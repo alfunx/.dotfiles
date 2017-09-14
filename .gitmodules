@@ -1,0 +1,6 @@
+[submodule ".config/awesome/lain"]
+	path = .config/awesome/lain
+	url = https://github.com/copycat-killer/lain
+[submodule ".config/awesome/freedesktop"]
+	path = .config/awesome/freedesktop
+	url = https://github.com/copycat-killer/awesome-freedesktop

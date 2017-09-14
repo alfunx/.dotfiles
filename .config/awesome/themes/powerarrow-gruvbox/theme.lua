@@ -58,14 +58,14 @@ local clock_bg_normal          = bw0
 
 local gears = require("gears")
 local lain  = require("lain")
+local custom_widget = require("themes.powerarrow-gruvbox.widgets")
 local awful = require("awful")
 local wibox = require("wibox")
 local os, math, string = os, math, string
 
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-gruvbox"
-theme.wallpaper                                 = theme.dir .. "/gray-wall.png"
-theme.wallpaper                                 = "~/pictures/wallpaper.png"
+theme.wallpaper                                 = theme.dir .. "/wallpapers/wall.png"
 
 local font_name                                 = "Meslo LG S for Powerline"
 -- local font_name                                 = "Source Code Pro for Powerline"
@@ -396,7 +396,7 @@ theme.volume = lain.widget.alsa({
     end,
 })
 
-theme.volume_click = lain.widget.eventhandler({
+theme.volume_click = custom_widget.eventhandler({
     attach_to = { theme.volume.widget },
     execute = function() awful.spawn("termite -e \"alsamixer\"") end,
 })
@@ -446,7 +446,7 @@ local bat = lain.widget.bat({
 --     -- end)
 -- })
 
-theme.bat_hover = lain.widget.eventhandler({
+theme.bat_hover = custom_widget.eventhandler({
     attach_to = { bat.widget },
     attach = eventhandler.attach_hover,
     execute = function()
@@ -491,12 +491,12 @@ local net = lain.widget.net({
 --     awful.button({}, 1, awful.spawn("termite"))
 -- ))
 
-theme.net_click = lain.widget.eventhandler({
+theme.net_click = custom_widget.eventhandler({
     attach_to = { net.widget },
     execute = function() awful.spawn("termite -e \"sudo wifi-menu\"") end,
 })
 
-theme.net_hover = lain.widget.eventhandler({
+theme.net_hover = custom_widget.eventhandler({
     attach_to = { net.widget },
     attach = eventhandler.attach_hover,
     execute = function()
