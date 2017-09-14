@@ -95,11 +95,17 @@ eval `dircolors $HOME/.dir_colors`
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 if [ "$TERM" = "linux" ]; then
-  PROMPT='[%F{red}%B%n%b%f@%m %~]$ '
+  PROMPT='[%F{red}%B%n%b%f@%m %~]'
+  PROMPT+='$(git_prompt_info)'
+  PROMPT+=' %(?.%F{cyan}%B$%b%f.%F{red}%B$%b%f) '
+
+  ZSH_THEME_GIT_PROMPT_PREFIX=" [%F{yellow}%B"
+  ZSH_THEME_GIT_PROMPT_SUFFIX="%b%f]"
+  ZSH_THEME_GIT_PROMPT_DIRTY="%F{red}%B*%b%f"
+  ZSH_THEME_GIT_PROMPT_CLEAN=""
 fi
 
 if [ "$TERM" = "linux" ]; then
-    # echo -en "\e]P0080808" #black
     # echo -en "\e]P0282828" #black
     echo -en "\e]P0000000" #black
     echo -en "\e]P8928374" #darkgrey
