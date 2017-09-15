@@ -47,20 +47,20 @@ local bw10             = "#fbf1c7"
 local textcolor_dark   = bw0
 local textcolor_light  = bw9
 
--- local fs_bg_normal             = bw7
--- local temp_bg_normal           = bw6
-local cpu_bg_normal            = bw5
-local mem_bg_normal            = bw4
-local vol_bg_normal            = bw3
-local bat_bg_normal            = bw2
-local net_bg_normal            = bw1
-local clock_bg_normal          = bw0
+-- local fs_bg_normal    = bw7
+-- local temp_bg_normal  = bw6
+local cpu_bg_normal   = bw5
+local mem_bg_normal   = bw4
+local vol_bg_normal   = bw3
+local bat_bg_normal   = bw2
+local net_bg_normal   = bw1
+local clock_bg_normal = bw0
 
-local gears = require("gears")
-local lain  = require("lain")
-local custom_widget = require("themes.powerarrow-gruvbox.widgets")
-local awful = require("awful")
-local wibox = require("wibox")
+local gears            = require("gears")
+local lain             = require("lain")
+local custom_widget    = require("themes.powerarrow-gruvbox.widgets")
+local awful            = require("awful")
+local wibox            = require("wibox")
 local os, math, string = os, math, string
 
 local theme                                     = {}
@@ -133,24 +133,24 @@ theme.awesome_icon                              = theme.dir .. "/icons/awesome.p
 theme.taglist_squares_sel                       = theme.dir .. "/icons/square_sel.png"
 theme.taglist_squares_unsel                     = theme.dir .. "/icons/square_unsel.png"
 
-theme.layout_cascadetile                        = theme.dir .. "/layouts-border/cascadetilew.png"
-theme.layout_centerwork                         = theme.dir .. "/layouts-border/centerworkw.png"
-theme.layout_cornerne                           = theme.dir .. "/layouts-border/cornernew.png"
-theme.layout_cornernw                           = theme.dir .. "/layouts-border/cornernww.png"
-theme.layout_cornerse                           = theme.dir .. "/layouts-border/cornersew.png"
-theme.layout_cornersw                           = theme.dir .. "/layouts-border/cornersww.png"
-theme.layout_dwindle                            = theme.dir .. "/layouts-border/dwindlew.png"
-theme.layout_fairh                              = theme.dir .. "/layouts-border/fairhw.png"
-theme.layout_fairv                              = theme.dir .. "/layouts-border/fairvw.png"
-theme.layout_floating                           = theme.dir .. "/layouts-border/floatingw.png"
-theme.layout_fullscreen                         = theme.dir .. "/layouts-border/fullscreenw.png"
-theme.layout_magnifier                          = theme.dir .. "/layouts-border/magnifierw.png"
-theme.layout_max                                = theme.dir .. "/layouts-border/maxw.png"
-theme.layout_spiral                             = theme.dir .. "/layouts-border/spiralw.png"
-theme.layout_tile                               = theme.dir .. "/layouts-border/tilew.png"
-theme.layout_tilebottom                         = theme.dir .. "/layouts-border/tilebottomw.png"
-theme.layout_tileleft                           = theme.dir .. "/layouts-border/tileleftw.png"
-theme.layout_tiletop                            = theme.dir .. "/layouts-border/tiletopw.png"
+theme.layout_cascadetile                        = theme.dir .. "/layouts/cascadetile.png"
+theme.layout_centerwork                         = theme.dir .. "/layouts/centerwork.png"
+theme.layout_cornerne                           = theme.dir .. "/layouts/cornerne.png"
+theme.layout_cornernw                           = theme.dir .. "/layouts/cornernw.png"
+theme.layout_cornerse                           = theme.dir .. "/layouts/cornerse.png"
+theme.layout_cornersw                           = theme.dir .. "/layouts/cornersw.png"
+theme.layout_dwindle                            = theme.dir .. "/layouts/dwindle.png"
+theme.layout_fairh                              = theme.dir .. "/layouts/fairh.png"
+theme.layout_fairv                              = theme.dir .. "/layouts/fairv.png"
+theme.layout_floating                           = theme.dir .. "/layouts/floating.png"
+theme.layout_fullscreen                         = theme.dir .. "/layouts/fullscreen.png"
+theme.layout_magnifier                          = theme.dir .. "/layouts/magnifier.png"
+theme.layout_max                                = theme.dir .. "/layouts/max.png"
+theme.layout_spiral                             = theme.dir .. "/layouts/spiral.png"
+theme.layout_tile                               = theme.dir .. "/layouts/tile.png"
+theme.layout_tilebottom                         = theme.dir .. "/layouts/tilebottom.png"
+theme.layout_tileleft                           = theme.dir .. "/layouts/tileleft.png"
+theme.layout_tiletop                            = theme.dir .. "/layouts/tiletop.png"
 
 theme.widget_ac                                 = theme.dir .. "/icons/ac.png"
 theme.widget_battery                            = theme.dir .. "/icons/battery.png"
@@ -590,7 +590,7 @@ function theme.at_screen_connect(s)
         { -- Left widgets
             layout = wibox.layout.fixed.horizontal,
             --spr,
-            wibox.container.background(wibox.container.margin(wibox.widget { s.mylayoutbox, layout = wibox.layout.align.horizontal }, 7, 3), clock_bg_normal),
+            wibox.container.background(wibox.container.margin(wibox.widget { s.mylayoutbox, layout = wibox.layout.align.horizontal }, 7, 3, 3, 3), clock_bg_normal),
             wibox.container.background(wibox.container.margin(wibox.widget { s.mytaglist, layout = wibox.layout.align.horizontal }, 3, 8), theme.taglist_bg_normal),
             arrow_r(theme.taglist_bg_normal, theme.prompt_bg),
             wibox.container.background(wibox.container.margin(wibox.widget { s.mypromptbox, layout = wibox.layout.align.horizontal }, 8, 4), theme.prompt_bg),

@@ -67,13 +67,13 @@ local ctrlkey      = "Control"
 local shiftkey     = "Shift"
 
 local terminal     = "termite"
-local editor       = os.getenv("EDITOR") or "vim"
+local editor       = "vim"
 local gui_editor   = "gvim"
 local browser      = "chromium"
 local filemanager  = "termite -e ranger"
 
 awful.util.terminal = terminal
-awful.util.tagnames = { "α", "β", "γ", "δ", "ϵ", "ω" }
+awful.util.tagnames = { "α", "β", "γ", "δ", "ϵ", "λ", "μ", "ω" }
 awful.layout.layouts = {
     awful.layout.suit.max,
     --awful.layout.suit.max.fullscreen,
@@ -85,7 +85,7 @@ awful.layout.layouts = {
     -- awful.layout.suit.fair.horizontal,
     --awful.layout.suit.spiral,
     --awful.layout.suit.spiral.dwindle,
-    --awful.layout.suit.magnifier,
+    awful.layout.suit.magnifier,
     --awful.layout.suit.corner.nw,
     --awful.layout.suit.corner.ne,
     --awful.layout.suit.corner.sw,
@@ -159,7 +159,7 @@ lain.layout.termfair.center.ncol       = 1
 lain.layout.cascade.tile.offset_x      = 2
 lain.layout.cascade.tile.offset_y      = 32
 lain.layout.cascade.tile.extra_padding = 5
-lain.layout.cascade.tile.nmaster       = 5
+lain.layout.cascade.tile.nmaster       = 3
 lain.layout.cascade.tile.ncol          = 2
 
 local theme_path = string.format("%s/.config/awesome/themes/%s/theme.lua", os.getenv("HOME"), chosen_theme)
@@ -698,7 +698,7 @@ client.connect_signal("focus",
         if c.maximized then
             c.border_width = 0
             c.border_color = beautiful.border_normal
-        elseif c.maximized or awful.layout.get(c.screen) == awful.layout.suit.max
+        elseif awful.layout.get(c.screen) == awful.layout.suit.max
                 or #awful.screen.focused().clients == 1 then
             c.border_color = beautiful.border_normal
         elseif #awful.screen.focused().clients > 1 then
@@ -712,7 +712,7 @@ client.connect_signal("property::maximized",
         if c.maximized then
             c.border_width = 0
             c.border_color = beautiful.border_normal
-        elseif c.maximized or awful.layout.get(c.screen) == awful.layout.suit.max
+        elseif awful.layout.get(c.screen) == awful.layout.suit.max
                 or #awful.screen.focused().clients == 1 then
             c.border_color = beautiful.border_normal
         elseif #awful.screen.focused().clients > 1 then
