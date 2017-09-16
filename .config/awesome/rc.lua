@@ -74,6 +74,7 @@ local filemanager  = "termite -e ranger"
 
 awful.util.terminal = terminal
 awful.util.tagnames = { "α", "β", "γ", "δ", "ϵ", "λ", "μ", "ω" }
+
 awful.layout.layouts = {
     awful.layout.suit.max,
     --awful.layout.suit.max.fullscreen,
@@ -96,6 +97,17 @@ awful.layout.layouts = {
     --lain.layout.centerwork.horizontal,
     --lain.layout.termfair,
     --lain.layout.termfair.center,
+    awful.layout.suit.floating,
+}
+
+awful.util.layouts = {
+    awful.layout.suit.max,
+    awful.layout.suit.tile,
+    awful.layout.suit.tile,
+    awful.layout.suit.tile,
+    awful.layout.suit.tile,
+    awful.layout.suit.tile,
+    awful.layout.suit.tile,
     awful.layout.suit.floating,
 }
 
@@ -516,6 +528,8 @@ clientkeys = awful.util.table.join(
               {description = "move to screen", group = "client"}),
     awful.key({ mod_4             }, "t", function (c) c.ontop = not c.ontop end,
               {description = "toggle keep on top", group = "client"}),
+    awful.key({ mod_4             }, "s", function (c) c.sticky = not c.sticky end,
+              {description = "toggle sticky", group = "client"}),
     awful.key({ mod_4             }, "n",
         function (c)
             -- The client currently has the input focus, so it cannot be

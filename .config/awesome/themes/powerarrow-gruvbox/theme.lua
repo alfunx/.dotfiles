@@ -216,7 +216,7 @@ local clock = awful.widget.watch(
 
 -- Calendar
 theme.cal = lain.widget.calendar({
-    cal = "cal --color=always",
+    cal = "cal --color=always --monday",
     -- attach_to = { binclock.widget },
     attach_to = { clock },
     icons = "",
@@ -556,7 +556,7 @@ function theme.at_screen_connect(s)
     gears.wallpaper.maximized(wallpaper, s, true)
 
     -- Tags
-    awful.tag(awful.util.tagnames, s, awful.layout.layouts)
+    awful.tag(awful.util.tagnames, s, awful.util.layouts)
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
@@ -576,7 +576,7 @@ function theme.at_screen_connect(s)
     -- Create a tasklist widget
     s.mytasklist = awful.widget.tasklist(s,
     awful.widget.tasklist.filter.currenttags, awful.util.tasklist_buttons, {
-      bg_focus = theme.tasklist_bg_focus, shape = gears.shape.rounded_rect,
+      bg_focus = theme.tasklist_bg_focus, shape = gears.shape.octogon,
       shape_border_width = 0, shape_border_color = theme.tasklist_bg_normal,
       align = "center" })
 
