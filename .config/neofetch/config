@@ -405,7 +405,7 @@ install_time_format="12h"
 # colors=(distro)      - Text is colored based on Distro colors.
 # colors=(4 6 1 8 8 6) - Text is colored in the order above.
 # colors=(distro)
-colors=(4 4 4 4 4 4)
+colors=(1 1 1 1 1 1)
 
 
 # Text Options
@@ -591,7 +591,7 @@ ascii_distro="auto"
 # ascii_colors=(distro)      - Ascii is colored based on Distro colors.
 # ascii_colors=(4 6 1 8 8 6) - Ascii is colored using these colors.
 # ascii_colors=(distro)
-ascii_colors=(4 4 4 4 4 4)
+ascii_colors=(1 1 1 1 1 1)
 
 # Bold ascii logo
 # Whether or not to bold the ascii logo.
