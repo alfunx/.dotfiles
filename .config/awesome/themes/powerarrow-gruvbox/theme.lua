@@ -312,7 +312,7 @@ local mem = lain.widget.mem({
             mem_bg_normal_font = theme.font_bold
         end
 
-        widget:set_markup(markup.fontfg(mem_bg_normal_font, mem_bg_normal_text, " " .. mem_now.used .. "MB "))
+        widget:set_markup(markup.fontfg(mem_bg_normal_font, mem_bg_normal_text, mem_now.perc))
     end
 })
 
@@ -342,7 +342,7 @@ local cpu = lain.widget.cpu({
             cpu_bg_normal_font = theme.font_bold
         end
 
-        widget:set_markup(markup.fontfg(cpu_bg_normal_font, cpu_bg_normal_text, " " .. cpu_now.usage .. "% "))
+        widget:set_markup(markup.fontfg(cpu_bg_normal_font, cpu_bg_normal_text, cpu_now.usage))
     end
 })
 
@@ -392,7 +392,7 @@ theme.volume = lain.widget.alsa({
             volicon:set_image(theme.widget_vol)
         end
 
-        widget:set_markup(markup.fontfg(theme.font, textcolor_light, " " .. volume_now.level .. "% "))
+        widget:set_markup(markup.fontfg(theme.font, textcolor_light, volume_now.level))
     end,
 })
 
@@ -428,7 +428,7 @@ local bat = lain.widget.bat({
             baticon:set_image(theme.widget_battery)
         end
 
-        widget:set_markup(markup.fontfg(bat_bg_normal_font, bat_bg_normal_text, " " .. bat_now.perc .. "% "))
+        widget:set_markup(markup.fontfg(bat_bg_normal_font, bat_bg_normal_text, bat_now.perc))
     end,
     notify = "off",
     batteries = {"BAT0"},
@@ -479,7 +479,7 @@ local net = lain.widget.net({
             net_bg_normal_font = theme.font_bold
             widget:set_markup(markup.fontfg(net_bg_normal_font, net_bg_normal_text, " N/A "))
         else
-            widget:set_markup(markup.fontfg(net_bg_normal_font, net_bg_normal_text, " " .. net_now.received .. " ↓↑ " .. net_now.sent .. " "))
+            widget:set_markup(markup.fontfg(net_bg_normal_font, net_bg_normal_text, net_now.received .. " ↓↑ " .. net_now.sent))
         end
     end,
     notify = "off",
@@ -628,17 +628,16 @@ function theme.at_screen_connect(s)
             -- wibox.container.background(wibox.container.margin(wibox.widget { tempicon, temp.widget, layout = wibox.layout.align.horizontal }, 4, 2), temp_bg_normal),
             -- arrow(temp_bg_normal, cpu_bg_normal),
             arrow(theme.tasklist_bg_normal, cpu_bg_normal),
-            wibox.container.background(wibox.container.margin(wibox.widget { cpuicon, cpu.widget, layout = wibox.layout.align.horizontal }, 4, 2), cpu_bg_normal),
+            wibox.container.background(wibox.container.margin(wibox.widget { cpuicon, cpu.widget, layout = wibox.layout.align.horizontal }, 2, 10), cpu_bg_normal),
             arrow(cpu_bg_normal, mem_bg_normal),
-            wibox.container.background(wibox.container.margin(wibox.widget { memicon, mem.widget, layout = wibox.layout.align.horizontal }, 4, 2), mem_bg_normal),
+            wibox.container.background(wibox.container.margin(wibox.widget { memicon, mem.widget, layout = wibox.layout.align.horizontal }, 2, 10), mem_bg_normal),
             arrow(mem_bg_normal, vol_bg_normal),
-            wibox.container.background(wibox.container.margin(wibox.widget { volicon, theme.volume.widget, layout = wibox.layout.align.horizontal }, 4, 2), vol_bg_normal),
+            wibox.container.background(wibox.container.margin(wibox.widget { volicon, theme.volume.widget, layout = wibox.layout.align.horizontal }, 2, 10), vol_bg_normal),
             arrow(vol_bg_normal, bat_bg_normal),
-            wibox.container.background(wibox.container.margin(wibox.widget { baticon, bat.widget, layout = wibox.layout.align.horizontal }, 4, 2), bat_bg_normal),
+            wibox.container.background(wibox.container.margin(wibox.widget { baticon, bat.widget, layout = wibox.layout.align.horizontal }, 2, 10), bat_bg_normal),
             arrow(bat_bg_normal, net_bg_normal),
-            wibox.container.background(wibox.container.margin(wibox.widget { nil, neticon, net.widget, layout = wibox.layout.align.horizontal }, 4, 2), net_bg_normal),
+            wibox.container.background(wibox.container.margin(wibox.widget { --[[neticon, --]] net.widget, layout = wibox.layout.align.horizontal }, 8, 10), net_bg_normal),
             arrow(net_bg_normal, clock_bg_normal),
-            -- wibox.container.background(wibox.container.margin(binclock.widget, 4, 8), clock_bg_normal),
             wibox.container.background(wibox.container.margin(wibox.widget { clock, layout = wibox.layout.align.horizontal }, 0, 8), clock_bg_normal),
             --]]
         },

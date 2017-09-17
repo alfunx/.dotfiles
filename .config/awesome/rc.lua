@@ -630,7 +630,10 @@ awful.rules.rules = {
       properties = { screen = 1, tag = awful.util.tagnames[1] } },
 
     { rule = { class = "Gimp", role = "gimp-image-window" },
-          properties = { maximized = true } },
+      properties = { maximized = true } },
+
+    { rule = { class = "Pinentry" },
+      properties = { floating = true } },
 }
 -- }}}
 
