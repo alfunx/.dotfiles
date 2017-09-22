@@ -37,7 +37,7 @@ fi
 dropbox &
 amixer set "Master" mute &
 unclutter -root -reset &
-# redshift -c .config/redshift.conf &
+redshift -c .config/redshift.conf &
 compton --config .config/compton.conf -b -c
 
 awesome
