@@ -1,0 +1,51 @@
+# gruvbox
+
+set font                        "Meslo LG S for Powerline 10"
+set default-bg                  "#fbf1c7"
+set default-fg                  "#3c3836"
+
+set statusbar-bg                "#282828"
+set statusbar-fg                "#ebdbb2"
+
+set inputbar-bg                 "#282828"
+set inputbar-fg                 "#ebdbb2"
+
+set notification-error-bg       "#fb4934"
+set notification-error-fg       "#282828"
+
+set notification-warning-bg     "#d3869b"
+set notification-warning-fg     "#282828"
+
+set highlight-color             "#fabd2f"
+set highlight-active-color      "#fe8019"
+
+set completion-highlight-bg     "#3c3836"
+set completion-highlight-fg     "#fb4934"
+
+set completion-bg               "#282828"
+set completion-fg               "#ebdbb2"
+
+set notification-bg             "#282828"
+set notification-fg             "#ebdbb2"
+
+set recolor-lightcolor          "#fbf1c7"
+set recolor-darkcolor           "#3c3836"
+set recolor                     "false"
+
+# Setting recolor-keep true will keep any color your pdf has.
+# If it is false, it'll just be black and white.
+set recolor-keephue             "true"
+
+# Rest of your configs go here:
+
+set adjust-open "width"
+set pages-per-row 1
+set smooth-scroll "true"
+set selection-clipboard clipboard
+
+set window-title-home-tilde "true"
+set window-title-basename "true"
+set statusbar-home-tilde "true"
+set show-hidden "true"
+
+set incremental-search "true"
