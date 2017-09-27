@@ -26,28 +26,31 @@ dotfiles() {
 # the silver searcher #
 #######################
 
-alias ag="ag --pager 'less -R' $@"
+alias ag="ag --color-match \"1;31\" --color-path \"0;37\" --color-line-number \"1;33\" --pager 'less -R' $@"
 
 ##################
 # fuzzy commands #
 ##################
 
+alias fzf="fzf-tmux -d 30% $@"
+
 # fuzzy ag
 fag() {
-  ag --nobreak --nonumbers --noheading . | fzf --height 80% --reverse --border
+  ag --nobreak --nonumbers --noheading --color --color-match "" --color-path "0;37" --color-line-number "0;30" "$@" . | fzf-tmux -d 30% --ansi
 }
 
 # fda - cd to selected directory
 fda() {
   local dir
-  dir=$(find ${1:-.} -path '*/\.*' -prune \
-                  -o -type d -print 2> /dev/null | fzf --height 80% --reverse --border +m) && cd "$dir"
+  dir=$(find ${1:-.} -path '*/\.*' -prune -o -type d -print 2> /dev/null \
+    | fzf-tmux -d 30% +m -q "$1" -0) && cd "$dir"
 }
 
-# fd - including hidden directories
+# fd - fda including hidden directories
 fd() {
   local dir
-  dir=$(find ${1:-.} -type d 2> /dev/null | fzf --height 80% --reverse --border +m) && cd "$dir"
+  dir=$(find -L ${1:-.} -type d 2> /dev/null \
+    | fzf-tmux -d 30% +m -q "$1" -0) && cd "$dir"
 }
 
 # fo - Open the selected file with the default editor
@@ -55,19 +58,19 @@ fd() {
 #   - CTRL-E or Enter key to open with the $EDITOR
 fo() {
   local out file key
-  IFS=$'\n' out=($(fzf-tmux --height 80% --reverse --border --query="$1" --exit-0 --expect=ctrl-o,ctrl-e))
+  IFS=$'\n' out=($(fzf-tmux -d 30% -q "$1" -0 --expect=ctrl-o,ctrl-e))
   key=$(head -1 <<< "$out")
   file=$(head -2 <<< "$out" | tail -1)
   if [ -n "$file" ]; then
-    [ "$key" = ctrl-o ] && open "$file" || ${EDITOR:-vim} "$file"
+    [ "$key" = ctrl-o ] && mimeopen -n "$file" || ${EDITOR:-vim} "$file"
   fi
 }
 
 # cdf - cd into the directory of the selected file
 cdf() {
-   local file
-   local dir
-   file=$(fzf --height 80% --reverse --border +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
+  local file
+  local dir
+  file=$(fzf-tmux -d 30% +m -q "$1" -0) && dir=$(dirname "$file") && cd "$dir"
 }
 
 # c - browse chrome history
@@ -78,31 +81,40 @@ c() {
 
   if [ "$(uname)" = "Darwin" ]; then
     google_history="$HOME/Library/Application Support/Google/Chrome/Default/History"
-    open=open
+    open="open"
   else
     google_history="$HOME/.config/chromium/Default/History"
-    open=xdg-open
+    open="mimeopen -n"
   fi
+
   cp -f "$google_history" /tmp/h
   sqlite3 -separator $sep /tmp/h \
     "select substr(title, 1, $cols), url
-     from urls order by last_visit_time desc" |
-  awk -F $sep '{printf "%-'$cols's  \x1b[36m%s\x1b[m\n", $1, $2}' |
-  fzf --height 80% --reverse --border --ansi --multi | sed 's#.*\(https*://\)#\1#' | xargs $open > /dev/null 2> /dev/null
+  from urls order by last_visit_time desc" \
+    | awk -F $sep '{printf "%-'$cols's  \x1b[36m%s\x1b[m\n", $1, $2}' \
+    | fzf-tmux -d 30% --ansi -m \
+    | sed 's#.*\(https*://\)#\1#' \
+    | xargs $open > /dev/null 2> /dev/null
 }
 
-# fdr - cd to selected parent directory
-fdr() {
+# fdp - cd to selected parent directory
+fdp() {
   local declare dirs=()
+
   get_parent_dirs() {
-    if [[ -d "${1}" ]]; then dirs+=("$1"); else return; fi
+    if [[ -d "${1}" ]]; then
+      dirs+=("$1"); else return;
+    fi
     if [[ "${1}" == '/' ]]; then
-      for _dir in "${dirs[@]}"; do echo $_dir; done
+      for _dir in "${dirs[@]}"; do
+        echo $_dir;
+      done
     else
       get_parent_dirs $(dirname "$1")
     fi
   }
-  local DIR=$(get_parent_dirs $(realpath "${1:-$PWD}") | fzf-tmux --height 80% --reverse --border --tac)
+
+  local DIR=$(get_parent_dirs $(realpath "${1:-$PWD}") | fzf-tmux -d 30% --tac)
   cd "$DIR"
 }
 
@@ -113,10 +125,9 @@ fdr() {
 # fkill - kill process
 fkill() {
   local pid
-  pid=$(ps -ef | sed 1d | fzf --height 80% --reverse --border -m | awk '{print $2}')
+  pid=$(ps -ef | sed 1d | fzf-tmux -d 30% -m | awk '{print $2}')
 
-  if [ "x$pid" != "x" ]
-  then
+  if [ "x$pid" != "x" ]; then
     echo $pid | xargs kill -${1:-9}
   fi
 }
@@ -129,23 +140,22 @@ fkill() {
 fbr() {
   local branches branch
   branches=$(git branch --all | grep -v HEAD) &&
-  branch=$(echo "$branches" |
-           fzf-tmux --height 80% --reverse --border -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
-  git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
+    branch=$(echo "$branches" | fzf-tmux -d 30% -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
+    git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
 }
 
 # fco - checkout git branch/tag
 fco() {
   local tags branches target
   tags=$(
-    git tag | awk '{print "\x1b[31;1mtag\x1b[m\t" $1}') || return
+  git tag | awk '{print "\x1b[31;1mtag\x1b[m\t" $1}') || return
   branches=$(
-    git branch --all | grep -v HEAD             |
-    sed "s/.* //"    | sed "s#remotes/[^/]*/##" |
-    sort -u          | awk '{print "\x1b[34;1mbranch\x1b[m\t" $1}') || return
+  git branch --all | grep -v HEAD \
+    | sed "s/.* //" | sed "s#remotes/[^/]*/##" | sort -u \
+    | awk '{print "\x1b[34;1mbranch\x1b[m\t" $1}') || return
   target=$(
-    (echo "$tags"; echo "$branches") |
-    fzf-tmux --height 80% --reverse --border -l30 -- --no-hscroll --ansi +m -d "\t" -n 2) || return
+  (echo "$tags"; echo "$branches") |
+    fzf-tmux -d 30% -- --no-hscroll --ansi +m -d "\t" -n 2) || return
   git checkout $(echo "$target" | awk '{print $2}')
 }
 
@@ -153,29 +163,29 @@ fco() {
 fcoc() {
   local commits commit
   commits=$(git log --pretty=oneline --abbrev-commit --reverse) &&
-  commit=$(echo "$commits" | fzf --height 80% --reverse --border --tac +s +m -e) &&
-  git checkout $(echo "$commit" | sed "s/ .*//")
+    commit=$(echo "$commits" | fzf-tmux -d 30% --tac +s +m -e) &&
+    git checkout $(echo "$commit" | sed "s/ .*//")
 }
 
 # fshow - git commit browser
 fshow() {
   git log --graph --color=always \
-      --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
-  fzf --height 80% --reverse --border --ansi --no-sort --tiebreak=index --bind=ctrl-s:toggle-sort \
-      --bind "ctrl-m:execute:
-                (grep -o '[a-f0-9]\{7\}' | head -1 |
-                xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
-                {}
-FZF-EOF"
+    --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" \
+    | fzf-tmux -d 30% --ansi --no-sort --tac --tiebreak=index --bind=ctrl-s:toggle-sort \
+    --bind "ctrl-m:execute:
+  (grep -o '[a-f0-9]\{7\}' | head -1 |
+    xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
+  {}
+  FZF-EOF"
 }
 
 # fcs - get git commit sha
 # example usage: git rebase -i `fcs`
 fcs() {
   local commits commit
-  commits=$(git log --color=always --pretty=oneline --abbrev-commit --reverse) &&
-  commit=$(echo "$commits" | fzf --height 80% --reverse --border --tac +s +m -e --ansi --reverse) &&
-  echo -n $(echo "$commit" | sed "s/ .*//")
+  commits=$(git log --color=always --pretty=oneline --abbrev-commit) &&
+    commit=$(echo "$commits" | fzf-tmux -d 30% +s +m -e --ansi) &&
+    echo -n $(echo "$commit" | sed "s/ .*//")
 }
 
 # fstash - easier way to deal with stashes
@@ -186,9 +196,9 @@ fcs() {
 fstash() {
   local out q k sha
   while out=$(
-    git stash list --pretty="%C(yellow)%h %>(14)%Cgreen%cr %C(blue)%gs" |
-    fzf --height 80% --reverse --border --ansi --no-sort --query="$q" --print-query \
-        --expect=ctrl-d,ctrl-b);
+    git stash list --pretty="%C(yellow)%h %>(14)%Cgreen%cr %C(blue)%gs" \
+      | fzf-tmux -d 30% --ansi --no-sort -q "$q" --print-query \
+      --expect=ctrl-d,ctrl-b);
   do
     mapfile -t out <<< "$out"
     q="${out[0]}"
@@ -207,24 +217,41 @@ fstash() {
   done
 }
 
+#########################
+#  fuzzy pacman search  #
+#########################
+
+# example usage: pacman -S $(fp)
+fp() {
+  local packages package package_name arg
+  arg="-Ss"
+  if (( $# > 0 )); then
+    arg="$@"
+  fi
+  packages=$(pacman "$arg" | sed 'N;s/\n//') &&
+    package=$(echo "$packages" | fzf-tmux -d 30% -m) &&
+    package_name=$(echo "$package" | sed 's/.*\///' | sed 's/ .*//') &&
+    echo -n "$package_name"
+}
+
 #####################
 # SVN airline theme #
 #####################
 
 prompt_svn() {
-    local rev branch
-    if in_svn; then
-        rev=$(svn_get_rev_nr)
-        branch=$(svn_get_branch_name)
-        PL_BRANCH_CHAR=$'\ue0a0'         # 
-        if [[ $(svn_dirty_choose_pwd 1 0) -eq 1 ]]; then
-            prompt_segment yellow black
-            echo -n "$PL_BRANCH_CHAR $rev@$branch"
-            echo -n "±"
-        else
-            prompt_segment green black
-            echo -n "$PL_BRANCH_CHAR $rev@$branch"
-        fi
+  local rev branch
+  if in_svn; then
+    rev=$(svn_get_rev_nr)
+    branch=$(svn_get_branch_name)
+    PL_BRANCH_CHAR=$'\ue0a0'         # 
+    if [[ $(svn_dirty_choose_pwd 1 0) -eq 1 ]]; then
+      prompt_segment yellow black
+      echo -n "$PL_BRANCH_CHAR $rev@$branch"
+      echo -n "±"
+    else
+      prompt_segment green black
+      echo -n "$PL_BRANCH_CHAR $rev@$branch"
     fi
+  fi
 }
 

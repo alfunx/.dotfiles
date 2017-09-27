@@ -94,6 +94,27 @@ eval `dircolors $HOME/.dir_colors`
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+
+############
+#  CUSTOM  #
+############
+
+# No scrolllock
+stty -ixon
+
+# Gruvbox colors fix
+source /home/amariya/.vim/plugged/gruvbox/gruvbox_256palette.sh
+
+# Man page colours
+export LESS_TERMCAP_mb=$'\e[1;31m'
+export LESS_TERMCAP_md=$'\e[1;34m'
+export LESS_TERMCAP_me=$'\e[0m'
+export LESS_TERMCAP_se=$'\e[0m'
+export LESS_TERMCAP_so=$'\e[0;30;103m'
+export LESS_TERMCAP_ue=$'\e[0m'
+export LESS_TERMCAP_us=$'\e[1;35m'
+
+# Alternative prompt
 if [ "$TERM" = "linux" ]; then
   PROMPT='[%F{red}%B%n%b%f@%m %~]'
   PROMPT+='$(git_prompt_info)'
@@ -105,6 +126,7 @@ if [ "$TERM" = "linux" ]; then
   ZSH_THEME_GIT_PROMPT_CLEAN=""
 fi
 
+# Alternative colors
 if [ "$TERM" = "linux" ]; then
     # echo -en "\e]P0282828" #black
     echo -en "\e]P0000000" #black
@@ -126,6 +148,23 @@ if [ "$TERM" = "linux" ]; then
     clear #for background artifacting
 fi
 
+# FZF
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -f -g ""'
-export FZF_DEFAULT_OPTS='--height 80% --reverse --border'
+
+export FZF_DEFAULT_OPTS='--height 30%
+  --color fg:223,bg:235,hl:208,fg+:229,bg+:237,hl+:167
+  --color info:246,prompt:214,pointer:214,marker:142,spinner:246,header:214'
+
+export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git --follow -g ""'
+export FZF_TMUX=1
+export FZF_TMUX_HEIGHT=30%
+set -g FZF_CTRL_T_COMMAND "command find -L \$dir -type f 2> /dev/null | sed '1d; s#^\./##'"
+
+export FZF_CTRL_T_OPTS="--no-reverse"
+export FZF_CTRL_R_OPTS="--no-reverse"
+export FZF_ALT_C_OPTS="--no-reverse"
+
+# Scripts path
+export PATH="$PATH:/home/amariya/scripts"
+export VISUAL="vim"
+export EDITOR="vim"
