@@ -1,19 +1,26 @@
-" vimrc
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""
+"  VIMRC  "
+"""""""""""
 
-" path settings
+"" Path settings
+
 set rtp+=/usr/local/opt/fzf
 
 
-" plugins
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""
+"  PLUGINS  "
+"""""""""""""
+
+"" Load Plugins
 
 call plug#begin('~/.vim/plugged')
 
+" General
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
 Plug 'tpope/vim-sensible'
-Plug 'mileszs/ack.vim'
 Plug 'tpope/vim-git'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
@@ -21,93 +28,62 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-vinegar'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+Plug 'tpope/vim-rsi'
+Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/vim-easy-align'
-Plug 'tomtom/tcomment_vim'
 Plug 'easymotion/vim-easymotion'
 Plug 'haya14busa/incsearch.vim'
+Plug 'haya14busa/incsearch-easymotion.vim'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'jiangmiao/auto-pairs'
 Plug 'mbbill/undotree'
-Plug 'wellle/targets.vim'
 Plug 'christoomey/vim-titlecase'
+Plug 'tomtom/tcomment_vim'
+Plug 'ap/vim-css-color'
+Plug 'benmills/vimux'
+Plug 'christoomey/vim-tmux-navigator'
 
-" language specific
+" Text objects
+Plug 'wellle/targets.vim'
+Plug 'junegunn/vim-after-object'
+Plug 'michaeljsmith/vim-indent-object'
+
+" Snippets
+" Plug 'Valloric/YouCompleteMe'
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+
+" Language specific
 Plug 'plasticboy/vim-markdown'
+Plug 'lervag/vimtex'
 
-" themes
-Plug 'joshdick/onedark.vim'
+" Themes
 Plug 'morhetz/gruvbox'
-Plug 'chriskempson/base16-vim'
-Plug 'chriskempson/tomorrow-theme', { 'rtp': 'vim/' }
+
+" Don't load in console
+if &term !=? 'linux' || has("gui_running")
+  Plug 'vim-airline/vim-airline'
+  Plug 'vim-airline/vim-airline-themes'
+endif
 
 call plug#end()
 
 
-" plugin settings
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""
+"  KEY MAPPINGS  "
+""""""""""""""""""
 
-" fzf
-if executable('fzf')
-  autocmd VimEnter * nnoremap <Leader>f :FZF<CR>
-endif
+"" Leader key
+nnoremap <Space> <Nop>
+nnoremap <,> <Nop>
+let mapleader=" "
+let maplocalleader=","
 
-" the silver searcher
-if executable('ag')
-  " use ag over grep
-  set grepprg=ag\ --nogroup\ --nocolor\ --ignore-case\ --column\ --vimgrep
-  set grepformat=%f:%l:%c:%m,%f:%l:%m
-
-  " integrate ag into ack
-  let g:ackprg='ag --nogroup --nocolor --ignore-case --column --vimgrep --hidden'
-
-  " use ag in ctrlp for listing files. lightning fast and respects .gitignore
-  let g:ctrlp_user_command='ag %s -l --nocolor -g "" --hidden'
-
-  " ag is fast enough that ctrlp doesn't need to cache
-  let g:ctrlp_use_caching=0
-
-  " ag
-   autocmd VimEnter * nnoremap <Leader>a :Ag<CR>
-endif
-
-
-" leader key
-let mapleader=' '
-
-
-" easier split navigation
+"" Split navigation
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
-
-" german key mappings
-map ü <C-]>
-" map <C-k> {
-map ä {
-" map <C-j> }
-map ö }
-" map ' /
-
-imap <C-B> <Esc>O
-
-" magic search
-map ,/ /\v
-map ,? ?\v
-cmap ,s %s/\v
-cmap ,g %g/\v
-
-" norm
-vnoremap <C-n> :norm<Space>
-
-" more natural splits
-" set splitbelow
-" set splitright
-
-" bind \ (backward slash) to grep shortcut
-" command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
 
 "   augroup quickfix
 "     autocmd!
@@ -115,116 +91,91 @@ vnoremap <C-n> :norm<Space>
 "     autocmd QuickFixCmdPost l*    lwindow
 "   augroup END
 
+"" German keyboard mappings
+noremap ü <C-]>
+noremap ä {
+noremap ö }
+
+"" insert mode mappings
+inoremap OO <C-O>O
+inoremap PP <C-O>o
+
+" select last inserted text
+nnoremap gV `[v`]
+
+"" Magic regex search
+noremap ,/ /\v
+noremap ,? ?\v
+cnoremap ,s %s/\v
+cnoremap ,g %g/\v
+
+" remove trailing whitespaces
+nnoremap <silent> <F5> :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
 
 
+"""""""""""""""""""""
+"  PLUGIN SETTINGS  "
+"""""""""""""""""""""
 
-" theme
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-if &term !=? 'linux' || has("gui_running")
-  set guifont=Meslo\ LG\ S\ for\ Powerline
-  set t_Co=256
-  set termguicolors
-  set background=dark
-  " let g:gruvbox_contrast_dark='hard'
-  let g:gruvbox_italic=1
-  colorscheme gruvbox
+"" FZF
+if executable('fzf')
+  autocmd VimEnter * nnoremap <Leader>f :FZF<CR>
 endif
 
-" spaces, indents and tabs
-set encoding=utf-8
-set shiftwidth=2
-set softtabstop=2
-set tabstop=2
-set softtabstop=2
-set tabstop=2
-set expandtab
-set textwidth=0
-set linespace=0
-set scrolloff=3
+" default key bindings
+let g:fzf_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
 
-" special rules for some filetypes
-autocmd BufRead,BufNewFile *.xml set noexpandtab
+" default fzf layout
+let g:fzf_layout = { 'down': '~30%' }
 
-" ui config
-set number
-" set relativenumber
-set showcmd
-set hidden
-set wildmenu  " shows autocomplete in commandline
-set wildmode=longest:full,full
-set textwidth=80
-" set colorcolumn=81  " vertical line
-set cursorline  " horizontal line
-set wrapmargin=0  " turns off automatic newlines
-set nowrap  " line wrapping off
-syntax enable
+" customize the options used by 'git log'
+let g:fzf_commits_log_options='--graph --color=always --format="%c(auto)%h%d %s %c(black)%c(bold)%cr"'
 
-set showmatch  " show matching brackets
-set mat=5  " bracket blinking
+" command to generate tags file
+let g:fzf_tags_command = 'ctags -R'
 
-set list
-set lcs=tab:\▸\ ,eol:\↵,trail:\~,extends:>,precedes:<
-set viminfo^=!
+" mapping selecting mappings
+nmap <leader><tab> <plug>(fzf-maps-n)
+xmap <leader><tab> <plug>(fzf-maps-x)
+omap <leader><tab> <plug>(fzf-maps-o)
+" imap <leader><tab> <plug>(fzf-maps-i)
 
-set novisualbell  " no blinking
-set noerrorbells  " no noise
-set laststatus=2  " always show status line
-set showtabline=2  " always show tab line
-set noshowmode  " Hide the default mode text (e.g. -- INSERT -- below the statusline)
+" insert mode completion
+imap <c-x><c-k> <plug>(fzf-complete-word)
+imap <c-x><c-f> <plug>(fzf-complete-path)
+imap <c-x><c-j> <plug>(fzf-complete-file-ag)
+imap <c-x><c-l> <plug>(fzf-complete-line)
 
-" searching
-set incsearch
-set hlsearch
-set ignorecase
-set smartcase
+" use custom dictionary
+inoremap <expr> <c-x><c-k> fzf#complete('cat /usr/share/dict/words-insane')
 
-" folding
-set foldenable
-set foldmethod=indent
-autocmd BufWinEnter * let &foldlevel=max(add(map(range(1, line('$')), 'foldlevel(v:val)'), 10))  " with this, everything is unfolded at start
-set foldnestmax=100
-set cf  " enable error files & error jumping.
-" set clipboard+=unnamed  " yanks go on clipboard instead.
-set history=10000 " Number of things to remember in history.
-set autowrite  " writes on make/shell commands
-set ruler  " ruler on
-set timeoutlen=2000  " time to wait after esc (default causes an annoying delay)
+"" AG
+command! -bang -nargs=* Ag
+      \ call fzf#vim#ag(<q-args>, '--color-path "0;37" --color-line-number "0;30"', <bang>0)
 
-if has('persistent_undo')
-  set undodir=~/.vim/tmp/undo/
-  set undofile
+if executable('ag')
+  autocmd VimEnter * nnoremap <Leader>a :Ag<CR>
 endif
 
-" formatting (some of these are for coding in c and c++)
-set bs=2  " backspace over everything in insert mode
-set nocp incsearch
-set cinoptions=:0,p0,t0
-" set cinwords=if,else,while,do,for,switch,case
-set formatoptions=tcqr
-set cindent
-set smarttab
-set pastetoggle=<F10>
-
-" remove trailing whitespaces with F5
-nnoremap <F5> :call <SID>StripTrailingWhitespaces() <CR>
-
+"" Airline
 if !exists('g:airline_symbols')
   let g:airline_symbols={}
 endif
 
-" unicode symbols
-let g:airline_left_sep='»'
+""" Unicode symbols
+let g:airline_left_alt_sep='»'
 let g:airline_left_sep='▶'
-let g:airline_right_sep='«'
+let g:airline_right_alt_sep='«'
 let g:airline_right_sep='◀'
 let g:airline_symbols.crypt='🔒'
 let g:airline_symbols.linenr='☰'
 let g:airline_symbols.linenr='␊'
 let g:airline_symbols.linenr='␤'
 let g:airline_symbols.linenr='¶'
-let g:airline_symbols.maxlinenr=''
-let g:airline_symbols.maxlinenr='㏑'
+let g:airline_symbols.maxlinenr='␤'
 let g:airline_symbols.branch='⎇'
 let g:airline_symbols.paste='ρ'
 let g:airline_symbols.paste='Þ'
@@ -233,7 +184,7 @@ let g:airline_symbols.spell='Ꞩ'
 let g:airline_symbols.notexists='∄'
 let g:airline_symbols.whitespace='Ξ'
 
-" powerline symbols
+""" Powerline symbols
 let g:airline_left_sep=''
 let g:airline_left_alt_sep=''
 let g:airline_right_sep=''
@@ -243,55 +194,27 @@ let g:airline_symbols.readonly=''
 let g:airline_symbols.linenr='☰'
 let g:airline_symbols.maxlinenr=''
 
-" air-line
-" let g:airline_theme='molokai'
-" let g:airline_theme='solarized'
-" let g:airline_solarized_bg='dark'
-" let g:airline_theme='onedark'
+""" Airline settings
 let g:airline_theme='gruvbox'
 let g:airline#extensions#tabline#enabled=1
 let g:airline#extensions#whitespace#mixed_indent_algo=1
 let g:airline_powerline_fonts=1
-" let g:airline_skip_empty_sections=1
 
-" " default curser color while searching
-" nnoremap <silent> [oh :call gruvbox#hls_show()<CR>
-" nnoremap <silent> ]oh :call gruvbox#hls_hide()<CR>
-" nnoremap <silent> coh :call gruvbox#hls_toggle()<CR>
-" nnoremap * :let @/=""<CR>:call gruvbox#hls_show()<CR>*
-" nnoremap / :let @/=""<CR>:call gruvbox#hls_show()<CR>/
-" nnoremap ? :let @/=""<CR>:call gruvbox#hls_show()<CR>?
+"" EasyMotion
+" let g:EasyMotion_do_mapping=0  " Disable default mappings
+let g:EasyMotion_smartcase=1  " Turn on case insensitive feature
+let g:EasyMotion_keys='asdghklqwertyuiopzxcvbnmfj,'
 
-" color overlength
-highlight OverLength ctermbg=darkred ctermfg=white guibg=#592929
-" match OverLength /\%>80v.\+/
-match OverLength /\%81v./
-
-" easymotion
-let g:EasyMotion_do_mapping=0 " Disable default mappings
-
-" Jump to anywhere you want with minimal keystrokes, with just one key binding.
-" `s{char}{label}`
 nmap s <Plug>(easymotion-overwin-f)
-" or
-" `s{char}{char}{label}`
-" Need one more keystroke, but on average, it may be more comfortable.
-nmap s <Plug>(easymotion-overwin-f2)
-
-" Turn on case insensitive feature
-let g:EasyMotion_smartcase=1
-
-" JK motions: Line motions
+" nmap s <Plug>(easymotion-overwin-f2)
 map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
 
-" incsearch
+"" Incsearch
 map /  <Plug>(incsearch-forward)
 map ?  <Plug>(incsearch-backward)
 map g/ <Plug>(incsearch-stay)
 
-" :h g:incsearch#auto_nohlsearch
-set hlsearch
 let g:incsearch#auto_nohlsearch=1
 map n <Plug>(incsearch-nohl-n)
 map N <Plug>(incsearch-nohl-N)
@@ -300,41 +223,16 @@ map # <Plug>(incsearch-nohl-#)
 map g* <Plug>(incsearch-nohl-g*)
 map g# <Plug>(incsearch-nohl-g#)
 
-" remove trailing whitespaces
-nnoremap <silent> <F5> :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
+"" Incsearch-EasyMotion
+map z/ <Plug>(incsearch-easymotion-/)
+map z? <Plug>(incsearch-easymotion-?)
+map zg/ <Plug>(incsearch-easymotion-stay)
 
-" " NERDTree
-" let NERDTreeHijackNetrw=1
-" let NERDTreeQuitOnOpen=1
-" let NERDTreeMinimalUI=1
-" let NERDTreeDirArrows=1
-" autocmd StdinReadPre * let s:std_in=1
-" autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-" autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
-" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-" map <C-M> :NERDTreeToggle<CR>
+"" Netrw
+let g:netrw_liststyle=0
+let g:netrw_preview=1
 
-" " NERDTress File highlighting
-" function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)
-"  exec 'autocmd filetype nerdtree highlight ' . a:extension .' ctermbg='. a:bg .' ctermfg='. a:fg .' guibg='. a:guibg .' guifg='. a:guifg
-"  exec 'autocmd filetype nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
-" endfunction
-
-" call NERDTreeHighlightFile('jade', 'green', 'none', 'green', '#151515')
-" call NERDTreeHighlightFile('ini', 'yellow', 'none', 'yellow', '#151515')
-" call NERDTreeHighlightFile('md', 'blue', 'none', '#3366FF', '#151515')
-" call NERDTreeHighlightFile('yml', 'yellow', 'none', 'yellow', '#151515')
-" call NERDTreeHighlightFile('config', 'yellow', 'none', 'yellow', '#151515')
-" call NERDTreeHighlightFile('conf', 'yellow', 'none', 'yellow', '#151515')
-" call NERDTreeHighlightFile('json', 'yellow', 'none', 'yellow', '#151515')
-" call NERDTreeHighlightFile('html', 'yellow', 'none', 'yellow', '#151515')
-" call NERDTreeHighlightFile('styl', 'cyan', 'none', 'cyan', '#151515')
-" call NERDTreeHighlightFile('css', 'cyan', 'none', 'cyan', '#151515')
-" call NERDTreeHighlightFile('coffee', 'Red', 'none', 'red', '#151515')
-" call NERDTreeHighlightFile('js', 'Red', 'none', '#ffa500', '#151515')
-" call NERDTreeHighlightFile('php', 'Magenta', 'none', '#ff00ff', '#151515')
-
-" unimpaired
+"" Unimpaired
 nmap <S-H> [
 nmap <S-L> ]
 omap <S-H> [
@@ -342,28 +240,280 @@ omap <S-L> ]
 xmap <S-H> [
 xmap <S-L> ]
 
-" easy align
+"" Vim RSI
+let g:rsi_no_meta=1
+
+"" EasyAlign
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
-" undotree
+"" Undotree
 nnoremap <F4> :UndotreeToggle<CR>
 
-" titlecase
+"" Titlecase
 let g:titlecase_map_keys=0
-nmap gct <Plug>Titlecase
-vmap gct <Plug>Titlecase
-nmap gcT <Plug>TitlecaseLine
+nmap gwt <Plug>Titlecase
+vmap gwt <Plug>Titlecase
+nmap gwT <Plug>TitlecaseLine
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"" After text object
+autocmd VimEnter * call after_object#enable(['m', 'mm'], '=', ':', '+', '-', '*', '/', '#', ' ')
 
-" [[b]commits] customize the options used by 'git log':
-let g:fzf_commits_log_options='--graph --color=always --format="%c(auto)%h%d %s %c(black)%c(bold)%cr"'
+"" Vimtex
+let g:vimtex_view_method='zathura'
+
+"" UltiSnips
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+"" Goyo + Limelight
+function! s:goyo_enter()
+  set nolist
+  set noshowmode
+  set noshowcmd
+  set scrolloff=999
+  Limelight
+endfunction
+
+function! s:goyo_leave()
+  set list
+  highlight OverLength ctermbg=darkred ctermfg=white guibg=#9d0006 guifg=#fbf1c7
+  match OverLength /\%81v./
+  set noshowmode
+  set showcmd
+  set scrolloff=3
+  Limelight!
+endfunction
+
+autocmd! User GoyoEnter nested call <SID>goyo_enter()
+autocmd! User GoyoLeave nested call <SID>goyo_leave()
+
+"" tslime
+let g:tslime_always_current_session=1
+let g:tslime_always_current_window=1
+
+vmap <C-c><C-c> <Plug>SendSelectionToTmux
+
+"" Vimux
+let g:VimuxUseNearest=1
+
+function! VimuxSlime()
+  call VimuxOpenRunner()
+  call VimuxSendText(@v)
+  " call VimuxSendKeys("Enter")
+endfunction
+
+vmap <Leader>vs "vy :call VimuxSlime()<CR>
 
 
-" links
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""
+"  APPEARANCE  "
+""""""""""""""""
+
+"" Theme and colors
+set guifont=Meslo\ LG\ S\ for\ Powerline
+set termguicolors
+set background=dark
+let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
+set t_Co=256
+let g:gruvbox_italic=1
+colorscheme gruvbox
+
+"" UI config
+syntax enable
+set nocompatible
+set number
+set showcmd
+set hidden
+set wildmenu  " shows autocomplete in commandline
+set wildmode=longest:full,full
+set lazyredraw
+set mouse=a
+
+set cursorline  " horizontal line
+set textwidth=80
+" set colorcolumn=81  " vertical line
+set wrapmargin=0  " turns off automatic newlines
+set nowrap  " line wrapping off
+set showmatch  " show matching brackets
+set mat=5  " bracket blinking
+set list
+
+if &term !=? 'linux' || has("gui_running")
+  set listchars=tab:▸\ ,eol:↵,trail:~,extends:>,precedes:<
+  set fillchars=vert:│,fold:─,diff:-
+else
+  set listchars=tab:~\ ,eol:$,trail:~,extends:>,precedes:<
+  set fillchars=vert:\|,fold:-,diff:-
+endif
+
+set novisualbell  " no blinking
+set noerrorbells  " no noise
+set display=lastline
+set laststatus=2  " always show status line
+set showtabline=2  " always show tab line
+set noshowmode  " Hide the default mode text (e.g. -- INSERT -- below the statusline)
+
+"" Spaces, indents and tabs
+set encoding=utf-8
+set shiftwidth=2
+set softtabstop=2
+set tabstop=2
+set expandtab
+set smarttab
+set autoindent
+set cindent
+set linespace=0
+set scrolloff=5
+set backspace=2  " backspace over everything in insert mode
+set cinoptions=:0,p0,t0
+" set cinwords=if,else,while,do,for,switch,case
+set formatoptions=tcqr
+set pastetoggle=<F10>
+
+""" Color overlength
+highlight OverLength ctermbg=darkred ctermfg=white guibg=#9d0006 guifg=#fbf1c7
+match OverLength /\%81v./
+" match OverLength /\%>80v.\+/
+
+"" Searching
+set incsearch
+set hlsearch
+set ignorecase
+set smartcase
+
+"" Folding
+set foldenable
+set foldmethod=indent
+autocmd BufWinEnter * let &foldlevel=max(add(map(range(1, line('$')), 'foldlevel(v:val)'), 10))  " with this, everything is unfolded at start
+set foldnestmax=100
+set cf  " enable error files & error jumping.
+" set clipboard+=unnamed  " yanks go on clipboard instead.
+set history=10000 " Number of things to remember in history.
+set autoread
+set autowrite
+set ruler  " ruler on
+set timeoutlen=2000  " time to wait after esc (default causes an annoying delay)
+
+function! NeatFoldText()
+  let line = ' ' . substitute(getline(v:foldstart), '^\s*"\?\s*\|\s*"\?\s*{{' . '{\d*\s*', '', 'g') . ' '
+  let lines_count = v:foldend - v:foldstart + 1
+  let lines_count_text = '┤ ' . printf("%10s", lines_count . ' lines') . ' ├'
+  let foldchar = matchstr(&fillchars, 'fold:\zs.')
+  let foldtextstart = strpart('+ ' . repeat(foldchar, v:foldlevel*2) . line, 0, (winwidth(0)*2)/3)
+  let foldtextend = lines_count_text . repeat(foldchar, 8)
+  let foldtextlength = strlen(substitute(foldtextstart . foldtextend, '.', 'x', 'g')) + &foldcolumn
+  return foldtextstart . repeat(foldchar, winwidth(0)-foldtextlength) . foldtextend
+endfunction
+set foldtext=NeatFoldText()
+
+"" Last position
+set viminfo='10,\"100,:20,%,n~/.viminfo
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+endif
+
+"" Undo file
+if has("persistent_undo")
+  set undodir=~/.vim/undodir/
+  set undofile
+endif
+
+"" Dictionary
+set dictionary+=/usr/share/dict/words-insane
+
+"" Open files in arglist as tabs
+if ! &diff
+  tab all
+endif
+
+
+"""""""""""""""""""""""
+"  LANGUAGE SPECIFIC  "
+"""""""""""""""""""""""
+
+augroup configgroup
+  autocmd!
+  autocmd Filetype python setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+  autocmd Filetype java setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
+  autocmd Filetype lua setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
+augroup END
+
+
+"""""""""""""""""""
+"  VIMRC FOLDING  "
+"""""""""""""""""""
+
+"" Autofolding .vimrc
+" see http://vimcasts.org/episodes/writing-a-custom-fold-expression/
+
+""" defines a foldlevel for each line of code
+function! VimFolds(lnum)
+  let s:thisline = getline(a:lnum)
+  if match(s:thisline, '^"" ') >= 0
+    return '>2'
+  endif
+  if match(s:thisline, '^""" ') >= 0
+    return '>3'
+  endif
+  let s:two_following_lines = 0
+  if line(a:lnum) + 2 <= line('$')
+    let s:line_1_after = getline(a:lnum+1)
+    let s:line_2_after = getline(a:lnum+2)
+    let s:two_following_lines = 1
+  endif
+  if !s:two_following_lines
+      return '='
+    endif
+  else
+    if (match(s:thisline, '^"""""') >= 0) &&
+       \ (match(s:line_1_after, '^"  ') >= 0) &&
+       \ (match(s:line_2_after, '^""""') >= 0)
+      return '>1'
+    else
+      return '='
+    endif
+  endif
+endfunction
+
+""" defines a foldtext
+function! VimFoldText()
+  " handle special case of normal comment first
+  let s:info = '('.string(v:foldend-v:foldstart).' l)'
+  if v:foldlevel == 1
+    let s:line = ' ◇ '.getline(v:foldstart+1)[3:-2]
+  elseif v:foldlevel == 2
+    let s:line = '   ●  '.getline(v:foldstart)[3:]
+  elseif v:foldlevel == 3
+    let s:line = '     ▪ '.getline(v:foldstart)[4:]
+  endif
+  if strwidth(s:line) > 80 - len(s:info) - 3
+    return s:line[:79-len(s:info)-3+len(s:line)-strwidth(s:line)].'...'.s:info
+  else
+    return s:line.repeat(' ', 80 - strwidth(s:line) - len(s:info)).s:info
+  endif
+endfunction
+
+""" set foldsettings automatically for vim files
+augroup fold_vimrc
+  autocmd!
+  autocmd FileType vim
+                   \ setlocal foldmethod=expr |
+                   \ setlocal foldexpr=VimFolds(v:lnum) |
+                   \ setlocal foldtext=VimFoldText() |
+     "              \ set foldcolumn=2 foldminlines=2
+augroup END
+
+
+"""""""""""
+"  LINKS  "
+"""""""""""
+
+"" Links to check out
+
 " checkout: https://github.com/zenbro/dotfiles/blob/master/.nvimrc
 "           https://github.com/spf13/spf13-vim/blob/3.0/.vimrc
 "           https://github.com/euclio/vimrc/blob/master/vimrc
-
+"           https://github.com/KevOBrien/dotfiles
