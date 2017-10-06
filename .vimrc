@@ -68,6 +68,8 @@ endif
 
 call plug#end()
 
+runtime ftplugin/man.vim
+
 
 """"""""""""""""""
 "  KEY MAPPINGS  "
@@ -75,9 +77,9 @@ call plug#end()
 
 "" Leader key
 nnoremap <Space> <Nop>
-nnoremap <,> <Nop>
+" nnoremap <,> <Nop>
 let mapleader=" "
-let maplocalleader=","
+" let maplocalleader=","
 
 "" Split navigation
 nnoremap <C-J> <C-W><C-J>
@@ -95,6 +97,11 @@ nnoremap <C-H> <C-W><C-H>
 noremap ü <C-]>
 noremap ä {
 noremap ö }
+
+" Use CTRL-S for saving, also in Insert mode
+noremap <silent> <C-S> :update<CR>
+vnoremap <silent> <C-S> <C-C>:update<CR>
+inoremap <silent> <C-S> <C-O>:update<CR>
 
 "" insert mode mappings
 inoremap OO <C-O>O
@@ -143,6 +150,9 @@ xmap <leader><tab> <plug>(fzf-maps-x)
 omap <leader><tab> <plug>(fzf-maps-o)
 " imap <leader><tab> <plug>(fzf-maps-i)
 
+nnoremap <leader>b :Buffers<CR>
+vnoremap <leader>b <C-C>:Buffers<CR>
+
 " insert mode completion
 imap <c-x><c-k> <plug>(fzf-complete-word)
 imap <c-x><c-f> <plug>(fzf-complete-path)
@@ -152,9 +162,23 @@ imap <c-x><c-l> <plug>(fzf-complete-line)
 " use custom dictionary
 inoremap <expr> <c-x><c-k> fzf#complete('cat /usr/share/dict/words-insane')
 
+"" RG
+command! -bang -nargs=* Rg
+      \ call fzf#vim#grep(
+      \ 'rg --line-number --no-heading --ignore-case --follow --color=always --colors="match:none" --colors="path:fg:white" --colors="line:fg:white" '.shellescape(<q-args>), 0,
+      \ <bang>0)
+
+if executable('rg')
+  autocmd VimEnter * nnoremap <Leader>r :Rg<CR>
+  set grepprg=rg\ --vimgrep
+  set grepformat^=%f:%l:%c:%m
+endif
+
 "" AG
 command! -bang -nargs=* Ag
-      \ call fzf#vim#ag(<q-args>, '--color-path "0;37" --color-line-number "0;30"', <bang>0)
+      \ call fzf#vim#ag(
+      \ <q-args>, '--color-path "0;37" --color-line-number "0;37" --color-match "" --follow',
+      \ <bang>0)
 
 if executable('ag')
   autocmd VimEnter * nnoremap <Leader>a :Ag<CR>
@@ -205,8 +229,8 @@ let g:airline_powerline_fonts=1
 let g:EasyMotion_smartcase=1  " Turn on case insensitive feature
 let g:EasyMotion_keys='asdghklqwertyuiopzxcvbnmfj,'
 
-nmap s <Plug>(easymotion-overwin-f)
-" nmap s <Plug>(easymotion-overwin-f2)
+" nmap s <Plug>(easymotion-overwin-f)
+nmap s <Plug>(easymotion-overwin-f2)
 map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
 
@@ -366,7 +390,7 @@ set smarttab
 set autoindent
 set cindent
 set linespace=0
-set scrolloff=5
+set scrolloff=3
 set backspace=2  " backspace over everything in insert mode
 set cinoptions=:0,p0,t0
 " set cinwords=if,else,while,do,for,switch,case
@@ -389,12 +413,14 @@ set foldenable
 set foldmethod=indent
 autocmd BufWinEnter * let &foldlevel=max(add(map(range(1, line('$')), 'foldlevel(v:val)'), 10))  " with this, everything is unfolded at start
 set foldnestmax=100
+
 set cf  " enable error files & error jumping.
 " set clipboard+=unnamed  " yanks go on clipboard instead.
-set history=10000 " Number of things to remember in history.
+set history=10000  " Number of things to remember in history.
 set autoread
 set autowrite
-set ruler  " ruler on
+set ruler
+set nostartofline
 set timeoutlen=2000  " time to wait after esc (default causes an annoying delay)
 
 function! NeatFoldText()
@@ -415,18 +441,39 @@ if has("autocmd")
   au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 endif
 
-"" Undo file
-if has("persistent_undo")
-  set undodir=~/.vim/undodir/
-  set undofile
-endif
-
 "" Dictionary
 set dictionary+=/usr/share/dict/words-insane
 
-"" Open files in arglist as tabs
-if ! &diff
-  tab all
+
+""""""""""""""""""""""""""
+"  BACKUP / SWAP / UNDO  "
+""""""""""""""""""""""""""
+
+if isdirectory($HOME . '/.vim/backup') == 0
+  :silent !mkdir -p ~/.vim/backup >/dev/null 2>&1
+endif
+set backupdir-=.
+set backupdir+=.
+set backupdir-=~/
+set backupdir^=~/.vim/backup/
+set backupdir^=./.vim-backup/
+set backup
+
+if isdirectory($HOME . '/.vim/swap') == 0
+  :silent !mkdir -p ~/.vim/swap >/dev/null 2>&1
+endif
+set directory=./.vim-swap//
+set directory+=~/.vim/swap//
+set directory+=~/tmp//
+set directory+=.
+
+if exists("+undofile")
+  if isdirectory($HOME . '/.vim/undo') == 0
+    :silent !mkdir -p ~/.vim/undo > /dev/null 2>&1
+  endif
+  set undodir=./.vim-undo//
+  set undodir+=~/.vim/undo//
+  set undofile
 endif
 
 
