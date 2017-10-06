@@ -99,6 +99,9 @@ eval `dircolors $HOME/.dir_colors`
 #  CUSTOM  #
 ############
 
+# Zsh options
+setopt extendedglob
+
 # No scrolllock
 stty -ixon
 
@@ -110,9 +113,10 @@ export LESS_TERMCAP_mb=$'\e[1;31m'
 export LESS_TERMCAP_md=$'\e[1;34m'
 export LESS_TERMCAP_me=$'\e[0m'
 export LESS_TERMCAP_se=$'\e[0m'
-export LESS_TERMCAP_so=$'\e[0;30;103m'
+export LESS_TERMCAP_so=$'\e[0;30m\e[48;5;208m'
 export LESS_TERMCAP_ue=$'\e[0m'
 export LESS_TERMCAP_us=$'\e[1;35m'
+export LESS='-iMRj.5'
 
 # Alternative prompt
 if [ "$TERM" = "linux" ]; then
@@ -155,7 +159,8 @@ export FZF_DEFAULT_OPTS='--height 30%
   --color fg:223,bg:235,hl:208,fg+:229,bg+:237,hl+:167
   --color info:246,prompt:214,pointer:214,marker:142,spinner:246,header:214'
 
-export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git --follow -g ""'
+export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git --follow -g "" '
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*"'
 export FZF_TMUX=1
 export FZF_TMUX_HEIGHT=30%
 set -g FZF_CTRL_T_COMMAND "command find -L \$dir -type f 2> /dev/null | sed '1d; s#^\./##'"

@@ -22,22 +22,37 @@ dotfiles() {
   esac
 }
 
+##########
+#  tmux  #
+##########
+
+alias fzf="fzf-tmux -d 30% $@"
+
+#############
+#  ripgrep  #
+#############
+
+alias rg="rg --ignore-case --line-number --colors=\"match:fg:red\" --colors=\"match:style:bold\" --colors=\"path:fg:white\" --colors=\"line:fg:yellow\" --colors=\"line:style:bold\" $@"
+
+# fuzzy rg
+frg() {
+  rg --no-line-number --no-heading --color=always --colors="match:none" --colors="path:fg:white" --colors="line:fg:white" "$@" . | fzf-tmux -d 30% --ansi
+}
+
 #######################
 # the silver searcher #
 #######################
 
-alias ag="ag --color-match \"1;31\" --color-path \"0;37\" --color-line-number \"1;33\" --pager 'less -R' $@"
+alias ag="ag --numbers --color-match \"1;31\" --color-path \"0;37\" --color-line-number \"1;33\" $@"
+
+# fuzzy ag
+fag() {
+  ag --nobreak --nonumbers --noheading --color --color-match "" --color-path "0;37" --color-line-number "0;37" "$@" . | fzf-tmux -d 30% --ansi
+}
 
 ##################
 # fuzzy commands #
 ##################
-
-alias fzf="fzf-tmux -d 30% $@"
-
-# fuzzy ag
-fag() {
-  ag --nobreak --nonumbers --noheading --color --color-match "" --color-path "0;37" --color-line-number "0;30" "$@" . | fzf-tmux -d 30% --ansi
-}
 
 # fda - cd to selected directory
 fda() {
