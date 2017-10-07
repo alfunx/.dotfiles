@@ -11,7 +11,13 @@ set rtp+=/usr/local/opt/fzf
 "  PLUGINS  "
 """""""""""""
 
-"" Load Plugins
+if filereadable($HOME . '/.vim/autoload/plug.vim') == 0
+  :silent !mkdir -p ~/.vim/autoload > /dev/null 2>&1
+  :silent !mkdir -p ~/.vim/plugged > /dev/null 2>&1
+  :silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+        \ > /dev/null 2>&1
+endif
 
 call plug#begin('~/.vim/plugged')
 
@@ -77,9 +83,9 @@ runtime ftplugin/man.vim
 
 "" Leader key
 nnoremap <Space> <Nop>
-" nnoremap <,> <Nop>
+nnoremap ü <Nop>
 let mapleader=" "
-" let maplocalleader=","
+let maplocalleader="ü"
 
 "" Split navigation
 nnoremap <C-J> <C-W><C-J>
@@ -94,7 +100,7 @@ nnoremap <C-H> <C-W><C-H>
 "   augroup END
 
 "" German keyboard mappings
-noremap ü <C-]>
+" noremap ü <C-]>
 noremap ä {
 noremap ö }
 
