@@ -47,14 +47,16 @@ local bw10             = "#fbf1c7"
 local textcolor_dark   = bw0
 local textcolor_light  = bw9
 
--- local fs_bg_normal    = bw7
--- local temp_bg_normal  = bw6
-local cpu_bg_normal   = bw5
-local mem_bg_normal   = bw4
-local vol_bg_normal   = bw3
-local bat_bg_normal   = bw2
-local net_bg_normal   = bw1
-local clock_bg_normal = bw0
+-- local fs_bg_normal      = bw2
+-- local temp_bg_normal    = bw2
+local pacman_bg_normal  = bw2
+local sysload_bg_normal = bw2
+local cpu_bg_normal     = bw2
+local mem_bg_normal     = bw2
+local vol_bg_normal     = bw2
+local bat_bg_normal     = bw2
+local net_bg_normal     = bw1
+local clock_bg_normal   = bw0
 
 local gears            = require("gears")
 local lain             = require("lain")
@@ -76,7 +78,7 @@ theme.font_italic                               = font_name .. " " .. "Italic"  
 theme.font_bold_italic                          = font_name .. " " .. "Bold Italic" .. " " .. font_size
 
 theme.border_normal                             = bw0
-theme.border_focus                              = bw10
+theme.border_focus                              = bw6
 theme.border_marked                             = red_light
 
 theme.fg_normal                                 = bw9
@@ -84,7 +86,7 @@ theme.fg_focus                                  = red_light
 theme.fg_urgent                                 = bw0
 theme.bg_normal                                 = bw5
 theme.bg_normal                                 = bw0
-theme.bg_focus                                  = bw3
+theme.bg_focus                                  = bw2
 theme.bg_urgent                                 = red_light
 
 theme.notification_margin                       = 100
@@ -104,19 +106,19 @@ theme.taglist_bg_urgent                         = red_light
 theme.tasklist_font_normal                      = theme.font
 theme.tasklist_font_focus                       = theme.font_bold
 theme.tasklist_font_minimized                   = theme.font_italic
-theme.tasklist_font_urgent                      = theme.font_italic
-theme.tasklist_fg_normal                        = textcolor_dark
+theme.tasklist_font_urgent                      = theme.font_bold_italic
+theme.tasklist_fg_normal                        = bw7
 theme.tasklist_fg_focus                         = textcolor_dark
-theme.tasklist_fg_urgent                        = textcolor_dark
-theme.tasklist_bg_normal                        = bw6
-theme.tasklist_bg_focus                         = bw8
-theme.tasklist_bg_urgent                        = red_light
+theme.tasklist_fg_urgent                        = red_light
+theme.tasklist_bg_normal                        = bw3
+theme.tasklist_bg_focus                         = bw6
+theme.tasklist_bg_urgent                        = bw1
 
 theme.titlebar_bg_normal                        = theme.border_normal
 theme.titlebar_bg_focus                         = theme.border_focus
 theme.titlebar_bg_marked                        = theme.border_marked
 
-theme.prompt_bg                                 = bw3
+theme.prompt_bg                                 = bw2
 theme.prompt_fg                                 = textcolor_light
 theme.bg_systray                                = theme.tasklist_bg_normal
 
@@ -125,6 +127,7 @@ theme.menu_height                               = 20
 theme.menu_width                                = 250
 theme.tasklist_plain_task_name                  = true
 theme.tasklist_disable_icon                     = true
+theme.tasklist_spacing                          = 3
 theme.useless_gap                               = 3
 theme.systray_icon_spacing                      = 4
 
@@ -159,6 +162,7 @@ theme.widget_battery_empty                      = theme.dir .. "/icons/battery_e
 theme.widget_mem                                = theme.dir .. "/icons/mem.png"
 theme.widget_cpu                                = theme.dir .. "/icons/cpu.png"
 theme.widget_temp                               = theme.dir .. "/icons/temp.png"
+theme.widget_pacman                             = theme.dir .. "/icons/pacman.png"
 theme.widget_net                                = theme.dir .. "/icons/net.png"
 theme.widget_hdd                                = theme.dir .. "/icons/hdd.png"
 theme.widget_music                              = theme.dir .. "/icons/note.png"
@@ -200,24 +204,15 @@ local separators = lain.util.separators
 local clockicon = wibox.widget.imagebox(theme.widget_clock)
 local clock = awful.widget.watch(
     -- "date +'%a %d %b %R'", 60,
-    "date +'%R'", 60,
+    "date +'%R'", 20,
     function(widget, stdout)
-        widget:set_markup(markup.fontfg(theme.font_bold, textcolor_light, " " .. stdout))
+        widget:set_markup(markup.fontfg(theme.font_bold, textcolor_light, stdout))
     end
 )
-
--- -- Binary clock
--- local binclock = require("themes.powerarrow.binclock"){
---     height = 21,
---     show_seconds = false,
---     color_active = theme.fg_normal,
---     color_inactive = theme.bg_focus
--- }
 
 -- Calendar
 theme.cal = lain.widget.calendar({
     cal = "cal --color=always --monday",
-    -- attach_to = { binclock.widget },
     attach_to = { clock },
     icons = "",
     notification_preset = {
@@ -226,18 +221,6 @@ theme.cal = lain.widget.calendar({
         bg   = theme.bg_normal
     }
 })
-
--- -- Taskwarrior
--- local task = wibox.widget.imagebox(theme.widget_task)
--- lain.widget.contrib.task.attach(task, {
---     -- do not colorize output
---     show_cmd = "task | sed -r 's/\\x1B\\[([0-9]{1,2}(;[0-9]{1,2})?)?[mGK]//g'"
--- })
--- task:buttons(awful.util.table.join(awful.button({}, 1, lain.widget.contrib.task.prompt)))
-
--- -- Scissors (xsel copy and paste)
--- local scissors = wibox.widget.imagebox(theme.widget_scissors)
--- scissors:buttons(awful.util.table.join(awful.button({}, 1, function() awful.spawn("xsel | xsel -i -b") end)))
 
 -- -- Mail IMAP check
 -- local mailicon = wibox.widget.imagebox(theme.widget_mail)
@@ -297,52 +280,81 @@ theme.cal = lain.widget.calendar({
 -- MEM
 local memicon = wibox.widget.imagebox(theme.widget_mem)
 local mem = lain.widget.mem({
+    timeout = 5,
     settings = function()
-        local mem_bg_normal_text = textcolor_light
-        local mem_bg_normal_font = theme.font
+        local bg_normal_color = textcolor_light
+        local bg_normal_font = theme.font
 
         if tonumber(mem_now.perc) >= 90 then
-            mem_bg_normal_text = red_light
-            mem_bg_normal_font = theme.font_bold
+            bg_normal_color = red_light
+            bg_normal_font = theme.font_bold
         elseif tonumber(mem_now.perc) >= 80 then
-            mem_bg_normal_text = orange_light
-            mem_bg_normal_font = theme.font_bold
+            bg_normal_color = orange_light
+            bg_normal_font = theme.font_bold
         elseif tonumber(mem_now.perc) >= 70 then
-            mem_bg_normal_text = yellow_light
-            mem_bg_normal_font = theme.font_bold
+            bg_normal_color = yellow_light
+            bg_normal_font = theme.font_bold
         end
 
-        widget:set_markup(markup.fontfg(mem_bg_normal_font, mem_bg_normal_text, mem_now.perc))
+        widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, mem_now.perc))
     end
 })
-
--- mem:buttons(awful.util.table.join(
---     awful.button({   }, 1, awful.tag.viewnext),
--- ))
-
--- mem:buttons(awful.util.table.join(
---             awful.button({}, 1, os.execute("ranger")),
---             awful.button({}, 3, os.execute("glances"))))
 
 -- CPU
 local cpuicon = wibox.widget.imagebox(theme.widget_cpu)
 local cpu = lain.widget.cpu({
+    timeout = 5,
     settings = function()
-        local cpu_bg_normal_text = textcolor_light
-        local cpu_bg_normal_font = theme.font
+        local bg_normal_color = textcolor_light
+        local bg_normal_font = theme.font
 
         if tonumber(cpu_now.usage) >= 90 then
-            cpu_bg_normal_text = red_light
-            cpu_bg_normal_font = theme.font_bold
+            bg_normal_color = red_light
+            bg_normal_font = theme.font_bold
         elseif tonumber(cpu_now.usage) >= 80 then
-            cpu_bg_normal_text = orange_light
-            cpu_bg_normal_font = theme.font_bold
+            bg_normal_color = orange_light
+            bg_normal_font = theme.font_bold
         elseif tonumber(cpu_now.usage) >= 70 then
-            cpu_bg_normal_text = yellow_light
-            cpu_bg_normal_font = theme.font_bold
+            bg_normal_color = yellow_light
+            bg_normal_font = theme.font_bold
         end
 
-        widget:set_markup(markup.fontfg(cpu_bg_normal_font, cpu_bg_normal_text, cpu_now.usage))
+        widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, cpu_now.usage))
+    end
+})
+
+-- SYSLOAD
+local sysloadicon = wibox.widget.imagebox(theme.widget_hdd)
+local sysload = lain.widget.sysload({
+    timeout = 5,
+    settings = function()
+        local bg_normal_color = textcolor_light
+        local bg_normal_font = theme.font
+
+        -- check with: grep 'model name' /proc/cpuinfo | wc -l
+        local number_of_cores = 4
+
+        if tonumber(load_1) / number_of_cores >= 1.5 then
+            bg_normal_color = red_light
+            bg_normal_font = theme.font_bold
+        elseif tonumber(load_1) / number_of_cores >= 1.0 then
+            bg_normal_color = orange_light
+            bg_normal_font = theme.font_bold
+        elseif tonumber(load_1) / number_of_cores >= 0.7 then
+            bg_normal_color = yellow_light
+            bg_normal_font = theme.font_bold
+        end
+        widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, load_1))
+    end
+})
+
+-- PACMAN
+local pacmanicon = wibox.widget.imagebox(theme.widget_pacman)
+local pacman = custom_widget.pacman({
+    settings = function()
+        local bg_normal_color = textcolor_light
+        local bg_normal_font = theme.font
+        widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, available))
     end
 })
 
@@ -358,13 +370,26 @@ end)
 --]]
 
 -- -- CORETEMP (lain, average)
+-- local tempicon = wibox.widget.imagebox(theme.widget_temp)
 -- local temp = lain.widget.temp({
+--     tempfile = "/sys/class/thermal/thermal_zone7/temp",
 --     settings = function()
---         widget:set_markup(markup.fontfg(theme.font, textcolor_light, " " .. coretemp_now .. "°C "))
+--         local bg_normal_color = textcolor_light
+--         local bg_normal_font = theme.font
+--
+--         if tonumber(coretemp_now) >= 90 then
+--             bg_normal_color = red_light
+--             bg_normal_font = theme.font_bold
+--         elseif tonumber(coretemp_now) >= 80 then
+--             bg_normal_color = orange_light
+--             bg_normal_font = theme.font_bold
+--         elseif tonumber(coretemp_now) >= 70 then
+--             bg_normal_color = yellow_light
+--             bg_normal_font = theme.font_bold
+--         end
+--         widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, coretemp_now))
 --     end
 -- })
--- --]]
--- local tempicon = wibox.widget.imagebox(theme.widget_temp)
 
 -- -- FS
 -- local fsicon = wibox.widget.imagebox(theme.widget_hdd)
@@ -405,30 +430,30 @@ theme.volume_click = custom_widget.eventhandler({
 local baticon = wibox.widget.imagebox(theme.widget_battery)
 local bat = lain.widget.bat({
     settings = function()
-        local bat_bg_normal_text = textcolor_light
-        local bat_bg_normal_font = theme.font
+        local bg_normal_color = textcolor_light
+        local bg_normal_font = theme.font
 
         if bat_now.ac_status == 1 then
             baticon:set_image(theme.widget_ac)
         elseif tonumber(bat_now.perc) <= 10 then
             baticon:set_image(theme.widget_battery_empty)
-            bat_bg_normal_text = red_light
-            bat_bg_normal_font = theme.font_bold
+            bg_normal_color = red_light
+            bg_normal_font = theme.font_bold
         elseif tonumber(bat_now.perc) <= 20 then
             baticon:set_image(theme.widget_battery_low)
-            bat_bg_normal_text = orange_light
-            bat_bg_normal_font = theme.font_bold
+            bg_normal_color = orange_light
+            bg_normal_font = theme.font_bold
         elseif tonumber(bat_now.perc) <= 30 then
             baticon:set_image(theme.widget_battery_low)
-            bat_bg_normal_text = yellow_light
-            bat_bg_normal_font = theme.font_bold
+            bg_normal_color = yellow_light
+            bg_normal_font = theme.font_bold
         elseif tonumber(bat_now.perc) <= 50 then
             baticon:set_image(theme.widget_battery_low)
         else
             baticon:set_image(theme.widget_battery)
         end
 
-        widget:set_markup(markup.fontfg(bat_bg_normal_font, bat_bg_normal_text, bat_now.perc))
+        widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, bat_now.perc))
     end,
     notify = "off",
     batteries = {"BAT0"},
@@ -446,9 +471,20 @@ local bat = lain.widget.bat({
 --     -- end)
 -- })
 
-theme.bat_hover = custom_widget.eventhandler({
+-- theme.bat_hover = custom_widget.eventhandler({
+--     attach_to = { bat.widget },
+--     attach = eventhandler.attach_hover,
+--     execute = function()
+--         awful.spawn.easy_async("/home/amariya/scripts/battery.sh", function(stdout, stderr, reason, exit_code)
+--             eventhandler.notify {
+--                 text = stdout, height = 31, timeout = 0
+--             }
+--         end)
+--     end
+-- })
+
+theme.bat_click = custom_widget.eventhandler({
     attach_to = { bat.widget },
-    attach = eventhandler.attach_hover,
     execute = function()
         awful.spawn.easy_async("/home/amariya/scripts/battery.sh", function(stdout, stderr, reason, exit_code)
             eventhandler.notify {
@@ -471,15 +507,15 @@ theme.bat_hover = custom_widget.eventhandler({
 local neticon = wibox.widget.imagebox(theme.widget_net)
 local net = lain.widget.net({
     settings = function()
-        local net_bg_normal_text = textcolor_light
-        local net_bg_normal_font = theme.font
+        local bg_normal_color = textcolor_light
+        local bg_normal_font = theme.font
 
         if net_now.state == nil or (net_now.state ~= nil and net_now.state == "down") then
-            net_bg_normal_text = red_light
-            net_bg_normal_font = theme.font_bold
-            widget:set_markup(markup.fontfg(net_bg_normal_font, net_bg_normal_text, " N/A "))
+            bg_normal_color = red_light
+            bg_normal_font = theme.font_bold
+            widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, " N/A "))
         else
-            widget:set_markup(markup.fontfg(net_bg_normal_font, net_bg_normal_text, net_now.received .. " ↓↑ " .. net_now.sent))
+            widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, net_now.received .. " ↓↑ " .. net_now.sent))
         end
     end,
     notify = "off",
@@ -487,18 +523,25 @@ local net = lain.widget.net({
     -- units = 131072, -- in mbps (1024^2/8)
 })
 
--- net.widget:buttons(awful.table.join(
---     awful.button({}, 1, awful.spawn("termite"))
--- ))
+-- theme.net_click = custom_widget.eventhandler({
+--     attach_to = { net.widget },
+--     execute = function() awful.spawn("termite -e \"sudo wifi-menu\"") end,
+-- })
+
+-- theme.net_hover = custom_widget.eventhandler({
+--     attach_to = { net.widget },
+--     attach = eventhandler.attach_hover,
+--     execute = function()
+--         awful.spawn.easy_async("/home/amariya/scripts/ip_address.sh", function(stdout, stderr, reason, exit_code)
+--             eventhandler.notify {
+--                 text = stdout, timeout = 0
+--             }
+--         end)
+--     end
+-- })
 
 theme.net_click = custom_widget.eventhandler({
     attach_to = { net.widget },
-    execute = function() awful.spawn("termite -e \"sudo wifi-menu\"") end,
-})
-
-theme.net_hover = custom_widget.eventhandler({
-    attach_to = { net.widget },
-    attach = eventhandler.attach_hover,
     execute = function()
         awful.spawn.easy_async("/home/amariya/scripts/ip_address.sh", function(stdout, stderr, reason, exit_code)
             eventhandler.notify {
@@ -507,15 +550,6 @@ theme.net_hover = custom_widget.eventhandler({
         end)
     end
 })
-
--- net.buttons = awful.util.table.join(
---                     awful.button({ }, 1, os.execute("ranger")),
---                     awful.button({ modkey }, 1, awful.client.movetotag),
---                     awful.button({ }, 3, awful.tag.viewtoggle),
---                     awful.button({ modkey }, 3, awful.client.toggletag),
---                     awful.button({ }, 4, function(t) awful.tag.viewnext(awful.tag.getscreen(t)) end),
---                     awful.button({ }, 5, function(t) awful.tag.viewprev(awful.tag.getscreen(t)) end)
---                     )
 
 -- SEPARATORS
 local arrow = separators.arrow_left
@@ -576,9 +610,9 @@ function theme.at_screen_connect(s)
     -- Create a tasklist widget
     s.mytasklist = awful.widget.tasklist(s,
     awful.widget.tasklist.filter.currenttags, awful.util.tasklist_buttons, {
-      bg_focus = theme.tasklist_bg_focus, shape = gears.shape.octogon,
-      shape_border_width = 0, shape_border_color = theme.tasklist_bg_normal,
-      align = "center" })
+        bg_focus = theme.tasklist_bg_focus, shape = gears.shape.octogon,
+        shape_border_width = 0, shape_border_color = theme.tasklist_bg_normal,
+        align = "center" })
 
     -- Create the wibox
     s.mywibox = awful.wibar({ position = "top", screen = s, height = 21, bg = theme.bg_normal, fg = theme.fg_normal })
@@ -590,7 +624,7 @@ function theme.at_screen_connect(s)
         { -- Left widgets
             layout = wibox.layout.fixed.horizontal,
             --spr,
-            wibox.container.background(wibox.container.margin(wibox.widget { s.mylayoutbox, layout = wibox.layout.align.horizontal }, 7, 3, 3, 3), clock_bg_normal),
+            wibox.container.background(wibox.container.margin(wibox.widget { s.mylayoutbox, layout = wibox.layout.align.horizontal }, 7, 3, 4, 4), clock_bg_normal),
             wibox.container.background(wibox.container.margin(wibox.widget { s.mytaglist, layout = wibox.layout.align.horizontal }, 3, 8), theme.taglist_bg_normal),
             arrow_r(theme.taglist_bg_normal, theme.prompt_bg),
             wibox.container.background(wibox.container.margin(wibox.widget { s.mypromptbox, layout = wibox.layout.align.horizontal }, 8, 4), theme.prompt_bg),
@@ -603,42 +637,32 @@ function theme.at_screen_connect(s)
 
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
-            wibox.container.background(wibox.container.margin(wibox.widget { nil, wibox.widget.systray(), layout = wibox.layout.align.horizontal }, 4, 8, 3, 3), theme.tasklist_bg_normal),
+            wibox.container.background(wibox.container.margin(wibox.widget { nil, wibox.widget.systray(), layout = wibox.layout.align.horizontal }, 8, 8, 3, 3), theme.tasklist_bg_normal),
+
             -- wibox.container.margin(scissors, 4, 8),
-
-            --[[ using shapes
-            pl(wibox.widget { mpdicon, theme.mpd.widget, layout = wibox.layout.align.horizontal }, "#343434"),
-            pl(task, "#343434"),
-            --pl(wibox.widget { mailicon, mail and mail.widget, layout = wibox.layout.align.horizontal }, "#343434"),
-            pl(wibox.widget { memicon, mem.widget, layout = wibox.layout.align.horizontal }, "#777E76"),
-            pl(wibox.widget { cpuicon, cpu.widget, layout = wibox.layout.align.horizontal }, "#4B696D"),
-            pl(wibox.widget { tempicon, temp.widget, layout = wibox.layout.align.horizontal }, "#4B3B51"),
-            pl(wibox.widget { fsicon, theme.fs.widget, layout = wibox.layout.align.horizontal }, "#CB755B"),
-            pl(wibox.widget { baticon, bat.widget, layout = wibox.layout.align.horizontal }, "#8DAA9A"),
-            pl(wibox.widget { neticon, net.widget, layout = wibox.layout.align.horizontal }, "#C0C0A2"),
-            pl(binclock.widget, "#777E76"),
-            --]]
-
             -- wibox.container.background(wibox.container.margin(wibox.widget { weather.icon, weather.widget, layout = wibox.layout.align.horizontal }, 4, 2), cpu_bg_normal),
 
-            -- using separators
+            arrow(theme.tasklist_bg_normal, cpu_bg_normal),
             -- arrow(theme.bg_normal, fs_bg_normal),
             -- wibox.container.background(wibox.container.margin(wibox.widget { fsicon, theme.fs.widget, layout = wibox.layout.align.horizontal }, 4, 2), fs_bg_normal),
             -- arrow(fs_bg_normal, temp_bg_normal),
             -- wibox.container.background(wibox.container.margin(wibox.widget { tempicon, temp.widget, layout = wibox.layout.align.horizontal }, 4, 2), temp_bg_normal),
-            -- arrow(temp_bg_normal, cpu_bg_normal),
-            arrow(theme.tasklist_bg_normal, cpu_bg_normal),
-            wibox.container.background(wibox.container.margin(wibox.widget { cpuicon, cpu.widget, layout = wibox.layout.align.horizontal }, 2, 10), cpu_bg_normal),
-            arrow(cpu_bg_normal, mem_bg_normal),
-            wibox.container.background(wibox.container.margin(wibox.widget { memicon, mem.widget, layout = wibox.layout.align.horizontal }, 2, 10), mem_bg_normal),
-            arrow(mem_bg_normal, vol_bg_normal),
-            wibox.container.background(wibox.container.margin(wibox.widget { volicon, theme.volume.widget, layout = wibox.layout.align.horizontal }, 2, 10), vol_bg_normal),
-            arrow(vol_bg_normal, bat_bg_normal),
+            -- arrow(temp_bg_normal, pacman_bg_normal),
+            wibox.container.background(wibox.container.margin(wibox.widget { pacmanicon, pacman.widget, layout = wibox.layout.align.horizontal }, 2, 6), pacman_bg_normal),
+            -- arrow(pacman_bg_normal, sysload_bg_normal),
+            wibox.container.background(wibox.container.margin(wibox.widget { sysloadicon, sysload.widget, layout = wibox.layout.align.horizontal }, 2, 6), sysload_bg_normal),
+            -- arrow(sysload_bg_normal, cpu_bg_normal),
+            wibox.container.background(wibox.container.margin(wibox.widget { cpuicon, cpu.widget, layout = wibox.layout.align.horizontal }, 2, 6), cpu_bg_normal),
+            -- arrow(cpu_bg_normal, mem_bg_normal),
+            wibox.container.background(wibox.container.margin(wibox.widget { memicon, mem.widget, layout = wibox.layout.align.horizontal }, 2, 6), mem_bg_normal),
+            -- arrow(mem_bg_normal, vol_bg_normal),
+            wibox.container.background(wibox.container.margin(wibox.widget { volicon, theme.volume.widget, layout = wibox.layout.align.horizontal }, 2, 6), vol_bg_normal),
+            -- arrow(vol_bg_normal, bat_bg_normal),
             wibox.container.background(wibox.container.margin(wibox.widget { baticon, bat.widget, layout = wibox.layout.align.horizontal }, 2, 10), bat_bg_normal),
             arrow(bat_bg_normal, net_bg_normal),
             wibox.container.background(wibox.container.margin(wibox.widget { --[[neticon, --]] net.widget, layout = wibox.layout.align.horizontal }, 8, 10), net_bg_normal),
             arrow(net_bg_normal, clock_bg_normal),
-            wibox.container.background(wibox.container.margin(wibox.widget { clock, layout = wibox.layout.align.horizontal }, 0, 8), clock_bg_normal),
+            wibox.container.background(wibox.container.margin(wibox.widget { clock, layout = wibox.layout.align.horizontal }, 8, 8), clock_bg_normal),
             --]]
         },
     }
