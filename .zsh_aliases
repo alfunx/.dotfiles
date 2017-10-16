@@ -22,6 +22,59 @@ dotfiles() {
   esac
 }
 
+#############
+#  aliases  #
+#############
+
+con() {
+  case $1 in
+    vim)
+      shift
+      vim ~/.vimrc $@
+      ;;
+    tmux)
+      shift
+      vim ~/.tmux.conf $@
+      ;;
+    git)
+      shift
+      vim ~/.gitconfig ~/.gitignore ~/.gitmodules $@
+      ;;
+    zsh)
+      shift
+      vim ~/.zshrc ~/.zsh_aliases ~/.oh-my-zsh/themes/agnoster-custom.zsh-theme $@
+      ;;
+    bash)
+      shift
+      vim ~/.bashrc ~/.bash_profile $@
+      ;;
+    aw)
+      shift
+      vim ~/.config/awesome/rc.lua ~/.config/awesome/themes/powerarrow-gruvbox/theme.lua $@
+      ;;
+    xorg)
+      shift
+      vim ~/.xinitrc $@
+      ;;
+    script)
+      shift
+      vim ~/scripts/* $@
+      ;;
+    *)
+      shift
+      vim ~/.zsh_aliases $@
+      ;;
+  esac
+}
+
+mkcd() {
+  mkdir -p $@ && cd $@
+}
+
+toilol() {
+  toilet -f mono12 -w "$(tput cols)" | lolcat
+}
+
 ##########
 #  tmux  #
 ##########
@@ -32,22 +85,22 @@ alias fzf="fzf-tmux -d 30% $@"
 #  ripgrep  #
 #############
 
-alias rg="rg --ignore-case --line-number --colors=\"match:fg:red\" --colors=\"match:style:bold\" --colors=\"path:fg:white\" --colors=\"line:fg:yellow\" --colors=\"line:style:bold\" $@"
+alias rg="rg --ignore-case --line-number --color=always --colors=\"match:fg:red\" --colors=\"match:style:bold\" --colors=\"path:fg:white\" --colors=\"line:fg:yellow\" --colors=\"line:style:bold\" $@"
 
 # fuzzy rg
 frg() {
-  rg --no-line-number --no-heading --color=always --colors="match:none" --colors="path:fg:white" --colors="line:fg:white" "$@" . | fzf-tmux -d 30% --ansi
+  rg --ignore-case --no-line-number --no-heading --color=always --colors="match:none" --colors="path:fg:white" --colors="line:fg:white" "$@" . | fzf-tmux -d 30% --ansi
 }
 
 #######################
 # the silver searcher #
 #######################
 
-alias ag="ag --numbers --color-match \"1;31\" --color-path \"0;37\" --color-line-number \"1;33\" $@"
+alias ag="ag --ignore-case --numbers --color --color-match \"1;31\" --color-path \"0;37\" --color-line-number \"1;33\" $@"
 
 # fuzzy ag
 fag() {
-  ag --nobreak --nonumbers --noheading --color --color-match "" --color-path "0;37" --color-line-number "0;37" "$@" . | fzf-tmux -d 30% --ansi
+  ag --ignore-case --nobreak --nonumbers --noheading --color --color-match "" --color-path "0;37" --color-line-number "0;37" "$@" . | fzf-tmux -d 30% --ansi
 }
 
 ##################
@@ -249,6 +302,17 @@ fp() {
     echo -n "$package_name"
 }
 
+######################
+#  fuzzy man search  #
+######################
+
+fman() {
+  local manpage manpage_name
+  manpage=$(apropos . | less | fzf-tmux -d 30%) &&
+    manpage_name=$(echo "$manpage" | sed 's/ .*//') &&
+    man "$manpage_name"
+}
+
 #####################
 # SVN airline theme #
 #####################
@@ -269,4 +333,3 @@ prompt_svn() {
     fi
   fi
 }
-

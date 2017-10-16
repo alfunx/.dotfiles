@@ -99,6 +99,28 @@ eval `dircolors $HOME/.dir_colors`
 #  CUSTOM  #
 ############
 
+# Alternative colors
+if [ "$TERM" = "linux" ]; then
+    # echo -en "\e]P0282828" #black
+    echo -en "\e]P0000000" #black
+    echo -en "\e]P8928374" #darkgrey
+    echo -en "\e]P1CC241D" #darkred
+    echo -en "\e]P9FB4934" #red
+    echo -en "\e]P298971A" #darkgreen
+    echo -en "\e]PAB8BB26" #green
+    echo -en "\e]P3D79921" #brown
+    echo -en "\e]PBFABD2F" #yellow
+    echo -en "\e]P4458588" #darkblue
+    echo -en "\e]PC83A598" #blue
+    echo -en "\e]P5B16286" #darkmagenta
+    echo -en "\e]PDD3869B" #magenta
+    echo -en "\e]P6689D6A" #darkcyan
+    echo -en "\e]PE8EC07C" #cyan
+    echo -en "\e]P7A89984" #lightgrey
+    echo -en "\e]PFEBDBB2" #white
+    clear #for background artifacting
+fi
+
 # Zsh options
 setopt extendedglob
 
@@ -130,28 +152,6 @@ if [ "$TERM" = "linux" ]; then
   ZSH_THEME_GIT_PROMPT_CLEAN=""
 fi
 
-# Alternative colors
-if [ "$TERM" = "linux" ]; then
-    # echo -en "\e]P0282828" #black
-    echo -en "\e]P0000000" #black
-    echo -en "\e]P8928374" #darkgrey
-    echo -en "\e]P1CC241D" #darkred
-    echo -en "\e]P9FB4934" #red
-    echo -en "\e]P298971A" #darkgreen
-    echo -en "\e]PAB8BB26" #green
-    echo -en "\e]P3D79921" #brown
-    echo -en "\e]PBFABD2F" #yellow
-    echo -en "\e]P4458588" #darkblue
-    echo -en "\e]PC83A598" #blue
-    echo -en "\e]P5B16286" #darkmagenta
-    echo -en "\e]PDD3869B" #magenta
-    echo -en "\e]P6689D6A" #darkcyan
-    echo -en "\e]PE8EC07C" #cyan
-    echo -en "\e]P7A89984" #lightgrey
-    echo -en "\e]PFEBDBB2" #white
-    clear #for background artifacting
-fi
-
 # FZF
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
@@ -168,6 +168,11 @@ set -g FZF_CTRL_T_COMMAND "command find -L \$dir -type f 2> /dev/null | sed '1d;
 export FZF_CTRL_T_OPTS="--no-reverse"
 export FZF_CTRL_R_OPTS="--no-reverse"
 export FZF_ALT_C_OPTS="--no-reverse"
+
+# TMUX
+if [ "$(ps aux | pgrep termite | wc -l)" -eq "1" ]; then
+  tmux attach > /dev/null 2&>1 || tmux new > /dev/null 2&>1
+fi
 
 # Scripts path
 export PATH="$PATH:/home/amariya/scripts"
