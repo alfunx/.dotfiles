@@ -3,7 +3,6 @@
 """""""""""
 
 "" Path settings
-
 set rtp+=/usr/local/opt/fzf
 
 
@@ -105,25 +104,28 @@ noremap ä {
 noremap ö }
 
 " Use CTRL-S for saving, also in Insert mode
-noremap <silent> <C-S> :update<CR>
+nnoremap <silent> <C-S> :update<CR>
 vnoremap <silent> <C-S> <C-C>:update<CR>
 inoremap <silent> <C-S> <C-O>:update<CR>
 
-"" insert mode mappings
+"" Insert mode mappings
 inoremap OO <C-O>O
 inoremap PP <C-O>o
 
-" select last inserted text
+" Select last inserted text
 nnoremap gV `[v`]
 
 "" Magic regex search
-noremap ,/ /\v
-noremap ,? ?\v
-cnoremap ,s %s/\v
-cnoremap ,g %g/\v
+noremap <leader>/ /\v
+noremap <leader>? ?\v
+cnoremap <C-S> %s/\v
+cnoremap <C-G> %g/\v
 
-" remove trailing whitespaces
+" Remove trailing whitespaces
 nnoremap <silent> <F5> :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
+
+" Allow saving of files as sudo
+cmap w!! w !sudo tee > /dev/null %
 
 
 """""""""""""""""""""
@@ -135,22 +137,22 @@ if executable('fzf')
   autocmd VimEnter * nnoremap <Leader>f :FZF<CR>
 endif
 
-" default key bindings
+" Default key bindings
 let g:fzf_action = {
   \ 'ctrl-t': 'tab split',
   \ 'ctrl-x': 'split',
   \ 'ctrl-v': 'vsplit' }
 
-" default fzf layout
+" Default fzf layout
 let g:fzf_layout = { 'down': '~30%' }
 
-" customize the options used by 'git log'
+" Customize the options used by 'git log'
 let g:fzf_commits_log_options='--graph --color=always --format="%c(auto)%h%d %s %c(black)%c(bold)%cr"'
 
-" command to generate tags file
+" Command to generate tags file
 let g:fzf_tags_command = 'ctags -R'
 
-" mapping selecting mappings
+" Mapping selecting mappings
 nmap <leader><tab> <plug>(fzf-maps-n)
 xmap <leader><tab> <plug>(fzf-maps-x)
 omap <leader><tab> <plug>(fzf-maps-o)
@@ -159,13 +161,13 @@ omap <leader><tab> <plug>(fzf-maps-o)
 nnoremap <leader>b :Buffers<CR>
 vnoremap <leader>b <C-C>:Buffers<CR>
 
-" insert mode completion
+" Insert mode completion
 imap <c-x><c-k> <plug>(fzf-complete-word)
 imap <c-x><c-f> <plug>(fzf-complete-path)
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <c-x><c-l> <plug>(fzf-complete-line)
 
-" use custom dictionary
+" Use custom dictionary
 inoremap <expr> <c-x><c-k> fzf#complete('cat /usr/share/dict/words-insane')
 
 "" RG
@@ -241,8 +243,8 @@ map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
 
 "" Incsearch
-map /  <Plug>(incsearch-forward)
-map ?  <Plug>(incsearch-backward)
+map / <Plug>(incsearch-forward)
+map ? <Plug>(incsearch-backward)
 map g/ <Plug>(incsearch-stay)
 
 let g:incsearch#auto_nohlsearch=1
@@ -319,7 +321,7 @@ endfunction
 autocmd! User GoyoEnter nested call <SID>goyo_enter()
 autocmd! User GoyoLeave nested call <SID>goyo_leave()
 
-"" tslime
+"" Tslime
 let g:tslime_always_current_session=1
 let g:tslime_always_current_window=1
 
@@ -334,7 +336,7 @@ function! VimuxSlime()
   " call VimuxSendKeys("Enter")
 endfunction
 
-vmap <Leader>vs "vy :call VimuxSlime()<CR>
+vmap <Leader>vs "vy:call VimuxSlime()<CR>
 
 
 """"""""""""""""
@@ -489,7 +491,7 @@ endif
 
 augroup configgroup
   autocmd!
-  autocmd Filetype python setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+  autocmd Filetype python setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
   autocmd Filetype java setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
   autocmd Filetype lua setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
 augroup END
@@ -502,7 +504,7 @@ augroup END
 "" Autofolding .vimrc
 " see http://vimcasts.org/episodes/writing-a-custom-fold-expression/
 
-""" defines a foldlevel for each line of code
+""" Defines a foldlevel for each line of code
 function! VimFolds(lnum)
   let s:thisline = getline(a:lnum)
   if match(s:thisline, '^"" ') >= 0
@@ -531,7 +533,7 @@ function! VimFolds(lnum)
   endif
 endfunction
 
-""" defines a foldtext
+""" Defines a foldtext
 function! VimFoldText()
   " handle special case of normal comment first
   let s:info = '('.string(v:foldend-v:foldstart).' l)'
@@ -549,7 +551,7 @@ function! VimFoldText()
   endif
 endfunction
 
-""" set foldsettings automatically for vim files
+""" Set foldsettings automatically for vim files
 augroup fold_vimrc
   autocmd!
   autocmd FileType vim
