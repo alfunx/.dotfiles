@@ -134,10 +134,10 @@ source /home/amariya/.vim/plugged/gruvbox/gruvbox_256palette.sh
 export LESS_TERMCAP_mb=$'\e[1;31m'
 export LESS_TERMCAP_md=$'\e[1;34m'
 export LESS_TERMCAP_me=$'\e[0m'
-export LESS_TERMCAP_se=$'\e[0m'
 export LESS_TERMCAP_so=$'\e[0;30m\e[48;5;208m'
-export LESS_TERMCAP_ue=$'\e[0m'
+export LESS_TERMCAP_se=$'\e[0m'
 export LESS_TERMCAP_us=$'\e[1;35m'
+export LESS_TERMCAP_ue=$'\e[0m'
 export LESS='-iMRj.5'
 
 # Alternative prompt
@@ -170,7 +170,7 @@ export FZF_CTRL_R_OPTS="--no-reverse"
 export FZF_ALT_C_OPTS="--no-reverse"
 
 # TMUX
-if [ "$(ps aux | pgrep termite | wc -l)" -eq "1" ]; then
+if [ "$(pgrep termite | wc -l)" -eq "1" ] && [[ "$TERM" == "xterm-termite" ]]; then
   tmux attach > /dev/null 2&>1 || tmux new > /dev/null 2&>1
 fi
 

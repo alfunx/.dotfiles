@@ -75,6 +75,15 @@ toilol() {
   toilet -f mono12 -w "$(tput cols)" | lolcat
 }
 
+pacman() {
+  local pattern="^-S[cuy]|^-S$|^-R[sn]|^-U"
+  if [[ "$1" =~ $pattern ]]; then
+    sudo /usr/bin/pacman $@
+  else
+    /usr/bin/pacman $@
+  fi
+}
+
 ##########
 #  tmux  #
 ##########
@@ -109,16 +118,20 @@ fag() {
 
 # fda - cd to selected directory
 fda() {
-  local dir
-  dir=$(find ${1:-.} -path '*/\.*' -prune -o -type d -print 2> /dev/null \
-    | fzf-tmux -d 30% +m -q "$1" -0) && cd "$dir"
+  cd "$(find ${1:-.} -path '*/\.*' -prune -o -type d -print 2>/dev/null \
+    | fzf-tmux -d 30% +m -q "$1" -0)"
 }
 
 # fd - fda including hidden directories
 fd() {
-  local dir
-  dir=$(find -L ${1:-.} -type d 2> /dev/null \
-    | fzf-tmux -d 30% +m -q "$1" -0) && cd "$dir"
+  cd "$(find -L ${1:-.} -type d 2>/dev/null \
+    | fzf-tmux -d 30% +m -q "$1" -0)"
+}
+
+# fr - cd to selected directory and open ranger
+fr() {
+  cd "$(find -L ${1:-.} -type d 2>/dev/null \
+    | fzf-tmux -d 30% +m -q "$1" -0)" && ranger
 }
 
 # fo - Open the selected file with the default editor
@@ -291,15 +304,16 @@ fstash() {
 
 # example usage: pacman -S $(fp)
 fp() {
-  local packages package package_name arg
+  local arg
   arg="-Ss"
   if (( $# > 0 )); then
     arg="$@"
   fi
-  packages=$(pacman "$arg" | sed 'N;s/\n//') &&
-    package=$(echo "$packages" | fzf-tmux -d 30% -m) &&
-    package_name=$(echo "$package" | sed 's/.*\///' | sed 's/ .*//') &&
-    echo -n "$package_name"
+  echo -n "$(pacman $arg \
+    | sed 'N;s/\n//' \
+    | fzf-tmux -d 30% -m \
+    | sed 's/.*\///' \
+    | sed 's/ .*//')"
 }
 
 ######################
@@ -307,10 +321,7 @@ fp() {
 ######################
 
 fman() {
-  local manpage manpage_name
-  manpage=$(apropos . | less | fzf-tmux -d 30%) &&
-    manpage_name=$(echo "$manpage" | sed 's/ .*//') &&
-    man "$manpage_name"
+  man "$(apropos . | fzf-tmux -d 30% | sed 's/ .*//')"
 }
 
 #####################
