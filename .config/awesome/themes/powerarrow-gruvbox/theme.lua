@@ -79,6 +79,7 @@ theme.font_bold_italic                          = font_name .. " " .. "Bold Ital
 
 theme.border_normal                             = bw0
 theme.border_focus                              = bw6
+-- theme.border_focus                              = red_light
 theme.border_marked                             = red_light
 
 theme.fg_normal                                 = bw9

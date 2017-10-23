@@ -43,6 +43,32 @@ do
 end
 -- }}}
 
+function spawn_once(command, class, tag)
+    -- create move callback
+    local callback
+    callback = function(c)
+        if c.class == class then
+            awful.client.movetotag(tag, c)
+            client.remove_signal("manage", callback)
+        end
+    end
+    client.add_signal("manage", callback)
+    -- now check if not already running!
+    local findme = command
+    local firstspace = findme:find(" ")
+    if firstspace then
+        findme = findme:sub(0, firstspace-1)
+    end
+    -- finally run it
+    awful.util.spawn_with_shell(string.format("pgrep -u $USER -x %s > /dev/null || (%s)", findme, command))
+end
+
+-- spawn_once("subl", "Sublime_text", tags[1][2])
+-- spawn_once("chromium", "Chromium", tags[1][3])
+-- spawn_once("thunar", "Thunar", tags[1][4])
+-- spawn_once("xchat", "Xchat", tags[1][5])
+-- spawn_once("termite -e tmux", "tmux", awful.tag.find_by_name(awful.screen.focused(), "2"))
+
 -- {{{ Autostart windowless processes
 local function run_once(cmd_arr)
     for _, cmd in ipairs(cmd_arr) do
@@ -66,10 +92,10 @@ local altkey       = "Mod1"
 local ctrlkey      = "Control"
 local shiftkey     = "Shift"
 
-local leftkey      = "Left"
-local rightkey     = "Right"
-local upkey        = "Up"
-local downkey      = "Down"
+-- local leftkey      = "Left"
+-- local rightkey     = "Right"
+-- local upkey        = "Up"
+-- local downkey      = "Down"
 
 local leftkey      = "h"
 local rightkey     = "l"
@@ -83,7 +109,8 @@ local browser      = "chromium"
 local filemanager  = "termite -e ranger"
 
 awful.util.terminal = terminal
-awful.util.tagnames = { "α", "β", "γ", "δ", "ϵ", "λ", "μ", "σ", "ω" }
+-- awful.util.tagnames = { "α", "β", "γ", "δ", "ϵ", "λ", "μ", "σ", "ω" }
+awful.util.tagnames = { "1", "2", "3", "4", "5", "6", "7", "8", "9" }
 
 awful.layout.layouts = {
     awful.layout.suit.max,
