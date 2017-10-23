@@ -5,11 +5,6 @@
 "" Path settings
 set rtp+=/usr/local/opt/fzf
 
-
-"""""""""""""
-"  PLUGINS  "
-"""""""""""""
-
 if filereadable($HOME . '/.vim/autoload/plug.vim') == 0
   :silent !mkdir -p ~/.vim/autoload > /dev/null 2>&1
   :silent !mkdir -p ~/.vim/plugged > /dev/null 2>&1
@@ -17,6 +12,11 @@ if filereadable($HOME . '/.vim/autoload/plug.vim') == 0
         \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
         \ > /dev/null 2>&1
 endif
+
+
+"""""""""""""
+"  PLUGINS  "
+"""""""""""""
 
 call plug#begin('~/.vim/plugged')
 
