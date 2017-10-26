@@ -1,0 +1,69 @@
+[user]
+	email = alphonse.mariya@hotmail.com
+	name = Alphonse Mariya
+[core]
+	editor = vim
+	whitespace = fix,trailing-space,cr-at-eol
+[credential]
+	helper = cache
+[diff]
+	tool = vimdiff
+[difftool]
+	prompt = false
+[merge]
+	tool = diffconflicts
+[mergetool "diffconflicts"]
+	cmd = diffconflicts vim $BASE $LOCAL $REMOTE $MERGED
+	trustExitCode = true
+[mergetool]
+	keepBackup = false
+[alias]
+	l = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
+	ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
+	ld = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short
+	ldr = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative
+	lnc = log --pretty=format:"%h\\ %s\\ [%cn]"
+	fl = log -u
+	lt = log --graph --oneline --decorate --all
+
+	dl = "!git ll -1"
+	dlc = diff --cached HEAD^
+	dr  = "!f() { git diff "$1"^.."$1";  }; f"
+	lc  = "!f() { git ll "$1"^.."$1";  }; f"
+	grep = grep -Ii
+
+	a = add
+	ap = add -p
+	c = commit --verbose
+	ca = commit -a --verbose
+	cm = commit -m
+	cam = commit -a -m
+	m = commit --amend --verbose
+
+	d = diff
+	ds = diff --stat
+	dc = diff --cached
+
+	r = reset
+	r1 = reset HEAD^
+	r2 = reset HEAD^^
+	rh = reset --hard
+	rh1 = reset HEAD^ --hard
+	rh2 = reset HEAD^^ --hard
+
+	s = status -s
+	co = checkout
+	com = checkout master
+	col = checkout @{-1}
+	cob = checkout -b
+	cp = cherry-pick
+	cl = clone
+	# list branches sorted by last modified
+	b = "!git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'"
+
+	# list aliases
+	la = "!git config -l | grep alias | cut -c 7-"
+
+	ri = rebase -i
+	# rebase on master (never do this on a public branch!)
+	rim = "!git rebase -i `git merge-base HEAD master`"
