@@ -6,11 +6,12 @@
 set rtp+=/usr/local/opt/fzf
 
 if filereadable($HOME . '/.vim/autoload/plug.vim') == 0
-  :silent !mkdir -p ~/.vim/autoload > /dev/null 2>&1
-  :silent !mkdir -p ~/.vim/plugged > /dev/null 2>&1
-  :silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+  silent !mkdir -p ~/.vim/autoload > /dev/null 2>&1
+  silent !mkdir -p ~/.vim/plugged > /dev/null 2>&1
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
         \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
         \ > /dev/null 2>&1
+  auto VimEnter * PlugInstall
 endif
 
 
@@ -103,6 +104,12 @@ nnoremap <C-H> <C-W><C-H>
 noremap ä {
 noremap ö }
 
+" Make Y behave like other commands
+nnoremap Y y$
+
+" Copy to system clipboard
+noremap gy "+y
+
 " Use CTRL-S for saving, also in Insert mode
 nnoremap <silent> <C-S> :update<CR>
 vnoremap <silent> <C-S> <C-C>:update<CR>
@@ -122,10 +129,13 @@ cnoremap <C-S> %s/\v
 cnoremap <C-G> %g/\v
 
 " Remove trailing whitespaces
-nnoremap <silent> <F5> :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
+noremap <silent> <F3> :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
+
+" Make
+noremap <F5> :make!<CR>
 
 " Allow saving of files as sudo
-cmap w!! w !sudo tee > /dev/null %
+command W silent w !sudo tee > /dev/null %
 
 
 """""""""""""""""""""
@@ -365,8 +375,8 @@ set lazyredraw
 set mouse=a
 
 set cursorline  " horizontal line
-set textwidth=80
 " set colorcolumn=81  " vertical line
+set textwidth=80
 set wrapmargin=0  " turns off automatic newlines
 set nowrap  " line wrapping off
 set showmatch  " show matching brackets
@@ -403,7 +413,7 @@ set backspace=2  " backspace over everything in insert mode
 set cinoptions=:0,p0,t0
 " set cinwords=if,else,while,do,for,switch,case
 set formatoptions=tcqr
-set pastetoggle=<F10>
+set pastetoggle=<F2>
 
 """ Color overlength
 highlight OverLength ctermbg=darkred ctermfg=white guibg=#9d0006 guifg=#fbf1c7
@@ -458,7 +468,7 @@ set dictionary+=/usr/share/dict/words-insane
 """"""""""""""""""""""""""
 
 if isdirectory($HOME . '/.vim/backup') == 0
-  :silent !mkdir -p ~/.vim/backup >/dev/null 2>&1
+  silent !mkdir -p ~/.vim/backup > /dev/null 2>&1
 endif
 set backupdir-=.
 set backupdir+=.
@@ -468,7 +478,7 @@ set backupdir^=./.vim-backup/
 set backup
 
 if isdirectory($HOME . '/.vim/swap') == 0
-  :silent !mkdir -p ~/.vim/swap >/dev/null 2>&1
+  silent !mkdir -p ~/.vim/swap > /dev/null 2>&1
 endif
 set directory=./.vim-swap//
 set directory+=~/.vim/swap//
@@ -477,7 +487,7 @@ set directory+=.
 
 if exists("+undofile")
   if isdirectory($HOME . '/.vim/undo') == 0
-    :silent !mkdir -p ~/.vim/undo > /dev/null 2>&1
+    silent !mkdir -p ~/.vim/undo > /dev/null 2>&1
   endif
   set undodir=./.vim-undo//
   set undodir+=~/.vim/undo//
