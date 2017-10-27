@@ -33,6 +33,7 @@
 	grep = grep -Ii
 
 	a = add
+	ai = add -i
 	ap = add -p
 	c = commit --verbose
 	ca = commit -a --verbose
@@ -50,20 +51,26 @@
 	rh = reset --hard
 	rh1 = reset HEAD^ --hard
 	rh2 = reset HEAD^^ --hard
+	rs = reset --soft
+	rs1 = reset HEAD^ --soft
+	rs2 = reset HEAD^^ --soft
 
 	s = status -s
 	co = checkout
 	com = checkout master
-	col = checkout @{-1}
+	col = checkout -
 	cob = checkout -b
+	b = branch
 	cp = cherry-pick
 	cl = clone
 	# list branches sorted by last modified
-	b = "!git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'"
-
-	# list aliases
-	la = "!git config -l | grep alias | cut -c 7-"
+	lb = "!git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'"
 
 	ri = rebase -i
 	# rebase on master (never do this on a public branch!)
-	rim = "!git rebase -i `git merge-base HEAD master`"
+	rim = "!git rebase -i master"
+	# rewrite history (never do this on a public branch!)
+	rih = "!git rebase -i `git merge-base HEAD master`"
+
+	# list aliases
+	la = "!git config -l | grep alias | cut -c 7- | sed -e 's/=/\\t/' | column -s $'\\t' | less"
