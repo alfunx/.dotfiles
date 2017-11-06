@@ -125,8 +125,10 @@ nnoremap gV `[v`]
 "" Magic regex search
 noremap <leader>/ /\v
 noremap <leader>? ?\v
-cnoremap <C-S> %s/\v
-cnoremap <C-G> %g/\v
+set wildchar=<Tab>
+set wildcharm=<Tab>
+cnoremap <expr> <Tab> getcmdtype() =~ '[?/]' ? '<C-G>' : '<Tab>'
+cnoremap <expr> <S-Tab> getcmdtype() =~ '[?/]' ? '<C-t>' : feedkeys('<S-Tab>', 'int')[1]
 
 " Remove trailing whitespaces
 noremap <silent> <F3> :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
@@ -135,7 +137,7 @@ noremap <silent> <F3> :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl
 noremap <F5> :make!<CR>
 
 " Allow saving of files as sudo
-command W silent w !sudo tee > /dev/null %
+command! W silent w !sudo tee > /dev/null %
 
 
 """""""""""""""""""""
@@ -268,7 +270,7 @@ map g# <Plug>(incsearch-nohl-g#)
 "" Incsearch-EasyMotion
 map z/ <Plug>(incsearch-easymotion-/)
 map z? <Plug>(incsearch-easymotion-?)
-map zg/ <Plug>(incsearch-easymotion-stay)
+" map zg/ <Plug>(incsearch-easymotion-stay)
 
 "" Netrw
 let g:netrw_liststyle=0
