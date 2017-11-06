@@ -21,6 +21,7 @@ dotfiles() {
       ;;
   esac
 }
+compdef dotfiles='git'
 
 #############
 #  aliases  #
@@ -75,6 +76,8 @@ toilol() {
   toilet -f mono12 -w "$(tput cols)" | lolcat
 }
 
+alias pg="ping -c 1 www.google.ch"
+
 pacman() {
   local pattern="^-S[cuy]|^-S$|^-R[sn]|^-U"
   if [[ "$1" =~ $pattern ]]; then
@@ -94,7 +97,7 @@ alias fzf="fzf-tmux -d 30% $@"
 #  ripgrep  #
 #############
 
-alias rg="rg --ignore-case --line-number --color=always --colors=\"match:fg:red\" --colors=\"match:style:bold\" --colors=\"path:fg:white\" --colors=\"line:fg:yellow\" --colors=\"line:style:bold\" $@"
+alias rg="rg --ignore-case --line-number --color=auto --colors=\"match:fg:red\" --colors=\"match:style:bold\" --colors=\"path:fg:white\" --colors=\"line:fg:yellow\" --colors=\"line:style:bold\" $@"
 
 # fuzzy rg
 frg() {
@@ -123,7 +126,7 @@ fda() {
 }
 
 # fd - fda including hidden directories
-fd() {
+c() {
   cd "$(find -L ${1:-.} -type d 2>/dev/null \
     | fzf-tmux -d 30% +m -q "$1" -0)"
 }
@@ -155,7 +158,7 @@ cdf() {
 }
 
 # c - browse chrome history
-c() {
+ch() {
   local cols sep google_history open
   cols=$(( COLUMNS / 3 ))
   sep='{::}'
