@@ -290,7 +290,14 @@ globalkeys = awful.util.table.join(
               {description = "open filemanager", group = "launcher"}),
     awful.key({ mod_4                     }, "w", function () awful.spawn("Whatsapp") end,
               {description = "open whatsapp", group = "launcher"}),
+
     awful.key({                          }, "Print", function() os.execute("maim ~/pictures/screenshots/$(date +%s).png") end,
+              {description = "take screenshot", group = "launcher"}),
+    awful.key({ ctrlkey                  }, "Print", function() os.execute("maim -s -b 3 -c 0.98431372549019607843,0.28627450980392156862,0.20392156862745098039,1 ~/pictures/screenshots/$(date +%s).png") end,
+              {description = "take screenshot", group = "launcher"}),
+    awful.key({ shiftkey                 }, "Print", function() os.execute("maim -u ~/pictures/screenshots/$(date +%s).png") end,
+              {description = "take screenshot", group = "launcher"}),
+    awful.key({ ctrlkey, shiftkey        }, "Print", function() os.execute("maim -u -s -b 3 -c 0.98431372549019607843,0.28627450980392156862,0.20392156862745098039,1 ~/pictures/screenshots/$(date +%s).png") end,
               {description = "take screenshot", group = "launcher"}),
 
     -- Copy primary to clipboard (terminals to gtk)
@@ -436,12 +443,12 @@ globalkeys = awful.util.table.join(
     -- end),
 
     -- On the fly useless gaps change
-    awful.key({ mod_4, altkey             }, upkey, function () lain.util.useless_gaps_resize(3) end,
+    awful.key({ mod_4, altkey             }, downkey, function () lain.util.useless_gaps_resize(3) end,
               {description = "increase useless gap"}),
-    awful.key({ mod_4, altkey             }, downkey, function () lain.util.useless_gaps_resize(-3) end,
+    awful.key({ mod_4, altkey             }, upkey, function () lain.util.useless_gaps_resize(-3) end,
               {description = "decrease useless gap"}),
-    awful.key({ mod_4, altkey, shiftkey   }, upkey, function () lain.util.useless_gaps_resize(9) end),
-    awful.key({ mod_4, altkey, shiftkey   }, downkey, function () lain.util.useless_gaps_resize(-9) end),
+    awful.key({ mod_4, altkey, shiftkey   }, downkey, function () lain.util.useless_gaps_resize(9) end),
+    awful.key({ mod_4, altkey, shiftkey   }, upkey, function () lain.util.useless_gaps_resize(-9) end),
 
     -- Non-empty tag browsing
     awful.key({ mod_4, ctrlkey            }, leftkey, function () lain.util.tag_view_nonempty(-1) end,
