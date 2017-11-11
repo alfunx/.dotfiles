@@ -50,6 +50,7 @@ local textcolor_light  = bw9
 -- local fs_bg_normal      = bw2
 -- local temp_bg_normal    = bw2
 local pacman_bg_normal  = bw2
+local users_bg_normal  = bw2
 local sysload_bg_normal = bw2
 local cpu_bg_normal     = bw2
 local mem_bg_normal     = bw2
@@ -79,6 +80,7 @@ theme.font_bold_italic                          = font_name .. " " .. "Bold Ital
 
 theme.border_normal                             = bw0
 theme.border_focus                              = bw6
+theme.border_focus                              = bw9
 -- theme.border_focus                              = red_light
 theme.border_marked                             = red_light
 
@@ -164,6 +166,7 @@ theme.widget_mem                                = theme.dir .. "/icons/mem.png"
 theme.widget_cpu                                = theme.dir .. "/icons/cpu.png"
 theme.widget_temp                               = theme.dir .. "/icons/temp.png"
 theme.widget_pacman                             = theme.dir .. "/icons/pacman.png"
+theme.widget_users                              = theme.dir .. "/icons/user.png"
 theme.widget_net                                = theme.dir .. "/icons/net.png"
 theme.widget_hdd                                = theme.dir .. "/icons/hdd.png"
 theme.widget_music                              = theme.dir .. "/icons/note.png"
@@ -356,6 +359,21 @@ local pacman = custom_widget.pacman({
         local bg_normal_color = textcolor_light
         local bg_normal_font = theme.font
         widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, available))
+    end
+})
+
+-- USERS
+local usersicon = wibox.widget.imagebox(theme.widget_users)
+local users = custom_widget.users({
+    settings = function()
+        local bg_normal_color = textcolor_light
+        local bg_normal_font = theme.font
+
+        if tonumber(logged_in) > 1 then
+            bg_normal_color = red_light
+            bg_normal_font = theme.font_bold
+        end
+        widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, logged_in))
     end
 })
 
@@ -650,7 +668,9 @@ function theme.at_screen_connect(s)
             -- wibox.container.background(wibox.container.margin(wibox.widget { tempicon, temp.widget, layout = wibox.layout.align.horizontal }, 4, 2), temp_bg_normal),
             -- arrow(temp_bg_normal, pacman_bg_normal),
             wibox.container.background(wibox.container.margin(wibox.widget { pacmanicon, pacman.widget, layout = wibox.layout.align.horizontal }, 2, 6), pacman_bg_normal),
-            -- arrow(pacman_bg_normal, sysload_bg_normal),
+            -- arrow(pacman_bg_normal, users_bg_normal),
+            wibox.container.background(wibox.container.margin(wibox.widget { usersicon, users.widget, layout = wibox.layout.align.horizontal }, 2, 6), users_bg_normal),
+            -- arrow(users_bg_normal, sysload_bg_normal),
             wibox.container.background(wibox.container.margin(wibox.widget { sysloadicon, sysload.widget, layout = wibox.layout.align.horizontal }, 2, 6), sysload_bg_normal),
             -- arrow(sysload_bg_normal, cpu_bg_normal),
             wibox.container.background(wibox.container.margin(wibox.widget { cpuicon, cpu.widget, layout = wibox.layout.align.horizontal }, 2, 6), cpu_bg_normal),

@@ -281,7 +281,7 @@ globalkeys = awful.util.table.join(
               {description = "jump to urgent client", group = "client"}),
     awful.key({ mod_4,                    }, "Return", function () awful.spawn(terminal) end,
               {description = "open a terminal", group = "launcher"}),
-    awful.key({ mod_4,                    }, "t", function () awful.spawn(terminal) end),
+    awful.key({ mod_4,                    }, "v", function () awful.spawn(terminal) end),
     awful.key({ mod_4                     }, "b", function () awful.spawn(browser) end,
               {description = "open browser", group = "launcher"}),
     awful.key({ mod_4                     }, "e", function () awful.spawn(editor) end,
@@ -300,10 +300,10 @@ globalkeys = awful.util.table.join(
     awful.key({ ctrlkey, shiftkey        }, "Print", function() os.execute("maim -u -s -b 3 -c 0.98431372549019607843,0.28627450980392156862,0.20392156862745098039,1 ~/pictures/screenshots/$(date +%s).png") end,
               {description = "take screenshot", group = "launcher"}),
 
-    -- Copy primary to clipboard (terminals to gtk)
-    awful.key({ mod_4             }, "c", function () awful.spawn("xsel | xsel -i -b") end),
-    -- Copy clipboard to primary (gtk to terminals)
-    awful.key({ mod_4             }, "v", function () awful.spawn("xsel -b | xsel") end),
+    -- -- Copy primary to clipboard (terminals to gtk)
+    -- awful.key({ mod_4             }, "c", function () awful.spawn("xsel | xsel -i -b") end),
+    -- -- Copy clipboard to primary (gtk to terminals)
+    -- awful.key({ mod_4             }, "v", function () awful.spawn("xsel -b | xsel") end),
 
     -- Prompt
     awful.key({ mod_4             }, "$", function () awful.screen.focused().mypromptbox:run() end),
