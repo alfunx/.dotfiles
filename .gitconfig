@@ -39,6 +39,7 @@
 	grep = grep -Ii
 
 	a = add
+	au = add -u
 	ai = add -i
 	ap = add -p
 	c = commit --verbose
