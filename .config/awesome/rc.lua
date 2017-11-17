@@ -67,7 +67,8 @@ end
 -- spawn_once("chromium", "Chromium", tags[1][3])
 -- spawn_once("thunar", "Thunar", tags[1][4])
 -- spawn_once("xchat", "Xchat", tags[1][5])
--- spawn_once("termite -e tmux", "tmux", awful.tag.find_by_name(awful.screen.focused(), "2"))
+-- spawn_once("termite", "termite", awful.tag.find_by_name(awful.screen.focused(), "2"))
+-- spawn_once("termite", "termite", awful.screen.focused().tags[2])
 
 -- {{{ Autostart windowless processes
 local function run_once(cmd_arr)
@@ -312,9 +313,9 @@ globalkeys = awful.util.table.join(
     awful.key({ mod_4             }, "p", function() menubar.show() end,
               {description = "show the menubar", group = "launcher"}),
     awful.key({ mod_4             }, ".", function ()
-        -- awful.spawn(string.format("dmenu_run -i -fn 'Meslo LG S for Powerline' -nb '%s' -nf '%s' -sb '%s' -sf '%s'",
-        awful.spawn(string.format("dmenu_run -i -t -dim 0.5 -p 'Run: ' -h 21 -fn 'Meslo LG S for Powerline-10' -nb '%s' -nf '%s' -sb '%s' -sf '%s'",
-        beautiful.tasklist_bg_normal, beautiful.fg_normal, beautiful.tasklist_bg_urgent, beautiful.tasklist_fg_urgent))
+        awful.spawn("rofi -show drun")
+        -- awful.spawn(string.format("dmenu_run -i -t -dim 0.5 -p 'Run: ' -h 21 -fn 'Meslo LG S for Powerline-10' -nb '%s' -nf '%s' -sb '%s' -sf '%s'",
+        -- beautiful.tasklist_bg_normal, beautiful.fg_normal, beautiful.tasklist_bg_urgent, beautiful.tasklist_fg_urgent))
     end),
     -- awful.key({ altkey            }, "space", function ()
     --     -- awful.spawn(string.format("dmenu_run -i -fn 'Meslo LG S for Powerline' -nb '%s' -nf '%s' -sb '%s' -sf '%s'",

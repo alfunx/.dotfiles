@@ -92,8 +92,13 @@ theme.bg_normal                                 = bw0
 theme.bg_focus                                  = bw2
 theme.bg_urgent                                 = red_light
 
+theme.notification_width                        = 600
 theme.notification_margin                       = 100
-theme.notification_opacity                      = 70
+theme.notification_border_width                 = 0
+theme.notification_shape                        = gears.shape.rounded_rect
+-- theme.notification_fg                           = textcolor_dark
+-- theme.notification_bg                           = bw9
+-- theme.notification_border_color                 = bw9
 
 theme.taglist_font                              = theme.font_bold
 theme.taglist_fg_normal                         = theme.fg_normal
