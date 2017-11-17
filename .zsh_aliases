@@ -87,6 +87,16 @@ pacman() {
   fi
 }
 
+tmux() {
+  if [ "$TERM" = "linux" ]; then
+    /usr/bin/tmux -L linux -f $HOME/.tmux.minimal.conf $@
+  else
+    /usr/bin/tmux $@
+  fi
+}
+
+alias tree="tree -C $@"
+
 ##########
 #  tmux  #
 ##########

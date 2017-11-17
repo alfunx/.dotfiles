@@ -99,27 +99,27 @@ eval `dircolors $HOME/.dir_colors`
 #  CUSTOM  #
 ############
 
-# Alternative colors
-if [ "$TERM" = "linux" ]; then
-    # echo -en "\e]P0282828" #black
-    echo -en "\e]P0000000" #black
-    echo -en "\e]P8928374" #darkgrey
-    echo -en "\e]P1CC241D" #darkred
-    echo -en "\e]P9FB4934" #red
-    echo -en "\e]P298971A" #darkgreen
-    echo -en "\e]PAB8BB26" #green
-    echo -en "\e]P3D79921" #brown
-    echo -en "\e]PBFABD2F" #yellow
-    echo -en "\e]P4458588" #darkblue
-    echo -en "\e]PC83A598" #blue
-    echo -en "\e]P5B16286" #darkmagenta
-    echo -en "\e]PDD3869B" #magenta
-    echo -en "\e]P6689D6A" #darkcyan
-    echo -en "\e]PE8EC07C" #cyan
-    echo -en "\e]P7A89984" #lightgrey
-    echo -en "\e]PFEBDBB2" #white
-    clear #for background artifacting
-fi
+# # Alternative colors
+# if [ "$TERM" = "linux" ]; then
+#     # echo -en "\e]P0282828" #black
+#     echo -en "\e]P0000000" #black
+#     echo -en "\e]P8928374" #darkgrey
+#     echo -en "\e]P1CC241D" #darkred
+#     echo -en "\e]P9FB4934" #red
+#     echo -en "\e]P298971A" #darkgreen
+#     echo -en "\e]PAB8BB26" #green
+#     echo -en "\e]P3D79921" #brown
+#     echo -en "\e]PBFABD2F" #yellow
+#     echo -en "\e]P4458588" #darkblue
+#     echo -en "\e]PC83A598" #blue
+#     echo -en "\e]P5B16286" #darkmagenta
+#     echo -en "\e]PDD3869B" #magenta
+#     echo -en "\e]P6689D6A" #darkcyan
+#     echo -en "\e]PE8EC07C" #cyan
+#     echo -en "\e]P7A89984" #lightgrey
+#     echo -en "\e]PFEBDBB2" #white
+#     clear #for background artifacting
+# fi
 
 # Zsh options
 setopt extendedglob
@@ -144,7 +144,7 @@ export LESS_TERMCAP_ue=$'\e[0m'
 export LESS='-iMRj.5'
 
 # Alternative prompt
-if [ "$TERM" = "linux" ]; then
+if [[ "$TERM" == "linux" ]]; then
   PROMPT='[%F{red}%B%n%b%f@%m %~]'
   PROMPT+='$(git_prompt_info)'
   PROMPT+=' %(?.%F{cyan}%B$%b%f.%F{red}%B$%b%f) '
@@ -174,8 +174,9 @@ export FZF_CTRL_R_OPTS="--no-reverse"
 export FZF_ALT_C_OPTS="--no-reverse"
 
 # TMUX
-if [ "$(pgrep termite | wc -l)" -eq "1" ] && [[ "$TERM" == "xterm-termite" ]]; then
-  tmux attach -t main 2>&1 > /dev/null || tmux new -s main 2>&1 > /dev/null
+if [[ "$(pgrep termite | wc -l)" -eq "1" ]] && [[ "$TERM" == "xterm-termite" ]]; then
+  tmux attach -t main > /dev/null 2>&1 || tmux new -s main > /dev/null 2>&1
+  exit
 fi
 
 # Scripts path
