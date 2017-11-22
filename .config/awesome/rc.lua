@@ -145,8 +145,8 @@ awful.util.layouts = {
     awful.layout.suit.tile,
     awful.layout.suit.tile,
     awful.layout.suit.tile,
-    awful.layout.suit.tile,
-    awful.layout.suit.tile,
+    awful.layout.suit.max,
+    awful.layout.suit.max,
     awful.layout.suit.floating,
 }
 
@@ -292,13 +292,13 @@ globalkeys = awful.util.table.join(
     awful.key({ mod_4                     }, "w", function () awful.spawn("Whatsapp") end,
               {description = "open whatsapp", group = "launcher"}),
 
-    awful.key({                          }, "Print", function() os.execute("maim ~/pictures/screenshots/$(date +%s).png") end,
+    awful.key({                          }, "Print", function() os.execute("scrot -q 100 ~/pictures/screenshots/$(date +%s).png") end,
               {description = "take screenshot", group = "launcher"}),
-    awful.key({ ctrlkey                  }, "Print", function() os.execute("maim -s -b 3 -c 0.98431372549019607843,0.28627450980392156862,0.20392156862745098039,1 ~/pictures/screenshots/$(date +%s).png") end,
+    awful.key({ ctrlkey                  }, "Print", function() os.execute("scrot -s -q 100 ~/pictures/screenshots/$(date +%s).png") end,
               {description = "take screenshot", group = "launcher"}),
-    awful.key({ shiftkey                 }, "Print", function() os.execute("maim -u ~/pictures/screenshots/$(date +%s).png") end,
+    awful.key({ shiftkey                 }, "Print", function() os.execute("maim ~/pictures/screenshots/$(date +%s).png") end,
               {description = "take screenshot", group = "launcher"}),
-    awful.key({ ctrlkey, shiftkey        }, "Print", function() os.execute("maim -u -s -b 3 -c 0.98431372549019607843,0.28627450980392156862,0.20392156862745098039,1 ~/pictures/screenshots/$(date +%s).png") end,
+    awful.key({ ctrlkey, shiftkey        }, "Print", function() os.execute("maim -s -b 3 -c 0.98431372549019607843,0.28627450980392156862,0.20392156862745098039,1 ~/pictures/screenshots/$(date +%s).png") end,
               {description = "take screenshot", group = "launcher"}),
 
     -- -- Copy primary to clipboard (terminals to gtk)
@@ -444,12 +444,12 @@ globalkeys = awful.util.table.join(
     -- end),
 
     -- On the fly useless gaps change
-    awful.key({ mod_4, altkey             }, downkey, function () lain.util.useless_gaps_resize(3) end,
+    awful.key({ mod_4, altkey             }, downkey, function () lain.util.useless_gaps_resize(6) end,
               {description = "increase useless gap"}),
-    awful.key({ mod_4, altkey             }, upkey, function () lain.util.useless_gaps_resize(-3) end,
+    awful.key({ mod_4, altkey             }, upkey, function () lain.util.useless_gaps_resize(-6) end,
               {description = "decrease useless gap"}),
-    awful.key({ mod_4, altkey, shiftkey   }, downkey, function () lain.util.useless_gaps_resize(9) end),
-    awful.key({ mod_4, altkey, shiftkey   }, upkey, function () lain.util.useless_gaps_resize(-9) end),
+    awful.key({ mod_4, altkey, shiftkey   }, downkey, function () lain.util.useless_gaps_resize(12) end),
+    awful.key({ mod_4, altkey, shiftkey   }, upkey, function () lain.util.useless_gaps_resize(-12) end),
 
     -- Non-empty tag browsing
     awful.key({ mod_4, ctrlkey            }, leftkey, function () lain.util.tag_view_nonempty(-1) end,
@@ -593,7 +593,12 @@ clientkeys = awful.util.table.join(
             c.maximized = not c.maximized
             c:raise()
         end ,
-        {description = "maximize", group = "client"})
+        {description = "maximize", group = "client"}),
+    awful.key({ mod_4            }, "i",
+        function (c)
+            awful.titlebar.toggle(c)
+        end ,
+        {description = "toggle titlebar", group = "client"})
 )
 
 -- Bind all key numbers to tags.
@@ -660,34 +665,37 @@ root.keys(globalkeys)
 awful.rules.rules = {
     -- All clients will match this rule.
     { rule = { },
-      properties = { border_width = beautiful.border_width,
-                     border_color = beautiful.border_normal,
-                     focus = awful.client.focus.filter,
-                     raise = true,
-                     keys = clientkeys,
-                     buttons = clientbuttons,
-                     screen = awful.screen.preferred,
-                     placement = awful.placement.no_overlap+awful.placement.no_offscreen,
-                     size_hints_honor = false
+        properties = { border_width = beautiful.border_width,
+                       border_color = beautiful.border_normal,
+                       focus = awful.client.focus.filter,
+                       raise = true,
+                       keys = clientkeys,
+                       buttons = clientbuttons,
+                       screen = awful.screen.preferred,
+                       placement = awful.placement.no_overlap+awful.placement.no_offscreen,
+                       size_hints_honor = false
      }
     },
 
     -- Titlebars
-    { rule_any = { type = { "dialog", "normal" } },
-      properties = { titlebars_enabled = false } },
-
-    -- Set Firefox to always map on the first tag on screen 1.
-    { rule = { class = "Firefox" },
-      properties = { screen = 1, tag = awful.util.tagnames[1] } },
+    { rule_any = { type = { "normal", "dialog" } },
+      properties = { titlebars_enabled = true } },
 
     { rule = { class = "Gimp", role = "gimp-image-window" },
-      properties = { maximized = true } },
+      properties = { screen = 1, tag = awful.util.tagnames[7] } },
+
+    { rule = { class = "VirtualBox" },
+      properties = { screen = 1, tag = awful.util.tagnames[8] } },
 
     { rule = { class = "feh" },
       properties = { floating = true, x = 30, y = 51 } },
 
+    { rule = { class = "Lxappearance" },
+      properties = { floating = true, x = 30, y = 51 } },
+
     { rule = { class = "Pinentry" },
       properties = { floating = true } },
+
 }
 -- }}}
 
@@ -729,7 +737,7 @@ client.connect_signal("request::titlebars", function(c)
         end)
     )
 
-    awful.titlebar(c, {size = 16}) : setup {
+    awful.titlebar(c, {size = 20}) : setup {
         { -- Left
             awful.titlebar.widget.iconwidget(c),
             buttons = buttons,
@@ -744,15 +752,21 @@ client.connect_signal("request::titlebars", function(c)
             layout  = wibox.layout.flex.horizontal
         },
         { -- Right
-            awful.titlebar.widget.floatingbutton (c),
+            -- awful.titlebar.widget.floatingbutton(c),
+            awful.titlebar.widget.stickybutton(c),
+            awful.titlebar.widget.ontopbutton(c),
+            awful.titlebar.widget.minimizebutton(c),
             awful.titlebar.widget.maximizedbutton(c),
-            awful.titlebar.widget.stickybutton   (c),
-            awful.titlebar.widget.ontopbutton    (c),
-            awful.titlebar.widget.closebutton    (c),
-            layout = wibox.layout.fixed.horizontal()
+            awful.titlebar.widget.closebutton(c),
+            layout = wibox.layout.fixed.horizontal
         },
         layout = wibox.layout.align.horizontal
     }
+
+    -- Hide the menubar if we are not floating
+    if not (awful.layout.get(c.screen) == awful.layout.suit.floating or c.floating) then
+        awful.titlebar.hide(c)
+    end
 end)
 
 -- -- Enable sloppy focus, so that focus follows mouse.
@@ -763,63 +777,138 @@ end)
 --     end
 -- end)
 
--- No border for maximized clients
+-- -- No border for maximized clients
+-- client.connect_signal("focus",
+--     function(c)
+--         if not c.maximized and (awful.layout.get(c.screen) == awful.layout.suit.floating or
+--                 c.type == "dialog" or c.floating) then
+--             c.border_width = beautiful.border_width
+--             c.border_color = beautiful.border_focus
+--             awful.titlebar.show(c)
+--         elseif c.maximized then
+--             c.border_width = 0
+--             c.border_color = beautiful.border_normal
+--             awful.titlebar.hide(c)
+--         elseif awful.layout.get(c.screen) == awful.layout.suit.max
+--                 or #awful.screen.focused().clients == 1 then
+--             c.border_color = beautiful.border_normal
+--             awful.titlebar.hide(c)
+--         elseif #awful.screen.focused().clients > 1 then
+--             c.border_width = beautiful.border_width
+--             c.border_color = beautiful.border_focus
+--             awful.titlebar.hide(c)
+--         end
+--     end)
+--
+-- client.connect_signal("property::maximized",
+--     function(c)
+--         if not c.maximized and (awful.layout.get(c.screen) == awful.layout.suit.floating or
+--                 c.type == "dialog" or c.floating) then
+--             c.border_width = beautiful.border_width
+--             c.border_color = beautiful.border_focus
+--             awful.titlebar.show(c)
+--         elseif c.maximized then
+--             c.border_width = 0
+--             c.border_color = beautiful.border_normal
+--             awful.titlebar.hide(c)
+--         elseif awful.layout.get(c.screen) == awful.layout.suit.max
+--                 or #awful.screen.focused().clients == 1 then
+--             c.border_color = beautiful.border_normal
+--             awful.titlebar.hide(c)
+--         elseif #awful.screen.focused().clients > 1 then
+--             c.border_width = beautiful.border_width
+--             c.border_color = beautiful.border_focus
+--             awful.titlebar.hide(c)
+--         end
+--     end)
+--
+-- tag.connect_signal("property::layout",
+--     function(t)
+--         if #awful.screen.focused().clients >= 1 and
+--                 not client.focus.maximized and (t.layout == awful.layout.suit.floating or
+--                 client.focus.type == "dialog" or client.focus.floating) then
+--             client.focus.border_width = beautiful.border_width
+--             client.focus.border_color = beautiful.border_focus
+--             awful.titlebar.show(client.focus)
+--         elseif #awful.screen.focused().clients >= 1
+--                 and client.focus.maximized then
+--             client.focus.border_width = 0
+--             client.focus.border_color = beautiful.border_normal
+--             awful.titlebar.hide(client.focus)
+--         elseif (t.layout == awful.layout.suit.floating
+--                 and #awful.screen.focused().clients >= 1)
+--                 or #awful.screen.focused().clients == 1 then
+--             client.focus.border_color = beautiful.border_normal
+--             awful.titlebar.hide(client.focus)
+--         elseif #awful.screen.focused().clients > 1 then
+--             client.focus.border_width = beautiful.border_width
+--             client.focus.border_color = beautiful.border_focus
+--             awful.titlebar.hide(client.focus)
+--         end
+--     end)
+--
+-- client.connect_signal("property::floating",
+--     function(c)
+--         if c.floating then
+--             awful.titlebar.show(c)
+--         else
+--             awful.titlebar.hide(c)
+--         end
+--     end)
+--
+-- -- awful.tag.attached_connect_signal(s, "property::layout", function (t)
+-- --     local float = t.layout.name == "floating"
+-- --     for _,c in pairs(t:clients()) do
+-- --         c.floating = float
+-- --     end
+-- -- end)
+--
+-- client.connect_signal("unfocus",
+--     function(c)
+--         c.border_width = beautiful.border_width
+--         c.border_color = beautiful.border_normal
+--     end)
+
 client.connect_signal("focus",
     function(c)
-        if c.maximized then
-            c.border_width = 0
-            c.border_color = beautiful.border_normal
-        elseif awful.layout.get(c.screen) == awful.layout.suit.max
-                or #awful.screen.focused().clients == 1 then
-            c.border_color = beautiful.border_normal
-        elseif #awful.screen.focused().clients > 1 then
-            c.border_width = beautiful.border_width
-            c.border_color = beautiful.border_focus
-        end
+        c.border_color = beautiful.border_focus
+    end)
+
+client.connect_signal("unfocus",
+    function(c)
+        c.border_color = beautiful.border_normal
     end)
 
 client.connect_signal("property::maximized",
     function(c)
         if c.maximized then
             c.border_width = 0
-            c.border_color = beautiful.border_normal
-        elseif awful.layout.get(c.screen) == awful.layout.suit.max
-                or #awful.screen.focused().clients == 1 then
-            c.border_color = beautiful.border_normal
-        elseif #awful.screen.focused().clients > 1 then
+            awful.titlebar.hide(c)
+        else
             c.border_width = beautiful.border_width
-            c.border_color = beautiful.border_focus
         end
     end)
 
-tag.connect_signal("property::layout",
-    function(t)
-        if #awful.screen.focused().clients >= 1
-                and client.focus.maximized then
-            client.focus.border_width = 0
-            client.focus.border_color = beautiful.border_normal
-        elseif (t.layout == awful.layout.suit.max
-                and #awful.screen.focused().clients >= 1)
-                or #awful.screen.focused().clients == 1 then
-            client.focus.border_color = beautiful.border_normal
-        elseif #awful.screen.focused().clients > 1 then
-            client.focus.border_width = beautiful.border_width
-            client.focus.border_color = beautiful.border_focus
-        end
-    end)
-
-client.connect_signal("unfocus",
+client.connect_signal("property::floating",
     function(c)
-        c.border_width = beautiful.border_width
-        c.border_color = beautiful.border_normal
+        if c.floating then
+            awful.titlebar.show(c)
+        else
+            awful.titlebar.hide(c)
+        end
     end)
 
--- -- Rounded corners
--- client.connect_signal("manage",
---     function(c)
---         c.shape = function(cr, w, h)
---             gears.shape.rounded_rect(cr, w, h, 3)
---             end
---     end)
+awful.tag.attached_connect_signal(s, "property::layout",
+    function(t)
+        for _,c in pairs(t:clients()) do
+            c.floating = t.layout == awful.layout.suit.floating
+        end
+    end)
+
+-- Rounded corners
+client.connect_signal("manage",
+    function(c)
+        c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 4) end
+    end)
 
 -- }}}

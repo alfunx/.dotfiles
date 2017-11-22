@@ -50,7 +50,7 @@ local textcolor_light  = bw9
 -- local fs_bg_normal      = bw2
 -- local temp_bg_normal    = bw2
 local pacman_bg_normal  = bw2
-local users_bg_normal  = bw2
+local users_bg_normal   = bw2
 local sysload_bg_normal = bw2
 local cpu_bg_normal     = bw2
 local mem_bg_normal     = bw2
@@ -78,11 +78,9 @@ theme.font_bold                                 = font_name .. " " .. "Bold"    
 theme.font_italic                               = font_name .. " " .. "Italic"      .. " " .. font_size
 theme.font_bold_italic                          = font_name .. " " .. "Bold Italic" .. " " .. font_size
 
-theme.border_normal                             = bw0
-theme.border_focus                              = bw6
-theme.border_focus                              = bw9
--- theme.border_focus                              = red_light
-theme.border_marked                             = red_light
+theme.border_normal                             = bw3
+theme.border_focus                              = bw4
+theme.border_marked                             = bw4
 
 theme.fg_normal                                 = bw9
 theme.fg_focus                                  = red_light
@@ -113,15 +111,18 @@ theme.taglist_bg_urgent                         = red_light
 
 theme.tasklist_font_normal                      = theme.font
 theme.tasklist_font_focus                       = theme.font_bold
-theme.tasklist_font_minimized                   = theme.font_italic
-theme.tasklist_font_urgent                      = theme.font_bold_italic
+theme.tasklist_font_urgent                      = theme.font_bold
 theme.tasklist_fg_normal                        = bw7
-theme.tasklist_fg_focus                         = textcolor_dark
+theme.tasklist_fg_focus                         = bw9
+theme.tasklist_fg_minimize                      = bw5
 theme.tasklist_fg_urgent                        = red_light
 theme.tasklist_bg_normal                        = bw3
-theme.tasklist_bg_focus                         = bw6
-theme.tasklist_bg_urgent                        = bw1
+theme.tasklist_bg_focus                         = bw4
+theme.tasklist_bg_urgent                        = bw2
 
+theme.titlebar_fg_normal                        = theme.tasklist_fg_normal
+theme.titlebar_fg_focus                         = theme.tasklist_fg_focus
+theme.titlebar_fg_marked                        = theme.tasklist_fg_focus
 theme.titlebar_bg_normal                        = theme.border_normal
 theme.titlebar_bg_focus                         = theme.border_focus
 theme.titlebar_bg_marked                        = theme.border_marked
@@ -136,7 +137,7 @@ theme.menu_width                                = 250
 theme.tasklist_plain_task_name                  = true
 theme.tasklist_disable_icon                     = true
 theme.tasklist_spacing                          = 3
-theme.useless_gap                               = 3
+theme.useless_gap                               = 6
 theme.systray_icon_spacing                      = 4
 
 theme.menu_submenu_icon                         = theme.dir .. "/icons/submenu.png"
@@ -201,6 +202,10 @@ theme.titlebar_floating_button_focus_active     = theme.dir .. "/icons/titlebar/
 theme.titlebar_floating_button_normal_active    = theme.dir .. "/icons/titlebar/floating_normal_active.png"
 theme.titlebar_floating_button_focus_inactive   = theme.dir .. "/icons/titlebar/floating_focus_inactive.png"
 theme.titlebar_floating_button_normal_inactive  = theme.dir .. "/icons/titlebar/floating_normal_inactive.png"
+theme.titlebar_minimize_button_focus_active    = theme.dir .. "/icons/titlebar/minimized_focus_active.png"
+theme.titlebar_minimize_button_normal_active   = theme.dir .. "/icons/titlebar/minimized_normal_active.png"
+theme.titlebar_minimize_button_focus_inactive  = theme.dir .. "/icons/titlebar/minimized_focus_inactive.png"
+theme.titlebar_minimize_button_normal_inactive = theme.dir .. "/icons/titlebar/minimized_normal_inactive.png"
 theme.titlebar_maximized_button_focus_active    = theme.dir .. "/icons/titlebar/maximized_focus_active.png"
 theme.titlebar_maximized_button_normal_active   = theme.dir .. "/icons/titlebar/maximized_normal_active.png"
 theme.titlebar_maximized_button_focus_inactive  = theme.dir .. "/icons/titlebar/maximized_focus_inactive.png"
@@ -576,7 +581,7 @@ theme.net_click = custom_widget.eventhandler({
 })
 
 -- SEPARATORS
-local arrow = separators.arrow_left
+local arrow_l = separators.arrow_left
 local arrow_r = separators.arrow_right
 
 function theme.powerline_rl(cr, width, height)
@@ -666,28 +671,28 @@ function theme.at_screen_connect(s)
             -- wibox.container.margin(scissors, 4, 8),
             -- wibox.container.background(wibox.container.margin(wibox.widget { weather.icon, weather.widget, layout = wibox.layout.align.horizontal }, 4, 2), cpu_bg_normal),
 
-            arrow(theme.tasklist_bg_normal, cpu_bg_normal),
-            -- arrow(theme.bg_normal, fs_bg_normal),
+            arrow_l(theme.tasklist_bg_normal, cpu_bg_normal),
+            -- arrow_l(theme.bg_normal, fs_bg_normal),
             -- wibox.container.background(wibox.container.margin(wibox.widget { fsicon, theme.fs.widget, layout = wibox.layout.align.horizontal }, 4, 2), fs_bg_normal),
-            -- arrow(fs_bg_normal, temp_bg_normal),
+            -- arrow_l(fs_bg_normal, temp_bg_normal),
             -- wibox.container.background(wibox.container.margin(wibox.widget { tempicon, temp.widget, layout = wibox.layout.align.horizontal }, 4, 2), temp_bg_normal),
-            -- arrow(temp_bg_normal, pacman_bg_normal),
+            -- arrow_l(temp_bg_normal, pacman_bg_normal),
             wibox.container.background(wibox.container.margin(wibox.widget { pacmanicon, pacman.widget, layout = wibox.layout.align.horizontal }, 2, 6), pacman_bg_normal),
-            -- arrow(pacman_bg_normal, users_bg_normal),
+            -- arrow_l(pacman_bg_normal, users_bg_normal),
             wibox.container.background(wibox.container.margin(wibox.widget { usersicon, users.widget, layout = wibox.layout.align.horizontal }, 2, 6), users_bg_normal),
-            -- arrow(users_bg_normal, sysload_bg_normal),
+            -- arrow_l(users_bg_normal, sysload_bg_normal),
             wibox.container.background(wibox.container.margin(wibox.widget { sysloadicon, sysload.widget, layout = wibox.layout.align.horizontal }, 2, 6), sysload_bg_normal),
-            -- arrow(sysload_bg_normal, cpu_bg_normal),
+            -- arrow_l(sysload_bg_normal, cpu_bg_normal),
             wibox.container.background(wibox.container.margin(wibox.widget { cpuicon, cpu.widget, layout = wibox.layout.align.horizontal }, 2, 6), cpu_bg_normal),
-            -- arrow(cpu_bg_normal, mem_bg_normal),
+            -- arrow_l(cpu_bg_normal, mem_bg_normal),
             wibox.container.background(wibox.container.margin(wibox.widget { memicon, mem.widget, layout = wibox.layout.align.horizontal }, 2, 6), mem_bg_normal),
-            -- arrow(mem_bg_normal, vol_bg_normal),
+            -- arrow_l(mem_bg_normal, vol_bg_normal),
             wibox.container.background(wibox.container.margin(wibox.widget { volicon, theme.volume.widget, layout = wibox.layout.align.horizontal }, 2, 6), vol_bg_normal),
-            -- arrow(vol_bg_normal, bat_bg_normal),
+            -- arrow_l(vol_bg_normal, bat_bg_normal),
             wibox.container.background(wibox.container.margin(wibox.widget { baticon, bat.widget, layout = wibox.layout.align.horizontal }, 2, 10), bat_bg_normal),
-            arrow(bat_bg_normal, net_bg_normal),
+            arrow_l(bat_bg_normal, net_bg_normal),
             wibox.container.background(wibox.container.margin(wibox.widget { --[[neticon, --]] net.widget, layout = wibox.layout.align.horizontal }, 8, 10), net_bg_normal),
-            arrow(net_bg_normal, clock_bg_normal),
+            arrow_l(net_bg_normal, clock_bg_normal),
             wibox.container.background(wibox.container.margin(wibox.widget { clock, layout = wibox.layout.align.horizontal }, 8, 8), clock_bg_normal),
             --]]
         },
