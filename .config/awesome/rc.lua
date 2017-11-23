@@ -287,18 +287,16 @@ globalkeys = awful.util.table.join(
               {description = "open browser", group = "launcher"}),
     awful.key({ mod_4                     }, "e", function () awful.spawn(editor) end,
               {description = "open editor", group = "launcher"}),
-    awful.key({ mod_4                     }, "o", function () awful.spawn(filemanager) end,
-              {description = "open filemanager", group = "launcher"}),
     awful.key({ mod_4                     }, "w", function () awful.spawn("Whatsapp") end,
               {description = "open whatsapp", group = "launcher"}),
 
-    awful.key({                          }, "Print", function() os.execute("scrot -q 100 ~/pictures/screenshots/$(date +%s).png") end,
+    awful.key({                          }, "Print", function() os.execute("maim ~/pictures/screenshots/$(date +%s).png") end,
               {description = "take screenshot", group = "launcher"}),
-    awful.key({ ctrlkey                  }, "Print", function() os.execute("scrot -s -q 100 ~/pictures/screenshots/$(date +%s).png") end,
+    awful.key({ ctrlkey                  }, "Print", function() os.execute("maim -s -b 3 -c 0.98431372549019607843,0.28627450980392156862,0.20392156862745098039,1 ~/pictures/screenshots/$(date +%s).png") end,
               {description = "take screenshot", group = "launcher"}),
-    awful.key({ shiftkey                 }, "Print", function() os.execute("maim ~/pictures/screenshots/$(date +%s).png") end,
+    awful.key({ shiftkey                 }, "Print", function() os.execute("maim -u ~/pictures/screenshots/$(date +%s).png") end,
               {description = "take screenshot", group = "launcher"}),
-    awful.key({ ctrlkey, shiftkey        }, "Print", function() os.execute("maim -s -b 3 -c 0.98431372549019607843,0.28627450980392156862,0.20392156862745098039,1 ~/pictures/screenshots/$(date +%s).png") end,
+    awful.key({ ctrlkey, shiftkey        }, "Print", function() os.execute("maim -u -s -b 3 -c 0.98431372549019607843,0.28627450980392156862,0.20392156862745098039,1 ~/pictures/screenshots/$(date +%s).png") end,
               {description = "take screenshot", group = "launcher"}),
 
     -- -- Copy primary to clipboard (terminals to gtk)
@@ -586,18 +584,18 @@ clientkeys = awful.util.table.join(
             -- The client currently has the input focus, so it cannot be
             -- minimized, since minimized clients can't have the focus.
             c.minimized = true
-        end ,
+        end,
         {description = "minimize", group = "client"}),
     awful.key({ mod_4            }, "m",
         function (c)
             c.maximized = not c.maximized
             c:raise()
-        end ,
+        end,
         {description = "maximize", group = "client"}),
     awful.key({ mod_4            }, "i",
         function (c)
             awful.titlebar.toggle(c)
-        end ,
+        end,
         {description = "toggle titlebar", group = "client"})
 )
 
@@ -891,7 +889,7 @@ client.connect_signal("property::maximized",
 
 client.connect_signal("property::floating",
     function(c)
-        if c.floating then
+        if c.floating and not c.maximized then
             awful.titlebar.show(c)
         else
             awful.titlebar.hide(c)
