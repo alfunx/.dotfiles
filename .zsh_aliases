@@ -76,8 +76,6 @@ toilol() {
   toilet -f mono12 -w "$(tput cols)" | lolcat
 }
 
-alias pg="ping -c 1 www.google.ch"
-
 pacman() {
   local pattern="^-S[cuy]|^-S$|^-R[sn]|^-U"
   if [[ "$1" =~ $pattern ]]; then
@@ -95,19 +93,19 @@ tmux() {
   fi
 }
 
-alias tree="tree -C $@"
+alias pg="ping -c 1 www.google.ch"
 
 ##########
 #  tmux  #
 ##########
 
-alias fzf="fzf-tmux -d 30% $@"
+alias fzf="fzf-tmux -d 30%"
 
 #############
 #  ripgrep  #
 #############
 
-alias rg="rg --ignore-case --line-number --color=auto --colors=\"match:fg:red\" --colors=\"match:style:bold\" --colors=\"path:fg:white\" --colors=\"line:fg:yellow\" --colors=\"line:style:bold\" $@"
+alias rg="rg --ignore-case --line-number --color=auto --colors=\"match:fg:red\" --colors=\"match:style:bold\" --colors=\"path:fg:white\" --colors=\"line:fg:yellow\" --colors=\"line:style:bold\""
 
 # fuzzy rg
 frg() {
@@ -118,7 +116,7 @@ frg() {
 # the silver searcher #
 #######################
 
-alias ag="ag --ignore-case --numbers --color --color-match \"1;31\" --color-path \"0;37\" --color-line-number \"1;33\" $@"
+alias ag="ag --ignore-case --numbers --color --color-match \"1;31\" --color-path \"0;37\" --color-line-number \"1;33\""
 
 # fuzzy ag
 fag() {
@@ -317,11 +315,8 @@ fstash() {
 
 # example usage: pacman -S $(fp)
 fp() {
-  local arg
-  arg="-Ss"
-  if (( $# > 0 )); then
-    arg="$@"
-  fi
+  local arg="-Ss"
+  (( $# )) && { arg=$@; }
   echo -n "$(pacman $arg \
     | sed 'N;s/\n//' \
     | fzf-tmux -d 30% -m \
@@ -335,6 +330,28 @@ fp() {
 
 fman() {
   man "$(apropos . | fzf-tmux -d 30% | sed 's/ .*//')"
+}
+
+#################
+#  transfer.sh  #
+#################
+
+transfer() {
+  if [ $# -eq 0 ]; then
+    echo -e "No arguments specified."
+    return 1
+  fi 
+
+  tmpfile=$( mktemp )
+  if tty -s; then
+    basefile=$(basename "$1" \
+      | sed -e 's/[^a-zA-Z0-9._-]/-/g')
+    curl --progress-bar --upload-file "$1" "https://transfer.sh/$basefile" >> $tmpfile
+  else
+    curl --progress-bar --upload-file "-" "https://transfer.sh/$1" >> $tmpfile
+  fi
+  cat $tmpfile
+  rm -f $tmpfile
 }
 
 #####################
