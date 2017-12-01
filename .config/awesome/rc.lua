@@ -234,7 +234,7 @@ awful.util.mymainmenu = freedesktop.menu.build({
     }
 })
 
---menubar.utils.terminal = terminal -- Set the Menubar terminal for applications that require it
+menubar.utils.terminal = terminal -- Set the Menubar terminal for applications that require it
 -- }}}
 
 -- {{{ Screen
@@ -274,7 +274,7 @@ globalkeys = awful.util.table.join(
               {description = "reload awesome", group = "awesome"}),
     awful.key({ mod_4, ctrlkey            }, "q", awesome.quit,
               {description = "quit awesome", group = "awesome"}),
-    awful.key({ mod_4, ctrlkey, altkey    }, "q", function () awful.spawn("/usr/bin/custom-lockscreen") end,
+    awful.key({ mod_4, ctrlkey,           }, "z", function () awful.spawn("custom-lockscreen") end,
               {description = "lock screen", group = "awesome"}),
 
     -- Hotkeys
@@ -282,6 +282,8 @@ globalkeys = awful.util.table.join(
               {description = "jump to urgent client", group = "client"}),
     awful.key({ mod_4,                    }, "Return", function () awful.spawn(terminal) end,
               {description = "open a terminal", group = "launcher"}),
+    awful.key({ mod_4, ctrlkey            }, "Return", function () awful.spawn(terminal, { floating = true, placement = awful.placement.centered }) end,
+              {description = "open a floating terminal", group = "launcher"}),
     awful.key({ mod_4,                    }, "v", function () awful.spawn(terminal) end),
     awful.key({ mod_4                     }, "b", function () awful.spawn(browser) end,
               {description = "open browser", group = "launcher"}),
@@ -290,13 +292,13 @@ globalkeys = awful.util.table.join(
     awful.key({ mod_4                     }, "w", function () awful.spawn("Whatsapp") end,
               {description = "open whatsapp", group = "launcher"}),
 
-    awful.key({                          }, "Print", function() os.execute("maim ~/pictures/screenshots/$(date +%s).png") end,
+    awful.key({                          }, "Print", function() os.execute("maim ~/pictures/screenshots/$(date +%Y-%m-%d_%T).png") end,
               {description = "take screenshot", group = "launcher"}),
-    awful.key({ ctrlkey                  }, "Print", function() os.execute("maim -s -b 3 -c 0.98431372549019607843,0.28627450980392156862,0.20392156862745098039,1 ~/pictures/screenshots/$(date +%s).png") end,
+    awful.key({ ctrlkey                  }, "Print", function() os.execute("maim -s -b 3 -c 0.98431372549019607843,0.28627450980392156862,0.20392156862745098039,1 ~/pictures/screenshots/$(date +%Y-%m-%d_%T).png") end,
               {description = "take screenshot", group = "launcher"}),
-    awful.key({ shiftkey                 }, "Print", function() os.execute("maim -u ~/pictures/screenshots/$(date +%s).png") end,
+    awful.key({ shiftkey                 }, "Print", function() os.execute("maim -u ~/pictures/screenshots/$(date +%Y-%m-%d_%T).png") end,
               {description = "take screenshot", group = "launcher"}),
-    awful.key({ ctrlkey, shiftkey        }, "Print", function() os.execute("maim -u -s -b 3 -c 0.98431372549019607843,0.28627450980392156862,0.20392156862745098039,1 ~/pictures/screenshots/$(date +%s).png") end,
+    awful.key({ ctrlkey, shiftkey        }, "Print", function() os.execute("maim -u -s -b 3 -c 0.98431372549019607843,0.28627450980392156862,0.20392156862745098039,1 ~/pictures/screenshots/$(date +%Y-%m-%d_%T).png") end,
               {description = "take screenshot", group = "launcher"}),
 
     -- -- Copy primary to clipboard (terminals to gtk)
@@ -579,24 +581,16 @@ clientkeys = awful.util.table.join(
               {description = "toggle keep on top", group = "client"}),
     awful.key({ mod_4             }, "s", function (c) c.sticky = not c.sticky end,
               {description = "toggle sticky", group = "client"}),
-    awful.key({ mod_4             }, "n",
-        function (c)
-            -- The client currently has the input focus, so it cannot be
-            -- minimized, since minimized clients can't have the focus.
-            c.minimized = true
-        end,
-        {description = "minimize", group = "client"}),
+    awful.key({ mod_4            }, "i", function (c) awful.titlebar.toggle(c) end,
+              {description = "toggle titlebar", group = "client"}),
+    awful.key({ mod_4             }, "n", function (c) c.minimized = true end,
+              {description = "minimize", group = "client"}),
     awful.key({ mod_4            }, "m",
         function (c)
             c.maximized = not c.maximized
             c:raise()
         end,
-        {description = "maximize", group = "client"}),
-    awful.key({ mod_4            }, "i",
-        function (c)
-            awful.titlebar.toggle(c)
-        end,
-        {description = "toggle titlebar", group = "client"})
+        {description = "maximize", group = "client"})
 )
 
 -- Bind all key numbers to tags.
@@ -671,8 +665,7 @@ awful.rules.rules = {
                        buttons = clientbuttons,
                        screen = awful.screen.preferred,
                        placement = awful.placement.no_overlap+awful.placement.no_offscreen,
-                       size_hints_honor = false
-     }
+                       size_hints_honor = true }
     },
 
     -- Titlebars
@@ -686,13 +679,13 @@ awful.rules.rules = {
       properties = { screen = 1, tag = awful.util.tagnames[8] } },
 
     { rule = { class = "feh" },
-      properties = { floating = true, x = 30, y = 51 } },
+      properties = { floating = true, x = 30, y = 51, placement = awful.placement.centered+awful.placement.no_offscreen } },
 
     { rule = { class = "Lxappearance" },
-      properties = { floating = true, x = 30, y = 51 } },
+      properties = { floating = true, x = 30, y = 51, placement = awful.placement.centered+awful.placement.no_offscreen } },
 
     { rule = { class = "Pinentry" },
-      properties = { floating = true } },
+      properties = { floating = true, placement = awful.placement.centered+awful.placement.no_offscreen } },
 
 }
 -- }}}
@@ -761,7 +754,7 @@ client.connect_signal("request::titlebars", function(c)
         layout = wibox.layout.align.horizontal
     }
 
-    -- Hide the menubar if we are not floating
+    -- Hide the titlebar if we are not floating
     if not (awful.layout.get(c.screen) == awful.layout.suit.floating or c.floating) then
         awful.titlebar.hide(c)
     end
@@ -903,10 +896,10 @@ awful.tag.attached_connect_signal(s, "property::layout",
         end
     end)
 
--- Rounded corners
-client.connect_signal("manage",
-    function(c)
-        c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 4) end
-    end)
+-- -- Rounded corners
+-- client.connect_signal("manage",
+--     function(c)
+--         c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 4) end
+--     end)
 
 -- }}}

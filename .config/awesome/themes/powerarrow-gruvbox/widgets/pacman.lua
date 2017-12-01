@@ -20,7 +20,7 @@ local function factory(args)
     local args     = args or {}
     local timeout  = args.timeout or 900
     local settings = args.settings or function() end
-    local cmd      = "checkupdates | wc -l"
+    local cmd      = "if [ $(pacaur -k | wc -l) -gt 0  ]; then echo \"$(checkupdates | wc -l)+$(pacaur -k | wc -l)\"; else echo \"$(checkupdates | wc -l)\"; fi"
 
     function pacman.update()
         helpers.async({ shell, "-c", cmd }, function(f)
