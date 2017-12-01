@@ -7,7 +7,7 @@
 
 lock='/home/amariya/pictures/lock.png'
 
-maim \
+maim -u \
   | convert png:- -scale 10% -scale 1000% png:- \
   | convert png:- "$lock" -gravity center -composite -matte png:- \
   | i3lock -e -i /dev/stdin \
