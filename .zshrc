@@ -147,7 +147,7 @@ export LESS='-iMRj.5'
 if [[ "$TERM" == "linux" ]]; then
   PROMPT='[%F{red}%B%n%b%f@%m %~]'
   PROMPT+='$(git_prompt_info)'
-  PROMPT+=' %(?.%F{cyan}%B$%b%f.%F{red}%B$%b%f) '
+  PROMPT+=' %(?.%F{cyan}.%F{red})%B%(!.#.$)%b%f '
 
   ZSH_THEME_GIT_PROMPT_PREFIX=" [%F{yellow}%B"
   ZSH_THEME_GIT_PROMPT_SUFFIX="%b%f]"
