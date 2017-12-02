@@ -1,5 +1,7 @@
 # .dotfiles
 
+![Awesome WM](https://i.imgur.com/eclgbfA.png)
+
 ## Setup repository
 
 ```bash
