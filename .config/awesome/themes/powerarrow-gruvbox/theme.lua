@@ -68,7 +68,8 @@ local os, math, string = os, math, string
 
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-gruvbox"
-theme.wallpaper                                 = theme.dir .. "/wallpapers/wall.png"
+theme.wallpaper                                 = theme.dir .. "/wallpapers/red-deer_base.jpg"
+theme.wallpaper_blur                            = theme.dir .. "/wallpapers/red-deer_blur.jpg"
 
 local font_name                                 = "Meslo LG S for Powerline"
 -- local font_name                                 = "Source Code Pro for Powerline"
@@ -79,13 +80,14 @@ theme.font_italic                               = font_name .. " " .. "Italic"  
 theme.font_bold_italic                          = font_name .. " " .. "Bold Italic" .. " " .. font_size
 
 theme.border_normal                             = bw3
-theme.border_focus                              = bw4
+-- theme.border_focus                              = bw4
+-- theme.border_focus                              = "#a83c2f"
+theme.border_focus                              = bw7
 theme.border_marked                             = bw4
 
 theme.fg_normal                                 = bw9
 theme.fg_focus                                  = red_light
 theme.fg_urgent                                 = bw0
-theme.bg_normal                                 = bw5
 theme.bg_normal                                 = bw0
 theme.bg_focus                                  = bw2
 theme.bg_urgent                                 = red_light
@@ -120,9 +122,12 @@ theme.tasklist_bg_normal                        = bw3
 theme.tasklist_bg_focus                         = bw4
 theme.tasklist_bg_urgent                        = bw2
 
-theme.titlebar_fg_normal                        = theme.tasklist_fg_normal
-theme.titlebar_fg_focus                         = theme.tasklist_fg_focus
-theme.titlebar_fg_marked                        = theme.tasklist_fg_focus
+-- theme.titlebar_fg_normal                        = theme.tasklist_fg_normal
+-- theme.titlebar_fg_focus                         = theme.tasklist_fg_focus
+-- theme.titlebar_fg_marked                        = theme.tasklist_fg_focus
+theme.titlebar_fg_normal                        = textcolor_dark
+theme.titlebar_fg_focus                         = textcolor_dark
+theme.titlebar_fg_marked                        = textcolor_dark
 theme.titlebar_bg_normal                        = theme.border_normal
 theme.titlebar_bg_focus                         = theme.border_focus
 theme.titlebar_bg_marked                        = theme.border_marked
@@ -131,13 +136,13 @@ theme.prompt_bg                                 = bw2
 theme.prompt_fg                                 = textcolor_light
 theme.bg_systray                                = theme.tasklist_bg_normal
 
-theme.border_width                              = 2
+theme.border_width                              = 4
 theme.menu_height                               = 20
 theme.menu_width                                = 250
 theme.tasklist_plain_task_name                  = true
 theme.tasklist_disable_icon                     = true
 theme.tasklist_spacing                          = 3
-theme.useless_gap                               = 6
+theme.useless_gap                               = 7
 theme.systray_icon_spacing                      = 4
 
 theme.menu_submenu_icon                         = theme.dir .. "/icons/submenu.png"
@@ -369,6 +374,17 @@ local pacman = custom_widget.pacman({
         local bg_normal_color = textcolor_light
         local bg_normal_font = theme.font
         widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, available))
+    end
+})
+
+theme.pacman_click = custom_widget.eventhandler({
+    attach_to = { pacman.widget },
+    execute = function()
+        awful.spawn.easy_async("/home/amariya/scripts/updates.sh", function(stdout, stderr, reason, exit_code)
+            eventhandler.notify {
+                text = stdout, timeout = 0
+            }
+        end)
     end
 })
 

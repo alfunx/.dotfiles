@@ -434,7 +434,7 @@ globalkeys = awful.util.table.join(
         {description = "restore minimized", group = "client"}),
 
     -- -- Show/Hide Wibox
-    -- awful.key({ mod_4 }, "b", function ()
+    -- awful.key({ mod_4, ctrlkey            }, "b", function ()
     --     for s in screen do
     --         s.mywibox.visible = not s.mywibox.visible
     --         if s.mybottomwibox then
@@ -444,12 +444,12 @@ globalkeys = awful.util.table.join(
     -- end),
 
     -- On the fly useless gaps change
-    awful.key({ mod_4, altkey             }, downkey, function () lain.util.useless_gaps_resize(6) end,
+    awful.key({ mod_4, altkey             }, downkey, function () lain.util.useless_gaps_resize(beautiful.useless_gap) end,
               {description = "increase useless gap"}),
-    awful.key({ mod_4, altkey             }, upkey, function () lain.util.useless_gaps_resize(-6) end,
+    awful.key({ mod_4, altkey             }, upkey, function () lain.util.useless_gaps_resize(-beautiful.useless_gap) end,
               {description = "decrease useless gap"}),
-    awful.key({ mod_4, altkey, shiftkey   }, downkey, function () lain.util.useless_gaps_resize(12) end),
-    awful.key({ mod_4, altkey, shiftkey   }, upkey, function () lain.util.useless_gaps_resize(-12) end),
+    awful.key({ mod_4, altkey, shiftkey   }, downkey, function () lain.util.useless_gaps_resize(1) end),
+    awful.key({ mod_4, altkey, shiftkey   }, upkey, function () lain.util.useless_gaps_resize(-1) end),
 
     -- Non-empty tag browsing
     awful.key({ mod_4, ctrlkey            }, leftkey, function () lain.util.tag_view_nonempty(-1) end,
@@ -863,11 +863,43 @@ end)
 client.connect_signal("focus",
     function(c)
         c.border_color = beautiful.border_focus
+        local s = client.screen
+        local wallpaper
+        if client.focus then
+            if beautiful.wallpaper_blur then
+                wallpaper = beautiful.wallpaper_blur
+            end
+        else
+            if beautiful.wallpaper then
+                wallpaper = beautiful.wallpaper
+            end
+        end
+        -- If wallpaper is a function, call it with the screen
+        if type(wallpaper) == "function" then
+            wallpaper = wallpaper(s)
+        end
+        gears.wallpaper.maximized(wallpaper, s, true)
     end)
 
 client.connect_signal("unfocus",
     function(c)
         c.border_color = beautiful.border_normal
+        local s = client.screen
+        local wallpaper
+        if client.focus then
+            if beautiful.wallpaper_blur then
+                wallpaper = beautiful.wallpaper_blur
+            end
+        else
+            if beautiful.wallpaper then
+                wallpaper = beautiful.wallpaper
+            end
+        end
+        -- If wallpaper is a function, call it with the screen
+        if type(wallpaper) == "function" then
+            wallpaper = wallpaper(s)
+        end
+        gears.wallpaper.maximized(wallpaper, s, true)
     end)
 
 client.connect_signal("property::maximized",
@@ -896,10 +928,10 @@ awful.tag.attached_connect_signal(s, "property::layout",
         end
     end)
 
--- -- Rounded corners
--- client.connect_signal("manage",
---     function(c)
---         c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 4) end
---     end)
+-- Rounded corners
+client.connect_signal("manage",
+    function(c)
+        c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 4) end
+    end)
 
 -- }}}
