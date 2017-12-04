@@ -860,46 +860,49 @@ end)
 --         c.border_color = beautiful.border_normal
 --     end)
 
+local set_wallpaper = function(clients)
+    local wallpaper
+    if clients > 0 then
+        if beautiful.wallpaper_blur then
+            wallpaper = beautiful.wallpaper_blur
+        end
+    else
+        if beautiful.wallpaper then
+            wallpaper = beautiful.wallpaper
+        end
+    end
+
+    -- If wallpaper is a function, call it with the screen
+    if type(wallpaper) == "function" then
+        wallpaper = wallpaper(client.screen)
+    end
+
+    gears.wallpaper.maximized(wallpaper, client.screen, true)
+end
+
+screen.connect_signal("tag::history::update",
+    function(s)
+        set_wallpaper(#s.clients)
+    end)
+
+client.connect_signal("tagged",
+    function(c)
+        set_wallpaper(#c.screen.clients)
+    end)
+
+client.connect_signal("untagged",
+    function(c)
+        set_wallpaper(#c.screen.clients)
+    end)
+
 client.connect_signal("focus",
     function(c)
         c.border_color = beautiful.border_focus
-        local s = client.screen
-        local wallpaper
-        if client.focus then
-            if beautiful.wallpaper_blur then
-                wallpaper = beautiful.wallpaper_blur
-            end
-        else
-            if beautiful.wallpaper then
-                wallpaper = beautiful.wallpaper
-            end
-        end
-        -- If wallpaper is a function, call it with the screen
-        if type(wallpaper) == "function" then
-            wallpaper = wallpaper(s)
-        end
-        gears.wallpaper.maximized(wallpaper, s, true)
     end)
 
 client.connect_signal("unfocus",
     function(c)
         c.border_color = beautiful.border_normal
-        local s = client.screen
-        local wallpaper
-        if client.focus then
-            if beautiful.wallpaper_blur then
-                wallpaper = beautiful.wallpaper_blur
-            end
-        else
-            if beautiful.wallpaper then
-                wallpaper = beautiful.wallpaper
-            end
-        end
-        -- If wallpaper is a function, call it with the screen
-        if type(wallpaper) == "function" then
-            wallpaper = wallpaper(s)
-        end
-        gears.wallpaper.maximized(wallpaper, s, true)
     end)
 
 client.connect_signal("property::maximized",
