@@ -433,20 +433,20 @@ globalkeys = awful.util.table.join(
         end,
         {description = "restore minimized", group = "client"}),
 
-    -- -- Show/Hide Wibox
-    -- awful.key({ mod_4, ctrlkey            }, "b", function ()
-    --     for s in screen do
-    --         s.mywibox.visible = not s.mywibox.visible
-    --         if s.mybottomwibox then
-    --             s.mybottomwibox.visible = not s.mybottomwibox.visible
-    --         end
-    --     end
-    -- end),
+    -- Show/Hide Wibox
+    awful.key({ mod_4, ctrlkey            }, "b", function ()
+        for s in screen do
+            s.mywibox.visible = not s.mywibox.visible
+            if s.mybottomwibox then
+                s.mybottomwibox.visible = not s.mybottomwibox.visible
+            end
+        end
+    end),
 
     -- On the fly useless gaps change
-    awful.key({ mod_4, altkey             }, downkey, function () lain.util.useless_gaps_resize(beautiful.useless_gap) end,
+    awful.key({ mod_4, altkey             }, downkey, function () lain.util.useless_gaps_resize(beautiful.useless_gap/2) end,
               {description = "increase useless gap"}),
-    awful.key({ mod_4, altkey             }, upkey, function () lain.util.useless_gaps_resize(-beautiful.useless_gap) end,
+    awful.key({ mod_4, altkey             }, upkey, function () lain.util.useless_gaps_resize(-beautiful.useless_gap/2) end,
               {description = "decrease useless gap"}),
     awful.key({ mod_4, altkey, shiftkey   }, downkey, function () lain.util.useless_gaps_resize(1) end),
     awful.key({ mod_4, altkey, shiftkey   }, upkey, function () lain.util.useless_gaps_resize(-1) end),
@@ -903,6 +903,16 @@ client.connect_signal("focus",
 client.connect_signal("unfocus",
     function(c)
         c.border_color = beautiful.border_normal
+    end)
+
+client.connect_signal("property::fullscreen",
+    function(c)
+        if c.fullscreen then
+            c.border_width = 0
+            awful.titlebar.hide(c)
+        else
+            c.border_width = beautiful.border_width
+        end
     end)
 
 client.connect_signal("property::maximized",

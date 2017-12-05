@@ -68,11 +68,10 @@ local os, math, string = os, math, string
 
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-gruvbox"
-theme.wallpaper                                 = theme.dir .. "/wallpapers/red-deer_base.jpg"
-theme.wallpaper_blur                            = theme.dir .. "/wallpapers/red-deer_blur.jpg"
+theme.wallpaper                                 = theme.dir .. "/wallpapers/deer_base.jpg"
+theme.wallpaper_blur                            = theme.dir .. "/wallpapers/deer_blur.jpg"
 
 local font_name                                 = "Meslo LG S for Powerline"
--- local font_name                                 = "Source Code Pro for Powerline"
 local font_size                                 = "11"
 theme.font                                      = font_name .. " " ..                         font_size
 theme.font_bold                                 = font_name .. " " .. "Bold"        .. " " .. font_size
@@ -82,7 +81,7 @@ theme.font_bold_italic                          = font_name .. " " .. "Bold Ital
 theme.border_normal                             = bw3
 -- theme.border_focus                              = bw4
 -- theme.border_focus                              = "#a83c2f"
-theme.border_focus                              = bw7
+theme.border_focus                              = bw8
 theme.border_marked                             = bw4
 
 theme.fg_normal                                 = bw9
@@ -142,7 +141,7 @@ theme.menu_width                                = 250
 theme.tasklist_plain_task_name                  = true
 theme.tasklist_disable_icon                     = true
 theme.tasklist_spacing                          = 3
-theme.useless_gap                               = 7
+theme.useless_gap                               = 14
 theme.systray_icon_spacing                      = 4
 
 theme.menu_submenu_icon                         = theme.dir .. "/icons/submenu.png"
