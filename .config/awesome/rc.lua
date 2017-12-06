@@ -10,6 +10,7 @@
 local awesome, client, mouse, screen, tag = awesome, client, mouse, screen, tag
 local ipairs, string, os, table, tostring, tonumber, type = ipairs, string, os, table, tostring, tonumber, type
 
+local cairo         = require("lgi").cairo
 local gears         = require("gears")
 local awful         = require("awful")
 local autofocus     = require("awful.autofocus")
@@ -596,7 +597,7 @@ clientkeys = awful.util.table.join(
 -- Bind all key numbers to tags.
 -- Be careful: we use keycodes to make it works on any keyboard layout.
 -- This should map on the top row of your keyboard, usually 1 to 9.
-for i = 1, 9 do
+for i = 1, 10 do
     globalkeys = awful.util.table.join(globalkeys,
         -- View tag only.
         awful.key({ mod_4 }, "#" .. i + 9,
@@ -753,12 +754,32 @@ client.connect_signal("request::titlebars", function(c)
         },
         layout = wibox.layout.align.horizontal
     }
+    -- awful.titlebar(c, {
+    --     size = 4,
+    --     position = "bottom",
+    -- }) : setup { layout = wibox.layout.align.horizontal }
+    -- awful.titlebar(c, {
+    --     size = 4,
+    --     position = "left",
+    -- }) : setup { layout = wibox.layout.align.horizontal }
+    -- awful.titlebar(c, {
+    --     size = 4,
+    --     position = "right",
+    -- }) : setup { layout = wibox.layout.align.horizontal }
 
     -- Hide the titlebar if we are not floating
     if not (awful.layout.get(c.screen) == awful.layout.suit.floating or c.floating) then
         awful.titlebar.hide(c)
     end
 end)
+
+-- -- client.connect_signal("request::titlebars", function(c) setSmartBorders(c, true) end)
+-- client.connect_signal("property::size",
+--     function(c)
+--         if beautiful.titlebar_fun then
+--             beautiful.titlebar_fun(c)
+--         end
+--     end)
 
 -- -- Enable sloppy focus, so that focus follows mouse.
 -- client.connect_signal("mouse::enter", function(c)
@@ -895,6 +916,11 @@ client.connect_signal("untagged",
         set_wallpaper(#c.screen.clients)
     end)
 
+client.connect_signal("property::minimized",
+    function(c)
+        set_wallpaper(#c.screen.clients)
+    end)
+
 client.connect_signal("focus",
     function(c)
         c.border_color = beautiful.border_focus
@@ -904,6 +930,66 @@ client.connect_signal("unfocus",
     function(c)
         c.border_color = beautiful.border_normal
     end)
+
+-- client.connect_signal("property::fullscreen",
+--     function(c)
+--         if c.maximized or c.fullscreen then
+--             c.border_width = 0
+--             awful.titlebar.hide(c, "top")
+--             awful.titlebar.hide(c, "bottom")
+--             awful.titlebar.hide(c, "left")
+--             awful.titlebar.hide(c, "right")
+--         else
+--             c.border_width = beautiful.border_width
+--             awful.titlebar.show(c, "top")
+--             awful.titlebar.show(c, "bottom")
+--             awful.titlebar.show(c, "left")
+--             awful.titlebar.show(c, "right")
+--         end
+--         -- if beautiful.titlebar_fun then
+--         --     beautiful.titlebar_fun(c)
+--         -- end
+--     end)
+--
+-- client.connect_signal("property::maximized",
+--     function(c)
+--         if c.maximized or c.fullscreen then
+--             c.border_width = 0
+--             awful.titlebar.hide(c, "top")
+--             awful.titlebar.hide(c, "bottom")
+--             awful.titlebar.hide(c, "left")
+--             awful.titlebar.hide(c, "right")
+--         else
+--             c.border_width = beautiful.border_width
+--             awful.titlebar.show(c, "top")
+--             awful.titlebar.show(c, "bottom")
+--             awful.titlebar.show(c, "left")
+--             awful.titlebar.show(c, "right")
+--         end
+--         -- if beautiful.titlebar_fun then
+--         --     beautiful.titlebar_fun(c)
+--         -- end
+--     end)
+--
+-- client.connect_signal("property::floating",
+--     function(c)
+--         if beautiful.titlebar_fun then
+--             beautiful.titlebar_fun(c)
+--         end
+--         if c.maximized or c.fullscreen then
+--             c.border_width = 0
+--             awful.titlebar.hide(c, "top")
+--             awful.titlebar.hide(c, "bottom")
+--             awful.titlebar.hide(c, "left")
+--             awful.titlebar.hide(c, "right")
+--         else
+--             c.border_width = beautiful.border_width
+--             awful.titlebar.show(c, "top")
+--             awful.titlebar.show(c, "bottom")
+--             awful.titlebar.show(c, "left")
+--             awful.titlebar.show(c, "right")
+--         end
+--     end)
 
 client.connect_signal("property::fullscreen",
     function(c)
@@ -927,7 +1013,7 @@ client.connect_signal("property::maximized",
 
 client.connect_signal("property::floating",
     function(c)
-        if c.floating and not c.maximized then
+        if c.floating and not c.maximized and not c.fullscreen then
             awful.titlebar.show(c)
         else
             awful.titlebar.hide(c)
