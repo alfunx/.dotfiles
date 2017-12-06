@@ -1,6 +1,7 @@
 # .dotfiles
 
-![Awesome WM](https://i.imgur.com/eclgbfA.png)
+![Awesome WM](https://i.imgur.com/GbWSzfw.png)
+![Awesome WM](https://i.imgur.com/KaFqLkO.png)
 
 ## Setup repository
 
