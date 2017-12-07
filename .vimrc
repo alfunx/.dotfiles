@@ -99,7 +99,7 @@ nnoremap <C-H> <C-W><C-H>
 "     autocmd QuickFixCmdPost l*    lwindow
 "   augroup END
 
-"" German keyboard mappings
+" German keyboard mappings
 " noremap ü <C-]>
 noremap ä {
 noremap ö }
@@ -122,7 +122,7 @@ inoremap PP <C-O>o
 " Select last inserted text
 nnoremap gV `[v`]
 
-"" Magic regex search
+" Magic regex search
 noremap <leader>/ /\v
 noremap <leader>? ?\v
 set wildchar=<Tab>
@@ -138,6 +138,9 @@ noremap <F5> :make!<CR>
 
 " Allow saving of files as sudo
 command! W silent w !sudo tee > /dev/null %
+
+" Set path to current file
+nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>
 
 
 """""""""""""""""""""
