@@ -463,6 +463,7 @@ EXEC 01;31  # Unix
 .swo 01;33
 *,v 01;33
 .pacnew 01;33
+.pacsave 01;33
 
 # The brightmagenta (Solarized: purple) color is free for you to use for your
 # custom file type
