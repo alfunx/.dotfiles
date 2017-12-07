@@ -4,3 +4,6 @@
 [submodule ".config/awesome/freedesktop"]
 	path = .config/awesome/freedesktop
 	url = https://github.com/copycat-killer/awesome-freedesktop
+[submodule ".oh-my-zsh"]
+	path = .oh-my-zsh
+	url = https://github.com/alfunx/oh-my-zsh
