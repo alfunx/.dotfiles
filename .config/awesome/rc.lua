@@ -238,18 +238,32 @@ awful.util.mymainmenu = freedesktop.menu.build({
 menubar.utils.terminal = terminal -- Set the Menubar terminal for applications that require it
 -- }}}
 
+-- {{{ Blur Wallpaper
+local set_wallpaper = function(clients)
+    local wallpaper
+    if clients > 0 then
+        if beautiful.wallpaper_blur then
+            wallpaper = beautiful.wallpaper_blur
+        end
+    else
+        if beautiful.wallpaper then
+            wallpaper = beautiful.wallpaper
+        end
+    end
+
+    -- If wallpaper is a function, call it with the screen
+    if type(wallpaper) == "function" then
+        wallpaper = wallpaper(client.screen)
+    end
+
+    gears.wallpaper.maximized(wallpaper, client.screen, true)
+end
+-- }}}
+
 -- {{{ Screen
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", function(s)
-    -- Wallpaper
-    if beautiful.wallpaper then
-        local wallpaper = beautiful.wallpaper
-        -- If wallpaper is a function, call it with the screen
-        if type(wallpaper) == "function" then
-            wallpaper = wallpaper(s)
-        end
-        gears.wallpaper.maximized(wallpaper, s, true)
-    end
+    set_wallpaper(#s.clients)
 end)
 
 -- Create a wibox for each screen and add it
@@ -608,6 +622,8 @@ clientkeys = awful.util.table.join(
               {description = "toggle sticky", group = "client"}),
     awful.key({ mod_4            }, "i", function (c) awful.titlebar.toggle(c) end,
               {description = "toggle titlebar", group = "client"}),
+    awful.key({ mod_4, ctrlkey   }, "i", function (c) set_wallpaper(0) end,
+              {description = "toggle titlebar", group = "client"}),
     awful.key({ mod_4             }, "n", function (c) c.minimized = true end,
               {description = "minimize", group = "client"}),
     awful.key({ mod_4            }, "m",
@@ -690,10 +706,10 @@ awful.rules.rules = {
                        buttons = clientbuttons,
                        screen = awful.screen.preferred,
                        placement = awful.placement.no_overlap+awful.placement.no_offscreen,
-                       size_hints_honor = true }
+                       size_hints_honor = false,
+                       titlebars_enabled = true }
     },
 
-    -- Titlebars
     { rule_any = { type = { "normal", "dialog" } },
       properties = { titlebars_enabled = true } },
 
@@ -904,26 +920,6 @@ end)
 --         c.border_width = beautiful.border_width
 --         c.border_color = beautiful.border_normal
 --     end)
-
-local set_wallpaper = function(clients)
-    local wallpaper
-    if clients > 0 then
-        if beautiful.wallpaper_blur then
-            wallpaper = beautiful.wallpaper_blur
-        end
-    else
-        if beautiful.wallpaper then
-            wallpaper = beautiful.wallpaper
-        end
-    end
-
-    -- If wallpaper is a function, call it with the screen
-    if type(wallpaper) == "function" then
-        wallpaper = wallpaper(client.screen)
-    end
-
-    gears.wallpaper.maximized(wallpaper, client.screen, true)
-end
 
 screen.connect_signal("tag::history::update",
     function(s)
