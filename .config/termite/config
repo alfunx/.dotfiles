@@ -11,7 +11,12 @@ font = Meslo LG S for Powerline 11
 scrollback_lines = 10000
 search_wrap = true
 icon_name = terminal
+
+# if size_hints is off
 geometry = 758x482
+
+# if size_hints is on
+#geometry = 84x24
 
 # "system", "on" or "off"
 cursor_blink = system
