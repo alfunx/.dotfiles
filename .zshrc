@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=/home/amariya/.oh-my-zsh
+export ZSH="$HOME"/.oh-my-zsh
 
 if [ "$TERM" != "linux" ]; then
   # Set name of the theme to load. Optionally, if you set this to "random"
@@ -10,8 +10,8 @@ if [ "$TERM" != "linux" ]; then
   # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
   # ZSH_THEME="robbyrussell"
   # ZSH_THEME="powerlevel9k/powerlevel9k"
-  # ZSH_THEME="agnoster"
-  ZSH_THEME="agnoster-custom"
+  ZSH_THEME="agnoster"
+  # ZSH_THEME="agnoster-custom"
 fi
 
 # Uncomment the following line to use case-sensitive completion.
@@ -58,10 +58,10 @@ fi
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(zsh-syntax-highlighting command-not-found common-aliases)
 
-source $ZSH/oh-my-zsh.sh
-source $HOME/.zsh_aliases
+source "$ZSH"/oh-my-zsh.sh
+source "$HOME"/.zsh_aliases
 
-eval `dircolors $HOME/.dir_colors`
+eval `dircolors "$HOME"/.dir_colors`
 
 # source ~/.dotfiles/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
 
@@ -159,8 +159,8 @@ setopt complete_aliases
 stty -ixon
 
 # Gruvbox colors fix
-if [ -f $HOME/.vim/plugged/gruvbox/gruvbox_256palette.sh ]; then
-  source $HOME/.vim/plugged/gruvbox/gruvbox_256palette.sh
+if [ -f "$HOME"/.vim/plugged/gruvbox/gruvbox_256palette.sh ]; then
+  source "$HOME"/.vim/plugged/gruvbox/gruvbox_256palette.sh
 fi
 
 # Man page colours
