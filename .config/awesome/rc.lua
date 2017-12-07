@@ -353,9 +353,9 @@ globalkeys = awful.util.table.join(
     --           {description = "go back", group = "tag"}),
 
     -- Dynamic tagging
-    awful.key({ mod_4, ctrlkey, shiftkey  }, leftkey, function () lain.util.move_tag(-1) end,
+    awful.key({ mod_4, altkey, shiftkey   }, leftkey, function () lain.util.move_tag(-1) end,
               {description = "move tag backward", group = "tag"}),
-    awful.key({ mod_4, ctrlkey, shiftkey  }, rightkey, function () lain.util.move_tag(1) end,
+    awful.key({ mod_4, altkey, shiftkey   }, rightkey, function () lain.util.move_tag(1) end,
               {description = "move tag forward", group = "tag"}),
     awful.key({ mod_4, altkey             }, "n", function () lain.util.add_tag() end,
               {description = "new tag", group = "tag"}),
@@ -391,6 +391,30 @@ globalkeys = awful.util.table.join(
               {description = "view previous", group = "tag"}),
     awful.key({ mod_4                     }, rightkey, awful.tag.viewnext,
               {description = "view next", group = "tag"}),
+
+    -- Move client between tags
+    awful.key({ mod_4, ctrlkey, shiftkey  }, leftkey,
+        function ()
+            if client.focus then
+                local current_tag = (client.focus.screen.selected_tags[1].index - 2) % #awful.screen.focused().tags + 1
+                local tag = client.focus.screen.tags[current_tag]
+                if tag then
+                    client.focus:move_to_tag(tag)
+                end
+            end
+            awful.tag.viewprev()
+        end,  {description = "move tag backward", group = "tag"}),
+    awful.key({ mod_4, ctrlkey, shiftkey  }, rightkey,
+        function ()
+            if client.focus then
+                local current_tag = (client.focus.screen.selected_tags[1].index) % #awful.screen.focused().tags + 1
+                local tag = client.focus.screen.tags[current_tag]
+                if tag then
+                    client.focus:move_to_tag(tag)
+                end
+            end
+            awful.tag.viewnext()
+        end,  {description = "move tag forward", group = "tag"}),
 
     -- Layout manipulation
     awful.key({ mod_4, shiftkey           }, upkey, function () awful.client.swap.byidx(-1) end,

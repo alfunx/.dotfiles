@@ -69,8 +69,8 @@ local os, math, string = os, math, string
 
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-gruvbox"
-theme.wallpaper                                 = theme.dir .. "/wallpapers/black_base.jpg"
-theme.wallpaper_blur                            = theme.dir .. "/wallpapers/black_blur.jpg"
+theme.wallpaper                                 = theme.dir .. "/wallpapers/matterhorn_base.jpg"
+theme.wallpaper_blur                            = theme.dir .. "/wallpapers/matterhorn_blur.jpg"
 
 local font_name                                 = "Meslo LG S for Powerline"
 local font_size                                 = "11"
@@ -223,7 +223,7 @@ local separators = lain.util.separators
 local clockicon = wibox.widget.imagebox(theme.widget_clock)
 local clock = awful.widget.watch(
     -- "date +'%a %d %b %R'", 60,
-    "date +'%R'", 20,
+    "date +'%R'", 5,
     function(widget, stdout)
         widget:set_markup(markup.fontfg(theme.font_bold, textcolor_light, stdout))
     end
@@ -381,8 +381,11 @@ theme.pacman_click = custom_widget.eventhandler({
     attach_to = { pacman.widget },
     execute = function()
         awful.spawn.easy_async("/home/amariya/scripts/updates.sh", function(stdout, stderr, reason, exit_code)
+            if not stdout or stdout == "" then
+                stdout = "Up to date."
+            end
             eventhandler.notify {
-                text = stdout, timeout = 0
+                text = stdout, timeout = 10
             }
         end)
     end
@@ -512,7 +515,7 @@ local bat = lain.widget.bat({
 --     shape = gears.shape.infobubble,
 --     -- timer_function = function() return "hello" end
 --     -- timer_function = awful.spawn.easy_async("/home/amariya/scripts/battery.sh", function(stdout, stderr, reason, exit_code)
---     --     text = stdout, height = 31, timeout = 0
+--     --     text = stdout, height = 31, timeout = 10
 --     -- end)
 -- })
 
@@ -522,7 +525,7 @@ local bat = lain.widget.bat({
 --     execute = function()
 --         awful.spawn.easy_async("/home/amariya/scripts/battery.sh", function(stdout, stderr, reason, exit_code)
 --             eventhandler.notify {
---                 text = stdout, height = 31, timeout = 0
+--                 text = stdout, height = 31, timeout = 10
 --             }
 --         end)
 --     end
@@ -533,7 +536,7 @@ theme.bat_click = custom_widget.eventhandler({
     execute = function()
         awful.spawn.easy_async("/home/amariya/scripts/battery.sh", function(stdout, stderr, reason, exit_code)
             eventhandler.notify {
-                text = stdout, height = 31, timeout = 0
+                text = stdout, height = 31, timeout = 10
             }
         end)
     end
@@ -579,7 +582,7 @@ local net = lain.widget.net({
 --     execute = function()
 --         awful.spawn.easy_async("/home/amariya/scripts/ip_address.sh", function(stdout, stderr, reason, exit_code)
 --             eventhandler.notify {
---                 text = stdout, timeout = 0
+--                 text = stdout, timeout = 10
 --             }
 --         end)
 --     end
@@ -590,7 +593,7 @@ theme.net_click = custom_widget.eventhandler({
     execute = function()
         awful.spawn.easy_async("/home/amariya/scripts/ip_address.sh", function(stdout, stderr, reason, exit_code)
             eventhandler.notify {
-                text = stdout, timeout = 0
+                text = stdout, timeout = 10
             }
         end)
     end
