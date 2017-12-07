@@ -99,6 +99,36 @@ eval `dircolors $HOME/.dir_colors`
 #  CUSTOM  #
 ############
 
+# HISTFILE="$HOME/.zsh_history"
+# HISTSIZE=10000000
+# SAVEHIST=$HISTSIZE
+# # Treat the '!' character specially during expansion.
+# setopt BANG_HIST
+# # Write the history file in the ":start:elapsed;command" format.
+# setopt EXTENDED_HISTORY
+# # Write to the history file immediately, not when the shell exits.
+# setopt INC_APPEND_HISTORY
+# # Share history between all sessions.
+# setopt SHARE_HISTORY
+# # Expire duplicate entries first when trimming history.
+# setopt HIST_EXPIRE_DUPS_FIRST
+# # Don't record an entry that was just recorded again.
+# setopt HIST_IGNORE_DUPS
+# # Delete old recorded entry if new entry is a duplicate.
+# setopt HIST_IGNORE_ALL_DUPS
+# # Do not display a line previously found.
+# setopt HIST_FIND_NO_DUPS
+# # Don't record an entry starting with a space.
+# setopt HIST_IGNORE_SPACE
+# # Don't write duplicate entries in the history file.
+# setopt HIST_SAVE_NO_DUPS
+# # Remove superfluous blanks before recording entry.
+# setopt HIST_REDUCE_BLANKS
+# # Don't execute immediately upon history expansion.
+# setopt HIST_VERIFY
+# # Beep when accessing nonexistent history.
+# setopt HIST_BEEP
+
 # # Alternative colors
 # if [ "$TERM" = "linux" ]; then
 #     # echo -en "\e]P0282828" #black
@@ -167,11 +197,13 @@ export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.g
 export FZF_CTRL_T_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*" 2> /dev/null'
 export FZF_TMUX=1
 export FZF_TMUX_HEIGHT=30%
+export FZF_COMPLETION_TRIGGER='**'
 # set -g FZF_CTRL_T_COMMAND "command find -L \$dir -type f 2> /dev/null | sed '1d; s#^\./##'"
 
 export FZF_CTRL_T_OPTS="--no-reverse"
 export FZF_CTRL_R_OPTS="--no-reverse"
 export FZF_ALT_C_OPTS="--no-reverse"
+export FZF_COMPLETION_OPTS="--no-reverse"
 
 # TMUX
 if [[ "$(pgrep termite | wc -l)" -eq "1" ]] && [[ "$TERM" == "xterm-termite" ]]; then
