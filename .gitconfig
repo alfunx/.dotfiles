@@ -45,16 +45,6 @@
 	c = commit --verbose
 	ca = commit --amend --verbose
 
-	r = reset HEAD
-	r1 = reset HEAD~
-	r2 = reset HEAD~2
-	rh = reset --hard HEAD
-	rh1 = reset HEAD~ --hard
-	rh2 = reset HEAD~2 --hard
-	rs = reset --soft HEAD
-	rs1 = reset HEAD~ --soft
-	rs2 = reset HEAD~2 --soft
-
 	s = status -s -b
 	co = checkout
 	com = checkout master
@@ -67,6 +57,7 @@
 	# list branches sorted by last modified
 	lb = "!git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'"
 
+	r = rebase
 	ri = rebase -i
 	# rebase on master (never do this on a public branch!)
 	rim = rebase -i master
