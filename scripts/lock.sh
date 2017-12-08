@@ -15,7 +15,7 @@ maim -u \
   --keyhlcolor=FB4934FF --bshlcolor=FB4934FF --separatorcolor=282828FF \
   --insidevercolor=FABD2F99 --insidewrongcolor=FB493499 \
   --ringvercolor=EBDBB2FF --ringwrongcolor=EBDBB2FF --indpos='x+100:y+980' \
-  --radius=27 --veriftext='' --wrongtext=''
+  --radius=27 --ring-width=10 --veriftext='' --wrongtext=''
 
 # sleep 0.5
 # dbus-send --print-reply --dest=com.github.chjj.compton.${DISPLAY/:/_} / \
