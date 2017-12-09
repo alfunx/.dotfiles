@@ -215,3 +215,6 @@ fi
 export PATH="$PATH:/home/amariya/scripts"
 export VISUAL="vim"
 export EDITOR="vim"
+
+# GPG for Github
+export GPG_TTY=$(tty)

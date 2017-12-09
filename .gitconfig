@@ -1,6 +1,7 @@
 [user]
 	email = alphonse.mariya@hotmail.com
 	name = Alphonse Mariya
+	signingkey = 24D4C85E7B4585A9
 [core]
 	editor = vim
 	whitespace = fix,trailing-space,cr-at-eol
@@ -42,8 +43,8 @@
 	au = add -u
 	ai = add -i
 	ap = add -p
-	c = commit --verbose
-	ca = commit --amend --verbose
+	c = commit -S --verbose
+	ca = commit -S --amend --verbose
 
 	s = status -s -b
 	co = checkout
@@ -68,4 +69,4 @@
 	la = "!git config -l | grep alias | cut -c 7- | sed -e 's/=/\\t/' | column -s $'\\t' | less"
 
 	# initialize repository in current directory
-	this = "!git init && git commit -m 'root' --allow-empty"
+	this = "!git init && git commit -S -m 'root' --allow-empty"
