@@ -45,9 +45,9 @@ dotfiles rm --cached ~/.some_file
 
 First clone dependent repositories, in this case for example `oh-my-zsh`. Clone
 your dotfiles repository as bare repository. Setup temporary alias and then
-checkout. If there exists files that collide with your repository (like a
-default `.bashrc`), the files will be moved to `~/.dotfiles.bak/`. Then update
-all submodules and again hide untracked files when querying the status.
+checkout. If there exist files that collide with your repository (like a default
+`.bashrc`), the files will be moved to `~/.dotfiles.bak/`. Then update all
+submodules and again hide untracked files when querying the status.
 
 ```bash
 git clone https://github.com/robbyrussell/oh-my-zsh \
