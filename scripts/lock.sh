@@ -6,11 +6,14 @@
 #     com.github.chjj.compton.opts_set string:unredir_if_possible boolean:false
 
 lock='/home/amariya/pictures/lock.png'
+image=$(mktemp --suffix=.png)
+trap 'rm -f "$image"' EXIT INT TERM
 
 maim -u \
   | convert png:- -scale 10% -scale 1000% png:- \
-  | convert png:- "$lock" -gravity center -composite -matte png:- \
-  | i3lock -e -i /dev/stdin \
+  | convert png:- "$lock" -gravity center -composite -matte "$image"
+
+i3lock -e -i "$image" \
   --insidecolor=28282899 --ringcolor=EBDBB2FF --line-uses-inside \
   --keyhlcolor=FB4934FF --bshlcolor=FB4934FF --separatorcolor=282828FF \
   --insidevercolor=FABD2F99 --insidewrongcolor=FB493499 \
