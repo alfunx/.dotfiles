@@ -599,7 +599,7 @@ ascii_colors=(12 4 4 4 4 4)
 # Default: 'on'
 # Values:  'on', 'off'
 # Flag:    --ascii_bold
-ascii_bold="off"
+ascii_bold="on"
 
 
 # Image Options
