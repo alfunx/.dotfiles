@@ -4,10 +4,10 @@
 
 ## Setup repository
 
-Setup a bare git repository in your home folder. Bare repositories have no
+Setup a bare git repository in your home directory. Bare repositories have no
 working directory, so setup an alias to avoid typing the long command. Add the
-git directory `~/.dotfiles/` to the gitignore as a security measure. Setup remote
-and push. Hide untracked files when querying the status.
+git directory `~/.dotfiles/` to the gitignore as a security measure. Setup
+remote and push. Hide untracked files when querying the status.
 
 ```bash
 git init --bare "$HOME"/.dotfiles
