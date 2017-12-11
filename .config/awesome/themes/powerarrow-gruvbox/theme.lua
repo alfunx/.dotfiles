@@ -229,10 +229,14 @@ local clock = awful.widget.watch(
     end
 )
 
+clock_widget = wibox.widget {
+    clock, layout = wibox.layout.align.horizontal
+}
+
 -- Calendar
 theme.cal = lain.widget.calendar({
     cal = "cal --color=always --monday",
-    attach_to = { clock },
+    attach_to = { clock_widget },
     icons = "",
     notification_preset = {
         font = theme.font,
@@ -319,6 +323,10 @@ local mem = lain.widget.mem({
     end
 })
 
+mem_widget = wibox.widget {
+    memicon, mem.widget, layout = wibox.layout.align.horizontal
+}
+
 -- CPU
 local cpuicon = wibox.widget.imagebox(theme.widget_cpu)
 local cpu = lain.widget.cpu({
@@ -341,6 +349,10 @@ local cpu = lain.widget.cpu({
         widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, cpu_now.usage))
     end
 })
+
+cpu_widget = wibox.widget {
+    cpuicon, cpu.widget, layout = wibox.layout.align.horizontal
+}
 
 -- SYSLOAD
 local sysloadicon = wibox.widget.imagebox(theme.widget_hdd)
@@ -367,6 +379,10 @@ local sysload = lain.widget.sysload({
     end
 })
 
+sysload_widget = wibox.widget {
+    sysloadicon, sysload.widget, layout = wibox.layout.align.horizontal
+}
+
 -- PACMAN
 local pacmanicon = wibox.widget.imagebox(theme.widget_pacman)
 local pacman = custom_widget.pacman({
@@ -377,8 +393,12 @@ local pacman = custom_widget.pacman({
     end
 })
 
+pacman_widget = wibox.widget {
+    pacmanicon, pacman.widget, layout = wibox.layout.align.horizontal
+}
+
 theme.pacman_click = custom_widget.eventhandler({
-    attach_to = { pacman.widget },
+    attach_to = { pacman_widget },
     execute = function()
         awful.spawn.easy_async("/home/amariya/scripts/updates.sh", function(stdout, stderr, reason, exit_code)
             if not stdout or stdout == "" then
@@ -405,6 +425,10 @@ local users = custom_widget.users({
         widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, logged_in))
     end
 })
+
+users_widget = wibox.widget {
+    usersicon, users.widget, layout = wibox.layout.align.horizontal
+}
 
 --[[ Coretemp (lm_sensors, per core)
 local tempwidget = awful.widget.watch({awful.util.shell, '-c', 'sensors | grep Core'}, 30,
@@ -439,6 +463,10 @@ end)
 --     end
 -- })
 
+-- temp_widget = wibox.widget {
+--     tempicon, temp.widget, layout = wibox.layout.align.horizontal
+-- }
+
 -- -- FS
 -- local fsicon = wibox.widget.imagebox(theme.widget_hdd)
 -- theme.fs = lain.widget.fs({
@@ -448,6 +476,10 @@ end)
 --         widget:set_markup(markup.fontfg(theme.font, textcolor_light, " " .. fs_now.available_gb .. "GB "))
 --     end
 -- })
+
+-- fs_widget = wibox.widget {
+--     fsicon, theme.fs.widget, layout = wibox.layout.align.horizontal
+-- }
 
 -- ALSA volume
 local volicon = wibox.widget.imagebox(theme.widget_vol)
@@ -469,8 +501,12 @@ theme.volume = lain.widget.alsa({
     end,
 })
 
+vol_widget = wibox.widget {
+    volicon, theme.volume.widget, layout = wibox.layout.align.horizontal
+}
+
 theme.volume_click = custom_widget.eventhandler({
-    attach_to = { theme.volume.widget },
+    attach_to = { vol_widget },
     execute = function() awful.spawn("termite -e \"alsamixer\"") end,
 })
 
@@ -481,9 +517,7 @@ local bat = lain.widget.bat({
         local bg_normal_color = textcolor_light
         local bg_normal_font = theme.font
 
-        if bat_now.ac_status == 1 then
-            baticon:set_image(theme.widget_ac)
-        elseif tonumber(bat_now.perc) <= 10 then
+        if tonumber(bat_now.perc) <= 10 then
             baticon:set_image(theme.widget_battery_empty)
             bg_normal_color = red_light
             bg_normal_font = theme.font_bold
@@ -501,12 +535,24 @@ local bat = lain.widget.bat({
             baticon:set_image(theme.widget_battery)
         end
 
+        if bat_now.ac_status == 1 then
+            baticon:set_image(theme.widget_ac)
+            if tonumber(bat_now.perc) >= 95 then
+                bg_normal_color = green_light
+                bg_normal_font = theme.font_bold
+            end
+        end
+
         widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, bat_now.perc))
     end,
     notify = "off",
     batteries = {"BAT0"},
     ac = "AC"
 })
+
+bat_widget = wibox.widget {
+    baticon, bat.widget, layout = wibox.layout.align.horizontal
+}
 
 -- theme.bat_hover = awful.tooltip({
 --     objects = { bat.widget },
@@ -532,7 +578,7 @@ local bat = lain.widget.bat({
 -- })
 
 theme.bat_click = custom_widget.eventhandler({
-    attach_to = { bat.widget },
+    attach_to = { bat_widget },
     execute = function()
         awful.spawn.easy_async("/home/amariya/scripts/battery.sh", function(stdout, stderr, reason, exit_code)
             eventhandler.notify {
@@ -550,6 +596,10 @@ theme.bat_click = custom_widget.eventhandler({
 --         widget:set_markup(markup.fontfg(theme.font, textcolor_light, " " .. units .. "°C "))
 --     end
 -- })
+
+-- weather_widget = wibox.widget {
+--     weather.icon, weather.widget, layout = wibox.layout.align.horizontal
+-- }
 
 -- NET
 local neticon = wibox.widget.imagebox(theme.widget_net)
@@ -571,6 +621,10 @@ local net = lain.widget.net({
     -- units = 131072, -- in mbps (1024^2/8)
 })
 
+net_widget = wibox.widget {
+    net.widget, layout = wibox.layout.align.horizontal
+}
+
 -- theme.net_click = custom_widget.eventhandler({
 --     attach_to = { net.widget },
 --     execute = function() awful.spawn("termite -e \"sudo wifi-menu\"") end,
@@ -589,7 +643,7 @@ local net = lain.widget.net({
 -- })
 
 theme.net_click = custom_widget.eventhandler({
-    attach_to = { net.widget },
+    attach_to = { net_widget },
     execute = function()
         awful.spawn.easy_async("/home/amariya/scripts/ip_address.sh", function(stdout, stderr, reason, exit_code)
             eventhandler.notify {
@@ -612,12 +666,12 @@ function theme.powerline_rl(cr, width, height)
         offset = -arrow_depth
     end
 
-    cr:move_to(offset + arrow_depth         , 0        )
-    cr:line_to(offset + width               , 0        )
-    cr:line_to(offset + width - arrow_depth , height/2 )
-    cr:line_to(offset + width               , height   )
-    cr:line_to(offset + arrow_depth         , height   )
-    cr:line_to(offset                       , height/2 )
+    cr:move_to( offset + arrow_depth         , 0        )
+    cr:line_to( offset + width               , 0        )
+    cr:line_to( offset + width - arrow_depth , height/2 )
+    cr:line_to( offset + width               , height   )
+    cr:line_to( offset + arrow_depth         , height   )
+    cr:line_to( offset                       , height/2 )
 
     cr:close_path()
 end
@@ -685,34 +739,34 @@ function theme.at_screen_connect(s)
 
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
-            wibox.container.background(wibox.container.margin(wibox.widget { nil, wibox.widget.systray(), layout = wibox.layout.align.horizontal }, 8, 8, 3, 3), theme.tasklist_bg_normal),
+            wibox.container.background(wibox.container.margin(wibox.widget { wibox.widget.systray(), layout = wibox.layout.align.horizontal }, 8, 8, 3, 3), theme.tasklist_bg_normal),
 
             -- wibox.container.margin(scissors, 4, 8),
-            -- wibox.container.background(wibox.container.margin(wibox.widget { weather.icon, weather.widget, layout = wibox.layout.align.horizontal }, 4, 2), cpu_bg_normal),
+            -- wibox.container.background(wibox.container.margin(weather_widget, 4, 2), cpu_bg_normal),
 
             arrow_l(theme.tasklist_bg_normal, cpu_bg_normal),
             -- arrow_l(theme.bg_normal, fs_bg_normal),
-            -- wibox.container.background(wibox.container.margin(wibox.widget { fsicon, theme.fs.widget, layout = wibox.layout.align.horizontal }, 4, 2), fs_bg_normal),
+            -- wibox.container.background(wibox.container.margin(fs_widget, 4, 2), fs_bg_normal),
             -- arrow_l(fs_bg_normal, temp_bg_normal),
-            -- wibox.container.background(wibox.container.margin(wibox.widget { tempicon, temp.widget, layout = wibox.layout.align.horizontal }, 4, 2), temp_bg_normal),
+            -- wibox.container.background(wibox.container.margin(temp_widget, 4, 2), temp_bg_normal),
             -- arrow_l(temp_bg_normal, pacman_bg_normal),
-            wibox.container.background(wibox.container.margin(wibox.widget { pacmanicon, pacman.widget, layout = wibox.layout.align.horizontal }, 2, 6), pacman_bg_normal),
+            wibox.container.background(wibox.container.margin(pacman_widget, 2, 6), pacman_bg_normal),
             -- arrow_l(pacman_bg_normal, users_bg_normal),
-            wibox.container.background(wibox.container.margin(wibox.widget { usersicon, users.widget, layout = wibox.layout.align.horizontal }, 2, 6), users_bg_normal),
+            wibox.container.background(wibox.container.margin(users_widget, 2, 6), users_bg_normal),
             -- arrow_l(users_bg_normal, sysload_bg_normal),
-            wibox.container.background(wibox.container.margin(wibox.widget { sysloadicon, sysload.widget, layout = wibox.layout.align.horizontal }, 2, 6), sysload_bg_normal),
+            wibox.container.background(wibox.container.margin(sysload_widget, 2, 6), sysload_bg_normal),
             -- arrow_l(sysload_bg_normal, cpu_bg_normal),
-            wibox.container.background(wibox.container.margin(wibox.widget { cpuicon, cpu.widget, layout = wibox.layout.align.horizontal }, 2, 6), cpu_bg_normal),
+            wibox.container.background(wibox.container.margin(cpu_widget, 2, 6), cpu_bg_normal),
             -- arrow_l(cpu_bg_normal, mem_bg_normal),
-            wibox.container.background(wibox.container.margin(wibox.widget { memicon, mem.widget, layout = wibox.layout.align.horizontal }, 2, 6), mem_bg_normal),
+            wibox.container.background(wibox.container.margin(mem_widget, 2, 6), mem_bg_normal),
             -- arrow_l(mem_bg_normal, vol_bg_normal),
-            wibox.container.background(wibox.container.margin(wibox.widget { volicon, theme.volume.widget, layout = wibox.layout.align.horizontal }, 2, 6), vol_bg_normal),
+            wibox.container.background(wibox.container.margin(vol_widget, 2, 6), vol_bg_normal),
             -- arrow_l(vol_bg_normal, bat_bg_normal),
-            wibox.container.background(wibox.container.margin(wibox.widget { baticon, bat.widget, layout = wibox.layout.align.horizontal }, 2, 10), bat_bg_normal),
+            wibox.container.background(wibox.container.margin(bat_widget, 2, 10), bat_bg_normal),
             arrow_l(bat_bg_normal, net_bg_normal),
-            wibox.container.background(wibox.container.margin(wibox.widget { --[[neticon, --]] net.widget, layout = wibox.layout.align.horizontal }, 8, 10), net_bg_normal),
+            wibox.container.background(wibox.container.margin(net_widget, 8, 10), net_bg_normal),
             arrow_l(net_bg_normal, clock_bg_normal),
-            wibox.container.background(wibox.container.margin(wibox.widget { clock, layout = wibox.layout.align.horizontal }, 8, 8), clock_bg_normal),
+            wibox.container.background(wibox.container.margin(clock_widget, 8, 8), clock_bg_normal),
             --]]
         },
     }

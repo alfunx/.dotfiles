@@ -725,6 +725,9 @@ awful.rules.rules = {
     { rule = { class = "Lxappearance" },
       properties = { floating = true, x = 30, y = 51, placement = awful.placement.centered+awful.placement.no_offscreen } },
 
+    { rule = { class = "Oomox" },
+      properties = { floating = true, x = 30, y = 51, placement = awful.placement.centered+awful.placement.no_offscreen } },
+
     { rule = { class = "Pinentry" },
       properties = { floating = true, placement = awful.placement.centered+awful.placement.no_offscreen } },
 
