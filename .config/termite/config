@@ -1,16 +1,24 @@
 [options]
+allow_bold = true
+audible_bell = false
+clickable_url = true
+dynamic_title = true
+font = Meslo LG S for Powerline 11
+fullscreen = true
+
+icon_name = terminal
+mouse_autohide = true
 scroll_on_output = false
 scroll_on_keystroke = true
-audible_bell = false
-mouse_autohide = true
-allow_bold = true
-dynamic_title = true
-urgent_on_bell = true
-clickable_url = true
-font = Meslo LG S for Powerline 11
+# Length of the scrollback buffer, 0 disabled the scrollback buffer
+# and setting it to a negative value means "infinite scrollback"
 scrollback_lines = 10000
 search_wrap = true
-icon_name = terminal
+urgent_on_bell = true
+hyperinks = true
+
+# $BROWSER is used by default if set, with xdg-open as a fallback
+browser = xdg-open
 
 # if size_hints is off
 geometry = 758x482
@@ -24,33 +32,32 @@ cursor_blink = system
 # "block", "underline" or "ibeam"
 cursor_shape = block
 
-# $BROWSER is used by default if set, with xdg-open as a fallback
-browser = xdg-open
+# Hide links that are no longer valid in url select overlay mode
+filter_unmatched_urls = true
+
+# Emit escape sequences for extra modified keys
+#modify_other_keys = false
 
 # set size hints for the window
 size_hints = false
 
-# Hide links that are no longer valid in url select overlay mode
-filter_unmatched_urls = true
-
-# emit escape sequences for extra modified keys
-#modify_other_keys = false
+# "off", "left" or "right"
+scrollbar = off
 
 [colors]
+# If both of these are unset, cursor falls back to the foreground color,
+# and cursor_foreground falls back to the background color.
 #cursor = #dcdccc
 #cursor_foreground = #dcdccc
 
 foreground = #ebdbb2
 foreground_bold = #ebdbb2
-
-#background = #1d2021 # hard contrast
 background = #282828
-#background = #32302f # soft contrast
 
 # 20% background transparency (requires a compositor)
 #background = rgba(63, 63, 63, 0.8)
 
-# if unset, will reverse foreground and background
+# If unset, will reverse foreground and background
 #highlight = #2f2f2f
 
 # colors from color0 to color254 can be set
