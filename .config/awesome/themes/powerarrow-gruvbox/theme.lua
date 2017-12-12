@@ -92,13 +92,17 @@ theme.bg_normal                                 = bw0
 theme.bg_focus                                  = bw2
 theme.bg_urgent                                 = red_light
 
-theme.notification_width                        = 600
+theme.notification_max_width                    = 600
 theme.notification_margin                       = 100
 theme.notification_border_width                 = 0
-theme.notification_shape                        = gears.shape.rounded_rect
--- theme.notification_fg                           = textcolor_dark
--- theme.notification_bg                           = bw9
--- theme.notification_border_color                 = bw9
+theme.notification_opacity                      = 0.9
+theme.notification_shape                        = function(cr, width, height)
+                                                      gears.shape.rounded_rect(cr, width, height, 5)
+                                                  end
+
+theme.notification_fg                           = textcolor_light
+theme.notification_bg                           = bw0
+theme.notification_border_color                 = bw0
 
 theme.taglist_font                              = theme.font_bold
 theme.taglist_fg_normal                         = theme.fg_normal
@@ -712,7 +716,8 @@ function theme.at_screen_connect(s)
     -- Create a tasklist widget
     s.mytasklist = awful.widget.tasklist(s,
     awful.widget.tasklist.filter.currenttags, awful.util.tasklist_buttons, {
-        bg_focus = theme.tasklist_bg_focus, shape = gears.shape.octogon,
+        bg_focus = theme.tasklist_bg_focus,
+        shape = function(cr, width, height) gears.shape.rounded_rect(cr, width, height, 5) end,
         shape_border_width = 0, shape_border_color = theme.tasklist_bg_normal,
         align = "center" })
 
