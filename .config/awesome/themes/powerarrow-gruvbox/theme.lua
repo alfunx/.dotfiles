@@ -390,7 +390,7 @@ sysload_widget = wibox.widget {
 -- PACMAN
 local pacmanicon = wibox.widget.imagebox(theme.widget_pacman)
 local pacman = custom_widget.pacman({
-    settings = function()
+    notify = true, settings = function()
         local bg_normal_color = textcolor_light
         local bg_normal_font = theme.font
         widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, available))
@@ -409,7 +409,9 @@ theme.pacman_click = custom_widget.eventhandler({
                 stdout = "Up to date."
             end
             eventhandler.notify {
-                text = stdout, timeout = 10
+                title = "pacman & AUR updates",
+                text = string.gsub(stdout, '\n*$', ''),
+                timeout = 10
             }
         end)
     end
@@ -586,7 +588,8 @@ theme.bat_click = custom_widget.eventhandler({
     execute = function()
         awful.spawn.easy_async("/home/amariya/scripts/battery.sh", function(stdout, stderr, reason, exit_code)
             eventhandler.notify {
-                text = stdout, height = 31, timeout = 10
+                text = string.gsub(stdout, '\n*$', ''),
+                timeout = 10
             }
         end)
     end
@@ -651,7 +654,9 @@ theme.net_click = custom_widget.eventhandler({
     execute = function()
         awful.spawn.easy_async("/home/amariya/scripts/ip_address.sh", function(stdout, stderr, reason, exit_code)
             eventhandler.notify {
-                text = stdout, timeout = 10
+                title = "Network summary",
+                text = string.gsub(stdout, '\n$', ''),
+                timeout = 10
             }
         end)
     end
