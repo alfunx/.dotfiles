@@ -20,6 +20,7 @@ local naughty       = require("naughty")
 local lain          = require("lain")
 local menubar       = require("menubar")
 local freedesktop   = require("freedesktop")
+local remote        = require("awful.remote")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
 -- }}}
 
@@ -718,6 +719,9 @@ awful.rules.rules = {
 
     { rule = { class = "VirtualBox" },
       properties = { screen = 1, tag = awful.util.tagnames[8] } },
+
+    { rule = { class = "Git-gui" },
+      properties = { floating = true, x = 30, y = 51, placement = awful.placement.centered+awful.placement.no_offscreen } },
 
     { rule = { class = "feh" },
       properties = { floating = true, x = 30, y = 51, placement = awful.placement.centered+awful.placement.no_offscreen } },

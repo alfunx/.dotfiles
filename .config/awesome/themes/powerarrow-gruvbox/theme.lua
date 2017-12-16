@@ -403,18 +403,7 @@ pacman_widget = wibox.widget {
 
 theme.pacman_click = custom_widget.eventhandler({
     attach_to = { pacman_widget },
-    execute = function()
-        awful.spawn.easy_async("/home/amariya/scripts/updates.sh", function(stdout, stderr, reason, exit_code)
-            if not stdout or stdout == "" then
-                stdout = "Up to date."
-            end
-            eventhandler.notify {
-                title = "pacman & AUR updates",
-                text = string.gsub(stdout, '\n*$', ''),
-                timeout = 10
-            }
-        end)
-    end
+    execute = pacman.manual_update
 })
 
 -- USERS
@@ -654,7 +643,7 @@ theme.net_click = custom_widget.eventhandler({
     execute = function()
         awful.spawn.easy_async("/home/amariya/scripts/ip_address.sh", function(stdout, stderr, reason, exit_code)
             eventhandler.notify {
-                title = "Network summary",
+                title = "Network",
                 text = string.gsub(stdout, '\n$', ''),
                 timeout = 10
             }
