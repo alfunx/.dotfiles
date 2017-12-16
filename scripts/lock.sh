@@ -14,11 +14,11 @@ maim -u \
   | convert png:- "$lock" -gravity center -composite -matte "$image"
 
 i3lock -e -i "$image" \
-  --insidecolor=28282899 --ringcolor=EBDBB2FF --line-uses-inside \
-  --keyhlcolor=FB4934FF --bshlcolor=FB4934FF --separatorcolor=282828FF \
-  --insidevercolor=FABD2F99 --insidewrongcolor=FB493499 \
-  --ringvercolor=EBDBB2FF --ringwrongcolor=EBDBB2FF --indpos='x+100:y+980' \
-  --radius=27 --ring-width=10 --veriftext='' --wrongtext=''
+  --insidecolor=EBDBB233 --ringcolor=282828FF --linecolor=EBDBB2FF \
+  --keyhlcolor=EBDBB2FF --bshlcolor=FB4934FF --separatorcolor=282828FF \
+  --insidevercolor=FABD2FFF --insidewrongcolor=FB4934FF \
+  --ringvercolor=282828FF --ringwrongcolor=282828FF --indpos='x+100:y+980' \
+  --radius=32 --ring-width=4 --veriftext='' --wrongtext=''
 
 # sleep 0.5
 # dbus-send --print-reply --dest=com.github.chjj.compton.${DISPLAY/:/_} / \
