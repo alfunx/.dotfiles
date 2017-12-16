@@ -14,9 +14,9 @@ git init --bare "$HOME"/.dotfiles
 echo 'alias dotfiles="/usr/bin/env git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"' \
   >> "$HOME"/.zshrc
 source "$HOME"/.zshrc
-echo ".dotfiles" >> "$HOME"/.gitignore
+echo '.dotfiles' >> "$HOME"/.gitignore
 dotfiles add "$HOME"/.gitignore
-dotfiles commit -m "Git: Add gitignore"
+dotfiles commit -m 'Git: Add gitignore'
 dotfiles remote add origin https://github.com/alfunx/.dotfiles
 dotfiles push --set-upstream origin master
 dotfiles config --local status.showUntrackedFiles no
@@ -29,9 +29,9 @@ Use the default git subcommands to track, update and remove files.
 ```bash
 dotfiles status
 dotfiles add .zshrc
-dotfiles commit -m "Zsh: Add zshrc"
+dotfiles commit -m 'Zsh: Add zshrc'
 dotfiles add .vimrc
-dotfiles commit -m "Vim: Add vimrc"
+dotfiles commit -m 'Vim: Add vimrc'
 dotfiles push
 ```
 
@@ -74,7 +74,7 @@ dotfiles config --local status.showUntrackedFiles no
 
 ## Additional commands
 
-Instead of the alias provided before you can use following function. `listall`
+Instead of the alias provided above, you can use following function. `listall`
 will show all tracked files, `listtree` will show those files in a tree format.
 You may need to use a pager for these commands.
 
