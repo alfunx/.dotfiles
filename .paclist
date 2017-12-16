@@ -52,6 +52,8 @@ gimp
 git
 glances
 glibc
+gpick
+grabc
 grep
 groff
 grub
@@ -107,6 +109,7 @@ nano
 ncdu
 ncmpcpp
 neofetch
+net-tools
 netctl
 netctl-dispatcher-chrony
 nmap
@@ -148,6 +151,7 @@ ranger
 redshift
 reiserfsprogs
 ripgrep
+rlwrap
 rofi
 rsync
 s-nail
@@ -177,6 +181,7 @@ texlive-publishers
 texlive-science
 the_silver_searcher
 thunderbird
+tk
 tmux
 toilet
 toilet-fonts
@@ -190,7 +195,6 @@ unzip
 usbutils
 util-linux
 vi
-vicious
 virtualbox
 vlc
 w3m
