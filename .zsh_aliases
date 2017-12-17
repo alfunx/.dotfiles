@@ -3,21 +3,21 @@
 ############
 
 dotfiles() {
-  case $1 in
+  case "$1" in
     listall)
       shift
-      dotfiles ls-tree --full-tree -r --name-only HEAD $@
+      dotfiles ls-tree --full-tree -r --name-only HEAD "$@"
       ;;
     listtree)
       shift
       if hash treeify 2>/dev/null; then
-        dotfiles ls-tree --full-tree -r --name-only HEAD $@ | treeify
+        dotfiles ls-tree --full-tree -r --name-only HEAD "$@" | treeify
       else
         dotfiles listall
       fi
       ;;
     *)
-      /usr/bin/env git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME $@
+      /usr/bin/env git --git-dir="$HOME/.dotfiles/" --work-tree="$HOME" "$@"
       ;;
   esac
 }
@@ -28,48 +28,48 @@ compdef dotfiles='git'
 #############
 
 con() {
-  case $1 in
+  case "$1" in
     vim)
       shift
-      vim ~/.vimrc $@
+      vim ~/.vimrc "$@"
       ;;
     tmux)
       shift
-      vim ~/.tmux.conf $@
+      vim ~/.tmux.conf "$@"
       ;;
     git)
       shift
-      vim ~/.gitconfig ~/.gitignore ~/.gitmodules $@
+      vim ~/.gitconfig ~/.gitignore ~/.gitmodules "$@"
       ;;
     zsh)
       shift
-      vim ~/.zshrc ~/.zsh_aliases ~/.oh-my-zsh/themes/agnoster-custom.zsh-theme $@
+      vim ~/.zshrc ~/.zsh_aliases ~/.oh-my-zsh/themes/agnoster-custom.zsh-theme "$@"
       ;;
     bash)
       shift
-      vim ~/.bashrc ~/.bash_profile $@
+      vim ~/.bashrc ~/.bash_profile "$@"
       ;;
     aw)
       shift
-      vim ~/.config/awesome/rc.lua ~/.config/awesome/themes/powerarrow-gruvbox/theme.lua $@
+      vim ~/.config/awesome/rc.lua ~/.config/awesome/themes/powerarrow-gruvbox/theme.lua "$@"
       ;;
     xorg)
       shift
-      vim ~/.xinitrc $@
+      vim ~/.xinitrc "$@"
       ;;
     script)
       shift
-      vim ~/scripts/* $@
+      vim ~/scripts/* "$@"
       ;;
     *)
       shift
-      vim ~/.zsh_aliases $@
+      vim ~/.zsh_aliases "$@"
       ;;
   esac
 }
 
 mkcd() {
-  mkdir -p $@ && cd $@
+  mkdir -p "$@" && cd "$@"
 }
 
 toilol() {
@@ -79,17 +79,17 @@ toilol() {
 pacman() {
   local pattern="^-S[cuy]|^-S$|^-R[sn]|^-U"
   if [[ "$1" =~ $pattern ]]; then
-    sudo /usr/bin/pacman $@
+    sudo /usr/bin/pacman "$@"
   else
-    /usr/bin/pacman $@
+    /usr/bin/pacman "$@"
   fi
 }
 
 tmux() {
   if [ "$TERM" = "linux" ]; then
-    /usr/bin/tmux -L linux -f $HOME/.tmux.minimal.conf $@
+    /usr/bin/tmux -L linux -f "$HOME/.tmux.minimal.conf" "$@"
   else
-    /usr/bin/tmux $@
+    /usr/bin/tmux "$@"
   fi
 }
 
