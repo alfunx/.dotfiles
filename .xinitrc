@@ -8,12 +8,12 @@ sysmodmap=/etc/X11/xinit/.Xmodmap
 
 # merge in defaults and keymaps
 
-if [ -f $sysresources ]; then
-    xrdb -merge $sysresources
+if [ -f "$sysresources" ]; then
+    xrdb -merge "$sysresources"
 fi
 
-if [ -f $sysmodmap ]; then
-    xmodmap $sysmodmap
+if [ -f "$sysmodmap" ]; then
+    xmodmap "$sysmodmap"
 fi
 
 if [ -f "$userresources" ]; then
@@ -38,4 +38,23 @@ unclutter -root -reset &
 redshift -c .config/redshift.conf &
 compton --config .config/compton.conf &
 
-awesome
+# select wm/de with: startx ~/.xinitrc session
+session=${1:-awesome}
+
+case "$session" in
+  awesome)
+    exec awesome
+    ;;
+  termite|term)
+    exec termite --geometry='1920x1080'
+    ;;
+  alacritty)
+    exec alacritty --dimensions 213 56
+    ;;
+  i3|i3wm)
+    exec i3
+    ;;
+  *)
+    exec "$session"
+    ;;
+esac
