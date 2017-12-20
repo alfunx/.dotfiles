@@ -92,17 +92,16 @@ theme.bg_normal                                 = bw0
 theme.bg_focus                                  = bw2
 theme.bg_urgent                                 = red_light
 
-theme.notification_max_width                    = 600
-theme.notification_margin                       = 100
-theme.notification_border_width                 = 0
-theme.notification_opacity                      = 0.9
-theme.notification_shape                        = function(cr, width, height)
-                                                      gears.shape.rounded_rect(cr, width, height, 5)
-                                                  end
-
 theme.notification_fg                           = textcolor_light
 theme.notification_bg                           = bw0
 theme.notification_border_color                 = bw0
+theme.notification_border_width                 = 4
+theme.notification_opacity                      = 0.9
+theme.notification_max_width                    = 600
+theme.notification_margin                       = 100
+theme.notification_shape                        = function(cr, width, height)
+                                                      gears.shape.rounded_rect(cr, width, height, 5)
+                                                  end
 
 theme.taglist_font                              = theme.font_bold
 theme.taglist_fg_normal                         = theme.fg_normal
@@ -135,6 +134,13 @@ theme.titlebar_fg_marked                        = textcolor_dark
 theme.titlebar_bg_normal                        = theme.border_normal
 theme.titlebar_bg_focus                         = theme.border_focus
 theme.titlebar_bg_marked                        = theme.border_marked
+
+theme.hotkeys_border_width                      = 30
+theme.hotkeys_border_color                      = bw0
+theme.hotkeys_group_margin                      = 30
+theme.hotkeys_shape                             = function(cr, width, height)
+                                                      gears.shape.rounded_rect(cr, width, height, 20)
+                                                  end
 
 theme.prompt_bg                                 = bw2
 theme.prompt_fg                                 = textcolor_light
@@ -390,7 +396,9 @@ sysload_widget = wibox.widget {
 -- PACMAN
 local pacmanicon = wibox.widget.imagebox(theme.widget_pacman)
 local pacman = custom_widget.pacman({
-    notify = true, settings = function()
+    command = "( checkupdates & pacaur -k --color never | sed 's/:: [a-zA-Z0-9]\\+ //' ) | sed 's/->/→/' | sort | column -t",
+    notify = "on",
+    settings = function()
         local bg_normal_color = textcolor_light
         local bg_normal_font = theme.font
         widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, available))

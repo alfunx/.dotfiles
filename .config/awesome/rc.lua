@@ -311,11 +311,11 @@ globalkeys = awful.util.table.join(
     awful.key({                          }, "Print", function() os.execute("maim ~/pictures/screenshots/$(date +%Y-%m-%d_%T).png") end,
               {description = "take screenshot", group = "launcher"}),
     awful.key({ ctrlkey                  }, "Print", function() os.execute("maim -s -b 3 -c 0.98431372549019607843,0.28627450980392156862,0.20392156862745098039,1 ~/pictures/screenshots/$(date +%Y-%m-%d_%T).png") end,
-              {description = "take screenshot", group = "launcher"}),
+              {description = "take screenshot, select area", group = "launcher"}),
     awful.key({ shiftkey                 }, "Print", function() os.execute("maim -u ~/pictures/screenshots/$(date +%Y-%m-%d_%T).png") end,
-              {description = "take screenshot", group = "launcher"}),
+              {description = "take screenshot, hide mouse", group = "launcher"}),
     awful.key({ ctrlkey, shiftkey        }, "Print", function() os.execute("maim -u -s -b 3 -c 0.98431372549019607843,0.28627450980392156862,0.20392156862745098039,1 ~/pictures/screenshots/$(date +%Y-%m-%d_%T).png") end,
-              {description = "take screenshot", group = "launcher"}),
+              {description = "take screenshot, hide mouse, select area", group = "launcher"}),
 
     -- -- Copy primary to clipboard (terminals to gtk)
     -- awful.key({ mod_4             }, "c", function () awful.spawn("xsel | xsel -i -b") end),
@@ -485,9 +485,9 @@ globalkeys = awful.util.table.join(
 
     -- On the fly useless gaps change
     awful.key({ mod_4, altkey             }, downkey, function () lain.util.useless_gaps_resize(beautiful.useless_gap/2) end,
-              {description = "increase useless gap"}),
+              {description = "increase useless gap", group = "layout"}),
     awful.key({ mod_4, altkey             }, upkey, function () lain.util.useless_gaps_resize(-beautiful.useless_gap/2) end,
-              {description = "decrease useless gap"}),
+              {description = "decrease useless gap", group = "layout"}),
     awful.key({ mod_4, altkey, shiftkey   }, downkey, function () lain.util.useless_gaps_resize(1) end),
     awful.key({ mod_4, altkey, shiftkey   }, upkey, function () lain.util.useless_gaps_resize(-1) end),
 
@@ -495,7 +495,7 @@ globalkeys = awful.util.table.join(
     awful.key({ mod_4, ctrlkey            }, leftkey, function () lain.util.tag_view_nonempty(-1) end,
               {description = "view previous nonempty", group = "tag"}),
     awful.key({ mod_4, ctrlkey            }, rightkey, function () lain.util.tag_view_nonempty(1) end,
-              {description = "view previous nonempty", group = "tag"}),
+              {description = "view next nonempty", group = "tag"}),
 
     -- -- Default client focus
     -- awful.key({ altkey,           }, "j", function () awful.client.focus.byidx(1) end,
@@ -649,7 +649,7 @@ for i = 1, 10 do
                            tag:view_only()
                         end
                   end,
-                  {description = "view tag #"..i, group = "tag"}),
+                  {description = "view tag #"..i, group = "tag-direct"}),
         -- Toggle tag display.
         awful.key({ mod_4, ctrlkey }, "#" .. i + 9,
                   function ()
@@ -659,7 +659,7 @@ for i = 1, 10 do
                          awful.tag.viewtoggle(tag)
                       end
                   end,
-                  {description = "toggle tag #" .. i, group = "tag"}),
+                  {description = "toggle tag #" .. i, group = "tag-direct"}),
         -- Move client to tag.
         awful.key({ mod_4, shiftkey }, "#" .. i + 9,
                   function ()
@@ -670,7 +670,7 @@ for i = 1, 10 do
                           end
                      end
                   end,
-                  {description = "move focused client to tag #"..i, group = "tag"}),
+                  {description = "move focused client to tag #"..i, group = "tag-direct"}),
         -- Toggle tag on focused client.
         awful.key({ mod_4, altkey }, "#" .. i + 9,
                   function ()
@@ -681,7 +681,7 @@ for i = 1, 10 do
                           end
                       end
                   end,
-                  {description = "toggle focused client on tag #" .. i, group = "tag"})
+                  {description = "toggle focused client on tag #" .. i, group = "tag-direct"})
     )
 end
 
