@@ -27,7 +27,7 @@
 	gls = log --format=short --abbrev-commit --all --decorate --color --stat --graph
 	glm = log --format=medium --abbrev-commit --all --decorate --color --stat --graph
 	gll = log --format=full --abbrev-commit --all --decorate --color --stat --graph
-	lc  = "!f() { git ll "$1"^.."$1";  }; f"
+	lc  = "!f() { git ll \"$1\"^..\"$1\"; }; f"
 	lnc = log --format=oneline --abbrev-commit --all --decorate --no-color
 	fl = log --patch --all --decorate --color
 
@@ -36,7 +36,7 @@
 	dc = diff --cached
 	dl = log --format=fuller --abbrev-commit --all --decorate --color --stat -1
 	dlc = diff --cached HEAD~
-	dr  = "!f() { git diff "$1"^.."$1";  }; f"
+	dr  = "!f() { git diff \"$1\"^..\"$1\"; }; f"
 	grep = grep -Ii
 
 	a = add
@@ -55,6 +55,7 @@
 	b = branch
 	cp = cherry-pick
 	cl = clone
+	hub = "!f() { git clone git@github.com:\"$1\"; }; f"
 	# list branches sorted by last modified
 	lb = "!git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'"
 
