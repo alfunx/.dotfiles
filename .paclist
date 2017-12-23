@@ -61,7 +61,9 @@ gtop
 gvim
 gzip
 htop
+i3-wm
 i3lock-color-git
+imagemagick
 inetutils
 intel-ucode
 inxi
@@ -83,6 +85,7 @@ libtool
 libva-intel-driver
 licenses
 linux
+linux-headers
 linux-lts
 linux-lts-headers
 logrotate
@@ -139,6 +142,7 @@ perl-file-mimeinfo
 pkg-config
 pkgfile
 postgresql
+powerline-fonts-git
 powertop
 procps-ng
 psmisc
@@ -155,6 +159,7 @@ rlwrap
 rofi
 rsync
 s-nail
+s-tui
 sed
 shadow
 smartmontools
@@ -187,6 +192,7 @@ toilet
 toilet-fonts
 tree
 treeify
+trizen
 ttf-freefont
 ttf-tamil
 ufw
