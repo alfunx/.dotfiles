@@ -340,7 +340,7 @@ transfer() {
   if [ $# -eq 0 ]; then
     echo -e "No arguments specified."
     return 1
-  fi 
+  fi
 
   tmpfile=$( mktemp )
   if tty -s; then
