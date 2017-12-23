@@ -104,11 +104,25 @@ nnoremap <C-H> <C-W><C-H>
 noremap ä {
 noremap ö }
 
+" Previous paragraph
+nnoremap <BS> {
+onoremap <BS> {
+vnoremap <BS> {
+
+" Next paragraph
+nnoremap <expr> <CR> empty(&buftype) ? '}' : '<CR>'
+onoremap <expr> <CR> empty(&buftype) ? '}' : '<CR>'
+vnoremap <CR> }
+
 " Make Y behave like other commands
 nnoremap Y y$
 
 " Copy to system clipboard
 noremap gy "+y
+
+" Keep selection after indenting
+vnoremap < <gv
+vnoremap > >gv
 
 " Use CTRL-S for saving, also in Insert mode
 nnoremap <silent> <C-S> :update<CR>
@@ -116,8 +130,8 @@ vnoremap <silent> <C-S> <C-C>:update<CR>
 inoremap <silent> <C-S> <C-O>:update<CR>
 
 "" Insert mode mappings
-inoremap OO <C-O>O
-inoremap PP <C-O>o
+inoremap àà <C-O>O
+inoremap éé <C-O>o
 
 " Select last inserted text
 nnoremap gV `[v`]
@@ -417,7 +431,7 @@ set scrolloff=3
 set backspace=2  " backspace over everything in insert mode
 set cinoptions=:0,p0,t0
 " set cinwords=if,else,while,do,for,switch,case
-set formatoptions=tcqr
+set formatoptions=tcqrj
 set pastetoggle=<F2>
 
 """ Color overlength
