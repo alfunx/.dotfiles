@@ -44,6 +44,7 @@ filesystem
 findutils
 firewalld
 flex
+fzf
 gawk
 gcc
 gcc-libs
@@ -159,7 +160,6 @@ rlwrap
 rofi
 rsync
 s-nail
-s-tui
 sed
 shadow
 smartmontools
