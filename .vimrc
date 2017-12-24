@@ -21,8 +21,10 @@ endif
 
 call plug#begin('~/.vim/plugged')
 
+" If fzf is not available in the package manager
+" Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+
 " General
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'

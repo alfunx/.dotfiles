@@ -73,7 +73,7 @@ mkcd() {
 }
 
 toilol() {
-  toilet -f mono12 -w "$(tput cols)" | lolcat
+  toilet -f mono12 -w "$(tput cols)" | lolcat "$@"
 }
 
 pacman() {
