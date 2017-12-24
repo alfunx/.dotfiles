@@ -353,24 +353,3 @@ transfer() {
   cat $tmpfile
   rm -f $tmpfile
 }
-
-#####################
-# SVN airline theme #
-#####################
-
-prompt_svn() {
-  local rev branch
-  if in_svn; then
-    rev=$(svn_get_rev_nr)
-    branch=$(svn_get_branch_name)
-    PL_BRANCH_CHAR=$'\ue0a0'         # 
-    if [[ $(svn_dirty_choose_pwd 1 0) -eq 1 ]]; then
-      prompt_segment yellow black
-      echo -n "$PL_BRANCH_CHAR $rev@$branch"
-      echo -n "±"
-    else
-      prompt_segment green black
-      echo -n "$PL_BRANCH_CHAR $rev@$branch"
-    fi
-  fi
-}
