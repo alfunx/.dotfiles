@@ -2,9 +2,6 @@
 "  VIMRC  "
 """""""""""
 
-"" Path settings
-set rtp+=/usr/local/opt/fzf
-
 if filereadable($HOME . '/.vim/autoload/plug.vim') == 0
   silent !mkdir -p ~/.vim/autoload > /dev/null 2>&1
   silent !mkdir -p ~/.vim/plugged > /dev/null 2>&1
@@ -24,8 +21,12 @@ call plug#begin('~/.vim/plugged')
 " If fzf is not available in the package manager
 " Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 
+" If fzf is installed through the package manager
+Plug '/usr/bin/fzf'
+
 " General
-Plug 'junegunn/fzf.vim'
+"Plug 'junegunn/fzf.vim'
+Plug 'alfunx/fzf.vim' " fork
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'tpope/vim-sensible'
@@ -66,7 +67,8 @@ Plug 'plasticboy/vim-markdown'
 Plug 'lervag/vimtex'
 
 " Themes
-Plug 'morhetz/gruvbox'
+"Plug 'morhetz/gruvbox'
+Plug 'alfunx/gruvbox' " fork
 
 " Don't load in console
 if &term !=? 'linux' || has("gui_running")
@@ -207,21 +209,37 @@ command! -bang -nargs=* Rg
       \ 'rg --line-number --no-heading --ignore-case --follow --color=always --colors="match:none" --colors="path:fg:white" --colors="line:fg:white" '.shellescape(<q-args>), 0,
       \ <bang>0)
 
-if executable('rg')
-  autocmd VimEnter * nnoremap <Leader>r :Rg<CR>
-  set grepprg=rg\ --vimgrep
-  set grepformat^=%f:%l:%c:%m
-endif
-
 "" AG
 command! -bang -nargs=* Ag
       \ call fzf#vim#ag(
       \ <q-args>, '--color-path "0;37" --color-line-number "0;37" --color-match "" --follow',
       \ <bang>0)
 
+if executable('rg')
+  autocmd VimEnter * nnoremap <Leader>r :Rg<CR>
+endif
+
 if executable('ag')
   autocmd VimEnter * nnoremap <Leader>a :Ag<CR>
 endif
+
+" if executable('rg')
+"   set grepprg=rg\ --vimgrep
+"   set grepformat^=%f:%l:%c:%m
+" elseif executable('ag')
+"   set grepprg=rg\ --vimgrep
+"   set grepformat^=%f:%l:%c:%m
+" endif
+
+let [s:grep_prg, s:grep_format] = ['%s -SF --vimgrep', '%f:%l:%c:%m']
+if executable('rg')
+  let &grepprg = printf(s:grep_prg, 'rg')
+  let &grepformat = s:grep_format
+elseif executable('ag')
+  let &grepprg = printf(s:grep_prg, 'ag')
+  let &grepformat = s:grep_format
+endif
+unlet! s:grep_prg s:grep_format
 
 "" Airline
 if !exists('g:airline_symbols')
