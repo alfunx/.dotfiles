@@ -37,7 +37,7 @@ local function factory(args)
     local notification_preset = args.notification_preset
     if not notification_preset then
         notification_preset = {
-            title    = "pacman",
+            title    = "Updates",
             timeout  = 15
         }
     end

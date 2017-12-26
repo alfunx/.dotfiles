@@ -757,7 +757,7 @@ end)
 client.connect_signal("request::titlebars", function(c)
     -- Custom
     if beautiful.titlebar_fun then
-        beautiful.titlebar_fun(c)
+        beautiful.titlebar_fun(c, true)
         return
     end
 
@@ -820,13 +820,12 @@ client.connect_signal("request::titlebars", function(c)
     end
 end)
 
--- -- client.connect_signal("request::titlebars", function(c) setSmartBorders(c, true) end)
--- client.connect_signal("property::size",
---     function(c)
---         if beautiful.titlebar_fun then
---             beautiful.titlebar_fun(c)
---         end
---     end)
+client.connect_signal("property::size",
+    function(c)
+        if beautiful.titlebar_fun then
+            beautiful.titlebar_fun(c, false)
+        end
+    end)
 
 -- -- Enable sloppy focus, so that focus follows mouse.
 -- client.connect_signal("mouse::enter", function(c)
