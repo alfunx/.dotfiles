@@ -52,6 +52,8 @@
 	col = checkout -
 	cob = checkout -b
 	p = pull --rebase=interactive
+	f = fetch
+	fa = fetch --all
 	b = branch
 	cp = cherry-pick
 	cl = clone
