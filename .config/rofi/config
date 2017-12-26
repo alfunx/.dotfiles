@@ -4,9 +4,9 @@ rofi.color-enabled: true
 # State:           bg,            fg,            sep
 rofi.color-window: argb:cc282828, argb:cc282828, argb:ffebdbb2
 # State:           bg,            fg,            bgalt,         hlbg,          hlfg
-rofi.color-normal: argb:00282828, argb:ffbdae93, argb:00282828, argb:99504945, argb:ffebdbb2
-rofi.color-active: argb:00282828, argb:ffbdae93, argb:00282828, argb:99504945, argb:ffebdbb2
-rofi.color-urgent: argb:00282828, argb:ffbdae93, argb:00282828, argb:99504945, argb:ffebdbb2
+rofi.color-normal: argb:00282828, argb:ffbdae93, argb:00282828, argb:99282828, argb:ffebdbb2
+rofi.color-active: argb:00282828, argb:ffbdae93, argb:00282828, argb:99282828, argb:ffebdbb2
+rofi.color-urgent: argb:00282828, argb:ffbdae93, argb:00282828, argb:99282828, argb:ffebdbb2
 
 rofi.font: Meslo LG S for Powerline 16
 rofi.eh: 1
