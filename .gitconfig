@@ -14,62 +14,82 @@
 [merge]
 	tool = diffconflicts
 [mergetool "diffconflicts"]
-	cmd = diffconflicts vim $BASE $LOCAL $REMOTE $MERGED
+	cmd = diffconflicts vim "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
 	trustExitCode = true
 [mergetool]
 	keepBackup = false
+
 [alias]
+	ec = config --global -e
+
 	l = log --format=oneline --abbrev-commit --all --decorate --color
 	ls = log --format=short --abbrev-commit --all --decorate --color --stat
 	lm = log --format=medium --abbrev-commit --all --decorate --color --stat
-	ll = log --format=full --abbrev-commit --all --decorate --color --stat
+	lf = log --format=full --abbrev-commit --all --decorate --color --stat
+	lff = log --format=fuller --abbrev-commit --all --decorate --color --stat
 	gl = log --format=oneline --abbrev-commit --all --decorate --color --graph
 	gls = log --format=short --abbrev-commit --all --decorate --color --stat --graph
 	glm = log --format=medium --abbrev-commit --all --decorate --color --stat --graph
-	gll = log --format=full --abbrev-commit --all --decorate --color --stat --graph
-	lc  = "!f() { git ll \"$1\"^..\"$1\"; }; f"
+	glf = log --format=full --abbrev-commit --all --decorate --color --stat --graph
+	glff = log --format=fuller --abbrev-commit --all --decorate --color --stat --graph
+	lr = "!f() { git lff \"${1-HEAD}\"~..\"${1-HEAD}\"; }; f"
 	lnc = log --format=oneline --abbrev-commit --all --decorate --no-color
 	fl = log --patch --all --decorate --color
 
 	d = diff
 	ds = diff --stat
 	dc = diff --cached
-	dl = log --format=fuller --abbrev-commit --all --decorate --color --stat -1
-	dlc = diff --cached HEAD~
-	dr  = "!f() { git diff \"$1\"^..\"$1\"; }; f"
+	dl = diff --cached HEAD~
+	dr = "!f() { git diff \"${1-HEAD}\"~..\"${1-HEAD}\"; }; f"
 	grep = grep -Ii
 
+	s = status -s -b
 	a = add
 	au = add -u
 	ai = add -i
 	ap = add -p
 	c = commit -S --verbose
-	ca = commit -S --amend --verbose
+	ca = commit -S --verbose --amend
 
-	s = status -s -b
 	co = checkout
 	com = checkout master
 	col = checkout -
 	cob = checkout -b
-	p = pull --rebase=interactive
-	f = fetch
-	fa = fetch --all
 	b = branch
-	cp = cherry-pick
-	cl = clone
-	hub = "!f() { git clone git@github.com:\"$1\"; }; f"
-	# list branches sorted by last modified
-	lb = "!git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'"
+	bt = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git branch --set-upstream-to=\"${1-origin/$CURRENT}\"; }; f"
 
+	cl = clone
+	p = pull --rebase=interactive --prune --all
+	f = fetch --prune --all
+	su = submodule update --init --recursive
+	up = "!git p \"$@\" && git su"
+
+	m = merge
+	mff = merge --ff-only
+	mnff = merge --no-ff
+	cp = cherry-pick
 	r = rebase
 	ri = rebase -i
-	# rebase on master (never do this on a public branch!)
 	rim = rebase -i master
-	# rewrite history (never do this on a public branch!)
-	rih = "!git rebase -i `git merge-base HEAD master`"
+
+	# rewrite history, default on origin
+	rwh = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git rebase -i $(git merge-base HEAD \"${1-origin/$CURRENT}\"); }; f"
+
+	# list branches sorted by last modified
+	lb = "!git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'"
 
 	# list aliases
 	la = "!git config -l | grep alias | cut -c 7- | sed -e 's/=/\\t/' | column -s $'\\t' | less"
 
 	# initialize repository in current directory
-	this = "!git init && git commit -S -m 'root' --allow-empty"
+	this = "!git init && git commit -S -m 'Initialize' --allow-empty"
+
+	# open github repository in browser
+	open = "!f() { URL=$(git config remote.\"${1-origin}\".url); xdg-open \"${URL%%.git}\"; }; f"
+
+	# hard reset with commit before (use reflog to restore)
+	wipe = "!f() { git add -A && git commit -qm 'WIPE-SAVEPOINT' && git reset \"${1-HEAD~}\" --hard; }; f"
+
+	# migrate commits to new branch
+	# migrate [new branch] [onto=master] [range=origin]
+	migrate = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git checkout -b \"$1\" && git branch --force \"$CURRENT\" \"${3-\\\"$CURRENT\\\"@\\{u\\}}\" && git rebase --onto \"${2-master}\" \"$CURRENT\"; }; f"
