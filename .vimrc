@@ -19,8 +19,7 @@ endif
 call plug#begin('~/.vim/plugged')
 
 " If fzf is not available in the package manager
-" Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-
+"Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 " If fzf is installed through the package manager
 Plug '/usr/bin/fzf'
 
@@ -44,21 +43,25 @@ Plug 'easymotion/vim-easymotion'
 Plug 'haya14busa/incsearch.vim'
 Plug 'haya14busa/incsearch-easymotion.vim'
 Plug 'terryma/vim-multiple-cursors'
+"Plug 'terryma/vim-expand-region'
 Plug 'jiangmiao/auto-pairs'
 Plug 'mbbill/undotree'
 Plug 'christoomey/vim-titlecase'
 Plug 'tomtom/tcomment_vim'
 Plug 'ap/vim-css-color'
-Plug 'benmills/vimux'
-Plug 'christoomey/vim-tmux-navigator'
+Plug 'jceb/vim-orgmode'
 
 " Text objects
 Plug 'wellle/targets.vim'
 Plug 'junegunn/vim-after-object'
 Plug 'michaeljsmith/vim-indent-object'
 
+" Tmux
+Plug 'benmills/vimux'
+Plug 'christoomey/vim-tmux-navigator'
+
 " Snippets
-" Plug 'Valloric/YouCompleteMe'
+"Plug 'Valloric/YouCompleteMe'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 
@@ -79,6 +82,8 @@ endif
 call plug#end()
 
 runtime ftplugin/man.vim
+runtime ftplugin/vim.vim
+runtime ftplugin/help.vim
 
 
 """"""""""""""""""
@@ -104,7 +109,7 @@ nnoremap <C-H> <C-W><C-H>
 "   augroup END
 
 " German keyboard mappings
-" noremap ü <C-]>
+"noremap ü <C-]>
 noremap ä {
 noremap ö }
 
@@ -158,6 +163,7 @@ noremap <F5> :make!<CR>
 command! W silent w !sudo tee > /dev/null %
 
 " Set path to current file
+command! -bang -nargs=* Cd  cd %:p:h
 nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>
 
 
@@ -189,7 +195,7 @@ let g:fzf_tags_command = 'ctags -R'
 nmap <leader><tab> <plug>(fzf-maps-n)
 xmap <leader><tab> <plug>(fzf-maps-x)
 omap <leader><tab> <plug>(fzf-maps-o)
-" imap <leader><tab> <plug>(fzf-maps-i)
+"imap <leader><tab> <plug>(fzf-maps-i)
 
 nnoremap <leader>b :Buffers<CR>
 vnoremap <leader>b <C-C>:Buffers<CR>
@@ -282,11 +288,11 @@ let g:airline#extensions#whitespace#mixed_indent_algo=1
 let g:airline_powerline_fonts=1
 
 "" EasyMotion
-" let g:EasyMotion_do_mapping=0  " Disable default mappings
+"let g:EasyMotion_do_mapping=0  " Disable default mappings
 let g:EasyMotion_smartcase=1  " Turn on case insensitive feature
 let g:EasyMotion_keys='asdghklqwertyuiopzxcvbnmfj,'
 
-" nmap s <Plug>(easymotion-overwin-f)
+"nmap s <Plug>(easymotion-overwin-f)
 nmap s <Plug>(easymotion-overwin-f2)
 map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
@@ -307,7 +313,7 @@ map g# <Plug>(incsearch-nohl-g#)
 "" Incsearch-EasyMotion
 map z/ <Plug>(incsearch-easymotion-/)
 map z? <Plug>(incsearch-easymotion-?)
-" map zg/ <Plug>(incsearch-easymotion-stay)
+"map zg/ <Plug>(incsearch-easymotion-stay)
 
 "" Netrw
 let g:netrw_liststyle=0
@@ -382,7 +388,7 @@ let g:VimuxUseNearest=1
 function! VimuxSlime()
   call VimuxOpenRunner()
   call VimuxSendText(@v)
-  " call VimuxSendKeys("Enter")
+  "call VimuxSendKeys("Enter")
 endfunction
 
 vmap <Leader>vs "vy:call VimuxSlime()<CR>
@@ -398,7 +404,7 @@ set termguicolors
 set background=dark
 let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
-set t_Co=256
+"set t_Co=256
 let g:gruvbox_italic=1
 colorscheme gruvbox
 
@@ -414,7 +420,7 @@ set lazyredraw
 set mouse=a
 
 set cursorline  " horizontal line
-" set colorcolumn=81  " vertical line
+"set colorcolumn=81  " vertical line
 set textwidth=80
 set wrapmargin=0  " turns off automatic newlines
 set nowrap  " line wrapping off
@@ -450,14 +456,14 @@ set linespace=0
 set scrolloff=3
 set backspace=2  " backspace over everything in insert mode
 set cinoptions=:0,p0,t0
-" set cinwords=if,else,while,do,for,switch,case
+"set cinwords=if,else,while,do,for,switch,case
 set formatoptions=tcqrj
 set pastetoggle=<F2>
 
 """ Color overlength
 highlight OverLength ctermbg=darkred ctermfg=white guibg=#9d0006 guifg=#fbf1c7
 match OverLength /\%81v./
-" match OverLength /\%>80v.\+/
+"match OverLength /\%>80v.\+/
 
 "" Searching
 set incsearch
@@ -472,7 +478,7 @@ autocmd BufWinEnter * let &foldlevel=max(add(map(range(1, line('$')), 'foldlevel
 set foldnestmax=100
 
 set cf  " enable error files & error jumping.
-" set clipboard+=unnamed  " yanks go on clipboard instead.
+"set clipboard+=unnamed  " yanks go on clipboard instead.
 set history=10000  " Number of things to remember in history.
 set autoread
 set autowrite
