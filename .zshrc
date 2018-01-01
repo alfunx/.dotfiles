@@ -60,7 +60,7 @@ fi
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(zsh-syntax-highlighting command-not-found common-aliases)
+plugins=(zsh-syntax-highlighting command-not-found custom-common-aliases)
 
 source "$ZSH"/oh-my-zsh.sh
 source "$HOME"/.alias.zsh

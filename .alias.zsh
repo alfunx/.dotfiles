@@ -133,7 +133,7 @@ fda() {
     | fzf-tmux -d 30% +m -q "$1" -0)"
 }
 
-# fd - fda including hidden directories
+# c - fda including hidden directories
 c() {
   cd "$(find -L ${1:-.} -type d 2>/dev/null \
     | fzf-tmux -d 30% +m -q "$1" -0)"
