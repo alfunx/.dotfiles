@@ -8,7 +8,7 @@ if filereadable($HOME . '/.vim/autoload/plug.vim') == 0
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
         \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
         \ > /dev/null 2>&1
-  auto VimEnter * PlugInstall
+  autocmd VimEnter * PlugInstall
 endif
 
 
@@ -37,6 +37,10 @@ Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-rsi'
+Plug 'tpope/vim-sleuth'
+Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-endwise'
+"Plug 'tpope/vim-commentary'
 Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/vim-easy-align'
 Plug 'easymotion/vim-easymotion'
@@ -46,10 +50,14 @@ Plug 'terryma/vim-multiple-cursors'
 "Plug 'terryma/vim-expand-region'
 Plug 'jiangmiao/auto-pairs'
 Plug 'mbbill/undotree'
-Plug 'christoomey/vim-titlecase'
+"Plug 'christoomey/vim-titlecase'
 Plug 'tomtom/tcomment_vim'
 Plug 'ap/vim-css-color'
 Plug 'jceb/vim-orgmode'
+Plug 'xtal8/traces.vim'
+Plug 'chrisbra/NrrwRgn'
+Plug 'kopischke/vim-fetch'
+Plug 'wellle/tmux-complete.vim'
 
 " Text objects
 Plug 'wellle/targets.vim'
@@ -84,6 +92,7 @@ call plug#end()
 runtime ftplugin/man.vim
 runtime ftplugin/vim.vim
 runtime ftplugin/help.vim
+" runtime macros/matchit.vim
 
 
 """"""""""""""""""
@@ -97,16 +106,23 @@ let mapleader=" "
 let maplocalleader="ü"
 
 "" Split navigation
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
+" (Handled by vim-tmux-navigator plugin)
+"nnoremap <C-H> <C-W><C-H>
+"nnoremap <C-J> <C-W><C-J>
+"nnoremap <C-K> <C-W><C-K>
+"nnoremap <C-L> <C-W><C-L>
 
-"   augroup quickfix
-"     autocmd!
-"     autocmd QuickFixCmdPost [^l]* cwindow
-"     autocmd QuickFixCmdPost l*    lwindow
-"   augroup END
+"" Split resize
+nnoremap <C-W>h :vertical resize -5<CR>
+nnoremap <C-W>j :resize -5<CR>
+nnoremap <C-W>k :resize +5<CR>
+nnoremap <C-W>l :vertical resize +5<CR>
+
+"augroup Quickfix
+"  autocmd!
+"  autocmd QuickFixCmdPost [^l]* cwindow
+"  autocmd QuickFixCmdPost l*    lwindow
+"augroup END
 
 " German keyboard mappings
 "noremap ü <C-]>
@@ -166,6 +182,16 @@ command! W silent w !sudo tee > /dev/null %
 command! -bang -nargs=* Cd  cd %:p:h
 nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>
 
+" Run macro on visual selection
+function! ExecuteMacroOverVisualRange()
+  echo "@".getcmdline()
+  execute ":'<,'>normal @".nr2char(getchar())
+endfunction
+xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
+
+" Run last macro
+nnoremap Q @@
+
 
 """""""""""""""""""""
 "  PLUGIN SETTINGS  "
@@ -173,7 +199,10 @@ nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>
 
 "" FZF
 if executable('fzf')
-  autocmd VimEnter * nnoremap <Leader>f :FZF<CR>
+  augroup Fzf
+    autocmd!
+    autocmd VimEnter * nnoremap <Leader>f :FZF<CR>
+  augroup End
 endif
 
 " Default key bindings
@@ -211,22 +240,28 @@ inoremap <expr> <c-x><c-k> fzf#complete('cat /usr/share/dict/words-insane')
 
 "" RG
 command! -bang -nargs=* Rg
-      \ call fzf#vim#grep(
-      \ 'rg --line-number --no-heading --ignore-case --follow --color=always --colors="match:none" --colors="path:fg:white" --colors="line:fg:white" '.shellescape(<q-args>), 0,
-      \ <bang>0)
+  \ call fzf#vim#grep(
+  \ 'rg --hidden --line-number --column --no-heading --smart-case --follow --color=always --colors="match:none" --colors="path:fg:white" --colors="line:fg:white" '.shellescape(<q-args>), 1,
+  \ <bang>0)
 
 "" AG
 command! -bang -nargs=* Ag
-      \ call fzf#vim#ag(
-      \ <q-args>, '--color-path "0;37" --color-line-number "0;37" --color-match "" --follow',
-      \ <bang>0)
+  \ call fzf#vim#ag(
+  \ <q-args>, '--color-path "0;37" --color-line-number "0;37" --color-match "" --follow',
+  \ <bang>0)
 
 if executable('rg')
-  autocmd VimEnter * nnoremap <Leader>r :Rg<CR>
+  augroup Rg
+    autocmd!
+    autocmd VimEnter * nnoremap <Leader>r :Rg<CR>
+  augroup End
 endif
 
 if executable('ag')
-  autocmd VimEnter * nnoremap <Leader>a :Ag<CR>
+  augroup Ag
+    autocmd!
+    autocmd VimEnter * nnoremap <Leader>a :Ag<CR>
+  augroup End
 endif
 
 " if executable('rg')
@@ -302,13 +337,27 @@ map / <Plug>(incsearch-forward)
 map ? <Plug>(incsearch-backward)
 map g/ <Plug>(incsearch-stay)
 
-let g:incsearch#auto_nohlsearch=1
 map n <Plug>(incsearch-nohl-n)
 map N <Plug>(incsearch-nohl-N)
 map * <Plug>(incsearch-nohl-*)
 map # <Plug>(incsearch-nohl-#)
 map g* <Plug>(incsearch-nohl-g*)
 map g# <Plug>(incsearch-nohl-g#)
+
+let g:incsearch#auto_nohlsearch=1
+let g:incsearch#no_inc_hlsearch = 1
+let g:incsearch#highlight = {
+\   'match' : {
+\     'priority' : '10'
+\   },
+\   'on_cursor' : {
+\     'priority' : '100'
+\   },
+\   'cursor' : {
+\     'group' : 'ErrorMsg',
+\     'priority' : '1000'
+\   }
+\ }
 
 "" Incsearch-EasyMotion
 map z/ <Plug>(incsearch-easymotion-/)
@@ -337,14 +386,17 @@ nmap ga <Plug>(EasyAlign)
 "" Undotree
 nnoremap <F4> :UndotreeToggle<CR>
 
-"" Titlecase
-let g:titlecase_map_keys=0
-nmap gwt <Plug>Titlecase
-vmap gwt <Plug>Titlecase
-nmap gwT <Plug>TitlecaseLine
+" "" Titlecase
+" let g:titlecase_map_keys=0
+" nmap gwt <Plug>Titlecase
+" vmap gwt <Plug>Titlecase
+" nmap gwT <Plug>TitlecaseLine
 
 "" After text object
-autocmd VimEnter * call after_object#enable(['m', 'mm'], '=', ':', '+', '-', '*', '/', '#', ' ')
+augroup AfterTextObject
+  autocmd!
+  autocmd VimEnter * call after_object#enable(['m', 'mm'], '=', ':', '+', '-', '*', '/', '#', ' ')
+augroup End
 
 "" Vimtex
 let g:vimtex_view_method='zathura'
@@ -353,6 +405,16 @@ let g:vimtex_view_method='zathura'
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+"" Multiple-Cursors
+let g:multi_cursor_next_key='<C-n>'
+let g:multi_cursor_prev_key='<C-p>'
+let g:multi_cursor_skip_key='<C-x>'
+let g:multi_cursor_quit_key='<Esc>'
+let g:multi_cursor_start_key='<C-n>'
+let g:multi_cursor_start_word_key='g<C-n>'
+let g:multi_cursor_exit_from_visual_mode=0
+let g:multi_cursor_exit_from_insert_mode=0
 
 "" Goyo + Limelight
 function! s:goyo_enter()
@@ -365,22 +427,17 @@ endfunction
 
 function! s:goyo_leave()
   set list
-  highlight OverLength ctermbg=darkred ctermfg=white guibg=#9d0006 guifg=#fbf1c7
-  match OverLength /\%81v./
   set noshowmode
   set showcmd
   set scrolloff=3
   Limelight!
 endfunction
 
-autocmd! User GoyoEnter nested call <SID>goyo_enter()
-autocmd! User GoyoLeave nested call <SID>goyo_leave()
-
-"" Tslime
-let g:tslime_always_current_session=1
-let g:tslime_always_current_window=1
-
-vmap <C-c><C-c> <Plug>SendSelectionToTmux
+augroup Goyo
+  autocmd!
+  autocmd User GoyoEnter nested call <SID>goyo_enter()
+  autocmd User GoyoLeave nested call <SID>goyo_leave()
+augroup END
 
 "" Vimux
 let g:VimuxUseNearest=1
@@ -391,26 +448,16 @@ function! VimuxSlime()
   "call VimuxSendKeys("Enter")
 endfunction
 
-vmap <Leader>vs "vy:call VimuxSlime()<CR>
+vmap <C-c><C-c> "vy:call VimuxSlime()<CR>
 
 
 """"""""""""""""
 "  APPEARANCE  "
 """"""""""""""""
 
-"" Theme and colors
-set guifont=Meslo\ LG\ S\ for\ Powerline
-set termguicolors
-set background=dark
-let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
-let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
-"set t_Co=256
-let g:gruvbox_italic=1
-colorscheme gruvbox
-
 "" UI config
-syntax enable
-set nocompatible
+filetype plugin indent on
+syntax on
 set number
 set showcmd
 set hidden
@@ -427,6 +474,16 @@ set nowrap  " line wrapping off
 set showmatch  " show matching brackets
 set mat=5  " bracket blinking
 set list
+
+augroup ClearCursorLine
+  autocmd!
+  autocmd ColorScheme * highlight clear CursorLine
+augroup END
+
+augroup BoldCursorLineNr
+  autocmd!
+  autocmd ColorScheme * highlight CursorLineNR cterm=bold
+augroup END
 
 if &term !=? 'linux' || has("gui_running")
   set listchars=tab:▸\ ,eol:↵,trail:~,extends:>,precedes:<
@@ -451,7 +508,8 @@ set tabstop=2
 set expandtab
 set smarttab
 set autoindent
-set cindent
+set smartindent
+"set cindent
 set linespace=0
 set scrolloff=3
 set backspace=2  " backspace over everything in insert mode
@@ -461,9 +519,12 @@ set formatoptions=tcqrj
 set pastetoggle=<F2>
 
 """ Color overlength
-highlight OverLength ctermbg=darkred ctermfg=white guibg=#9d0006 guifg=#fbf1c7
-match OverLength /\%81v./
-"match OverLength /\%>80v.\+/
+augroup OverLength
+  autocmd!
+  autocmd ColorScheme * highlight OverLength ctermbg=darkred ctermfg=white guibg=#cc241d guifg=#ebdbb2
+  autocmd ColorScheme * match OverLength /\%81v./
+  "autocmd ColorScheme * match OverLength /\%>80v.\+/
+augroup END
 
 "" Searching
 set incsearch
@@ -474,8 +535,11 @@ set smartcase
 "" Folding
 set foldenable
 set foldmethod=indent
-autocmd BufWinEnter * let &foldlevel=max(add(map(range(1, line('$')), 'foldlevel(v:val)'), 10))  " with this, everything is unfolded at start
 set foldnestmax=100
+augroup CustomFolding
+  autocmd!
+  autocmd BufWinEnter * let &foldlevel=max(add(map(range(1, line('$')), 'foldlevel(v:val)'), 10))  " with this, everything is unfolded at start
+augroup End
 
 set cf  " enable error files & error jumping.
 "set clipboard+=unnamed  " yanks go on clipboard instead.
@@ -485,6 +549,7 @@ set autowrite
 set ruler
 set nostartofline
 set timeoutlen=2000  " time to wait after esc (default causes an annoying delay)
+set nohidden
 
 function! NeatFoldText()
   let line = ' ' . substitute(getline(v:foldstart), '^\s*"\?\s*\|\s*"\?\s*{{' . '{\d*\s*', '', 'g') . ' '
@@ -500,42 +565,53 @@ set foldtext=NeatFoldText()
 
 "" Last position
 set viminfo='10,\"100,:20,%,n~/.viminfo
-if has("autocmd")
-  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-endif
+augroup SavePosition
+  autocmd!
+  autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+augroup END
 
 "" Dictionary
 set dictionary+=/usr/share/dict/words-insane
+
+"" Theme and colors
+set guifont=Meslo\ LG\ S\ for\ Powerline
+set termguicolors
+set background=dark
+let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
+"set t_Co=256
+let g:gruvbox_italic=1
+colorscheme gruvbox
 
 
 """"""""""""""""""""""""""
 "  BACKUP / SWAP / UNDO  "
 """"""""""""""""""""""""""
 
-if isdirectory($HOME . '/.vim/backup') == 0
-  silent !mkdir -p ~/.vim/backup > /dev/null 2>&1
+if isdirectory($HOME . '/.vim/.backup') == 0
+  silent !mkdir -p ~/.vim/.backup > /dev/null 2>&1
 endif
 set backupdir-=.
 set backupdir+=.
 set backupdir-=~/
-set backupdir^=~/.vim/backup/
+set backupdir^=~/.vim/.backup/
 set backupdir^=./.vim-backup/
 set backup
 
-if isdirectory($HOME . '/.vim/swap') == 0
-  silent !mkdir -p ~/.vim/swap > /dev/null 2>&1
+if isdirectory($HOME . '/.vim/.swap') == 0
+  silent !mkdir -p ~/.vim/.swap > /dev/null 2>&1
 endif
 set directory=./.vim-swap//
-set directory+=~/.vim/swap//
-set directory+=~/tmp//
+set directory+=~/.vim/.swap//
+set directory+=~/.tmp//
 set directory+=.
 
 if exists("+undofile")
-  if isdirectory($HOME . '/.vim/undo') == 0
-    silent !mkdir -p ~/.vim/undo > /dev/null 2>&1
+  if isdirectory($HOME . '/.vim/.undo') == 0
+    silent !mkdir -p ~/.vim/.undo > /dev/null 2>&1
   endif
   set undodir=./.vim-undo//
-  set undodir+=~/.vim/undo//
+  set undodir+=~/.vim/.undo//
   set undofile
 endif
 
@@ -544,7 +620,7 @@ endif
 "  LANGUAGE SPECIFIC  "
 """""""""""""""""""""""
 
-augroup configgroup
+augroup FiletypeSettings
   autocmd!
   autocmd Filetype python setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
   autocmd Filetype java setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
@@ -607,13 +683,13 @@ function! VimFoldText()
 endfunction
 
 """ Set foldsettings automatically for vim files
-augroup fold_vimrc
+augroup VimFolding
   autocmd!
   autocmd FileType vim
                    \ setlocal foldmethod=expr |
                    \ setlocal foldexpr=VimFolds(v:lnum) |
                    \ setlocal foldtext=VimFoldText() |
-     "              \ set foldcolumn=2 foldminlines=2
+                   " \ set foldcolumn=2 foldminlines=2
 augroup END
 
 
