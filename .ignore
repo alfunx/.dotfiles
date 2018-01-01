@@ -1,0 +1,9 @@
+.git
+.hg
+.svn
+.backup
+.vim-backup
+.swap
+.vim-swap
+.undo
+.vim-undo
