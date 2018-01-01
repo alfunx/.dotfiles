@@ -41,6 +41,7 @@
 	dc = diff --cached
 	dl = diff --cached HEAD~
 	dr = "!f() { git diff \"${1-HEAD}\"~..\"${1-HEAD}\"; }; f"
+	dt = difftool
 	grep = grep -Ii
 
 	s = status -s -b
@@ -56,10 +57,11 @@
 	col = checkout -
 	cob = checkout -b
 	b = branch
+	bd = branch --delete
 	bt = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git branch --set-upstream-to=\"${1-origin/$CURRENT}\"; }; f"
 
 	cl = clone
-	p = pull --rebase=interactive --prune --all
+	p = pull --rebase=interactive --prune
 	f = fetch --prune --all
 	su = submodule update --init --recursive
 	up = "!git p \"$@\" && git su"
@@ -67,6 +69,7 @@
 	m = merge
 	mff = merge --ff-only
 	mnff = merge --no-ff
+	mt = mergetool
 	cp = cherry-pick
 	r = rebase
 	ri = rebase -i
