@@ -21,7 +21,7 @@ dotfiles() {
       ;;
   esac
 }
-compdef dotfiles='git'
+compdef dotfiles=git
 
 #############
 #  aliases  #
@@ -95,9 +95,9 @@ tmux() {
 
 alias pg="ping -c 1 www.google.ch"
 
-##########
-#  tmux  #
-##########
+#########
+#  fzf  #
+#########
 
 alias fzf="fzf-tmux -d 30%"
 
@@ -105,44 +105,62 @@ alias fzf="fzf-tmux -d 30%"
 #  ripgrep  #
 #############
 
-alias rg="rg --ignore-case --line-number --color=auto --colors=\"match:fg:red\" --colors=\"match:style:bold\" --colors=\"path:fg:white\" --colors=\"line:fg:yellow\" --colors=\"line:style:bold\""
+alias rg="rg --smart-case --line-number --colors=\"match:fg:red\" --colors=\"match:style:bold\" --colors=\"path:fg:white\" --colors=\"line:fg:yellow\" --colors=\"line:style:bold\""
 
 # fuzzy rg
 frg() {
-  rg --ignore-case --no-line-number --no-heading --color=always --colors="match:none" --colors="path:fg:white" --colors="line:fg:white" "$@" . | fzf-tmux -d 30% --ansi
+  rg --smart-case --no-line-number --no-heading --color=always --colors="match:none" --colors="path:fg:white" --colors="line:fg:white" "$@" . | fzf --ansi
 }
 
 #######################
 # the silver searcher #
 #######################
 
-alias ag="ag --ignore-case --numbers --color --color-match \"1;31\" --color-path \"0;37\" --color-line-number \"1;33\""
+alias ag="ag --smart-case --numbers --color-match \"1;31\" --color-path \"0;37\" --color-line-number \"1;33\""
 
 # fuzzy ag
 fag() {
-  ag --ignore-case --nobreak --nonumbers --noheading --color --color-match "" --color-path "0;37" --color-line-number "0;37" "$@" . | fzf-tmux -d 30% --ansi
+  ag --smart-case --nobreak --nonumbers --noheading --color --color-match "" --color-path "0;37" --color-line-number "0;37" "$@" . | fzf --ansi
 }
 
 ##################
 # fuzzy commands #
 ##################
 
+# # fda - cd to selected directory
+# fda() {
+#   cd "$(find ${1:-.} -path '*/\.*' -prune -o -type d -print 2>/dev/null \
+#     | fzf +m -q "$1" -0)"
+# }
+
 # fda - cd to selected directory
 fda() {
-  cd "$(find ${1:-.} -path '*/\.*' -prune -o -type d -print 2>/dev/null \
-    | fzf-tmux -d 30% +m -q "$1" -0)"
+  cd "$(fd --follow --type d '.' ${1:-.} 2>/dev/null \
+    | fzf +m -q "$1" -0)"
 }
+
+# # c - fda including hidden directories
+# c() {
+#   cd "$(find -L ${1:-.} -type d 2>/dev/null \
+#     | fzf +m -q "$1" -0)"
+# }
 
 # c - fda including hidden directories
 c() {
-  cd "$(find -L ${1:-.} -type d 2>/dev/null \
-    | fzf-tmux -d 30% +m -q "$1" -0)"
+  cd "$(fd --hidden --follow --type d '.' ${1:-.} 2>/dev/null \
+    | fzf +m -q "$1" -0)"
 }
+
+# # fr - cd to selected directory and open ranger
+# fr() {
+#   cd "$(find -L ${1:-.} -type d 2>/dev/null \
+#     | fzf +m -q "$1" -0)" && ranger
+# }
 
 # fr - cd to selected directory and open ranger
 fr() {
-  cd "$(find -L ${1:-.} -type d 2>/dev/null \
-    | fzf-tmux -d 30% +m -q "$1" -0)" && ranger
+  cd "$(fd --hidden --follow --type d '.' ${1:-.} 2>/dev/null \
+    | fzf +m -q "$1" -0)" && ranger
 }
 
 # fo - Open the selected file with the default editor
@@ -150,7 +168,7 @@ fr() {
 #   - CTRL-E or Enter key to open with the $EDITOR
 fo() {
   local out file key
-  IFS=$'\n' out=($(fzf-tmux -d 30% -q "$1" -0 --expect=ctrl-o,ctrl-e))
+  IFS=$'\n' out=($(fzf -q "$1" -0 --expect=ctrl-o,ctrl-e))
   key=$(head -1 <<< "$out")
   file=$(head -2 <<< "$out" | tail -1)
   if [ -n "$file" ]; then
@@ -162,7 +180,7 @@ fo() {
 cdf() {
   local file
   local dir
-  file=$(fzf-tmux -d 30% +m -q "$1" -0) && dir=$(dirname "$file") && cd "$dir"
+  file=$(fzf +m -q "$1" -0) && dir=$(dirname "$file") && cd "$dir"
 }
 
 # c - browse chrome history
@@ -184,7 +202,7 @@ ch() {
     "select substr(title, 1, $cols), url
   from urls order by last_visit_time desc" \
     | awk -F $sep '{printf "%-'$cols's  \x1b[36m%s\x1b[m\n", $1, $2}' \
-    | fzf-tmux -d 30% --ansi -m \
+    | fzf --ansi -m \
     | sed 's#.*\(https*://\)#\1#' \
     | xargs $open > /dev/null 2> /dev/null
 }
@@ -206,7 +224,7 @@ fdp() {
     fi
   }
 
-  local DIR=$(get_parent_dirs $(realpath "${1:-$PWD}") | fzf-tmux -d 30% --tac)
+  local DIR=$(get_parent_dirs $(realpath "${1:-$PWD}") | fzf --tac)
   cd "$DIR"
 }
 
@@ -217,7 +235,7 @@ fdp() {
 # fkill - kill process
 fkill() {
   local pid
-  pid=$(ps -ef | sed 1d | fzf-tmux -d 30% -m | awk '{print $2}')
+  pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
 
   if [ "x$pid" != "x" ]; then
     echo $pid | xargs kill -${1:-9}
@@ -232,7 +250,7 @@ fkill() {
 fbr() {
   local branches branch
   branches=$(git branch --all | grep -v HEAD) &&
-    branch=$(echo "$branches" | fzf-tmux -d 30% -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
+    branch=$(echo "$branches" | fzf -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
     git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
 }
 
@@ -247,7 +265,7 @@ fco() {
     | awk '{print "\x1b[34;1mbranch\x1b[m\t" $1}') || return
   target=$(
   (echo "$tags"; echo "$branches") |
-    fzf-tmux -d 30% -- --no-hscroll --ansi +m -d "\t" -n 2) || return
+    fzf -- --no-hscroll --ansi +m -d "\t" -n 2) || return
   git checkout $(echo "$target" | awk '{print $2}')
 }
 
@@ -255,7 +273,7 @@ fco() {
 fcoc() {
   local commits commit
   commits=$(git log --pretty=oneline --abbrev-commit --reverse) &&
-    commit=$(echo "$commits" | fzf-tmux -d 30% --tac +s +m -e) &&
+    commit=$(echo "$commits" | fzf --tac +s +m -e) &&
     git checkout $(echo "$commit" | sed "s/ .*//")
 }
 
@@ -263,7 +281,7 @@ fcoc() {
 fshow() {
   git log --graph --color=always \
     --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" \
-    | fzf-tmux -d 30% --ansi --no-sort --tac --tiebreak=index --bind=ctrl-s:toggle-sort \
+    | fzf --ansi --no-sort --tac --tiebreak=index --bind=ctrl-s:toggle-sort \
     --bind "ctrl-m:execute:
   (grep -o '[a-f0-9]\{7\}' | head -1 |
     xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
@@ -276,7 +294,7 @@ fshow() {
 fcs() {
   local commits commit
   commits=$(git log --color=always --pretty=oneline --abbrev-commit) &&
-    commit=$(echo "$commits" | fzf-tmux -d 30% +s +m -e --ansi) &&
+    commit=$(echo "$commits" | fzf +s +m -e --ansi) &&
     echo -n $(echo "$commit" | sed "s/ .*//")
 }
 
@@ -289,7 +307,7 @@ fstash() {
   local out q k sha
   while out=$(
     git stash list --pretty="%C(yellow)%h %>(14)%Cgreen%cr %C(blue)%gs" \
-      | fzf-tmux -d 30% --ansi --no-sort -q "$q" --print-query \
+      | fzf --ansi --no-sort -q "$q" --print-query \
       --expect=ctrl-d,ctrl-b);
   do
     mapfile -t out <<< "$out"
@@ -319,7 +337,7 @@ fp() {
   (( $# )) && { arg=$@; }
   echo -n "$(pacman $arg \
     | sed 'N;s/\n//' \
-    | fzf-tmux -d 30% -m \
+    | fzf -m \
     | sed 's/.*\///' \
     | sed 's/ .*//')"
 }
@@ -329,7 +347,7 @@ fp() {
 ######################
 
 fman() {
-  man "$(apropos . | fzf-tmux -d 30% | sed 's/ .*//')"
+  man "$(apropos . | fzf | sed 's/ .*//')"
 }
 
 #################

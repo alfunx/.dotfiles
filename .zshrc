@@ -65,7 +65,7 @@ plugins=(zsh-syntax-highlighting command-not-found custom-common-aliases)
 source "$ZSH"/oh-my-zsh.sh
 source "$HOME"/.alias.zsh
 
-eval `dircolors "$HOME"/.dir_colors`
+eval "$(dircolors "$HOME"/.dir_colors)"
 
 # source ~/.dotfiles/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
 
