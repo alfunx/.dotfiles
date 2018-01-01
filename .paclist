@@ -38,6 +38,7 @@ dropbox
 e2fsprogs
 efibootmgr
 fakeroot
+fd-rs
 feh
 file
 filesystem
@@ -113,6 +114,7 @@ nano
 ncdu
 ncmpcpp
 neofetch
+neovim
 net-tools
 netctl
 netctl-dispatcher-chrony
@@ -160,6 +162,7 @@ rlwrap
 rofi
 rsync
 s-nail
+scrot
 sed
 shadow
 smartmontools
