@@ -21,7 +21,8 @@ hyperinks = true
 browser = xdg-open
 
 # if size_hints is off
-geometry = 758x482
+#geometry = 758x482
+geometry = 768x492
 
 # if size_hints is on
 #geometry = 84x24
