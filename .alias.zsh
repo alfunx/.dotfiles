@@ -83,6 +83,9 @@ pacman() {
   else
     /usr/bin/pacman "$@"
   fi
+
+  # Update pacman widget
+  /usr/bin/awesome-client 'require("beautiful").pacman.update()'
 }
 
 tmux() {
@@ -95,6 +98,10 @@ tmux() {
 
 alias pg="ping -c 1 www.google.ch"
 
+alias bcl="bc -l"
+
+alias neofetch="echo \"\\n\\n\" && neofetch"
+
 #########
 #  fzf  #
 #########
@@ -105,22 +112,22 @@ alias fzf="fzf-tmux -d 30%"
 #  ripgrep  #
 #############
 
-alias rg="rg --smart-case --line-number --colors=\"match:fg:red\" --colors=\"match:style:bold\" --colors=\"path:fg:white\" --colors=\"line:fg:yellow\" --colors=\"line:style:bold\""
+alias rg="rg --hidden --follow --smart-case --line-number --colors=\"match:fg:red\" --colors=\"match:style:bold\" --colors=\"path:fg:white\" --colors=\"line:fg:yellow\" --colors=\"line:style:bold\""
 
 # fuzzy rg
 frg() {
-  rg --smart-case --no-line-number --no-heading --color=always --colors="match:none" --colors="path:fg:white" --colors="line:fg:white" "$@" . | fzf --ansi
+  rg --no-line-number --no-heading --color=always --colors="match:none" --colors="path:fg:white" --colors="line:fg:white" "$@" . 2> /dev/null | fzf --ansi
 }
 
 #######################
 # the silver searcher #
 #######################
 
-alias ag="ag --smart-case --numbers --color-match \"1;31\" --color-path \"0;37\" --color-line-number \"1;33\""
+alias ag="ag --hidden --follow --smart-case --numbers --color-match \"1;31\" --color-path \"0;37\" --color-line-number \"1;33\""
 
 # fuzzy ag
 fag() {
-  ag --smart-case --nobreak --nonumbers --noheading --color --color-match "" --color-path "0;37" --color-line-number "0;37" "$@" . | fzf --ansi
+  ag --nobreak --nonumbers --noheading --color --color-match "" --color-path "0;37" --color-line-number "0;37" "$@" . 2> /dev/null | fzf --ansi
 }
 
 ##################

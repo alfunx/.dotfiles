@@ -3,10 +3,10 @@
 #########
 
 # auto-completion
-[[ $- == *i* ]] && source "/usr/share/fzf/completion.bash" 2> /dev/null
+[[ $- == *i* ]] && source '/usr/share/fzf/completion.bash' 2> /dev/null
 
 # key bindings
-source "/usr/share/fzf/key-bindings.bash"
+source '/usr/share/fzf/key-bindings.bash'
 
 # default options
 export FZF_DEFAULT_OPTS='--height 30%
@@ -23,7 +23,7 @@ export FZF_TMUX=1
 export FZF_TMUX_HEIGHT=30%
 export FZF_COMPLETION_TRIGGER='**'
 
-export FZF_CTRL_T_OPTS="--no-reverse"
-export FZF_CTRL_R_OPTS="--no-reverse"
-export FZF_ALT_C_OPTS="--no-reverse"
-export FZF_COMPLETION_OPTS="--no-reverse"
+export FZF_CTRL_T_OPTS='--no-reverse'
+export FZF_CTRL_R_OPTS='--no-reverse'
+export FZF_ALT_C_OPTS='--no-reverse'
+export FZF_COMPLETION_OPTS='--no-reverse'

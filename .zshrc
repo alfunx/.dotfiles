@@ -200,6 +200,7 @@ fi
 
 # Scripts path
 export PATH="$PATH:/home/amariya/scripts"
+export PATH="$PATH:/home/amariya/.gem/ruby/2.5.0/bin"
 export VISUAL="vim"
 export EDITOR="vim"
 
