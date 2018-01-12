@@ -28,7 +28,7 @@ Plug '/usr/bin/fzf'
 Plug 'alfunx/fzf.vim' " fork
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
-Plug 'tpope/vim-sensible'
+"Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-git'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
@@ -43,6 +43,7 @@ Plug 'tpope/vim-endwise'
 "Plug 'tpope/vim-commentary'
 Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/vim-easy-align'
+Plug 'junegunn/vim-peekaboo'
 Plug 'easymotion/vim-easymotion'
 Plug 'haya14busa/incsearch.vim'
 Plug 'haya14busa/incsearch-easymotion.vim'
@@ -53,11 +54,11 @@ Plug 'mbbill/undotree'
 "Plug 'christoomey/vim-titlecase'
 Plug 'tomtom/tcomment_vim'
 Plug 'ap/vim-css-color'
-Plug 'jceb/vim-orgmode'
+"Plug 'jceb/vim-orgmode'
 Plug 'xtal8/traces.vim'
 Plug 'chrisbra/NrrwRgn'
 Plug 'kopischke/vim-fetch'
-Plug 'wellle/tmux-complete.vim'
+Plug 'w0rp/ale'
 
 " Text objects
 Plug 'wellle/targets.vim'
@@ -67,24 +68,24 @@ Plug 'michaeljsmith/vim-indent-object'
 " Tmux
 Plug 'benmills/vimux'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'wellle/tmux-complete.vim'
 
 " Snippets
-"Plug 'Valloric/YouCompleteMe'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 
 " Language specific
-Plug 'plasticboy/vim-markdown'
-Plug 'lervag/vimtex'
+Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
+Plug 'lervag/vimtex', { 'for': ['latex', 'tex'] }
 
 " Themes
 "Plug 'morhetz/gruvbox'
 Plug 'alfunx/gruvbox' " fork
 
 " Don't load in console
-if &term !=? 'linux' || has("gui_running")
+if &term !=? 'linux' || has('gui_running')
   Plug 'vim-airline/vim-airline'
-  Plug 'vim-airline/vim-airline-themes'
+  "Plug 'vim-airline/vim-airline-themes'
 endif
 
 call plug#end()
@@ -92,7 +93,7 @@ call plug#end()
 runtime ftplugin/man.vim
 runtime ftplugin/vim.vim
 runtime ftplugin/help.vim
-" runtime macros/matchit.vim
+runtime macros/matchit.vim
 
 
 """"""""""""""""""
@@ -102,8 +103,8 @@ runtime ftplugin/help.vim
 "" Leader key
 nnoremap <Space> <Nop>
 nnoremap ü <Nop>
-let mapleader=" "
-let maplocalleader="ü"
+let mapleader=' '
+let maplocalleader='ü'
 
 "" Split navigation
 " (Handled by vim-tmux-navigator plugin)
@@ -150,11 +151,12 @@ vnoremap < <gv
 vnoremap > >gv
 
 " Use CTRL-S for saving, also in Insert mode
-nnoremap <silent> <C-S> :update<CR>
-vnoremap <silent> <C-S> <C-C>:update<CR>
-inoremap <silent> <C-S> <C-O>:update<CR>
+nnoremap <silent> <C-s> :write<CR>
+vnoremap <silent> <C-s> <Esc>:write<CR>
+inoremap <silent> <C-s> <C-O>:write<CR><Esc>
 
 "" Insert mode mappings
+inoremap <C-U> <C-G>u<C-U>
 inoremap àà <C-O>O
 inoremap éé <C-O>o
 
@@ -247,7 +249,7 @@ command! -bang -nargs=* Rg
 "" AG
 command! -bang -nargs=* Ag
   \ call fzf#vim#ag(
-  \ <q-args>, '--color-path "0;37" --color-line-number "0;37" --color-match "" --follow',
+  \ <q-args>, '--color-path "0;37" --color-line-number "0;37" --color-match "" --hidden --smart-case --follow',
   \ <bang>0)
 
 if executable('rg')
@@ -319,8 +321,27 @@ let g:airline_symbols.maxlinenr=''
 """ Airline settings
 let g:airline_theme='gruvbox'
 let g:airline#extensions#tabline#enabled=1
+let g:airline#extensions#tabline#buffer_idx_mode=1
 let g:airline#extensions#whitespace#mixed_indent_algo=1
 let g:airline_powerline_fonts=1
+let g:airline_skip_empty_sections=0
+let g:airline#extensions#tabline#show_tab_nr=0
+let g:airline#extensions#tabline#buffers_label='buffers'
+let g:airline#extensions#tabline#tabs_label='tabs'
+
+" let g:airline_mode_map = {
+"     \ '__' : ' - ',
+"     \ 'n'  : ' N ',
+"     \ 'i'  : ' I ',
+"     \ 'R'  : ' R ',
+"     \ 'c'  : ' C ',
+"     \ 'v'  : ' V ',
+"     \ 'V'  : 'V-L',
+"     \ '' : 'V-B',
+"     \ 's'  : ' S ',
+"     \ 'S'  : ' S ',
+"     \ '' : ' S ',
+"     \ }
 
 "" EasyMotion
 "let g:EasyMotion_do_mapping=0  " Disable default mappings
@@ -368,13 +389,13 @@ map z? <Plug>(incsearch-easymotion-?)
 let g:netrw_liststyle=0
 let g:netrw_preview=1
 
-"" Unimpaired
-nmap <S-H> [
-nmap <S-L> ]
-omap <S-H> [
-omap <S-L> ]
-xmap <S-H> [
-xmap <S-L> ]
+" "" Unimpaired
+" nmap <S-H> [
+" nmap <S-L> ]
+" omap <S-H> [
+" omap <S-L> ]
+" xmap <S-H> [
+" xmap <S-L> ]
 
 "" Vim RSI
 let g:rsi_no_meta=1
@@ -402,9 +423,9 @@ augroup End
 let g:vimtex_view_method='zathura'
 
 "" UltiSnips
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+let g:UltiSnipsExpandTrigger='<tab>'
+let g:UltiSnipsJumpForwardTrigger='<c-b>'
+let g:UltiSnipsJumpBackwardTrigger='<c-z>'
 
 "" Multiple-Cursors
 let g:multi_cursor_next_key='<C-n>'
@@ -422,6 +443,7 @@ function! s:goyo_enter()
   set noshowmode
   set noshowcmd
   set scrolloff=999
+  set sidescrolloff=20
   Limelight
 endfunction
 
@@ -430,6 +452,7 @@ function! s:goyo_leave()
   set noshowmode
   set showcmd
   set scrolloff=3
+  set sidescrolloff=5
   Limelight!
 endfunction
 
@@ -445,10 +468,21 @@ let g:VimuxUseNearest=1
 function! VimuxSlime()
   call VimuxOpenRunner()
   call VimuxSendText(@v)
-  "call VimuxSendKeys("Enter")
+  "call VimuxSendKeys('Enter')
 endfunction
 
 vmap <C-c><C-c> "vy:call VimuxSlime()<CR>
+
+"" Ale
+let g:ale_sign_error='>>'
+let g:ale_sign_warning='--'
+let g:ale_lint_on_text_changed='never'
+let g:ale_lint_on_enter=0
+let g:ale_lint_on_save=0
+let g:ale_lint_on_filetype_changed=0
+let g:ale_set_signs=1
+"nnoremap <silent> <C-w>p <Plug>(ale_previous_wrap)
+"nnoremap <silent> <C-w>n <Plug>(ale_next_wrap)
 
 
 """"""""""""""""
@@ -456,8 +490,7 @@ vmap <C-c><C-c> "vy:call VimuxSlime()<CR>
 """"""""""""""""
 
 "" UI config
-filetype plugin indent on
-syntax on
+"syntax enable
 set number
 set showcmd
 set hidden
@@ -485,11 +518,16 @@ augroup BoldCursorLineNr
   autocmd ColorScheme * highlight CursorLineNR cterm=bold
 augroup END
 
-if &term !=? 'linux' || has("gui_running")
-  set listchars=tab:▸\ ,eol:↵,trail:~,extends:>,precedes:<
+augroup RefreshAirline
+  autocmd!
+  autocmd ColorScheme * if exists(':AirlineRefresh') | :AirlineRefresh | endif
+augroup END
+
+if &term !=? 'linux' || has('gui_running')
+  set listchars=tab:▸\ ,eol:↵,trail:~,extends:>,precedes:<,nbsp:+
   set fillchars=vert:│,fold:─,diff:-
 else
-  set listchars=tab:~\ ,eol:$,trail:~,extends:>,precedes:<
+  set listchars=tab:>\ ,eol:¬,trail:~,extends:>,precedes:<,nbsp:+
   set fillchars=vert:\|,fold:-,diff:-
 endif
 
@@ -500,23 +538,31 @@ set laststatus=2  " always show status line
 set showtabline=2  " always show tab line
 set noshowmode  " Hide the default mode text (e.g. -- INSERT -- below the statusline)
 
-"" Spaces, indents and tabs
-set encoding=utf-8
-set shiftwidth=2
-set softtabstop=2
+"" Tabs
 set tabstop=2
+set softtabstop=2
+set shiftwidth=2
 set expandtab
+
+"" Spaces, indents
+set encoding=utf-8
 set smarttab
 set autoindent
-set smartindent
-"set cindent
+"filetype plugin indent on
 set linespace=0
 set scrolloff=3
-set backspace=2  " backspace over everything in insert mode
-set cinoptions=:0,p0,t0
-"set cinwords=if,else,while,do,for,switch,case
-set formatoptions=tcqrj
+set sidescrolloff=5
+set backspace=indent,eol,start  " backspace over everything in insert mode
+set formatoptions+=roj
+set nrformats-=octal
 set pastetoggle=<F2>
+
+set ttimeout
+set ttimeoutlen=100
+
+if filereadable('/bin/zsh')
+  set shell=/bin/zsh
+endif
 
 """ Color overlength
 augroup OverLength
@@ -541,15 +587,15 @@ augroup CustomFolding
   autocmd BufWinEnter * let &foldlevel=max(add(map(range(1, line('$')), 'foldlevel(v:val)'), 10))  " with this, everything is unfolded at start
 augroup End
 
-set cf  " enable error files & error jumping.
 "set clipboard+=unnamed  " yanks go on clipboard instead.
 set history=10000  " Number of things to remember in history.
+set tabpagemax=50
 set autoread
 set autowrite
 set ruler
 set nostartofline
-set timeoutlen=2000  " time to wait after esc (default causes an annoying delay)
 set nohidden
+set sessionoptions-=options
 
 function! NeatFoldText()
   let line = ' ' . substitute(getline(v:foldstart), '^\s*"\?\s*\|\s*"\?\s*{{' . '{\d*\s*', '', 'g') . ' '
@@ -581,7 +627,7 @@ let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
 "set t_Co=256
 let g:gruvbox_italic=1
-colorscheme gruvbox
+silent! colorscheme gruvbox
 
 
 """"""""""""""""""""""""""
@@ -606,7 +652,7 @@ set directory+=~/.vim/.swap//
 set directory+=~/.tmp//
 set directory+=.
 
-if exists("+undofile")
+if exists('+undofile')
   if isdirectory($HOME . '/.vim/.undo') == 0
     silent !mkdir -p ~/.vim/.undo > /dev/null 2>&1
   endif
@@ -614,18 +660,6 @@ if exists("+undofile")
   set undodir+=~/.vim/.undo//
   set undofile
 endif
-
-
-"""""""""""""""""""""""
-"  LANGUAGE SPECIFIC  "
-"""""""""""""""""""""""
-
-augroup FiletypeSettings
-  autocmd!
-  autocmd Filetype python setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
-  autocmd Filetype java setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
-  autocmd Filetype lua setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
-augroup END
 
 
 """""""""""""""""""
