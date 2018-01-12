@@ -687,6 +687,16 @@ local function pl(widget, bgcolor, padding)
     return wibox.container.background(wibox.container.margin(widget, 16, 16), bgcolor, theme.powerline_rl)
 end
 
+function rowfilter(t)
+    local index = t.index
+    local selected = awful.tag.selected().index
+    if not index or not selected then
+        return false
+    end
+    local columns = awful.util.tagcolumns or #awful.util.tagnames
+    return math.floor((index - 1) / columns) == math.floor((selected - 1) / columns)
+end
+
 function theme.at_screen_connect(s)
     -- Quake application
     s.quake = lain.util.quake({ app = awful.util.terminal })
@@ -714,7 +724,7 @@ function theme.at_screen_connect(s)
                           awful.button({ }, 5, function () awful.layout.inc(-1) end)))
 
     -- Create a taglist widget
-    s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, awful.util.taglist_buttons)
+    s.mytaglist = awful.widget.taglist(s, rowfilter, awful.util.taglist_buttons)
 
     -- Create a tasklist widget
     s.mytasklist = awful.widget.tasklist(s,
