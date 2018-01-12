@@ -31,7 +31,10 @@ if [ -d /etc/X11/xinit/xinitrc.d ] ; then
  unset f
 fi
 
-xautolock -time 11 -locker /usr/local/bin/custom-lockscreen -detectsleep &
+xautolock -detectsleep \
+  -time 9 -notify 20 \
+  -notifier "notify-send -t 18000 'Lock' 'Locking screen in 20 seconds.'" \
+  -locker /usr/local/bin/custom-lockscreen &
 dropbox &
 amixer set "Master" mute &
 unclutter -root -reset &
