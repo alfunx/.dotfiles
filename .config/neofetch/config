@@ -430,7 +430,7 @@ underline_enabled="on"
 # Default:  '-'
 # Values:   'string'
 # Flag:     --underline_char
-underline_char="-"
+underline_char="─"
 
 
 # Color Blocks
@@ -560,7 +560,7 @@ image_backend="ascii"
 # NOTE: 'auto' will pick the best image source for whatever image backend is used.
 #       In ascii mode, distro ascii art will be used and in an image mode, your
 #       wallpaper will be used.
-image_source="auto"
+image_source="/home/amariya/pictures/arch/arch.png"
 
 
 # Ascii Options
