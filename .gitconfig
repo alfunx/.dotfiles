@@ -1,3 +1,5 @@
+[init]
+	templatedir = ~/.git_template
 [user]
 	email = alphonse.mariya@hotmail.com
 	name = Alphonse Mariya
@@ -5,6 +7,7 @@
 [core]
 	editor = vim
 	whitespace = fix,trailing-space,cr-at-eol
+	excludefile = ~/.ignore
 [credential]
 	helper = cache
 [diff]
@@ -96,3 +99,5 @@
 	# migrate commits to new branch
 	# migrate [new branch] [onto=master] [range=origin]
 	migrate = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git checkout -b \"$1\" && git branch --force \"$CURRENT\" \"${3-\\\"$CURRENT\\\"@\\{u\\}}\" && git rebase --onto \"${2-master}\" \"$CURRENT\"; }; f"
+
+	ctags = "!.git/hooks/ctags"
