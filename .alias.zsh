@@ -89,12 +89,24 @@ pacman() {
 }
 
 tmux() {
-  if [ "$TERM" = "linux" ]; then
+  if [ "$1" = '.' ]; then
+    if [ -f ./.tmux ]; then
+      read -k 1 "reply?$fg_bold[white]Source $fg_bold[red]$(dirs)/.tmux$fg_bold[white]? [y/N] $reset_color"
+      echo
+      if [[ $reply =~ ^[Yy]$ ]]; then
+        tmux source-file $(pwd)/.tmux
+      fi
+    else
+      echo "No .tmux file found."
+    fi
+  elif [ "$TERM" = "linux" ]; then
     /usr/bin/tmux -L linux -f "$HOME/.tmux.minimal.conf" "$@"
   else
     /usr/bin/tmux "$@"
   fi
 }
+
+alias cp="cp --reflink=auto -i"
 
 alias pg="ping -c 1 www.google.ch"
 
