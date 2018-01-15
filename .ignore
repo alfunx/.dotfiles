@@ -1,10 +1,12 @@
 .git
 .hg
 .svn
+.tmux
 .backup
 .vim-backup
 .swap
 .vim-swap
 .undo
 .vim-undo
+*.bak
 tags
