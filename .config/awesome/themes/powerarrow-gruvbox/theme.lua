@@ -78,6 +78,7 @@ theme.font                                      = font_name .. " " ..           
 theme.font_bold                                 = font_name .. " " .. "Bold"        .. " " .. font_size
 theme.font_italic                               = font_name .. " " .. "Italic"      .. " " .. font_size
 theme.font_bold_italic                          = font_name .. " " .. "Bold Italic" .. " " .. font_size
+theme.font_big                                  = font_name .. " " .. "Bold"        .. " 16"
 
 theme.border_normal                             = bw3
 -- theme.border_focus                              = bw4
@@ -277,39 +278,39 @@ theme.cal = lain.widget.calendar({
 -- })
 -- --]]
 
--- -- MPD
--- local musicplr = awful.util.terminal .. " -title Music -g 130x34-320+16 -e ncmpcpp"
--- local mpdicon = wibox.widget.imagebox(theme.widget_music)
--- mpdicon:buttons(awful.util.table.join(
---     awful.button({ modkey }, 1, function () awful.spawn.with_shell(musicplr) end),
---     awful.button({ }, 1, function ()
---         awful.spawn.with_shell("mpc prev")
---         theme.mpd.update()
---     end),
---     awful.button({ }, 2, function ()
---         awful.spawn.with_shell("mpc toggle")
---         theme.mpd.update()
---     end),
---     awful.button({ }, 3, function ()
---         awful.spawn.with_shell("mpc next")
---         theme.mpd.update()
---     end)))
--- theme.mpd = lain.widget.mpd({
---     settings = function()
---         if mpd_now.state == "play" then
---             artist = " " .. mpd_now.artist .. " "
---             title  = mpd_now.title  .. " "
---             mpdicon:set_image(theme.widget_music_on)
---             widget:set_markup(markup.font(theme.font, markup("#FF8466", artist) .. " " .. title))
---         elseif mpd_now.state == "pause" then
---             widget:set_markup(markup.font(theme.font, " mpd paused "))
---             mpdicon:set_image(theme.widget_music_pause)
---         else
---             widget:set_text("")
---             mpdicon:set_image(theme.widget_music)
---         end
---     end
--- })
+-- MPD
+local musicplr = awful.util.terminal .. " -title Music -g 130x34-320+16 -e ncmpcpp"
+local mpdicon = wibox.widget.imagebox(theme.widget_music)
+mpdicon:buttons(awful.util.table.join(
+    awful.button({ modkey }, 1, function () awful.spawn.with_shell(musicplr) end),
+    awful.button({ }, 1, function ()
+        awful.spawn.with_shell("mpc prev")
+        theme.mpd.update()
+    end),
+    awful.button({ }, 2, function ()
+        awful.spawn.with_shell("mpc toggle")
+        theme.mpd.update()
+    end),
+    awful.button({ }, 3, function ()
+        awful.spawn.with_shell("mpc next")
+        theme.mpd.update()
+    end)))
+theme.mpd = lain.widget.mpd({
+    settings = function()
+        if mpd_now.state == "play" then
+            artist = " " .. mpd_now.artist .. " "
+            title  = mpd_now.title  .. " "
+            mpdicon:set_image(theme.widget_music_on)
+            widget:set_markup(markup.font(theme.font, markup("#FF8466", artist) .. " " .. title))
+        elseif mpd_now.state == "pause" then
+            widget:set_markup(markup.font(theme.font, " mpd paused "))
+            mpdicon:set_image(theme.widget_music_pause)
+        else
+            widget:set_text("")
+            mpdicon:set_image(theme.widget_music)
+        end
+    end
+})
 
 -- MEM
 local memicon = wibox.widget.imagebox(theme.widget_mem)
@@ -687,6 +688,7 @@ local function pl(widget, bgcolor, padding)
     return wibox.container.background(wibox.container.margin(widget, 16, 16), bgcolor, theme.powerline_rl)
 end
 
+-- Show only tags of current row
 function rowfilter(t)
     local index = t.index
     local selected = awful.tag.selected().index

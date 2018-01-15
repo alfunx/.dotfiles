@@ -280,24 +280,23 @@ root.buttons(awful.util.table.join(
 ))
 -- }}}
 
+local select_tag_in_grid
 do
-    local index_by_direction
     local columns = awful.util.tagcolumns or #awful.util.tagnames
-    function select_tag_in_grid(direction, current_index)
+    local index_by_direction = {
+        l = function(index) return (math.ceil((index) / columns) - 1) * columns + ((index - 2) % columns) + 1 end,
+        r = function(index) return (math.ceil((index) / columns) - 1) * columns + ((index) % columns) + 1 end,
+        u = function(index, rows) return (index - 1 - columns) % (rows * columns) + 1 end,
+        d = function(index, rows) return (index - 1 + columns) % (rows * columns) + 1 end
+    }
+    select_tag_in_grid = function(direction, current_index)
         local rows = math.ceil(#awful.screen.focused().tags / columns)
         local index = current_index or awful.tag.getidx()
+        local new_index = index_by_direction[direction](index, rows)
 
-        index_by_direction = index_by_direction or {
-            l = function(index, columns) return (math.ceil((index) / columns) - 1) * columns + ((index - 2) % columns) + 1 end,
-            r = function(index, columns) return (math.ceil((index) / columns) - 1) * columns + ((index) % columns) + 1 end,
-            u = function(index, columns, rows) return (index - 1 - columns) % (rows * columns) + 1 end,
-            d = function(index, columns, rows) return (index - 1 + columns) % (rows * columns) + 1 end,
-        }
-        local new_index = index_by_direction[direction](index, columns, rows)
-
-        local tag = awful.tag.gettags(awful.screen.focused())[new_index]
-        if tag then
-            awful.tag.viewonly(tag)
+        local new_tag = awful.tag.gettags(awful.screen.focused())[new_index]
+        if new_tag then
+            awful.tag.viewonly(new_tag)
             return new_index
         end
         select_tag_in_grid(direction, new_index)
@@ -307,9 +306,9 @@ end
 local function move_client_in_grid(direction)
     if client.focus then
         local current_client = client.focus
-        local new_tag_index = select_tag_in_grid(direction)
-        local tag = awful.tag.gettags(awful.screen.focused())[new_tag_index]
-        current_client:move_to_tag(tag)
+        local new_index = select_tag_in_grid(direction)
+        local new_tag = awful.tag.gettags(awful.screen.focused())[new_index]
+        current_client:move_to_tag(new_tag)
         current_client:raise()
     end
 end
