@@ -7,7 +7,7 @@
 [core]
 	editor = vim
 	whitespace = fix,trailing-space,cr-at-eol
-	excludefile = ~/.ignore
+	excludesfile = ~/.ignore
 [credential]
 	helper = cache
 [diff]
@@ -65,7 +65,7 @@
 
 	cl = clone
 	p = pull --rebase=interactive --prune
-	f = fetch --prune --all
+	f = fetch --prune --all --tags
 	su = submodule update --init --recursive
 	up = "!git p \"$@\" && git su"
 
