@@ -291,12 +291,12 @@ do
     }
     select_tag_in_grid = function(direction, current_index)
         local rows = math.ceil(#awful.screen.focused().tags / columns)
-        local index = current_index or awful.tag.getidx()
+        local index = current_index or awful.screen.focused().selected_tag.index
         local new_index = index_by_direction[direction](index, rows)
 
-        local new_tag = awful.tag.gettags(awful.screen.focused())[new_index]
+        local new_tag = awful.screen.focused().tags[new_index]
         if new_tag then
-            awful.tag.viewonly(new_tag)
+            new_tag:view_only()
             return new_index
         end
         select_tag_in_grid(direction, new_index)
@@ -307,7 +307,7 @@ local function move_client_in_grid(direction)
     if client.focus then
         local current_client = client.focus
         local new_index = select_tag_in_grid(direction)
-        local new_tag = awful.tag.gettags(awful.screen.focused())[new_index]
+        local new_tag = awful.screen.focused().tags[new_index]
         current_client:move_to_tag(new_tag)
         current_client:raise()
     end

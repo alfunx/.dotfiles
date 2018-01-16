@@ -97,7 +97,7 @@ theme.notification_fg                           = textcolor_light
 theme.notification_bg                           = bw0
 theme.notification_border_color                 = bw0
 theme.notification_border_width                 = 4
-theme.notification_icon_size                    = 8
+theme.notification_icon_size                    = 80
 theme.notification_opacity                      = 0.9
 theme.notification_max_width                    = 600
 theme.notification_margin                       = 100
@@ -691,7 +691,7 @@ end
 -- Show only tags of current row
 function rowfilter(t)
     local index = t.index
-    local selected = awful.tag.selected().index
+    local selected = awful.screen.focused().selected_tag.index
     if not index or not selected then
         return false
     end
