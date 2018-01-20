@@ -297,7 +297,7 @@ do
         local new_tag = awful.screen.focused().tags[new_index]
         if new_tag then
             new_tag:view_only()
-            return new_index
+            return new_tag
         end
         select_tag_in_grid(direction, new_index)
     end
@@ -306,8 +306,7 @@ end
 local function move_client_in_grid(direction)
     if client.focus then
         local current_client = client.focus
-        local new_index = select_tag_in_grid(direction)
-        local new_tag = awful.screen.focused().tags[new_index]
+        local new_tag = select_tag_in_grid(direction)
         current_client:move_to_tag(new_tag)
         current_client:raise()
     end
@@ -799,25 +798,28 @@ awful.rules.rules = {
       properties = { screen = 1, tag = awful.util.tagnames[8] } },
 
     { rule = { class = "Git-gui" },
-      properties = { floating = true, x = 30, y = 51, placement = awful.placement.centered+awful.placement.no_offscreen } },
+      properties = { floating = true, placement = awful.placement.centered } },
 
     { rule = { class = "feh" },
-      properties = { floating = true, x = 30, y = 51, placement = awful.placement.centered+awful.placement.no_offscreen } },
+      properties = { floating = true, placement = awful.placement.centered } },
 
     { rule = { class = "Lxappearance" },
-      properties = { floating = true, x = 30, y = 51, placement = awful.placement.centered+awful.placement.no_offscreen } },
+      properties = { floating = true, placement = awful.placement.centered } },
 
     { rule = { class = "Oomox" },
-      properties = { floating = true, x = 30, y = 51, placement = awful.placement.centered+awful.placement.no_offscreen } },
+      properties = { floating = true, placement = awful.placement.centered } },
+
+    { rule = { class = "System-config-printer.py" },
+      properties = { floating = true, placement = awful.placement.centered } },
 
     { rule = { class = "Pinentry" },
-      properties = { floating = true, placement = awful.placement.centered+awful.placement.no_offscreen } },
+      properties = { floating = true, placement = awful.placement.centered } },
 
     { rule = { name = "Event Tester" },
-      properties = { floating = true, placement = awful.placement.centered+awful.placement.no_offscreen } },
+      properties = { floating = true, placement = awful.placement.centered } },
 
     { rule = { name = "alsamixer" },
-      properties = { floating = true, x = 30, y = 51, placement = awful.placement.centered+awful.placement.no_offscreen } },
+      properties = { floating = true, placement = awful.placement.centered } },
 
 }
 -- }}}
