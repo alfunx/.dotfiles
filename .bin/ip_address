@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 echo "SSID: $(netctl-auto list | grep -Po '\* wlp58s0-\K.*')
 Internal: $(ip address show wlp58s0 | grep -Po 'inet \K[\d.]+')
