@@ -174,8 +174,8 @@ LINK 35
 FIFO 30;44
 SOCK 35;44
 DOOR 35;44 # Solaris 2.5 and later
-BLK  33;44
-CHR  37;44
+BLK 33;44
+CHR 37;44
 
 
 #############################################################################
@@ -183,7 +183,7 @@ CHR  37;44
 
 # Orphaned symlinks (blinking white on red)
 # Blink may or may not work (works on iTerm dark or light, and Putty dark)
-ORPHAN  05;37;41
+ORPHAN 05;37;41
 # ... and the files that orphaned symlinks point to (blinking white on red)
 MISSING 05;37;41
 
@@ -305,7 +305,7 @@ EXEC 01;31  # Unix
 
 # Audio
 .aac 33
-.au  33
+.au 33
 .flac 33
 .m4a 33
 .mid 33
@@ -315,7 +315,7 @@ EXEC 01;31  # Unix
 .mpa 33
 .mpeg 33
 .mpg 33
-.ogg  33
+.ogg 33
 .opus 33
 .ra 33
 .wav 33
@@ -372,33 +372,33 @@ EXEC 01;31  # Unix
 .psd 31
 
 # Archives, compressed
-.7z   1;35
-.apk  1;35
-.arj  1;35
-.bin  1;35
-.bz   1;35
-.bz2  1;35
-.cab  1;35  # Win
-.deb  1;35
-.dmg  1;35  # OSX
-.gem  1;35
-.gz   1;35
-.iso  1;35
-.jar  1;35
-.msi  1;35  # Win
-.rar  1;35
-.rpm  1;35
-.tar  1;35
-.tbz  1;35
+.7z 1;35
+.apk 1;35
+.arj 1;35
+.bin 1;35
+.bz 1;35
+.bz2 1;35
+.cab 1;35  # Win
+.deb 1;35
+.dmg 1;35  # OSX
+.gem 1;35
+.gz 1;35
+.iso 1;35
+.jar 1;35
+.msi 1;35  # Win
+.rar 1;35
+.rpm 1;35
+.tar 1;35
+.tbz 1;35
 .tbz2 1;35
-.tgz  1;35
-.tx   1;35
-.war  1;35
-.xpi  1;35
-.xz   1;35
-.z    1;35
-.Z    1;35
-.zip  1;35
+.tgz 1;35
+.tx 1;35
+.war 1;35
+.xpi 1;35
+.xz 1;35
+.z 1;35
+.Z 1;35
+.zip 1;35
 
 # For testing
 .ANSI-30-black 30
@@ -448,6 +448,9 @@ EXEC 01;31  # Unix
 #.swp 01;36
 #.swo 01;36
 #*,v 01;36
+#.pacnew 01;36
+#.pacsave 01;36
+#.pkglist 01;36
 .bak 01;33
 .BAK 01;33
 .old 01;33
@@ -464,6 +467,12 @@ EXEC 01;31  # Unix
 *,v 01;33
 .pacnew 01;33
 .pacsave 01;33
+.pkglist 01;33
+
+# Sensitive files
+*_history 01;36
+*_rsa 01;36
+*_keys 01;36
 
 # The brightmagenta (Solarized: purple) color is free for you to use for your
 # custom file type
