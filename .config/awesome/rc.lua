@@ -682,6 +682,11 @@ clientkeys = awful.util.table.join(
               {description = "magnify", group = "client"}),
     awful.key({ mod_4             }, "f",
         function (c)
+            if not c.fullscreen then
+                awful.titlebar.hide(c)
+            elseif c.fullscreen and c.floating then
+                awful.titlebar.show(c)
+            end
             c.fullscreen = not c.fullscreen
             c:raise()
         end,
@@ -700,12 +705,17 @@ clientkeys = awful.util.table.join(
               {description = "toggle sticky", group = "client"}),
     awful.key({ mod_4            }, "i", function (c) awful.titlebar.toggle(c) end,
               {description = "toggle titlebar", group = "client"}),
-    awful.key({ mod_4, ctrlkey   }, "i", function (c) set_wallpaper(0) end,
+    awful.key({ mod_4, ctrlkey   }, "i", function () set_wallpaper(0) end,
               {description = "toggle titlebar", group = "client"}),
     awful.key({ mod_4             }, "n", function (c) c.minimized = true end,
               {description = "minimize", group = "client"}),
     awful.key({ mod_4            }, "m",
         function (c)
+            if not c.maximized then
+                awful.titlebar.hide(c)
+            elseif c.maximized and c.floating then
+                awful.titlebar.show(c)
+            end
             c.maximized = not c.maximized
             c:raise()
         end,
@@ -774,6 +784,7 @@ root.keys(globalkeys)
 -- {{{ Rules
 -- Rules to apply to new clients (through the "manage" signal).
 awful.rules.rules = {
+
     -- All clients will match this rule.
     { rule = { },
         properties = { border_width = beautiful.border_width,
@@ -797,28 +808,10 @@ awful.rules.rules = {
     { rule = { class = "VirtualBox" },
       properties = { screen = 1, tag = awful.util.tagnames[8] } },
 
-    { rule = { class = "Git-gui" },
-      properties = { floating = true, placement = awful.placement.centered } },
-
-    { rule = { class = "feh" },
-      properties = { floating = true, placement = awful.placement.centered } },
-
-    { rule = { class = "Lxappearance" },
-      properties = { floating = true, placement = awful.placement.centered } },
-
-    { rule = { class = "Oomox" },
-      properties = { floating = true, placement = awful.placement.centered } },
-
-    { rule = { class = "System-config-printer.py" },
-      properties = { floating = true, placement = awful.placement.centered } },
-
-    { rule = { class = "Pinentry" },
-      properties = { floating = true, placement = awful.placement.centered } },
-
-    { rule = { name = "Event Tester" },
-      properties = { floating = true, placement = awful.placement.centered } },
-
-    { rule = { name = "alsamixer" },
+    { rule_any = { class = {
+        "Git-gui", "feh", "Lxappearance", "Oomox", "Gpick",
+        "System-config-printer.py", "Pinentry", "Event Tester", "alsamixer"
+    } },
       properties = { floating = true, placement = awful.placement.centered } },
 
 }
