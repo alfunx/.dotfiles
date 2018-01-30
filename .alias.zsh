@@ -85,7 +85,20 @@ pacman() {
   fi
 
   # Update pacman widget
-  /usr/bin/awesome-client 'require("beautiful").pacman.update()'
+  dbus-send --dest=org.awesomewm.awful --type=method_call \
+    / org.awesomewm.awful.Remote.Eval \
+    string:'pacman = require("beautiful").pacman; if pacman then pacman.update() end'
+}
+
+pacman-date-log() {
+  { pacman ${1:--Qeq}; cat /var/log/pacman.log; } | awk '
+    NF == 1 { pkgs[$0] = 1; }
+    $4 == "installed" {
+      if ($5 in pkgs) { pkgs[$5] = $1 " " $2; }
+    }
+    END {
+      for (p in pkgs) { print pkgs[p], p; }
+    }' | sort
 }
 
 tmux() {
@@ -94,10 +107,16 @@ tmux() {
       read -k 1 "reply?$fg_bold[white]Source $fg_bold[red]$(dirs)/.tmux$fg_bold[white]? [y/N] $reset_color"
       echo
       if [[ $reply =~ ^[Yy]$ ]]; then
-        tmux source-file $(pwd)/.tmux
+        if [[ ! -z "$TMUX" ]]; then
+          tmux source-file $(pwd)/.tmux
+        else
+          echo "No tmux session attached."; return 1
+        fi
+      else
+        echo "Not sourced .tmux file."; return 0
       fi
     else
-      echo "No .tmux file found."
+      echo "No .tmux file found."; return 1
     fi
   elif [ "$TERM" = "linux" ]; then
     /usr/bin/tmux -L linux -f "$HOME/.tmux.minimal.conf" "$@"
@@ -113,6 +132,12 @@ alias pg="ping -c 1 www.google.ch"
 alias bcl="bc -l"
 
 alias neofetch="echo \"\\n\\n\" && neofetch"
+
+foreground-job() {
+  fg
+}
+zle     -N   foreground-job
+bindkey '^Z' foreground-job
 
 #########
 #  fzf  #
@@ -367,26 +392,4 @@ fp() {
 
 fman() {
   man "$(apropos . | fzf | sed 's/ .*//')"
-}
-
-#################
-#  transfer.sh  #
-#################
-
-transfer() {
-  if [ $# -eq 0 ]; then
-    echo -e "No arguments specified."
-    return 1
-  fi
-
-  tmpfile=$( mktemp )
-  if tty -s; then
-    basefile=$(basename "$1" \
-      | sed -e 's/[^a-zA-Z0-9._-]/-/g')
-    curl --progress-bar --upload-file "$1" "https://transfer.sh/$basefile" >> $tmpfile
-  else
-    curl --progress-bar --upload-file "-" "https://transfer.sh/$1" >> $tmpfile
-  fi
-  cat $tmpfile
-  rm -f $tmpfile
 }

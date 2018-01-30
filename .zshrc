@@ -155,6 +155,10 @@ eval "$(dircolors "$HOME"/.dir_colors)"
 #     clear #for background artifacting
 # fi
 
+# Scripts path
+export PATH="/home/amariya/.bin:$PATH"
+export PATH="/home/amariya/.gem/ruby/2.5.0/bin:$PATH"
+
 # Zsh options
 setopt extendedglob
 setopt complete_aliases
@@ -182,7 +186,6 @@ if [[ "$TERM" == "linux" ]]; then
   PROMPT='[%F{red}%B%n%b%f@%m %~]'
   PROMPT+='$(git_prompt_info)'
   PROMPT+=' %(?.%F{cyan}.%F{red})%B%(!.#.$)%b%f '
-
   ZSH_THEME_GIT_PROMPT_PREFIX=" [%F{yellow}%B"
   ZSH_THEME_GIT_PROMPT_SUFFIX="%b%f]"
   ZSH_THEME_GIT_PROMPT_DIRTY="%F{red}%B*%b%f"
@@ -198,9 +201,7 @@ if [[ "$(pgrep termite | wc -l)" -eq "1" ]] && [[ "$TERM" == "xterm-termite" ]];
   exit
 fi
 
-# Scripts path
-export PATH="$PATH:/home/amariya/scripts"
-export PATH="$PATH:/home/amariya/.gem/ruby/2.5.0/bin"
+# Editor
 export VISUAL="vim"
 export EDITOR="vim"
 
