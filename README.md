@@ -10,12 +10,12 @@ git directory `~/.dotfiles/` to the gitignore as a security measure. Setup
 remote and push. Hide untracked files when querying the status.
 
 ```bash
-git init --bare "$HOME"/.dotfiles
+git init --bare "$HOME/.dotfiles"
 echo 'alias dotfiles="/usr/bin/env git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"' \
-  >> "$HOME"/.zshrc
-source "$HOME"/.zshrc
-echo '.dotfiles' >> "$HOME"/.gitignore
-dotfiles add "$HOME"/.gitignore
+  >> "$HOME/.zshrc"
+source "$HOME/.zshrc"
+echo '.dotfiles' >> "$HOME/.gitignore"
+dotfiles add "$HOME/.gitignore"
 dotfiles commit -m 'Git: Add gitignore'
 dotfiles remote add origin https://github.com/alfunx/.dotfiles
 dotfiles push --set-upstream origin master
@@ -51,21 +51,21 @@ submodules and again hide untracked files when querying the status.
 
 ```bash
 git clone https://github.com/robbyrussell/oh-my-zsh \
-  "$HOME"/.oh-my-zsh
+  "$HOME/.oh-my-zsh"
 git clone https://github.com/zsh-users/zsh-syntax-highlighting \
-  "$HOME"/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+  "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
 git clone --bare --recursive https://github.com/alfunx/.dotfiles \
-  "$HOME"/.dotfiles
+  "$HOME/.dotfiles"
 function dotfiles() {
-  /usr/bin/env git --git-dir="$HOME"/.dotfiles/ --work-tree="$HOME" "$@"
+  /usr/bin/env git --git-dir="$HOME/.dotfiles/" --work-tree="$HOME" "$@"
 }
 dotfiles checkout
 if [ "$?" -ne 0 ]; then
-  mkdir -p "$HOME"/.dotfiles.bak
+  mkdir -p "$HOME/.dotfiles.bak"
   dotfiles checkout 2>&1 \
     | egrep '\s+\.' \
     | awk {'print $1'} \
-    | xargs -I{} mv {} "$HOME"/.dotfiles.bak/{}
+    | xargs -I{} mv {} "$HOME/.dotfiles.bak/{}"
   dotfiles checkout
 fi
 dotfiles submodule update --recursive --remote
@@ -94,7 +94,7 @@ dotfiles() {
       fi
       ;;
     *)
-      /usr/bin/env git --git-dir="$HOME"/.dotfiles/ --work-tree="$HOME" "$@"
+      /usr/bin/env git --git-dir="$HOME/.dotfiles/" --work-tree="$HOME" "$@"
       ;;
   esac
 }

@@ -3,19 +3,16 @@
 ###########
 
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+# export PATH="$HOME/bin:/usr/local/bin:$PATH"
 
 # Path to your oh-my-zsh installation.
-export ZSH="$HOME"/.oh-my-zsh
+export ZSH="$HOME/.oh-my-zsh"
 
 if [ "$TERM" != "linux" ]; then
   # Set name of the theme to load. Optionally, if you set this to "random"
   # it'll load a random theme each time that oh-my-zsh is loaded.
   # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-  # ZSH_THEME="robbyrussell"
-  # ZSH_THEME="powerlevel9k/powerlevel9k"
   ZSH_THEME="agnoster"
-  # ZSH_THEME="agnoster-custom"
 fi
 
 # Uncomment the following line to use case-sensitive completion.
@@ -62,12 +59,11 @@ fi
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(zsh-syntax-highlighting command-not-found custom-common-aliases)
 
-source "$ZSH"/oh-my-zsh.sh
-source "$HOME"/.alias.zsh
+source "$HOME/.completion.zsh"
+source "$ZSH/oh-my-zsh.sh"
+source "$HOME/.alias.zsh"
 
-eval "$(dircolors "$HOME"/.dir_colors)"
-
-# source ~/.dotfiles/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
+eval "$(dircolors "$HOME/.dir_colors")"
 
 # User configuration
 
@@ -103,83 +99,31 @@ eval "$(dircolors "$HOME"/.dir_colors)"
 #  CUSTOM  #
 ############
 
-# HISTFILE="$HOME/.zsh_history"
-# HISTSIZE=10000000
-# SAVEHIST=$HISTSIZE
-# # Treat the '!' character specially during expansion.
-# setopt BANG_HIST
-# # Write the history file in the ":start:elapsed;command" format.
-# setopt EXTENDED_HISTORY
-# # Write to the history file immediately, not when the shell exits.
-# setopt INC_APPEND_HISTORY
-# # Share history between all sessions.
-# setopt SHARE_HISTORY
-# # Expire duplicate entries first when trimming history.
-# setopt HIST_EXPIRE_DUPS_FIRST
-# # Don't record an entry that was just recorded again.
-# setopt HIST_IGNORE_DUPS
-# # Delete old recorded entry if new entry is a duplicate.
-# setopt HIST_IGNORE_ALL_DUPS
-# # Do not display a line previously found.
-# setopt HIST_FIND_NO_DUPS
-# # Don't record an entry starting with a space.
-# setopt HIST_IGNORE_SPACE
-# # Don't write duplicate entries in the history file.
-# setopt HIST_SAVE_NO_DUPS
-# # Remove superfluous blanks before recording entry.
-# setopt HIST_REDUCE_BLANKS
-# # Don't execute immediately upon history expansion.
-# setopt HIST_VERIFY
-# # Beep when accessing nonexistent history.
-# setopt HIST_BEEP
-
-# # Alternative colors
-# if [ "$TERM" = "linux" ]; then
-#     # echo -en "\e]P0282828" #black
-#     echo -en "\e]P0000000" #black
-#     echo -en "\e]P8928374" #darkgrey
-#     echo -en "\e]P1CC241D" #darkred
-#     echo -en "\e]P9FB4934" #red
-#     echo -en "\e]P298971A" #darkgreen
-#     echo -en "\e]PAB8BB26" #green
-#     echo -en "\e]P3D79921" #brown
-#     echo -en "\e]PBFABD2F" #yellow
-#     echo -en "\e]P4458588" #darkblue
-#     echo -en "\e]PC83A598" #blue
-#     echo -en "\e]P5B16286" #darkmagenta
-#     echo -en "\e]PDD3869B" #magenta
-#     echo -en "\e]P6689D6A" #darkcyan
-#     echo -en "\e]PE8EC07C" #cyan
-#     echo -en "\e]P7A89984" #lightgrey
-#     echo -en "\e]PFEBDBB2" #white
-#     clear #for background artifacting
-# fi
-
-# Scripts path
-export PATH="/home/amariya/.bin:$PATH"
-export PATH="/home/amariya/.gem/ruby/2.5.0/bin:$PATH"
-
 # Zsh options
 setopt extendedglob
 setopt complete_aliases
 
+# Export
+source "$HOME/.env.sh"
+
 # No scrolllock
 stty -ixon
 
-# Gruvbox colors fix
-if [ -f ~/.vim/plugged/gruvbox/gruvbox_256palette.sh ]; then
-  source ~/.vim/plugged/gruvbox/gruvbox_256palette.sh
+# FZF
+if [ -f "$HOME/.fzf.zsh" ]; then
+  source "$HOME/.fzf.zsh"
 fi
 
-# Man page colours
-export LESS_TERMCAP_mb=$'\e[1;31m'
-export LESS_TERMCAP_md=$'\e[1;34m'
-export LESS_TERMCAP_me=$'\e[0m'
-export LESS_TERMCAP_so=$'\e[0;30m\e[48;5;208m'
-export LESS_TERMCAP_se=$'\e[0m'
-export LESS_TERMCAP_us=$'\e[1;35m'
-export LESS_TERMCAP_ue=$'\e[0m'
-export LESS='-iMRj.5'
+# Gruvbox colors fix
+if [ -f "$HOME/.vim/plugged/gruvbox/gruvbox_256palette.sh" ]; then
+  source "$HOME/.vim/plugged/gruvbox/gruvbox_256palette.sh"
+fi
+
+# TMUX
+if [[ "$(pgrep termite | wc -l)" -eq "1" ]] && [[ "$TERM" == "xterm-termite" ]]; then
+  tmux attach -t main > /dev/null 2>&1 || tmux new -s main > /dev/null 2>&1
+  exit
+fi
 
 # Alternative prompt
 if [[ "$TERM" == "linux" ]]; then
@@ -191,19 +135,3 @@ if [[ "$TERM" == "linux" ]]; then
   ZSH_THEME_GIT_PROMPT_DIRTY="%F{red}%B*%b%f"
   ZSH_THEME_GIT_PROMPT_CLEAN=""
 fi
-
-# FZF
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-# TMUX
-if [[ "$(pgrep termite | wc -l)" -eq "1" ]] && [[ "$TERM" == "xterm-termite" ]]; then
-  tmux attach -t main > /dev/null 2>&1 || tmux new -s main > /dev/null 2>&1
-  exit
-fi
-
-# Editor
-export VISUAL="vim"
-export EDITOR="vim"
-
-# GPG for Github
-export GPG_TTY=$(tty)

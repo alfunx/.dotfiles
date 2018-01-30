@@ -12,7 +12,10 @@ PS1='[\u@\h \W]\$ '
 
 PS1='[\[\033[1;31m\]\u\[\033[0m\]@\H \w]$ '
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+# Export
+source "$HOME/.env.sh"
 
-export PATH="$PATH:/home/amariya/scripts"
-export GPG_TTY=$(tty)
+# FZF
+if [ -f "$HOME/.fzf.bash" ]; then
+  source "$HOME/.fzf.bash"
+fi
