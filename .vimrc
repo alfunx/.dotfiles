@@ -25,7 +25,7 @@ Plug '/usr/bin/fzf'
 
 " General
 "Plug 'junegunn/fzf.vim'
-Plug 'alfunx/fzf.vim' " fork
+Plug 'alfunx/fzf.vim'  " fork
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 "Plug 'tpope/vim-sensible'
@@ -63,7 +63,8 @@ Plug 'w0rp/ale'
 " Text objects
 Plug 'wellle/targets.vim'
 Plug 'junegunn/vim-after-object'
-Plug 'michaeljsmith/vim-indent-object'
+"Plug 'michaeljsmith/vim-indent-object'
+Plug 'alfunx/vim-indent-object'  " fork
 
 " Tmux
 Plug 'benmills/vimux'
@@ -80,7 +81,7 @@ Plug 'lervag/vimtex', { 'for': ['latex', 'tex'] }
 
 " Themes
 "Plug 'morhetz/gruvbox'
-Plug 'alfunx/gruvbox' " fork
+Plug 'alfunx/gruvbox'  " fork
 
 " Don't load in console
 if &term !=? 'linux' || has('gui_running')
@@ -107,17 +108,24 @@ let mapleader=' '
 let maplocalleader='ü'
 
 "" Split navigation
-" (Handled by vim-tmux-navigator plugin)
-"nnoremap <C-H> <C-W><C-H>
-"nnoremap <C-J> <C-W><C-J>
-"nnoremap <C-K> <C-W><C-K>
-"nnoremap <C-L> <C-W><C-L>
+"nnoremap <C-h> <C-w><C-h>
+"nnoremap <C-j> <C-w><C-j>
+"nnoremap <C-k> <C-w><C-k>
+"nnoremap <C-l> <C-w><C-l>
+
+"" Split navigation (vim-tmux-navigator)
+let g:tmux_navigator_no_mappings=1
+nnoremap <silent> <C-h> :TmuxNavigateLeft<cr>
+nnoremap <silent> <C-j> :TmuxNavigateDown<cr>
+nnoremap <silent> <C-k> :TmuxNavigateUp<cr>
+nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
+nnoremap <silent> <C-BS> :TmuxNavigatePrevious<cr>
 
 "" Split resize
-nnoremap <C-W>h :vertical resize -5<CR>
-nnoremap <C-W>j :resize -5<CR>
-nnoremap <C-W>k :resize +5<CR>
-nnoremap <C-W>l :vertical resize +5<CR>
+nnoremap <C-w>h :vertical resize -5<CR>
+nnoremap <C-w>j :resize -5<CR>
+nnoremap <C-w>k :resize +5<CR>
+nnoremap <C-w>l :vertical resize +5<CR>
 
 "augroup Quickfix
 "  autocmd!
@@ -126,9 +134,17 @@ nnoremap <C-W>l :vertical resize +5<CR>
 "augroup END
 
 " German keyboard mappings
-"noremap ü <C-]>
 noremap ä {
 noremap ö }
+
+execute "set <M-h>=\<Esc>h"
+execute "set <M-j>=\<Esc>j"
+execute "set <M-k>=\<Esc>k"
+execute "set <M-l>=\<Esc>l"
+noremap <M-h> [
+noremap <M-l> ]
+noremap <M-j> }
+noremap <M-k> {
 
 " Previous paragraph
 nnoremap <BS> {
@@ -145,6 +161,7 @@ nnoremap Y y$
 
 " Copy to system clipboard
 noremap gy "+y
+noremap gp "+p
 
 " Keep selection after indenting
 vnoremap < <gv
@@ -153,12 +170,12 @@ vnoremap > >gv
 " Use CTRL-S for saving, also in Insert mode
 nnoremap <silent> <C-s> :write<CR>
 vnoremap <silent> <C-s> <Esc>:write<CR>
-inoremap <silent> <C-s> <C-O>:write<CR><Esc>
+inoremap <silent> <C-s> <C-o>:write<CR><Esc>
 
 "" Insert mode mappings
-inoremap <C-U> <C-G>u<C-U>
-inoremap àà <C-O>O
-inoremap éé <C-O>o
+inoremap <C-u> <C-g>u<C-u>
+inoremap àà <C-o>O
+inoremap éé <C-o>o
 
 " Select last inserted text
 nnoremap gV `[v`]
@@ -168,7 +185,7 @@ noremap <leader>/ /\v
 noremap <leader>? ?\v
 set wildchar=<Tab>
 set wildcharm=<Tab>
-cnoremap <expr> <Tab> getcmdtype() =~ '[?/]' ? '<C-G>' : '<Tab>'
+cnoremap <expr> <Tab> getcmdtype() =~ '[?/]' ? '<C-g>' : '<Tab>'
 cnoremap <expr> <S-Tab> getcmdtype() =~ '[?/]' ? '<C-t>' : feedkeys('<S-Tab>', 'int')[1]
 
 " Remove trailing whitespaces
@@ -229,7 +246,7 @@ omap <leader><tab> <plug>(fzf-maps-o)
 "imap <leader><tab> <plug>(fzf-maps-i)
 
 nnoremap <leader>b :Buffers<CR>
-vnoremap <leader>b <C-C>:Buffers<CR>
+vnoremap <leader>b <C-c>:Buffers<CR>
 
 " Insert mode completion
 imap <c-x><c-k> <plug>(fzf-complete-word)
@@ -471,7 +488,8 @@ function! VimuxSlime()
   "call VimuxSendKeys('Enter')
 endfunction
 
-vmap <C-c><C-c> "vy:call VimuxSlime()<CR>
+vnoremap <C-c><C-c> "vy:call VimuxSlime()<CR>
+nnoremap <C-c><C-c> vap"vy:call VimuxSlime()<CR>
 
 "" Ale
 let g:ale_sign_error='>>'
