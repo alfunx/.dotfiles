@@ -63,9 +63,9 @@ dotfiles checkout
 if [ "$?" -ne 0 ]; then
   mkdir -p "$HOME/.dotfiles.bak"
   dotfiles checkout 2>&1 \
-    | egrep '\s+\.' \
+    | grep -P '^\s+[\w.]' \
     | awk {'print $1'} \
-    | xargs -I{} mv {} "$HOME/.dotfiles.bak/{}"
+    | xargs -I{} sh -c 'cp -r --parents "{}" "$HOME/.dotfiles.bak/" && rm -rf "{}"'
   dotfiles checkout
 fi
 dotfiles submodule update --recursive --remote
