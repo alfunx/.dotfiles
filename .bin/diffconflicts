@@ -77,7 +77,7 @@
 #
 # NOTE: Use :cq to abort the merge and exit Vim with an error code.
 
-if [[ -z $@ || $# != "5" ]] ; then
+if [[ -z $* || $# != "5" ]] ; then
   echo -e "Usage: $0 \$EDITOR \$BASE \$LOCAL \$REMOTE \$MERGED"
   exit 1
 fi
@@ -97,8 +97,8 @@ GNU_SED="gsed"
 type $GNU_SED >/dev/null 2>&1 || GNU_SED="sed"
 
 # Temporary files for left and right side, keeping file extensions for syntax highlighting
-MERGED_PATH="$(dirname ${MERGED})"
-MERGED_FILE="$(basename ${MERGED})"
+MERGED_PATH="$(dirname "${MERGED}")"
+MERGED_FILE="$(basename "${MERGED}")"
 LCONFL="${MERGED_PATH}/.REMOTE.$$.${MERGED_FILE}"
 RCONFL="${MERGED_PATH}/.LOCAL.$$.${MERGED_FILE}"
 

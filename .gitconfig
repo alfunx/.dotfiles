@@ -19,7 +19,6 @@
 [mergetool "diffconflicts"]
 	cmd = diffconflicts vim "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
 	trustExitCode = true
-[mergetool]
 	keepBackup = false
 
 [alias]

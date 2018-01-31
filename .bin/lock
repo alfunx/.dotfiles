@@ -7,7 +7,7 @@
 
 lock='/home/amariya/pictures/lock.png'
 image=$(mktemp --suffix=.png)
-trap 'rm -f "$image"' EXIT INT TERM
+trap 'rm -f "$image"' SIGINT SIGTERM EXIT
 
 maim -u \
   | convert png:- -scale 10% -scale 1000% png:- \
