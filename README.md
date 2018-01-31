@@ -72,6 +72,12 @@ dotfiles submodule update --recursive --remote
 dotfiles config --local status.showUntrackedFiles no
 ```
 
+Or shorter:
+
+```bash
+. <(curl -s https://raw.githubusercontent.com/alfunx/.dotfiles/master/.bin/install-dotfiles)
+```
+
 ## Additional commands
 
 Instead of the alias provided above, you can use following function. `listall`
