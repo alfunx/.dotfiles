@@ -153,6 +153,7 @@ s-nail
 scrot
 sed
 shadow
+shellcheck
 smartmontools
 speedtest-cli
 sshfs
