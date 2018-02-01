@@ -2,7 +2,7 @@
 "  VIMRC  "
 """""""""""
 
-if filereadable($HOME . '/.vim/autoload/plug.vim') == 0
+if !filereadable($HOME . '/.vim/autoload/plug.vim')
   silent !mkdir -p ~/.vim/autoload > /dev/null 2>&1
   silent !mkdir -p ~/.vim/plugged > /dev/null 2>&1
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
@@ -136,13 +136,15 @@ nnoremap <C-w>l :vertical resize +5<CR>
 " German keyboard mappings
 noremap ä {
 noremap ö }
+noremap ü [
+noremap ¨ ]
 
 execute "set <M-h>=\<Esc>h"
 execute "set <M-j>=\<Esc>j"
 execute "set <M-k>=\<Esc>k"
 execute "set <M-l>=\<Esc>l"
-noremap <M-h> [
-noremap <M-l> ]
+"noremap <M-h> [
+"noremap <M-l> ]
 noremap <M-j> }
 noremap <M-k> {
 
@@ -657,7 +659,7 @@ silent! colorscheme gruvbox
 "  BACKUP / SWAP / UNDO  "
 """"""""""""""""""""""""""
 
-if isdirectory($HOME . '/.vim/.backup') == 0
+if !isdirectory($HOME . '/.vim/.backup')
   silent !mkdir -p ~/.vim/.backup > /dev/null 2>&1
 endif
 set backupdir-=.
@@ -667,7 +669,7 @@ set backupdir^=~/.vim/.backup/
 set backupdir^=./.vim-backup/
 set backup
 
-if isdirectory($HOME . '/.vim/.swap') == 0
+if !isdirectory($HOME . '/.vim/.swap')
   silent !mkdir -p ~/.vim/.swap > /dev/null 2>&1
 endif
 set directory=./.vim-swap//
@@ -676,7 +678,7 @@ set directory+=~/.tmp//
 set directory+=.
 
 if exists('+undofile')
-  if isdirectory($HOME . '/.vim/.undo') == 0
+  if !isdirectory($HOME . '/.vim/.undo')
     silent !mkdir -p ~/.vim/.undo > /dev/null 2>&1
   endif
   set undodir=./.vim-undo//
