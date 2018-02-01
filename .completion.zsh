@@ -8,5 +8,5 @@ zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p
 zstyle :compinstall filename '/home/amariya/.zshrc'
 
 autoload -Uz compinit
-compinit
+compinit -D
 # End of lines added by compinstall
