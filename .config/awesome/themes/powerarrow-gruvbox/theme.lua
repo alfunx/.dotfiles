@@ -69,9 +69,11 @@ local os, math, string = os, math, string
 
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-gruvbox"
+theme.scripts_dir                               = os.getenv("HOME") .. "/.bin"
+
+theme.wallpaper_original                        = theme.dir .. "/wallpapers/matterhorn.jpg"
 theme.wallpaper                                 = theme.dir .. "/wallpapers/matterhorn_base.jpg"
 theme.wallpaper_blur                            = theme.dir .. "/wallpapers/matterhorn_blur.jpg"
-theme.scripts_dir                               = os.getenv("HOME") .. "/.bin"
 
 local font_name                                 = "Meslo LG S for Powerline"
 local font_size                                 = "11"
