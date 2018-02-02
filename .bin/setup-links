@@ -1,0 +1,5 @@
+#!/bin/bash
+
+sudo ln -fs "$HOME/.bin/lock" '/usr/local/bin/custom-lockscreen'
+sudo ln -fs "$HOME/.bin/hibernate" '/usr/local/bin/hibernate'
+sudo ln -fs "$HOME/.bin/update-pkglist" '/usr/local/bin/update-pkglist'

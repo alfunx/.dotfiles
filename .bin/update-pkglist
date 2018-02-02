@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+pacman -Qeq \
+  | grep -v "$(paclist aur | sed 's/\s.*//')" \
+  > ~/.pacman.pkglist
+paclist aur | sed 's/\s.*//' \
+  > ~/.aur.pkglist

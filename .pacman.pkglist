@@ -195,6 +195,7 @@ virtualbox
 vlc
 w3m
 wget
+which
 wmctrl
 wpa_actiond
 wpa_supplicant
@@ -216,7 +217,6 @@ xorg-xinput
 xorg-xlsfonts
 xorg-xprop
 xorg-xrandr
-xsel
 xterm
 youtube-dl
 zathura

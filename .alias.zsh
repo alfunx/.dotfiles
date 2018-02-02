@@ -77,7 +77,7 @@ toilol() {
 }
 
 pacman() {
-  local pattern="^-S[cuy]|^-S$|^-R[sn]|^-U"
+  local pattern="^-S[cuy]|^-S$|^-R[sn]|^-R$|^-U"
   if [[ "$1" =~ $pattern ]]; then
     sudo /usr/bin/pacman "$@"
   else
@@ -88,6 +88,20 @@ pacman() {
   dbus-send --dest=org.awesomewm.awful --type=method_call \
     / org.awesomewm.awful.Remote.Eval \
     string:'pacman = require("beautiful").pacman; if pacman then pacman.update() end'
+}
+
+officer() {
+  local pattern="^-S[cuy]|^-S$|^-R[sn]|^-R$|^-U"
+  if [[ "$1" =~ $pattern ]]; then
+    sudo /usr/bin/officer "$@"
+  else
+    /usr/bin/officer "$@"
+  fi
+}
+compdef officer=pacman
+
+aurremove() {
+  repo-remove /var/cache/pacman/aur/aur.db.tar "$@"
 }
 
 pacman-date-log() {

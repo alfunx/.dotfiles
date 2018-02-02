@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-pacman -Qeq | grep -v "$(pacman -Qmq)" > ~/.pacman.pkglist
-pacman -Qmq > ~/.aur.pkglist

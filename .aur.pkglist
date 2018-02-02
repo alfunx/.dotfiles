@@ -1,5 +1,6 @@
 alacritty-git
 alacritty-terminfo-git
+aurutils
 awesome-git
 awmtt
 bash-pipes
@@ -7,8 +8,6 @@ cower
 dropbox
 grabc
 i3lock-color-git
-kmscon
-libtsm
 luacheck
 neofetch
 netctl-dispatcher-chrony
@@ -16,7 +15,6 @@ nvme-cli
 oomox-git
 overdue
 pacaur
-papirus-icon-theme-git
 powerline-fonts-git
 python-proselint
 quicklisp
@@ -25,7 +23,6 @@ ruby-json
 toilet
 toilet-fonts
 treeify
-trizen
 ttf-tamil
 whatsapp-desktop
 words-insane
