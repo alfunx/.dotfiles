@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+output_file="$HOME/pictures/screenshots/$(date +%Y-%m-%d_%T).png"
+
+readonly argv0="$0"
+declare -i hide_cursor=0 select_area=0
+
+usage() {
+  echo "usage: $argv0 [-hs] [-o output-file]"
+  exit 1
+}
+
+while getopts o:hs OPT; do
+    case $OPT in
+        h) hide_cursor=1 ;;
+        s) select_area=1 ;;
+        o) output_file=$OPTARG ;;
+        *) usage ;;
+    esac
+done
+shift $((OPTIND - 1))
+OPTIND=1
+
+readonly hide_cursor select_area output_file
+
+maim_flags=
+
+if ((hide_cursor)); then
+  maim_flags="$maim_flags -u"
+fi
+
+if ((select_area)); then
+  maim_flags="$maim_flags -s -b 3 -c 0.98431372549019607843,0.28627450980392156862,0.20392156862745098039,1"
+fi
+
+maim $maim_flags $output_file
+notify-send -i '/usr/share/icons/Adwaita/96x96/mimetypes/image-x-generic-symbolic.symbolic.png' \
+  'Screenshot' "saved as $(basename "$output_file")\nunder $(dirname "$output_file")"

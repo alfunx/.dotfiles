@@ -568,7 +568,7 @@ bat_widget = wibox.widget {
 --     margin_topbottom = 20,
 --     shape = gears.shape.infobubble,
 --     -- timer_function = function() return "hello" end
---     -- timer_function = awful.spawn.easy_async(theme.scripts_dir .. "/battery", function(stdout, stderr, reason, exit_code)
+--     -- timer_function = awful.spawn.easy_async(theme.scripts_dir .. "/show-battery-status", function(stdout, stderr, reason, exit_code)
 --     --     text = stdout, height = 31, timeout = 10
 --     -- end)
 -- })
@@ -577,7 +577,7 @@ bat_widget = wibox.widget {
 --     attach_to = { bat.widget },
 --     attach = eventhandler.attach_hover,
 --     execute = function()
---         awful.spawn.easy_async(theme.scripts_dir .. "/battery", function(stdout, stderr, reason, exit_code)
+--         awful.spawn.easy_async(theme.scripts_dir .. "/show-battery-status", function(stdout, stderr, reason, exit_code)
 --             eventhandler.notify {
 --                 text = stdout, height = 31, timeout = 10
 --             }
@@ -588,7 +588,7 @@ bat_widget = wibox.widget {
 theme.bat_click = custom_widget.eventhandler({
     attach_to = { bat_widget },
     execute = function()
-        awful.spawn.easy_async(theme.scripts_dir .. "/battery", function(stdout, stderr, reason, exit_code)
+        awful.spawn.easy_async(theme.scripts_dir .. "/show-battery-status", function(stdout, stderr, reason, exit_code)
             eventhandler.notify {
                 text = string.gsub(stdout, '\n*$', ''),
                 timeout = 10
@@ -643,7 +643,7 @@ net_widget = wibox.widget {
 --     attach_to = { net.widget },
 --     attach = eventhandler.attach_hover,
 --     execute = function()
---         awful.spawn.easy_async(theme.scripts_dir .. "/ip_address", function(stdout, stderr, reason, exit_code)
+--         awful.spawn.easy_async(theme.scripts_dir .. "/show-ip-address", function(stdout, stderr, reason, exit_code)
 --             eventhandler.notify {
 --                 text = stdout, timeout = 10
 --             }
@@ -654,7 +654,7 @@ net_widget = wibox.widget {
 theme.net_click = custom_widget.eventhandler({
     attach_to = { net_widget },
     execute = function()
-        awful.spawn.easy_async(theme.scripts_dir .. "/ip_address", function(stdout, stderr, reason, exit_code)
+        awful.spawn.easy_async(theme.scripts_dir .. "/show-ip-address", function(stdout, stderr, reason, exit_code)
             eventhandler.notify {
                 title = "Network",
                 text = string.gsub(stdout, '\n$', ''),
