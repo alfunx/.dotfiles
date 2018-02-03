@@ -61,7 +61,6 @@ plugins=(zsh-syntax-highlighting command-not-found custom-common-aliases)
 
 source "$HOME/.completion.zsh"
 source "$ZSH/oh-my-zsh.sh"
-source "$HOME/.alias.zsh"
 
 eval "$(dircolors "$HOME/.dir_colors")"
 
@@ -102,6 +101,9 @@ eval "$(dircolors "$HOME/.dir_colors")"
 # Zsh options
 setopt extendedglob
 setopt complete_aliases
+
+# Completion
+source "$HOME/.alias.zsh"
 
 # Export
 source "$HOME/.env.sh"

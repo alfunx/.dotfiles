@@ -11,12 +11,12 @@ usage() {
 }
 
 while getopts o:hs OPT; do
-    case $OPT in
-        h) hide_cursor=1 ;;
-        s) select_area=1 ;;
-        o) output_file=$OPTARG ;;
-        *) usage ;;
-    esac
+  case $OPT in
+    h) hide_cursor=1 ;;
+    s) select_area=1 ;;
+    o) output_file=$OPTARG ;;
+    *) usage ;;
+  esac
 done
 shift $((OPTIND - 1))
 OPTIND=1

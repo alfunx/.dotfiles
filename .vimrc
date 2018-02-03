@@ -3,11 +3,11 @@
 """""""""""
 
 if !filereadable($HOME . '/.vim/autoload/plug.vim')
-  silent !mkdir -p ~/.vim/autoload > /dev/null 2>&1
-  silent !mkdir -p ~/.vim/plugged > /dev/null 2>&1
+  silent !mkdir -p ~/.vim/autoload >/dev/null 2>&1
+  silent !mkdir -p ~/.vim/plugged >/dev/null 2>&1
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
         \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-        \ > /dev/null 2>&1
+        \ >/dev/null 2>&1
   autocmd VimEnter * PlugInstall
 endif
 
@@ -47,6 +47,7 @@ Plug 'junegunn/vim-peekaboo'
 Plug 'easymotion/vim-easymotion'
 Plug 'haya14busa/incsearch.vim'
 Plug 'haya14busa/incsearch-easymotion.vim'
+Plug 'mhinz/vim-grepper'
 Plug 'terryma/vim-multiple-cursors'
 "Plug 'terryma/vim-expand-region'
 Plug 'jiangmiao/auto-pairs'
@@ -134,10 +135,14 @@ nnoremap <C-w>l :vertical resize +5<CR>
 "augroup END
 
 " German keyboard mappings
-noremap ä {
-noremap ö }
-noremap ü [
-noremap ¨ ]
+nmap ä {
+nmap ö }
+xmap ä {
+xmap ö }
+nmap ü [
+nmap ¨ ]
+xmap ü [
+xmap ¨ ]
 
 execute "set <M-h>=\<Esc>h"
 execute "set <M-j>=\<Esc>j"
@@ -151,12 +156,12 @@ noremap <M-k> {
 " Previous paragraph
 nnoremap <BS> {
 onoremap <BS> {
-vnoremap <BS> {
+xnoremap <BS> {
 
 " Next paragraph
 nnoremap <expr> <CR> empty(&buftype) ? '}' : '<CR>'
 onoremap <expr> <CR> empty(&buftype) ? '}' : '<CR>'
-vnoremap <CR> }
+xnoremap <CR> }
 
 " Make Y behave like other commands
 nnoremap Y y$
@@ -166,12 +171,12 @@ noremap gy "+y
 noremap gp "+p
 
 " Keep selection after indenting
-vnoremap < <gv
-vnoremap > >gv
+xnoremap < <gv
+xnoremap > >gv
 
 " Use CTRL-S for saving, also in Insert mode
 nnoremap <silent> <C-s> :write<CR>
-vnoremap <silent> <C-s> <Esc>:write<CR>
+xnoremap <silent> <C-s> <Esc>:write<CR>
 inoremap <silent> <C-s> <C-o>:write<CR><Esc>
 
 "" Insert mode mappings
@@ -197,7 +202,7 @@ noremap <silent> <F3> :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl
 noremap <F5> :make!<CR>
 
 " Allow saving of files as sudo
-command! W silent w !sudo tee > /dev/null %
+command! W execute 'silent! w !sudo /usr/bin/tee % >/dev/null' <bar> edit!
 
 " Set path to current file
 command! -bang -nargs=* Cd  cd %:p:h
@@ -213,18 +218,14 @@ xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
 " Run last macro
 nnoremap Q @@
 
+" No highlight
+execute "set <M-t>=\<Esc>t"
+nnoremap <M-t> :nohlsearch<CR>
+
 
 """""""""""""""""""""
 "  PLUGIN SETTINGS  "
 """""""""""""""""""""
-
-"" FZF
-if executable('fzf')
-  augroup Fzf
-    autocmd!
-    autocmd VimEnter * nnoremap <Leader>f :FZF<CR>
-  augroup End
-endif
 
 " Default key bindings
 let g:fzf_action = {
@@ -247,8 +248,17 @@ xmap <leader><tab> <plug>(fzf-maps-x)
 omap <leader><tab> <plug>(fzf-maps-o)
 "imap <leader><tab> <plug>(fzf-maps-i)
 
+"" FZF
+if executable('fzf')
+  augroup Fzf
+    autocmd!
+    autocmd VimEnter * nnoremap <Leader>f :FZF<CR>
+  augroup End
+endif
+
 nnoremap <leader>b :Buffers<CR>
-vnoremap <leader>b <C-c>:Buffers<CR>
+nnoremap <leader>w :Windows<CR>
+nnoremap <leader>t :Tags<CR>
 
 " Insert mode completion
 imap <c-x><c-k> <plug>(fzf-complete-word)
@@ -285,23 +295,40 @@ if executable('ag')
   augroup End
 endif
 
-" if executable('rg')
-"   set grepprg=rg\ --vimgrep
-"   set grepformat^=%f:%l:%c:%m
-" elseif executable('ag')
-"   set grepprg=rg\ --vimgrep
-"   set grepformat^=%f:%l:%c:%m
-" endif
-
-let [s:grep_prg, s:grep_format] = ['%s -SF --vimgrep', '%f:%l:%c:%m']
 if executable('rg')
-  let &grepprg = printf(s:grep_prg, 'rg')
-  let &grepformat = s:grep_format
+  set grepprg=rg\ --smart-case\ --vimgrep
+  set grepformat^=%f:%l:%c:%m
 elseif executable('ag')
-  let &grepprg = printf(s:grep_prg, 'ag')
-  let &grepformat = s:grep_format
+  set grepprg=ag\ --smart-case\ --vimgrep
+  set grepformat^=%f:%l:%c:%m
 endif
-unlet! s:grep_prg s:grep_format
+
+"" Grepper
+let g:grepper={}
+let g:grepper.tools=[]
+if executable('rg')
+  let g:grepper.tools+=['rg']
+elseif executable('ag')
+  let g:grepper.tools+=['ag']
+endif
+let g:grepper.tools+=['git', 'grep']
+let g:grepper.rg = {
+      \ 'grepprg':    'rg --vimgrep',
+      \ 'grepformat': '%f:%l:%c:%m',
+      \ 'escape':     '\^$.*+?()[]{}|'
+      \ }
+let g:grepper.next_tool='<leader>g'
+let g:grepper.jump=0
+let g:grepper.quickfix=1
+let g:grepper.dir='repo,cwd'
+let g:grepper.stop=5000
+
+nnoremap <leader>s :Grepper -tool rg<cr>
+nmap gs <plug>(GrepperOperator)
+xmap gs <plug>(GrepperOperator)
+
+command! Todo :Grepper -tool rg -query '(TODO|FIXME|BUG)'
+command! Note :Grepper -tool rg -query '(NOTE)'
 
 "" Airline
 if !exists('g:airline_symbols')
@@ -361,6 +388,18 @@ let g:airline#extensions#tabline#tabs_label='tabs'
 "     \ 'S'  : ' S ',
 "     \ '' : ' S ',
 "     \ }
+
+"" GitGutter
+nmap <Leader>ha <Plug>GitGutterStageHunk
+nmap <Leader>hu <Plug>GitGutterUndoHunk
+nmap ]c <Plug>GitGutterNextHunk
+nmap [c <Plug>GitGutterPrevHunk
+
+let g:gitgutter_sign_added='●'
+let g:gitgutter_sign_modified='●'
+let g:gitgutter_sign_removed='●'
+let g:gitgutter_sign_removed_first_line='●'
+let g:gitgutter_sign_modified_removed='●'
 
 "" EasyMotion
 "let g:EasyMotion_do_mapping=0  " Disable default mappings
@@ -490,12 +529,13 @@ function! VimuxSlime()
   "call VimuxSendKeys('Enter')
 endfunction
 
-vnoremap <C-c><C-c> "vy:call VimuxSlime()<CR>
-nnoremap <C-c><C-c> vap"vy:call VimuxSlime()<CR>
+xnoremap <leader>v "vy:call VimuxSlime()<CR>
+nnoremap <leader>v vap"vy:call VimuxSlime()<CR>
 
 "" Ale
-let g:ale_sign_error='>>'
-let g:ale_sign_warning='--'
+" Using special space, U+2000 (EN QUAD)
+let g:ale_sign_error=' ●'
+let g:ale_sign_warning=' ●'
 let g:ale_lint_on_text_changed='never'
 let g:ale_lint_on_enter=1
 let g:ale_lint_on_save=1
@@ -516,11 +556,13 @@ augroup END
 
 "" UI config
 "syntax enable
+set synmaxcol=800
 set number
 set showcmd
 set hidden
 set wildmenu  " shows autocomplete in commandline
 set wildmode=longest:full,full
+set completeopt=menuone,longest,preview
 set lazyredraw
 set mouse=a
 
@@ -548,12 +590,41 @@ augroup RefreshAirline
   autocmd ColorScheme * if exists(':AirlineRefresh') | :AirlineRefresh | endif
 augroup END
 
+""" Color VCS conflict markers
+augroup VCSConflictMarker
+  autocmd!
+  autocmd ColorScheme * match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
+  autocmd BufEnter * syntax match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
+augroup END
+
+""" Color overlength
+augroup OverLength
+  autocmd!
+  "autocmd ColorScheme * highlight OverLength ctermbg=darkred ctermfg=white guibg=#cc241d guifg=#ebdbb2
+  autocmd ColorScheme * match ErrorMsg /\%81v./
+  autocmd BufEnter * syntax match ErrorMsg /\%81v./
+  "autocmd ColorScheme * match OverLength /\%>80v.\+/
+  "autocmd BufEnter * match OverLength /\%>80v.\+/
+augroup END
+
 if &term !=? 'linux' || has('gui_running')
   set listchars=tab:▸\ ,eol:↵,trail:~,extends:>,precedes:<,nbsp:+
   set fillchars=vert:│,fold:─,diff:-
+
+  augroup TrailingSpaces
+    autocmd!
+    autocmd InsertEnter * set listchars-=eol:↵,trail:~
+    autocmd InsertLeave * set listchars+=eol:↵,trail:~
+  augroup END
 else
-  set listchars=tab:>\ ,eol:¬,trail:~,extends:>,precedes:<,nbsp:+
+  set listchars=tab:>\ ,eol:$,trail:~,extends:>,precedes:<,nbsp:+
   set fillchars=vert:\|,fold:-,diff:-
+
+  augroup TrailingSpaces
+    autocmd!
+    autocmd InsertEnter * set listchars-=eol:$,trail:~
+    autocmd InsertLeave * set listchars+=eol:$,trail:~
+  augroup END
 endif
 
 set novisualbell  " no blinking
@@ -582,20 +653,13 @@ set formatoptions+=roj
 set nrformats-=octal
 set pastetoggle=<F2>
 
+set notimeout
 set ttimeout
 set ttimeoutlen=100
 
 if filereadable('/bin/zsh')
-  set shell=/bin/zsh
+  set shell=/bin/zsh\ --login
 endif
-
-""" Color overlength
-augroup OverLength
-  autocmd!
-  autocmd ColorScheme * highlight OverLength ctermbg=darkred ctermfg=white guibg=#cc241d guifg=#ebdbb2
-  autocmd ColorScheme * match OverLength /\%81v./
-  "autocmd ColorScheme * match OverLength /\%>80v.\+/
-augroup END
 
 "" Searching
 set incsearch
@@ -638,7 +702,7 @@ set foldtext=NeatFoldText()
 set viminfo='10,\"100,:20,%,n~/.viminfo
 augroup SavePosition
   autocmd!
-  autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+  autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | execute 'normal! g`"zvzz' | endif
 augroup END
 
 "" Dictionary
@@ -646,7 +710,7 @@ set dictionary+=/usr/share/dict/words-insane
 
 "" Theme and colors
 set guifont=Meslo\ LG\ S\ for\ Powerline
-set termguicolors
+"set notermguicolors
 set background=dark
 let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
@@ -654,13 +718,18 @@ let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
 let g:gruvbox_italic=1
 silent! colorscheme gruvbox
 
+augroup VimEnterNohl
+  autocmd!
+  autocmd VimEnter * nohl
+augroup END
+
 
 """"""""""""""""""""""""""
 "  BACKUP / SWAP / UNDO  "
 """"""""""""""""""""""""""
 
 if !isdirectory($HOME . '/.vim/.backup')
-  silent !mkdir -p ~/.vim/.backup > /dev/null 2>&1
+  silent !mkdir -p ~/.vim/.backup >/dev/null 2>&1
 endif
 set backupdir-=.
 set backupdir+=.
@@ -670,7 +739,7 @@ set backupdir^=./.vim-backup/
 set backup
 
 if !isdirectory($HOME . '/.vim/.swap')
-  silent !mkdir -p ~/.vim/.swap > /dev/null 2>&1
+  silent !mkdir -p ~/.vim/.swap >/dev/null 2>&1
 endif
 set directory=./.vim-swap//
 set directory+=~/.vim/.swap//
@@ -679,7 +748,7 @@ set directory+=.
 
 if exists('+undofile')
   if !isdirectory($HOME . '/.vim/.undo')
-    silent !mkdir -p ~/.vim/.undo > /dev/null 2>&1
+    silent !mkdir -p ~/.vim/.undo >/dev/null 2>&1
   endif
   set undodir=./.vim-undo//
   set undodir+=~/.vim/.undo//
@@ -762,3 +831,4 @@ augroup END
 "           https://github.com/spf13/spf13-vim/blob/3.0/.vimrc
 "           https://github.com/euclio/vimrc/blob/master/vimrc
 "           https://github.com/KevOBrien/dotfiles
+"           https://bitbucket.org/sjl/dotfiles/src/28205343c464b44fd36970d2588a74183ff73299/vim/vimrc

@@ -27,6 +27,7 @@ cryptsetup
 ctags
 cups
 device-mapper
+devtools
 dhcpcd
 dialog
 diffutils
@@ -34,6 +35,7 @@ dmidecode
 e2fsprogs
 efibootmgr
 emacs
+expac
 fakeroot
 fd-rs
 feh
@@ -124,6 +126,7 @@ openssh
 os-prober
 p7zip
 pacman
+parallel
 parted
 pass
 patch
@@ -191,6 +194,7 @@ unzip
 usbutils
 util-linux
 vi
+vifm
 virtualbox
 vlc
 w3m

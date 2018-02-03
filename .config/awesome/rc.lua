@@ -1135,7 +1135,7 @@ awful.tag.attached_connect_signal(s, "property::layout",
 -- Rounded corners
 client.connect_signal("manage",
     function(c)
-        c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 4) end
+        c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 8) end
     end)
 
 -- }}}

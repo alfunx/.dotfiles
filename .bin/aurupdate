@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+database='aur'
+
+readonly argv0="$0"
+
+usage() {
+  echo "usage: $argv0 [-d <database>]"
+  exit 1
+}
+
+while getopts d: OPT; do
+  case $OPT in
+    d) database=$OPTARG ;;
+    *) usage ;;
+  esac
+done
+shift $((OPTIND - 1))
+OPTIND=1
+
+readonly database
+
+aursync -c --repo="$database" "$(grep -Fxf <(pacman -Qq) <(pacman -Sql "$database"))"

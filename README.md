@@ -2,7 +2,24 @@
 
 ![Awesome WM](https://i.imgur.com/hInDVh0.png)
 
-## Setup repository
+## Table of Contents
+
++ [Introduction](#introduction)
++ [Setup Repository](#setup-repository)
++ [Track Files](#track-files)
++ [Restore Configurations](#restore-configurations)
++ [Additional Commands](#additional-commands)
+
+## Introduction
+
+This repository contains my personal configuration files (also called
+*dotfiles*). The package lists can be found in the `.pkglist` directory. To
+install all packages, run for example `cat .pkglist/pacman | pacman -S -`.
+
+In the following sections it's explained how these dotfiles repository was set
+up, how to use it and how to restore them, for example on a new device.
+
+## Setup Repository
 
 Setup a bare git repository in your home directory. Bare repositories have no
 working directory, so setup an alias to avoid typing the long command. Add the
@@ -22,9 +39,10 @@ dotfiles push --set-upstream origin master
 dotfiles config --local status.showUntrackedFiles no
 ```
 
-## Track files
+## Track Files
 
-Use the default git subcommands to track, update and remove files.
+Use the default git subcommands to track, update and remove files. You can
+obviously also use branches and all other features of git.
 
 ```bash
 dotfiles status
@@ -35,13 +53,13 @@ dotfiles commit -m 'Vim: Add vimrc'
 dotfiles push
 ```
 
-To remove a file from the repository while keeping it locally you may use:
+To remove a file from the repository while keeping it locally you can use:
 
 ```bash
 dotfiles rm --cached ~/.some_file
 ```
 
-## Restore configurations
+## Restore Configurations
 
 First clone dependent repositories, in this case for example `oh-my-zsh`. Clone
 your dotfiles repository as bare repository. Setup temporary alias and then
@@ -72,17 +90,21 @@ dotfiles submodule update --recursive --remote
 dotfiles config --local status.showUntrackedFiles no
 ```
 
-Or shorter:
+Note that the automatic moving of already existing (thus conflicting) files
+fails if there are too many of them (git cuts the message at some point).
+
+The short variant, using a script with the commands above:
 
 ```bash
 . <(curl -s https://raw.githubusercontent.com/alfunx/.dotfiles/master/.bin/install-dotfiles)
 ```
 
-## Additional commands
+## Additional Commands
 
 Instead of the alias provided above, you can use following function. `listall`
-will show all tracked files, `listtree` will show those files in a tree format.
-You may need to use a pager for these commands.
+will show all tracked files, `listtree` will show those files in a tree format
+(requires the package `treeify`). You may need to use a pager for these
+commands.
 
 ```bash
 dotfiles() {

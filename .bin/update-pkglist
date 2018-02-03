@@ -2,6 +2,11 @@
 
 pacman -Qeq \
   | grep -v "$(paclist aur | sed 's/\s.*//')" \
-  > ~/.pacman.pkglist
-paclist aur | sed 's/\s.*//' \
-  > ~/.aur.pkglist
+  | grep -v "$(paclist manual | sed 's/\s.*//')" \
+  > ~/.pkglist/pacman
+paclist aur \
+  | sed 's/\s.*//' \
+  > ~/.pkglist/aur
+paclist manual \
+  | sed 's/\s.*//' \
+  > ~/.pkglist/manual

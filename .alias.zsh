@@ -77,7 +77,7 @@ toilol() {
 }
 
 pacman() {
-  local pattern="^-S[cuy]|^-S$|^-R[sn]|^-R$|^-U"
+  local pattern="^-S[cuy]|^-S$|^-R[sn]|^-R$|^-U$|^-F[y]"
   if [[ "$1" =~ $pattern ]]; then
     sudo /usr/bin/pacman "$@"
   else
@@ -99,10 +99,6 @@ officer() {
   fi
 }
 compdef officer=pacman
-
-aurremove() {
-  repo-remove /var/cache/pacman/aur/aur.db.tar "$@"
-}
 
 pacman-date-log() {
   { pacman ${1:--Qeq}; cat /var/log/pacman.log; } | awk '

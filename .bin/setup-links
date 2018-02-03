@@ -1,5 +1,10 @@
 #!/bin/bash
 
+ln -fs "$HOME/.config/awesome/themes/powerarrow-gruvbox/wallpapers/wall.png" "$HOME/pictures/wall.png"
+ln -fs "$HOME/.config/awesome/themes/powerarrow-gruvbox/wallpapers/lock.png" "$HOME/pictures/lock.png"
+
 sudo ln -fs "$HOME/.bin/lock" '/usr/local/bin/custom-lockscreen'
 sudo ln -fs "$HOME/.bin/hibernate" '/usr/local/bin/hibernate'
 sudo ln -fs "$HOME/.bin/update-pkglist" '/usr/local/bin/update-pkglist'
+sudo ln -fs "$HOME/.bin/aurremove" '/usr/local/bin/aurremove'
+sudo ln -fs "$HOME/.bin/aurupdate" '/usr/local/bin/aurupdate'
