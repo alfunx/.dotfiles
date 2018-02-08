@@ -597,15 +597,15 @@ augroup VCSConflictMarker
   autocmd BufEnter * syntax match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
 augroup END
 
-""" Color overlength
-augroup OverLength
-  autocmd!
-  "autocmd ColorScheme * highlight OverLength ctermbg=darkred ctermfg=white guibg=#cc241d guifg=#ebdbb2
-  autocmd ColorScheme * match ErrorMsg /\%81v./
-  autocmd BufEnter * syntax match ErrorMsg /\%81v./
-  "autocmd ColorScheme * match OverLength /\%>80v.\+/
-  "autocmd BufEnter * match OverLength /\%>80v.\+/
-augroup END
+" """ Color overlength
+" augroup OverLength
+"   autocmd!
+"   autocmd ColorScheme * highlight OverLength ctermbg=darkred ctermfg=white guibg=#cc241d guifg=#ebdbb2
+"   autocmd ColorScheme * match OverLength /\%81v./
+"   autocmd BufEnter * syntax match OverLength /\%81v./
+"   "autocmd ColorScheme * match OverLength /\%>80v.\+/
+"   "autocmd BufEnter * match OverLength /\%>80v.\+/
+" augroup END
 
 if &term !=? 'linux' || has('gui_running')
   set listchars=tab:▸\ ,eol:↵,trail:~,extends:>,precedes:<,nbsp:+

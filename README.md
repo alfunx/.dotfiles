@@ -16,8 +16,12 @@ This repository contains my personal configuration files (also called
 *dotfiles*). The package lists can be found in the `.pkglist` directory. To
 install all packages, run for example `cat .pkglist/pacman | pacman -S -`.
 
-In the following sections it's explained how these dotfiles repository was set
+In the following sections it's explained how this dotfiles repository was set
 up, how to use it and how to restore them, for example on a new device.
+
+**Note**: I migrated to
+[dotfiles.sh](https://github.com/eli-schwartz/dotfiles.sh) by Eli Schwartz,
+which is a thin wrapper for git that implements the method described here.
 
 ## Setup Repository
 

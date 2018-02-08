@@ -2,6 +2,7 @@
 
 ln -fs "$HOME/.config/awesome/themes/powerarrow-gruvbox/wallpapers/wall.png" "$HOME/pictures/wall.png"
 ln -fs "$HOME/.config/awesome/themes/powerarrow-gruvbox/wallpapers/lock.png" "$HOME/pictures/lock.png"
+ln -fs "$HOME/projects/dotfiles.sh/dotfiles" "$HOME/.bin/dotfiles"
 
 sudo ln -fs "$HOME/.bin/lock" '/usr/local/bin/custom-lockscreen'
 sudo ln -fs "$HOME/.bin/hibernate" '/usr/local/bin/hibernate'

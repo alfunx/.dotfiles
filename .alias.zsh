@@ -2,25 +2,26 @@
 # dotfiles #
 ############
 
-dotfiles() {
-  case "$1" in
-    listall)
-      shift
-      dotfiles ls-tree --full-tree -r --name-only HEAD "$@"
-      ;;
-    listtree)
-      shift
-      if hash treeify 2>/dev/null; then
-        dotfiles ls-tree --full-tree -r --name-only HEAD "$@" | treeify
-      else
-        dotfiles listall
-      fi
-      ;;
-    *)
-      /usr/bin/env git --git-dir="$HOME/.dotfiles/" --work-tree="$HOME" "$@"
-      ;;
-  esac
-}
+# dotfiles() {
+#   case "$1" in
+#     listall)
+#       shift
+#       dotfiles ls-tree --full-tree -r --name-only HEAD "$@"
+#       ;;
+#     listtree)
+#       shift
+#       if hash treeify 2>/dev/null; then
+#         dotfiles ls-tree --full-tree -r --name-only HEAD "$@" | treeify
+#       else
+#         dotfiles listall
+#       fi
+#       ;;
+#     *)
+#       /usr/bin/env git --git-dir="$HOME/.dotfiles/" --work-tree="$HOME" "$@"
+#       ;;
+#   esac
+# }
+
 compdef dotfiles=git
 
 #############
