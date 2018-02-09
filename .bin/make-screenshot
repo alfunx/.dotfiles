@@ -10,7 +10,7 @@ usage() {
   exit 1
 }
 
-while getopts o:hs OPT; do
+while getopts hso: OPT; do
   case $OPT in
     h) hide_cursor=1 ;;
     s) select_area=1 ;;

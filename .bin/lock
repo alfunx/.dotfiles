@@ -5,7 +5,8 @@
 # dbus-send --print-reply --dest=com.github.chjj.compton.${DISPLAY/:/_} / \
 #     com.github.chjj.compton.opts_set string:unredir_if_possible boolean:false
 
-lock='/home/amariya/pictures/lock.png'
+pictures_dir="$(xdg-user-dir PICTURES 2>/dev/null)"
+lock="${pictures_dir:-$HOME/Pictures}"/lock.png
 image=$(mktemp --suffix=.png)
 trap 'rm -f "$image"' SIGINT SIGTERM EXIT
 
