@@ -25,8 +25,8 @@ dimensions:
 # Units are physical pixels; this is not DPI aware.
 # (change requires restart)
 padding:
-  x: 1
-  y: 1
+  x: 5
+  y: 3
 
 # Display tabs using this many cells (changes require restart)
 tabspaces: 4

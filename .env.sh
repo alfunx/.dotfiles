@@ -24,7 +24,7 @@ export LESS_TERMCAP_so=$'\e[0;30m\e[48;5;208m'
 export LESS_TERMCAP_se=$'\e[0m'
 export LESS_TERMCAP_us=$'\e[1;35m'
 export LESS_TERMCAP_ue=$'\e[0m'
-export LESS='-iMRj.5'
+export LESS='-iMRj.3'
 
 # gpg (for Github)
 export GPG_TTY=$(tty)

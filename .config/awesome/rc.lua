@@ -69,8 +69,8 @@ end
 -- spawn_once("chromium", "Chromium", tags[1][3])
 -- spawn_once("thunar", "Thunar", tags[1][4])
 -- spawn_once("xchat", "Xchat", tags[1][5])
--- spawn_once("termite", "termite", awful.tag.find_by_name(awful.screen.focused(), "2"))
--- spawn_once("termite", "termite", awful.screen.focused().tags[2])
+-- spawn_once("kitty", "kitty", awful.tag.find_by_name(awful.screen.focused(), "2"))
+-- spawn_once("kitty", "kitty", awful.screen.focused().tags[2])
 
 -- {{{ Autostart windowless processes
 local function run_once(cmd_arr)
@@ -105,11 +105,11 @@ local rightkey     = "l"
 local upkey        = "k"
 local downkey      = "j"
 
-local terminal     = "termite"
-local editor       = "termite -e vim"
+local terminal     = "kitty"
+local editor       = terminal .. " vim"
 local guieditor    = "gvim"
 local browser      = "chromium"
-local filemanager  = "termite -e ranger"
+local filemanager  = terminal .. " ranger"
 
 awful.util.terminal = terminal
 awful.util.tagcolumns = 9
@@ -219,8 +219,8 @@ beautiful.init(theme_path)
 -- {{{ Menu
 local myawesomemenu = {
     { "hotkeys", function() return false, hotkeys_popup.show_help end },
-    { "manual", terminal .. " -e man awesome" },
-    { "edit config", string.format("%s -e %s %s", terminal, editor, awesome.conffile) },
+    { "manual", terminal .. " man awesome" },
+    { "edit config", string.format("%s %s %s", terminal, editor, awesome.conffile) },
     { "restart", awesome.restart },
     { "quit", function() awesome.quit() end }
 }

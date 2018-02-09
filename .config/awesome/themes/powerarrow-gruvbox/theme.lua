@@ -75,7 +75,7 @@ theme.wallpaper_original                        = theme.dir .. "/wallpapers/matt
 theme.wallpaper                                 = theme.dir .. "/wallpapers/matterhorn_base.jpg"
 theme.wallpaper_blur                            = theme.dir .. "/wallpapers/matterhorn_blur.jpg"
 
-local font_name                                 = "Meslo LG S for Powerline"
+local font_name                                 = "Iosevka Custom"
 local font_size                                 = "11"
 theme.font                                      = font_name .. " " ..                         font_size
 theme.font_bold                                 = font_name .. " " .. "Bold"        .. " " .. font_size
@@ -282,7 +282,7 @@ theme.cal = lain.widget.calendar({
 -- --]]
 
 -- MPD
-local musicplr = awful.util.terminal .. " -title Music -g 130x34-320+16 -e ncmpcpp"
+local musicplr = awful.util.terminal .. " -title Music -g 130x34-320+16 ncmpcpp"
 local mpdicon = wibox.widget.imagebox(theme.widget_music)
 mpdicon:buttons(awful.util.table.join(
     awful.button({ modkey }, 1, function () awful.spawn.with_shell(musicplr) end),
@@ -515,7 +515,7 @@ vol_widget = wibox.widget {
 
 theme.volume_click = custom_widget.eventhandler({
     attach_to = { vol_widget },
-    execute = function() awful.spawn("termite -e \"alsamixer\"") end,
+    execute = function() awful.spawn(awful.util.terminal .. " \"alsamixer\"") end,
 })
 
 -- BAT
@@ -636,7 +636,7 @@ net_widget = wibox.widget {
 
 -- theme.net_click = custom_widget.eventhandler({
 --     attach_to = { net.widget },
---     execute = function() awful.spawn("termite -e \"sudo wifi-menu\"") end,
+--     execute = function() awful.spawn(awful.util.terminal .. " \"sudo wifi-menu\"") end,
 -- })
 
 -- theme.net_hover = custom_widget.eventhandler({

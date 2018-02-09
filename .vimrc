@@ -585,27 +585,30 @@ augroup BoldCursorLineNr
   autocmd ColorScheme * highlight CursorLineNR cterm=bold
 augroup END
 
-augroup RefreshAirline
+augroup SearchHighlightColor
   autocmd!
-  autocmd ColorScheme * if exists(':AirlineRefresh') | :AirlineRefresh | endif
+  autocmd ColorScheme * highlight Search guibg=#282828 guifg=#fe8019
 augroup END
 
 """ Color VCS conflict markers
 augroup VCSConflictMarker
   autocmd!
-  autocmd ColorScheme * match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
-  autocmd BufEnter * syntax match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
+  autocmd ColorScheme * highlight VCSConflict guibg=#cc241d guifg=#282828
+  autocmd ColorScheme * match VCSConflict '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
 augroup END
 
-" """ Color overlength
-" augroup OverLength
-"   autocmd!
-"   autocmd ColorScheme * highlight OverLength ctermbg=darkred ctermfg=white guibg=#cc241d guifg=#ebdbb2
-"   autocmd ColorScheme * match OverLength /\%81v./
-"   autocmd BufEnter * syntax match OverLength /\%81v./
-"   "autocmd ColorScheme * match OverLength /\%>80v.\+/
-"   "autocmd BufEnter * match OverLength /\%>80v.\+/
-" augroup END
+""" Color overlength
+augroup OverLength
+  autocmd!
+  autocmd ColorScheme * highlight OverLength guibg=#cc241d guifg=#282828
+  autocmd ColorScheme * match OverLength /\%81v./
+  "autocmd ColorScheme * match OverLength /\%>80v.\+/
+augroup END
+
+augroup RefreshAirline
+  autocmd!
+  autocmd ColorScheme * if exists(':AirlineRefresh') | :AirlineRefresh | endif
+augroup END
 
 if &term !=? 'linux' || has('gui_running')
   set listchars=tab:▸\ ,eol:↵,trail:~,extends:>,precedes:<,nbsp:+
@@ -717,6 +720,11 @@ let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
 "set t_Co=256
 let g:gruvbox_italic=1
 silent! colorscheme gruvbox
+
+"" Switch cursor according to mode
+let &t_SI="\<Esc>[6 q"
+let &t_SR="\<Esc>[4 q"
+let &t_EI="\<Esc>[2 q"
 
 augroup VimEnterNohl
   autocmd!
