@@ -2,6 +2,8 @@
 #  ZSHRC  #
 ###########
 
+eval "$(dircolors "$HOME/.dir_colors")"
+
 # If you come from bash you might have to change your $PATH.
 # export PATH="$HOME/bin:/usr/local/bin:$PATH"
 
@@ -61,8 +63,6 @@ plugins=(zsh-syntax-highlighting command-not-found custom-common-aliases)
 
 source "$HOME/.completion.zsh"
 source "$ZSH/oh-my-zsh.sh"
-
-eval "$(dircolors "$HOME/.dir_colors")"
 
 # User configuration
 
