@@ -1,0 +1,15 @@
+diff --git a/config.def.h b/config.def.h
+index d65c7c..a7ce5f4 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -5,8 +5,8 @@
+  * borderperc: percentage of cell width to use as a border
+  *		0 = no border, 100 = border width is same as cell width
+  */
+-char font[] = "Liberation Mono:pixelsize=12:antialias=true:autohint=true";
+-int borderpx = 2;
++char font[] = "Fira Mono:pixelsize=15:antialias=true:autohint=true";
++int borderpx = 1;
+ 
+ /*
+  * What program is execed by st depends of these precedence rules:

@@ -1,0 +1,79 @@
+# Maintainer: alfunx <alphonse.mariya@hotmail.com>
+# Contributor: alfunx <alphonse.mariya@hotmail.com>
+
+_pkgname=st
+pkgname=${_pkgname}-git
+pkgver=0.7.r41.g1f24bde
+pkgrel=1
+pkgdesc='A simple virtual terminal emulator for X. (Including patches and colorschemes)'
+arch=('i686' 'x86_64')
+url='https://st.suckless.org/'
+license=('MIT')
+options=('zipman')
+depends=('libxft')
+makedepends=('ncurses' 'libxext' 'git')
+optdepends=('dmenu: for unicode input'
+            'otf-fantasque-sans-mono: default defined font')
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+
+_patches=(
+    "https://st.suckless.org/patches/vertcenter/st-vertcenter-20170601-5a10aca.diff"
+    "https://st.suckless.org/patches/hidecursor/st-hidecursor-20170404-745c40f.diff"
+    "https://st.suckless.org/patches/scrollback/st-scrollback-20170329-149c0d3.diff"
+    "https://st.suckless.org/patches/scrollback/st-scrollback-mouse-20170427-5a10aca.diff"
+    "https://st.suckless.org/patches/clipboard/st-clipboard-20170925-b1338e9.diff"
+    "st-gruvbox-colorscheme-20180212-1f24bde.diff"
+    "st-font-iosevka-custom-20180212-1f24bde.diff"
+)
+
+source=(
+    "git://git.suckless.org/st"
+    "${_patches[@]}"
+)
+
+sha256sums=(
+    'SKIP'
+    'f96de9f96613dd44198c44a2c7fa3d6012a70fbed638243e61b17cf3e13035a3'
+    'bce5188fbd008f4bbf2c46aaddba0b691e56788d5706361f315e4c0f3c35836a'
+    '0d55a4d699f66a21a88746191662ddccd28ed32067bc9319ba90943e60ecf85d'
+    '7b9e957e851dd543aba6ead527a5c80efb61594a9bec0877895dd09d6c547621'
+    '2e4182696e805c4c8fd9b055041ee01024ff08abf90da40492c5a2fd9ef2d1e9'
+    'SKIP'
+    'SKIP'
+)
+
+pkgver() {
+  cd "$_pkgname"
+  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+  local file
+  cd "$_pkgname"
+
+  # skip terminfo which conflicts with nsurses
+  # sed -i '/tic /,+1d' Makefile
+  sed -i '/tic /d' Makefile
+
+  for file in "${_patches[@]}"; do
+    if [[ "$file" == *.h ]]; then
+      cp "$srcdir/$file" .
+    elif [[ "$file" == *.diff || "$file" == *.patch ]]; then
+      echo "Applying patch $(basename "$file")..."
+      patch -Np1 <"$srcdir/$(basename "$file")"
+    fi
+  done
+}
+
+build() {
+  cd "$_pkgname"
+  make X11INC=/usr/include/X11 X11LIB=/usr/lib/X11
+}
+
+package() {
+  cd "$_pkgname"
+  make PREFIX=/usr DESTDIR="$pkgdir" TERMINFO="$pkgdir/usr/share/terminfo" install
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$_pkgname/LICENSE"
+  install -Dm644 README "$pkgdir/usr/share/doc/$_pkgname/README"
+}
