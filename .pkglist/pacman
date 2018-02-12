@@ -37,7 +37,7 @@ efibootmgr
 emacs
 expac
 fakeroot
-fd-rs
+fd
 feh
 file
 filesystem
@@ -187,6 +187,8 @@ tk
 tlp
 tmux
 tree
+ttf-fira-mono
+ttf-fira-sans
 ttf-freefont
 ufw
 unclutter
@@ -226,4 +228,3 @@ youtube-dl
 zathura
 zathura-pdf-mupdf
 zsh
-zsh-completions
