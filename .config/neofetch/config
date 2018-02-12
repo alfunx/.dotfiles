@@ -405,7 +405,7 @@ install_time_format="12h"
 # colors=(distro)      - Text is colored based on Distro colors.
 # colors=(4 6 1 8 8 6) - Text is colored in the order above.
 # colors=(distro)
-colors=(4 4 4 4 4 4)
+colors=(4 12 12 4 12 12)
 
 
 # Text Options
@@ -464,7 +464,7 @@ color_blocks="on"
 # Default:  '3'
 # Values:   'num'
 # Flag:     --block_width
-block_width=3
+block_width=4
 
 # Color block height in lines
 #
