@@ -23,12 +23,14 @@ _patches=(
     "https://st.suckless.org/patches/scrollback/st-scrollback-20170329-149c0d3.diff"
     "https://st.suckless.org/patches/scrollback/st-scrollback-mouse-20170427-5a10aca.diff"
     "https://st.suckless.org/patches/clipboard/st-clipboard-20170925-b1338e9.diff"
+    "https://st.suckless.org/patches/relativeborder/st-relativeborder-20171207-0ac685f.diff"
     "st-gruvbox-colorscheme-20180212-1f24bde.diff"
+    # "st-gruvbox-colorscheme-both-20170626-b331da5.diff"
     "st-font-iosevka-custom-20180212-1f24bde.diff"
 )
 
 source=(
-    "git://git.suckless.org/st"
+    "$pkgname::git+file:///home/amariya/projects/st/st"
     "${_patches[@]}"
 )
 
@@ -39,18 +41,19 @@ sha256sums=(
     '0d55a4d699f66a21a88746191662ddccd28ed32067bc9319ba90943e60ecf85d'
     '7b9e957e851dd543aba6ead527a5c80efb61594a9bec0877895dd09d6c547621'
     '2e4182696e805c4c8fd9b055041ee01024ff08abf90da40492c5a2fd9ef2d1e9'
+    '1b427f476e7741f458cee2466c4875a0551d49471150ccafa06a95494913bb45'
     'SKIP'
     'SKIP'
 )
 
 pkgver() {
-  cd "$_pkgname"
+  cd "$pkgname"
   git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 prepare() {
   local file
-  cd "$_pkgname"
+  cd "$pkgname"
 
   # skip terminfo which conflicts with nsurses
   # sed -i '/tic /,+1d' Makefile
@@ -60,20 +63,20 @@ prepare() {
     if [[ "$file" == *.h ]]; then
       cp "$srcdir/$file" .
     elif [[ "$file" == *.diff || "$file" == *.patch ]]; then
-      echo "Applying patch $(basename "$file")..."
+      echo -e "\e[1mApplying patch: $(basename "$file")\e[0m"
       patch -Np1 <"$srcdir/$(basename "$file")"
     fi
   done
 }
 
 build() {
-  cd "$_pkgname"
+  cd "$pkgname"
   make X11INC=/usr/include/X11 X11LIB=/usr/lib/X11
 }
 
 package() {
-  cd "$_pkgname"
+  cd "$pkgname"
   make PREFIX=/usr DESTDIR="$pkgdir" TERMINFO="$pkgdir/usr/share/terminfo" install
-  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$_pkgname/LICENSE"
-  install -Dm644 README "$pkgdir/usr/share/doc/$_pkgname/README"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 README "$pkgdir/usr/share/doc/$pkgname/README"
 }

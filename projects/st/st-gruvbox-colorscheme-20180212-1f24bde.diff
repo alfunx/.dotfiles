@@ -31,7 +31,7 @@ index 877afab..d65c7c2 100644
 -	/* more colors can be added after 255 to use with DefaultXX */
 -	"#cccccc",
 -	"#555555",
-+	/* solarized dark */
++	/* gruvbox dark */
 +	"#282828",  /*  0: black    */
 +	"#cc241d",  /*  1: red      */
 +	"#98971a",  /*  2: green    */
