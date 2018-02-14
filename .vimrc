@@ -594,15 +594,19 @@ augroup END
 augroup VCSConflictMarker
   autocmd!
   autocmd ColorScheme * highlight VCSConflict guibg=#cc241d guifg=#282828
-  autocmd ColorScheme * match VCSConflict '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
+  autocmd BufEnter,WinEnter * match VCSConflict '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
 augroup END
 
 """ Color overlength
 augroup OverLength
   autocmd!
   autocmd ColorScheme * highlight OverLength guibg=#cc241d guifg=#282828
-  autocmd ColorScheme * match OverLength /\%81v./
-  "autocmd ColorScheme * match OverLength /\%>80v.\+/
+  "autocmd BufEnter,WinEnter * match OverLength /\%81v./
+  "autocmd BufEnter,WinEnter * match OverLength /\%>80v.\+/
+  let collumnLimit=80
+  let pattern='\%' . (collumnLimit+1) . 'v.'
+  autocmd BufEnter,WinEnter *
+        \ let w:m1=matchadd('OverLength', pattern, -1)
 augroup END
 
 augroup RefreshAirline
