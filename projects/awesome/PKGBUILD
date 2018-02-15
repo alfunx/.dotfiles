@@ -1,5 +1,4 @@
 # Maintainer: alfunx <alphonse.mariya@hotmail.com>
-# Contributor: alfunx <alphonse.mariya@hotmail.com>
 
 _pkgname=awesome
 pkgname=${_pkgname}-git
@@ -21,7 +20,7 @@ provides=('notification-daemon' "${_pkgname}")
 conflicts=("${_pkgname}")
 backup=('etc/xdg/awesome/rc.lua')
 source=("$pkgname::git+file:///home/amariya/projects/awesome/awesome")
-md5sums=('SKIP')
+sha512sums=('SKIP')
 
 pkgver() {
   cd "$pkgname"

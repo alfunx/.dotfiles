@@ -1,5 +1,4 @@
 # Maintainer: alfunx <alphonse.mariya@hotmail.com>
-# Contributor: alfunx <alphonse.mariya@hotmail.com>
 
 _pkgname=ttf-iosevka-custom
 pkgname=${_pkgname}-git
@@ -22,11 +21,13 @@ pkgver() {
 }
 
 build() {
-  : ${IOSEVKA_DESIGN='v-tilde-low v-asterisk-low v-underscore-low v-at-short expanded term'}
-  design="$IOSEVKA_DESIGN"
+  design='v-l-italic v-i-italic v-q-straight v-eszet-traditional v-tilde-low v-asterisk-low v-underscore-low v-at-short expanded term'
+  upright='v-g-opendoublestorey'
+  italic='v-g-singlestorey'
+  oblique='v-g-opendoublestorey'
   cd Iosevka
   npm install
-  make custom-config design="$design" family='Iosevka Custom'
+  make custom-config design="$design" upright="$upright" italic="$italic" oblique="$oblique" family='Iosevka Custom'
   make custom
 }
 
