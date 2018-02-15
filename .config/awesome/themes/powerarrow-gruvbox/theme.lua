@@ -152,6 +152,7 @@ theme.prompt_fg                                 = textcolor_light
 theme.bg_systray                                = theme.tasklist_bg_normal
 
 theme.border_width                              = 4
+theme.border_radius                             = 8
 theme.menu_height                               = 20
 theme.menu_width                                = 250
 theme.tasklist_plain_task_name                  = true

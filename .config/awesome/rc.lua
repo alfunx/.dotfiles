@@ -1101,8 +1101,10 @@ client.connect_signal("property::fullscreen",
         if c.fullscreen then
             c.border_width = 0
             awful.titlebar.hide(c)
+            c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 0) end
         else
             c.border_width = beautiful.border_width
+            c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, beautiful.border_radius or 0) end
         end
     end)
 
@@ -1111,8 +1113,10 @@ client.connect_signal("property::maximized",
         if c.maximized then
             c.border_width = 0
             awful.titlebar.hide(c)
+            c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 0) end
         else
             c.border_width = beautiful.border_width
+            c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, beautiful.border_radius or 0) end
         end
     end)
 
@@ -1135,7 +1139,7 @@ awful.tag.attached_connect_signal(s, "property::layout",
 -- Rounded corners
 client.connect_signal("manage",
     function(c)
-        c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 8) end
+        c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, beautiful.border_radius or 0) end
     end)
 
 -- }}}
