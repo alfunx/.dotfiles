@@ -62,7 +62,7 @@ prepare() {
       cp "$srcdir/$file" .
     elif [[ "$file" == *.diff || "$file" == *.patch ]]; then
       echo -e "\e[1mApplying patch: $(basename "$file")\e[0m"
-      patch -Np1 <"$srcdir/$(basename "$file")"
+      patch -N <"$srcdir/$(basename "$file")"
     fi
   done
 }

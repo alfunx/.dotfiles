@@ -1,0 +1,64 @@
+# Maintainer: alfunx <alphonse.mariya@hotmail.com>
+
+_pkgname=dmenu
+pkgname=${_pkgname}-git
+pkgver=4.7.r6.g8895128
+pkgrel=1
+pkgdesc='A generic menu for X. (Including patches and colorschemes)'
+arch=('i686' 'x86_64')
+url='https://st.suckless.org/'
+license=('MIT')
+options=('zipman')
+depends=('sh' 'libxinerama' 'libxft')
+makedepends=('git')
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+
+_patches=(
+    "https://tools.suckless.org/dmenu/patches/dmenu-lineheight-4.7.diff"
+    "https://tools.suckless.org/dmenu/patches/dmenu-fuzzymatch-20170603-f428f3e.diff"
+    "dmenu-config-20180215-8895128.diff"
+)
+
+source=(
+    "$pkgname::git+file:///home/amariya/projects/dmenu/dmenu"
+    "${_patches[@]}"
+)
+
+sha512sums=(
+    'SKIP'
+    '04d3d7c48ca27a3e939136f5c979eebe4c9e7935a63323576e577e1146c6a7e61f969ba43d06ef9e66c6f3c37907da36aa806ee77393f5f5c6907c3e50ebdd34'
+    'aed4681b24c7d6a82927026eda2bdb7335b3c387f37db87e5ef48183b2056ea184122c0c783056fbd6be3ee3bd0f7c32ff2112022f10f01c0e61c0c7a0fb3894'
+    'SKIP'
+)
+
+pkgver() {
+  cd "$pkgname"
+  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+  local file
+  cd "$pkgname"
+
+  for file in "${_patches[@]}"; do
+    if [[ "$file" == *.h ]]; then
+      cp "$srcdir/$file" .
+    elif [[ "$file" == *.diff || "$file" == *.patch ]]; then
+      echo -e "\e[1mApplying patch: $(basename "$file")\e[0m"
+      patch -N <"$srcdir/$(basename "$file")"
+    fi
+  done
+}
+
+build() {
+  cd "$pkgname"
+  make X11INC=/usr/include/X11 X11LIB=/usr/lib/X11
+}
+
+package() {
+  cd "$pkgname"
+  make PREFIX=/usr DESTDIR="$pkgdir" install
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 README "$pkgdir/usr/share/doc/$pkgname/README"
+}
