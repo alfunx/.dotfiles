@@ -1,0 +1,12 @@
+#!/usr/bin/env zsh
+
+alias fzf='fzf-tmux -d 30%'
+
+# checkout git branch (including remote branches)
+
+branches=$(git branch --all --color=always | grep -v HEAD) \
+  || exit 1
+branch=$(echo "$branches" \
+  | fzf +s +m -e --ansi -d $(( 2 + $(wc -l <<< "$branches") ))) \
+  || exit 1
+git checkout $(echo "$branch" | sed 's/.* //' | sed 's#remotes/[^/]*/##')

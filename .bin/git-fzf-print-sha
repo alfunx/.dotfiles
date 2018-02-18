@@ -1,0 +1,12 @@
+#!/usr/bin/env zsh
+
+alias fzf='fzf-tmux -d 30%'
+
+# print git commit sha-hash
+
+commits=$(git log --format=oneline --abbrev-commit --all \
+  --decorate --color=always) \
+  || exit 1
+commit=$(echo "$commits" | fzf +s +m -e --ansi) \
+  || exit 1
+echo -n $(echo "$commit" | sed 's/ .*//')

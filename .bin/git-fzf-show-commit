@@ -1,0 +1,16 @@
+#!/usr/bin/env zsh
+
+alias fzf='fzf-tmux -d 30%'
+
+# git commit browser
+
+# --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"
+
+git log --format=oneline --abbrev-commit --all --decorate --color=always \
+  --graph "$@" \
+  | fzf +s +m -e --ansi --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
+  --bind "ctrl-m:execute:
+(grep -o '[a-f0-9]\{7\}' | head -1 |
+  xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
+{}
+FZF-EOF"

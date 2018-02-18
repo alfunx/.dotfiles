@@ -14,6 +14,11 @@
 	tool = vimdiff
 [difftool]
 	prompt = false
+[color "diff"]
+	meta = bold
+	frag = yellow bold reverse
+	old = red
+	new = green
 [merge]
 	tool = diffconflicts
 [mergetool "diffconflicts"]
@@ -100,3 +105,11 @@
 	migrate = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git checkout -b \"$1\" && git branch --force \"$CURRENT\" \"${3-\\\"$CURRENT\\\"@\\{u\\}}\" && git rebase --onto \"${2-master}\" \"$CURRENT\"; }; f"
 
 	ctags = "!.git/hooks/ctags"
+
+	# fzf commands (custom)
+	fbr = fzf-branch
+	fco = fzf-checkout
+	fcoc = fzf-checkout-commit
+	fsha = fzf-print-sha
+	fshow = fzf-show-commit
+	fstash = fzf-show-stash
