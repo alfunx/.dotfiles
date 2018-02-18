@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+choice_by_dmenu() {
+  if [[ -f "$HOME/.dmenurc" ]]; then
+    . "$HOME/.dmenurc"
+    # DMENU='rofi -dmenu'
+  else
+    DMENU='dmenu -i'
+  fi
+
+  choice=$(
+  echo -e "0: Lock\\n1: Hibernate\\n2: Suspend\\n3: Logout\\n4: Reboot\\n5: Poweroff" \
+    | $DMENU | cut -d ':' -f 1
+  )
+}
+
+[[ -z "$DISPLAY" ]] && exit 1
+
+choice_by_dmenu
+
+[[ -z "$choice" ]] && exit 1
+
+case "$choice" in
+  0) xautolock -locknow & ;;
+  1) sudo systemctl hibernate & ;;
+  2) sudo systemctl suspend & ;;
+  3) sudo systemctl kill "$(pgrep X)" & ;;
+  4) sudo systemctl reboot & ;;
+  5) sudo systemctl poweroff & ;;
+esac
