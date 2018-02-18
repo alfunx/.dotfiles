@@ -333,7 +333,6 @@ globalkeys = awful.util.table.join(
               {description = "open a terminal", group = "launcher"}),
     awful.key({ mod_4, ctrlkey            }, "Return", function () awful.spawn(terminal, { floating = true, placement = awful.placement.centered }) end,
               {description = "open a floating terminal", group = "launcher"}),
-    awful.key({ mod_4,                    }, "v", function () awful.spawn(terminal) end),
     awful.key({ mod_4                     }, "b", function () awful.spawn(browser) end,
               {description = "open browser", group = "launcher"}),
     awful.key({ mod_4                     }, "e", function () awful.spawn(editor) end,
@@ -703,13 +702,13 @@ clientkeys = awful.util.table.join(
               {description = "toggle keep on top", group = "client"}),
     awful.key({ mod_4             }, "s", function (c) c.sticky = not c.sticky end,
               {description = "toggle sticky", group = "client"}),
-    awful.key({ mod_4            }, "i", function (c) awful.titlebar.toggle(c) end,
+    awful.key({ mod_4             }, "i", function (c) awful.titlebar.toggle(c) end,
               {description = "toggle titlebar", group = "client"}),
-    awful.key({ mod_4, ctrlkey   }, "i", function () set_wallpaper(0) end,
+    awful.key({ mod_4, ctrlkey    }, "i", function () set_wallpaper(0) end,
               {description = "toggle titlebar", group = "client"}),
     awful.key({ mod_4             }, "n", function (c) c.minimized = true end,
               {description = "minimize", group = "client"}),
-    awful.key({ mod_4            }, "m",
+    awful.key({ mod_4             }, "m",
         function (c)
             if not c.maximized then
                 awful.titlebar.hide(c)
@@ -719,7 +718,14 @@ clientkeys = awful.util.table.join(
             c.maximized = not c.maximized
             c:raise()
         end,
-        {description = "maximize", group = "client"})
+        {description = "maximize", group = "client"}),
+    awful.key({ mod_4             }, "v", function (c)
+        awful.spawn(terminal .. " zsh -lic '" .. beautiful.scripts_dir .. "/edit-in-vim'", {
+            floating = true,
+            ontop = true,
+            placement = awful.placement.centered,
+        })
+    end)
 )
 
 -- Bind all key numbers to tags.
