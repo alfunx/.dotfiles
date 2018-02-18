@@ -446,6 +446,8 @@ EXEC 91  # Unix
 #.DIST 96
 #.orig 96
 #.ORIG 96
+# .rej 96
+# .REJ 96
 #.swp 96
 #.swo 96
 #*,v 96
@@ -462,12 +464,13 @@ EXEC 91  # Unix
 .DIST 93
 .orig 93
 .ORIG 93
+.rej 93
+.REJ 93
 .swp 93
 .swo 93
 *,v 93
 .pacnew 93
 .pacsave 93
-.pkglist 93
 
 # Sensitive files
 *_history 96

@@ -466,7 +466,6 @@ EXEC 01;31  # Unix
 *,v 01;33
 .pacnew 01;33
 .pacsave 01;33
-.pkglist 01;33
 
 # Sensitive files
 *_history 01;36
