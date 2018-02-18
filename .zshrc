@@ -4,6 +4,8 @@
 
 eval "$(dircolors "$HOME/.dir_colors")"
 
+# fpath=("$HOME/.zsh" $fpath)
+
 # If you come from bash you might have to change your $PATH.
 # export PATH="$HOME/bin:/usr/local/bin:$PATH"
 
@@ -59,9 +61,12 @@ fi
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(zsh-syntax-highlighting zsh-completions command-not-found custom-common-aliases)
+plugins=(zsh-syntax-highlighting zsh-completions command-not-found custom-common-aliases colorize)
 
+# Completions
 source "$HOME/.completion.zsh"
+
+# Oh-My-Zsh
 source "$ZSH/oh-my-zsh.sh"
 
 # User configuration
@@ -101,6 +106,7 @@ source "$ZSH/oh-my-zsh.sh"
 # Zsh options
 setopt extendedglob
 setopt complete_aliases
+setopt hist_ignore_space
 
 # Highlighting options
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
@@ -157,8 +163,9 @@ fi
 
 # TMUX
 main_attached="$(tmux list-sessions -F '#S #{session_attached}' \
+  2>/dev/null \
   | sed -n 's/^main[[:space:]]//p')"
-if [ ! "$main_attached" -gt '0' ]; then
+if [ ! "$main_attached" -gt '0' ] && [ ! "$TERM" = 'linux' ]; then
   tmux attach -t main >/dev/null 2>&1 || tmux new -s main >/dev/null 2>&1
   exit
 fi
