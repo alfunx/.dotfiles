@@ -246,7 +246,8 @@ local clock = awful.widget.watch(
 )
 
 clock_widget = wibox.widget {
-    clock, layout = wibox.layout.align.horizontal
+    clock,
+    layout = wibox.layout.align.horizontal
 }
 
 -- Calendar
@@ -340,7 +341,8 @@ local mem = lain.widget.mem({
 })
 
 mem_widget = wibox.widget {
-    memicon, mem.widget, layout = wibox.layout.align.horizontal
+    memicon, mem.widget,
+    layout = wibox.layout.align.horizontal
 }
 
 -- CPU
@@ -367,7 +369,8 @@ local cpu = lain.widget.cpu({
 })
 
 cpu_widget = wibox.widget {
-    cpuicon, cpu.widget, layout = wibox.layout.align.horizontal
+    cpuicon, cpu.widget,
+    layout = wibox.layout.align.horizontal
 }
 
 -- SYSLOAD
@@ -396,7 +399,8 @@ local sysload = lain.widget.sysload({
 })
 
 sysload_widget = wibox.widget {
-    sysloadicon, sysload.widget, layout = wibox.layout.align.horizontal
+    sysloadicon, sysload.widget,
+    layout = wibox.layout.align.horizontal
 }
 
 -- PACMAN
@@ -412,7 +416,8 @@ theme.pacman = custom_widget.pacman({
 })
 
 pacman_widget = wibox.widget {
-    pacmanicon, theme.pacman.widget, layout = wibox.layout.align.horizontal
+    pacmanicon, theme.pacman.widget,
+    layout = wibox.layout.align.horizontal
 }
 
 theme.pacman_click = custom_widget.eventhandler({
@@ -436,7 +441,8 @@ local users = custom_widget.users({
 })
 
 users_widget = wibox.widget {
-    usersicon, users.widget, layout = wibox.layout.align.horizontal
+    usersicon, users.widget,
+    layout = wibox.layout.align.horizontal
 }
 
 --[[ Coretemp (lm_sensors, per core)
@@ -473,7 +479,8 @@ end)
 -- })
 
 -- temp_widget = wibox.widget {
---     tempicon, temp.widget, layout = wibox.layout.align.horizontal
+--     tempicon, temp.widget,
+--     layout = wibox.layout.align.horizontal
 -- }
 
 -- -- FS
@@ -487,7 +494,8 @@ end)
 -- })
 
 -- fs_widget = wibox.widget {
---     fsicon, theme.fs.widget, layout = wibox.layout.align.horizontal
+--     fsicon, theme.fs.widget,
+--     layout = wibox.layout.align.horizontal
 -- }
 
 -- ALSA volume
@@ -511,7 +519,8 @@ theme.volume = lain.widget.alsa({
 })
 
 vol_widget = wibox.widget {
-    volicon, theme.volume.widget, layout = wibox.layout.align.horizontal
+    volicon, theme.volume.widget,
+    layout = wibox.layout.align.horizontal
 }
 
 theme.volume_click = custom_widget.eventhandler({
@@ -560,7 +569,8 @@ local bat = lain.widget.bat({
 })
 
 bat_widget = wibox.widget {
-    baticon, bat.widget, layout = wibox.layout.align.horizontal
+    baticon, bat.widget,
+    layout = wibox.layout.align.horizontal
 }
 
 -- theme.bat_hover = awful.tooltip({
@@ -608,7 +618,8 @@ theme.bat_click = custom_widget.eventhandler({
 -- })
 
 -- weather_widget = wibox.widget {
---     weather.icon, weather.widget, layout = wibox.layout.align.horizontal
+--     weather.icon, weather.widget,
+--     layout = wibox.layout.align.horizontal
 -- }
 
 -- NET
@@ -632,7 +643,8 @@ local net = lain.widget.net({
 })
 
 net_widget = wibox.widget {
-    net.widget, layout = wibox.layout.align.horizontal
+    net.widget,
+    layout = wibox.layout.align.horizontal
 }
 
 -- theme.net_click = custom_widget.eventhandler({
@@ -734,14 +746,39 @@ function theme.at_screen_connect(s)
 
     -- Create a tasklist widget
     s.mytasklist = awful.widget.tasklist(s,
-    awful.widget.tasklist.filter.currenttags, awful.util.tasklist_buttons, {
+    awful.widget.tasklist.filter.currenttags,
+    awful.util.tasklist_buttons, {
         bg_focus = theme.tasklist_bg_focus,
         shape = function(cr, width, height) gears.shape.rounded_rect(cr, width, height, 5) end,
-        shape_border_width = 0, shape_border_color = theme.tasklist_bg_normal,
+        shape_border_width = 0,
+        shape_border_color = theme.tasklist_bg_normal,
         align = "center" })
 
     -- Create the wibox
     s.mywibox = awful.wibar({ position = "top", screen = s, height = 21, bg = theme.bg_normal, fg = theme.fg_normal })
+
+    local systray_widget = wibox.container.margin(wibox.widget {
+        wibox.widget.systray(),
+        layout = wibox.layout.align.horizontal
+    }, 8, 0, 3, 3)
+    systray_widget:set_visible(false)
+
+    local systray_widget_timer = gears.timer {
+        timeout   = 5,
+        callback  = function()
+            systray_widget:set_visible(false)
+        end
+    }
+
+    s.mywibox:connect_signal("mouse::enter", function()
+        systray_widget:set_visible(true)
+        systray_widget_timer:stop()
+    end)
+
+    s.mywibox:connect_signal("mouse::leave", function()
+        systray_widget_timer.timeout = 5
+        systray_widget_timer:start()
+    end)
 
     -- Add widgets to the wibox
     s.mywibox:setup {
@@ -749,13 +786,19 @@ function theme.at_screen_connect(s)
 
         { -- Left widgets
             layout = wibox.layout.fixed.horizontal,
-            --spr,
-            wibox.container.background(wibox.container.margin(wibox.widget { s.mylayoutbox, layout = wibox.layout.align.horizontal }, 7, 3, 4, 4), clock_bg_normal),
-            wibox.container.background(wibox.container.margin(wibox.widget { s.mytaglist, layout = wibox.layout.align.horizontal }, 3, 8), theme.taglist_bg_normal),
+
+            wibox.container.background(wibox.container.margin(wibox.widget {
+                s.mylayoutbox, layout = wibox.layout.align.horizontal
+            }, 8, 3, 4, 4), clock_bg_normal),
+            wibox.container.background(wibox.container.margin(wibox.widget {
+                s.mytaglist, layout = wibox.layout.align.horizontal
+            }, 3, 8), theme.taglist_bg_normal),
             arrow_r(theme.taglist_bg_normal, theme.prompt_bg),
-            wibox.container.background(wibox.container.margin(wibox.widget { s.mypromptbox, layout = wibox.layout.align.horizontal }, 8, 4), theme.prompt_bg),
+
+            wibox.container.background(wibox.container.margin(wibox.widget {
+                s.mypromptbox, layout = wibox.layout.align.horizontal
+            }, 8, 4), theme.prompt_bg),
             arrow_r(theme.prompt_bg, theme.tasklist_bg_normal),
-            spr,
         },
 
         -- s.mytasklist, -- Middle widget
@@ -763,35 +806,25 @@ function theme.at_screen_connect(s)
 
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
-            wibox.container.background(wibox.container.margin(wibox.widget { wibox.widget.systray(), layout = wibox.layout.align.horizontal }, 8, 8, 3, 3), theme.tasklist_bg_normal),
 
-            -- wibox.container.margin(scissors, 4, 8),
-            -- wibox.container.background(wibox.container.margin(weather_widget, 4, 2), cpu_bg_normal),
+            wibox.container.background(wibox.container.margin(systray_widget, 0, 8), theme.tasklist_bg_normal),
 
-            arrow_l(theme.tasklist_bg_normal, cpu_bg_normal),
-            -- arrow_l(theme.bg_normal, fs_bg_normal),
-            -- wibox.container.background(wibox.container.margin(fs_widget, 4, 2), fs_bg_normal),
-            -- arrow_l(fs_bg_normal, temp_bg_normal),
-            -- wibox.container.background(wibox.container.margin(temp_widget, 4, 2), temp_bg_normal),
-            -- arrow_l(temp_bg_normal, pacman_bg_normal),
-            wibox.container.background(wibox.container.margin(pacman_widget, 2, 6), pacman_bg_normal),
-            -- arrow_l(pacman_bg_normal, users_bg_normal),
-            wibox.container.background(wibox.container.margin(users_widget, 2, 6), users_bg_normal),
-            -- arrow_l(users_bg_normal, sysload_bg_normal),
+            arrow_l(theme.tasklist_bg_normal, pacman_bg_normal),
+            -- wibox.container.background(wibox.container.margin(fs_widget,      2, 6), fs_bg_normal),
+            -- wibox.container.background(wibox.container.margin(temp_widget,    2, 6), temp_bg_normal),
+            wibox.container.background(wibox.container.margin(pacman_widget,  2, 6), pacman_bg_normal),
+            wibox.container.background(wibox.container.margin(users_widget,   2, 6), users_bg_normal),
             wibox.container.background(wibox.container.margin(sysload_widget, 2, 6), sysload_bg_normal),
-            -- arrow_l(sysload_bg_normal, cpu_bg_normal),
-            wibox.container.background(wibox.container.margin(cpu_widget, 2, 6), cpu_bg_normal),
-            -- arrow_l(cpu_bg_normal, mem_bg_normal),
-            wibox.container.background(wibox.container.margin(mem_widget, 2, 6), mem_bg_normal),
-            -- arrow_l(mem_bg_normal, vol_bg_normal),
-            wibox.container.background(wibox.container.margin(vol_widget, 2, 6), vol_bg_normal),
-            -- arrow_l(vol_bg_normal, bat_bg_normal),
-            wibox.container.background(wibox.container.margin(bat_widget, 2, 10), bat_bg_normal),
+            wibox.container.background(wibox.container.margin(cpu_widget,     2, 6), cpu_bg_normal),
+            wibox.container.background(wibox.container.margin(mem_widget,     2, 6), mem_bg_normal),
+            wibox.container.background(wibox.container.margin(vol_widget,     2, 6), vol_bg_normal),
+            wibox.container.background(wibox.container.margin(bat_widget,     2, 10), bat_bg_normal),
+
             arrow_l(bat_bg_normal, net_bg_normal),
-            wibox.container.background(wibox.container.margin(net_widget, 8, 10), net_bg_normal),
+            wibox.container.background(wibox.container.margin(net_widget,     8, 10), net_bg_normal),
+
             arrow_l(net_bg_normal, clock_bg_normal),
-            wibox.container.background(wibox.container.margin(clock_widget, 8, 8), clock_bg_normal),
-            --]]
+            wibox.container.background(wibox.container.margin(clock_widget,   8, 8), clock_bg_normal),
         },
     }
 end

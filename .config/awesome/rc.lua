@@ -469,9 +469,9 @@ globalkeys = awful.util.table.join(
               {description = "view next nonempty", group = "tag"}),
 
     -- -- Default client focus
-    -- awful.key({ altkey,           }, "j", function () awful.client.focus.byidx(1) end,
+    -- awful.key({ altkey,           }, downkey, function () awful.client.focus.byidx(1) end,
     --           {description = "focus next by index", group = "client"}),
-    -- awful.key({ altkey,           }, "k", function () awful.client.focus.byidx(-1) end,
+    -- awful.key({ altkey,           }, upkey, function () awful.client.focus.byidx(-1) end,
     --           {description = "focus previous by index", group = "client"}),
 
     -- awful.key({ mod_4                     }, leftkey, function() select_tag_in_grid("l") end),
