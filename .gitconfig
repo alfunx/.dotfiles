@@ -1,30 +1,52 @@
 [init]
 	templatedir = ~/.git_template
+
 [user]
 	email = alphonse.mariya@hotmail.com
 	name = Alphonse Mariya
 	signingkey = 24D4C85E7B4585A9
+
 [core]
 	editor = vim
 	whitespace = fix,trailing-space,cr-at-eol
 	excludesfile = ~/.ignore
+
 [credential]
 	helper = cache
-[diff]
-	tool = vimdiff
-[difftool]
-	prompt = false
+
+[color]
+	ui = true
+
 [color "diff"]
 	meta = bold
 	frag = yellow bold reverse
+	commit = yellow bold
 	old = red
 	new = green
+	whitespace = red reverse
+
+[diff]
+	tool = vimdiff
+
+[difftool]
+	prompt = false
+
 [merge]
 	tool = diffconflicts
+
 [mergetool "diffconflicts"]
 	cmd = diffconflicts vim "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
 	trustExitCode = true
 	keepBackup = false
+
+[url "git@github.com:"]
+	insteadOf = @gh:
+
+[url "https://github.com/"]
+	insteadOf = gh://
+
+[url "https://aur.archlinux.org/"]
+	insteadOf = aur://
 
 [alias]
 	ec = config --global -e
@@ -68,8 +90,10 @@
 	bt = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git branch --set-upstream-to=\"${1-origin/$CURRENT}\"; }; f"
 
 	cl = clone
-	p = pull --rebase=interactive --prune
-	f = fetch --prune --all --tags
+	p = pull --rebase=interactive
+	pp = pull --rebase=interactive --prune
+	f = fetch --all --tags
+	fp = fetch --prune --all --tags
 	su = submodule update --init --recursive
 	up = "!git p \"$@\" && git su"
 
