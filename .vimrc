@@ -38,7 +38,6 @@ Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-sleuth'
-Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-endwise'
 "Plug 'tpope/vim-commentary'
 Plug 'airblade/vim-gitgutter'
@@ -66,6 +65,10 @@ Plug 'wellle/targets.vim'
 Plug 'junegunn/vim-after-object'
 "Plug 'michaeljsmith/vim-indent-object'
 Plug 'alfunx/vim-indent-object'  " fork
+
+Plug 'kana/vim-textobj-user'
+Plug 'kana/vim-textobj-entire'
+Plug 'Julian/vim-textobj-variable-segment'
 
 " Tmux
 Plug 'benmills/vimux'
@@ -174,6 +177,12 @@ noremap gp "+p
 xnoremap < <gv
 xnoremap > >gv
 
+" Swap lines
+xnoremap <leader>j :m '>+1<CR>gv=gv
+xnoremap <leader>k :m '<-2<CR>gv=gv
+nnoremap <leader>j :m .+1<CR>
+nnoremap <leader>k :m .-2<CR>
+
 " Use CTRL-S for saving, also in Insert mode
 nnoremap <silent> <C-s> :write<CR>
 xnoremap <silent> <C-s> <Esc>:write<CR>
@@ -221,6 +230,12 @@ nnoremap Q @@
 " No highlight
 execute "set <M-t>=\<Esc>t"
 nnoremap <M-t> :nohlsearch<CR>
+
+function! ChangeReg() abort
+  let x = nr2char(getchar())
+  call feedkeys("q:ilet @" . x . " = \<c-r>\<c-r>=string(@" . x . ")\<cr>\<esc>$", 'n')
+endfunction
+nnoremap cr :call ChangeReg()<cr>
 
 
 """""""""""""""""""""
@@ -408,8 +423,8 @@ let g:EasyMotion_keys='asdghklqwertyuiopzxcvbnmfj,'
 
 "nmap s <Plug>(easymotion-overwin-f)
 nmap s <Plug>(easymotion-overwin-f2)
-map <Leader>j <Plug>(easymotion-j)
-map <Leader>k <Plug>(easymotion-k)
+"map <Leader>j <Plug>(easymotion-j)
+"map <Leader>k <Plug>(easymotion-k)
 
 "" Incsearch
 map / <Plug>(incsearch-forward)
@@ -468,7 +483,7 @@ nnoremap <F4> :UndotreeToggle<CR>
 " "" Titlecase
 " let g:titlecase_map_keys=0
 " nmap gwt <Plug>Titlecase
-" vmap gwt <Plug>Titlecase
+" xmap gwt <Plug>Titlecase
 " nmap gwT <Plug>TitlecaseLine
 
 "" After text object
