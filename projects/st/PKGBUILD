@@ -21,6 +21,7 @@ _patches=(
     "https://st.suckless.org/patches/scrollback/st-scrollback-mouse-20170427-5a10aca.diff"
     "https://st.suckless.org/patches/clipboard/st-clipboard-20170925-b1338e9.diff"
     "https://st.suckless.org/patches/relativeborder/st-relativeborder-20171207-0ac685f.diff"
+    "st-config-20180221-1f24bde.diff"
     "st-gruvbox-colorscheme-20180212-1f24bde.diff"
     "st-font-iosevka-custom-20180212-1f24bde.diff"
     "st-worddelimiters-20180215.diff"
@@ -39,6 +40,7 @@ sha512sums=(
     'ffd0594e88de6f5aab7aebccb9e0efdb36be8ce43aa25b1a5ff1432075d23ab8d4dd2c75e74f3f716362b8ff2548080d44493c6ffe5aeaa3d1a8a84cf53ec231'
     'b7a854c26ebcc480606289b3dc25c4a482ce02eb5138918f35152b0a139b71084be658a39e79461ceaeabdee924872bae9e7c01bdd37514bcdb4eea1d2c01e0a'
     '243da02f4dc074d41bf234cc35609297bbf671532faea2cdff1f6aad9d7260b348e1d6a25e112467fab47558e5a7de3e34abd6905eddbdc1cd4197e90268bcc4'
+    'SKIP'
     'SKIP'
     'SKIP'
     'SKIP'
