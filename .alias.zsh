@@ -1,32 +1,8 @@
-############
-# dotfiles #
-############
-
-# dotfiles() {
-#   case "$1" in
-#     listall)
-#       shift
-#       dotfiles ls-tree --full-tree -r --name-only HEAD "$@"
-#       ;;
-#     listtree)
-#       shift
-#       if hash treeify 2>/dev/null; then
-#         dotfiles ls-tree --full-tree -r --name-only HEAD "$@" | treeify
-#       else
-#         dotfiles listall
-#       fi
-#       ;;
-#     *)
-#       /usr/bin/env git --git-dir="$HOME/.dotfiles/" --work-tree="$HOME" "$@"
-#       ;;
-#   esac
-# }
-
-compdef dotfiles=git
-
 #############
 #  aliases  #
 #############
+
+compdef dotfiles=git
 
 con() {
   cmd=$1
@@ -88,7 +64,7 @@ officer() {
 compdef officer=pacman
 
 pacman-date-log() {
-  { pacman ${1:--Qeq}; cat /var/log/pacman.log; } | awk '
+  { pacman "${1:--Qeq}"; cat /var/log/pacman.log; } | awk '
     NF == 1 { pkgs[$0] = 1; }
     $4 == "installed" {
       if ($5 in pkgs) { pkgs[$5] = $1 " " $2; }
@@ -105,7 +81,7 @@ tmux() {
       echo
       if [[ $reply =~ ^[Yy]$ ]]; then
         if [[ ! -z "$TMUX" ]]; then
-          tmux source-file $(pwd)/.tmux
+          tmux source-file "$(pwd)/.tmux"
         else
           echo "No tmux session attached."; return 1
         fi
@@ -176,7 +152,7 @@ fag() {
 
 # fda - cd to selected directory
 fda() {
-  cd "$(fd --follow --type d '.' ${1:-.} 2>/dev/null \
+  cd "$(fd --follow --type d '.' "${1:-.}" 2>/dev/null \
     | fzf +m -q "$1" -0)"
 }
 
@@ -188,7 +164,7 @@ fda() {
 
 # c - fda including hidden directories
 c() {
-  cd "$(fd --hidden --follow --type d '.' ${1:-.} 2>/dev/null \
+  cd "$(fd --hidden --follow --type d '.' "${1:-.}" 2>/dev/null \
     | fzf +m -q "$1" -0)"
 }
 
@@ -200,7 +176,7 @@ c() {
 
 # fr - cd to selected directory and open ranger
 fr() {
-  cd "$(fd --hidden --follow --type d '.' ${1:-.} 2>/dev/null \
+  cd "$(fd --hidden --follow --type d '.' "${1:-.}" 2>/dev/null \
     | fzf +m -q "$1" -0)" && ranger
 }
 
@@ -245,7 +221,7 @@ ch() {
     | awk -F $sep '{printf "%-'$cols's  \x1b[36m%s\x1b[m\n", $1, $2}' \
     | fzf --ansi -m \
     | sed 's#.*\(https*://\)#\1#' \
-    | xargs $open > /dev/null 2> /dev/null
+    | xargs "$open" > /dev/null 2> /dev/null
 }
 
 # fdp - cd to selected parent directory
@@ -258,14 +234,14 @@ fdp() {
     fi
     if [[ "${1}" == '/' ]]; then
       for _dir in "${dirs[@]}"; do
-        echo $_dir;
+        echo "$_dir";
       done
     else
-      get_parent_dirs $(dirname "$1")
+      get_parent_dirs "$(dirname "$1")"
     fi
   }
 
-  local DIR=$(get_parent_dirs $(realpath "${1:-$PWD}") | fzf --tac)
+  local DIR=$(get_parent_dirs "$(realpath "${1:-$PWD}")" | fzf --tac)
   cd "$DIR"
 }
 
@@ -279,7 +255,7 @@ fkill() {
   pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
 
   if [ "x$pid" != "x" ]; then
-    echo $pid | xargs kill -${1:-9}
+    echo "$pid" | xargs kill -"${1:-9}"
   fi
 }
 
@@ -290,8 +266,8 @@ fkill() {
 # example usage: pacman -S $(fp)
 fp() {
   local arg="-Ss"
-  (( $# )) && { arg=$@; }
-  echo -n "$(pacman $arg \
+  (( $# )) && { arg=$*; }
+  echo -n "$(pacman "$arg" \
     | sed 'N;s/\n//' \
     | fzf -m \
     | sed 's/.*\///' \

@@ -2,6 +2,7 @@
 #  ZSHRC  #
 ###########
 
+# Dircolors
 eval "$(dircolors "$HOME/.dir_colors")"
 
 # fpath=("$HOME/.zsh" $fpath)
@@ -100,47 +101,20 @@ source "$ZSH/oh-my-zsh.sh"
 
 
 ############
-#  CUSTOM  #
+#  custom  #
 ############
 
 # Zsh options
 setopt extendedglob
 setopt complete_aliases
 setopt hist_ignore_space
+setopt no_auto_cd
 
-# Highlighting options
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
+# No scrolllock
+stty -ixon
 
-typeset -A ZSH_HIGHLIGHT_STYLES
-ZSH_HIGHLIGHT_STYLES[default]='none'
-ZSH_HIGHLIGHT_STYLES[unknown-token]='fg=167,bold'
-ZSH_HIGHLIGHT_STYLES[reserved-word]='fg=yellow'
-ZSH_HIGHLIGHT_STYLES[suffix-alias]='fg=142,underline'
-ZSH_HIGHLIGHT_STYLES[precommand]='fg=142,underline'
-ZSH_HIGHLIGHT_STYLES[commandseparator]='none'
-ZSH_HIGHLIGHT_STYLES[path]='underline'
-ZSH_HIGHLIGHT_STYLES[path_pathseparator]=''
-ZSH_HIGHLIGHT_STYLES[path_prefix_pathseparator]=''
-ZSH_HIGHLIGHT_STYLES[globbing]='fg=blue'
-ZSH_HIGHLIGHT_STYLES[history-expansion]='fg=blue'
-ZSH_HIGHLIGHT_STYLES[single-hyphen-option]='none'
-ZSH_HIGHLIGHT_STYLES[double-hyphen-option]='none'
-ZSH_HIGHLIGHT_STYLES[back-quoted-argument]='none'
-ZSH_HIGHLIGHT_STYLES[single-quoted-argument]='fg=yellow'
-ZSH_HIGHLIGHT_STYLES[double-quoted-argument]='fg=yellow'
-ZSH_HIGHLIGHT_STYLES[dollar-quoted-argument]='fg=yellow'
-ZSH_HIGHLIGHT_STYLES[rc-quote]='fg=cyan'
-ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]='fg=cyan'
-ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]='fg=cyan'
-ZSH_HIGHLIGHT_STYLES[back-dollar-quoted-argument]='fg=cyan'
-ZSH_HIGHLIGHT_STYLES[assign]='none'
-ZSH_HIGHLIGHT_STYLES[redirection]='fg=208'
-ZSH_HIGHLIGHT_STYLES[comment]='fg=245'
-ZSH_HIGHLIGHT_STYLES[arg0]='fg=142,bold'
-
-typeset -A ZSH_HIGHLIGHT_PATTERNS
-ZSH_HIGHLIGHT_PATTERNS+=('rm -rf' 'fg=208,bold')
-ZSH_HIGHLIGHT_PATTERNS+=('git reset --hard' 'fg=208,bold')
+# Highlighting
+source "$HOME/.highlight.zsh"
 
 # Aliases
 source "$HOME/.alias.zsh"
@@ -148,18 +122,11 @@ source "$HOME/.alias.zsh"
 # Export
 source "$HOME/.env.sh"
 
-# No scrolllock
-stty -ixon
-
 # FZF
-if [ -f "$HOME/.fzf.zsh" ]; then
-  source "$HOME/.fzf.zsh"
-fi
+source "$HOME/.fzf.zsh"
 
 # Gruvbox colors fix
-if [ -f "$HOME/.vim/plugged/gruvbox/gruvbox_256palette.sh" ]; then
-  source "$HOME/.vim/plugged/gruvbox/gruvbox_256palette.sh"
-fi
+source "$HOME/.bin/fix-gruvbox-palette"
 
 # TMUX
 main_attached="$(tmux list-sessions -F '#S #{session_attached}' \

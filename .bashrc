@@ -16,6 +16,4 @@ PS1='[\[\033[1;31m\]\u\[\033[0m\]@\H \w]$ '
 source "$HOME/.env.sh"
 
 # FZF
-if [ -f "$HOME/.fzf.bash" ]; then
-  source "$HOME/.fzf.bash"
-fi
+source "$HOME/.fzf.bash"
