@@ -14,23 +14,17 @@ makedepends=('git')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 
-_patches=(
-    "https://tools.suckless.org/dmenu/patches/dmenu-lineheight-4.7.diff"
-    "https://tools.suckless.org/dmenu/patches/dmenu-fuzzymatch-20170603-f428f3e.diff"
-    "dmenu-config-20180215-8895128.diff"
-)
+_patches=('https://tools.suckless.org/dmenu/patches/dmenu-lineheight-4.7.diff'
+          'https://tools.suckless.org/dmenu/patches/dmenu-fuzzymatch-20170603-f428f3e.diff'
+          'dmenu-config-20180215-8895128.diff')
 
-source=(
-    "$pkgname::git+file:///home/amariya/projects/dmenu/dmenu"
-    "${_patches[@]}"
-)
+source=("$pkgname::git+file:///home/amariya/projects/dmenu/dmenu"
+        "${_patches[@]}")
 
-sha512sums=(
-    'SKIP'
-    '04d3d7c48ca27a3e939136f5c979eebe4c9e7935a63323576e577e1146c6a7e61f969ba43d06ef9e66c6f3c37907da36aa806ee77393f5f5c6907c3e50ebdd34'
-    'aed4681b24c7d6a82927026eda2bdb7335b3c387f37db87e5ef48183b2056ea184122c0c783056fbd6be3ee3bd0f7c32ff2112022f10f01c0e61c0c7a0fb3894'
-    'SKIP'
-)
+sha512sums=('SKIP'
+            '04d3d7c48ca27a3e939136f5c979eebe4c9e7935a63323576e577e1146c6a7e61f969ba43d06ef9e66c6f3c37907da36aa806ee77393f5f5c6907c3e50ebdd34'
+            'aed4681b24c7d6a82927026eda2bdb7335b3c387f37db87e5ef48183b2056ea184122c0c783056fbd6be3ee3bd0f7c32ff2112022f10f01c0e61c0c7a0fb3894'
+            'ece754e4de001f2a698cd2ceb00bbc0ae9f035f6f6abccfa7e4b7c8418a95cc79843334139a38f42da0c23681c8566f0e12d3027ba12475c6bc4b50d770b6961')
 
 pkgver() {
   cd "$pkgname"

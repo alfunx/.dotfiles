@@ -11,7 +11,7 @@ depends=('xcb-util-image' 'xcb-util-keysyms' 'pam' 'libev' 'cairo' 'libxkbcommon
 provides=('i3lock' 'i3lock-color')
 conflicts=('i3lock')
 source=("https://github.com/chrjguill/i3lock-color/archive/2.10.1-c.tar.gz")
-sha512sums=('SKIP')
+sha512sums=('6d3b05008a3e0701d91cedf93c3ec13c3cc61fc66e9a806945e6214dc72571649f88b036249d94af6c3bc126851a654513fac99fef7473dfc406865253d64f5a')
 _version="2.10.1-c"
 
 build() {

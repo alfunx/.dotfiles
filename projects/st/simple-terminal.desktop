@@ -1,0 +1,18 @@
+[Desktop Entry]
+Type=Application
+TryExec=st
+Exec=st
+Icon=utilities-terminal
+Terminal=false
+Categories=System;TerminalEmulator;
+Keywords=shell;prompt;command;commandline;cmd;
+
+Name=Simple Terminal
+GenericName=Terminal
+Comment=A simple virtual terminal emulator for X.
+StartupWMClass=Simple Terminal
+Actions=New;
+
+[Desktop Action New]
+Name=New Terminal
+Exec=st
