@@ -8,6 +8,10 @@ alias fzf='fzf-tmux -d 30%'
 # ctrl-d shows a diff of the stash against your current HEAD
 # ctrl-b checks the stash out as a branch, for easier merging
 
+if ! $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
+  exit 1
+fi
+
 while out=$(
   git stash list --pretty="%C(yellow)%h %>(14)%Cgreen%cr %C(blue)%gs" \
     | fzf +s +m -e --ansi -q "$q" --print-query \
@@ -19,6 +23,7 @@ do
   sha="${out[-1]}"
   sha="${sha%% *}"
   [[ -z "$sha" ]] && continue
+
   if [[ "$k" == 'ctrl-d' ]]; then
     git diff $sha
   elif [[ "$k" == 'ctrl-b' ]]; then

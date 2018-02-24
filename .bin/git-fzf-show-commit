@@ -4,6 +4,10 @@ alias fzf='fzf-tmux -d 30%'
 
 # git commit browser
 
+if ! $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
+  exit 1
+fi
+
 # --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"
 
 git log --format=oneline --abbrev-commit --all --decorate --color=always \
