@@ -1,6 +1,6 @@
 # gruvbox
 
-set font                        "Meslo LG S for Powerline 10"
+set font                        "Iosevka Custom 11"
 set default-bg                  "#fbf1c7"
 set default-fg                  "#3c3836"
 
@@ -28,13 +28,13 @@ set completion-fg               "#ebdbb2"
 set notification-bg             "#282828"
 set notification-fg             "#ebdbb2"
 
-set recolor-lightcolor          "#fbf1c7"
-set recolor-darkcolor           "#3c3836"
+set recolor-lightcolor          "#282828"
+set recolor-darkcolor           "#fbf1c7"
 set recolor                     "false"
 
 # Setting recolor-keep true will keep any color your pdf has.
 # If it is false, it'll just be black and white.
-set recolor-keephue             "true"
+set recolor-keephue             "false"
 
 # Rest of your configs go here:
 
@@ -42,10 +42,16 @@ set adjust-open "width"
 set pages-per-row 1
 set smooth-scroll "true"
 set selection-clipboard clipboard
+set incremental-search "true"
+set guioptions ""
 
 set window-title-home-tilde "true"
 set window-title-basename "true"
 set statusbar-home-tilde "true"
 set show-hidden "true"
 
-set incremental-search "true"
+map d scroll half-down
+map u scroll half-up
+map x toggle_page_mode
+map <C-r> rotate
+map r recolor
