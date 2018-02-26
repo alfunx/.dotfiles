@@ -814,6 +814,9 @@ awful.rules.rules = {
     { rule = { class = "VirtualBox" },
       properties = { screen = 1, tag = awful.util.tagnames[8] } },
 
+    { rule = { class = "Firefox", role = "toolbox" },
+      properties = { floating = true } },
+
     { rule_any = { class = {
         "Git-gui", "feh", "Lxappearance", "Oomox", "Gpick",
         "System-config-printer.py", "Pinentry", "Event Tester", "alsamixer"

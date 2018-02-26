@@ -83,11 +83,9 @@ theme.font_italic                               = font_name .. " " .. "Italic"  
 theme.font_bold_italic                          = font_name .. " " .. "Bold Italic" .. " " .. font_size
 theme.font_big                                  = font_name .. " " .. "Bold"        .. " 16"
 
-theme.border_normal                             = bw3
--- theme.border_focus                              = bw4
--- theme.border_focus                              = "#a83c2f"
+theme.border_normal                             = bw4
 theme.border_focus                              = bw7
-theme.border_marked                             = bw4
+theme.border_marked                             = bw5
 
 theme.fg_normal                                 = bw9
 theme.fg_focus                                  = red_light
@@ -506,6 +504,10 @@ theme.volume = lain.widget.alsa({
     settings = function()
         if volume_now.status == "off" then
             volicon:set_image(theme.widget_vol_mute)
+            naughty.notify {
+                title = "Audio",
+                text = "Muted"
+            }
         elseif tonumber(volume_now.level) == 0 then
             volicon:set_image(theme.widget_vol_no)
         elseif tonumber(volume_now.level) < 50 then
@@ -578,7 +580,6 @@ bat_widget = wibox.widget {
 --     margin_leftright = 10,
 --     margin_topbottom = 20,
 --     shape = gears.shape.infobubble,
---     -- timer_function = function() return "hello" end
 --     -- timer_function = awful.spawn.easy_async(theme.scripts_dir .. "/show-battery-status", function(stdout, stderr, reason, exit_code)
 --     --     text = stdout, height = 31, timeout = 10
 --     -- end)
@@ -776,7 +777,6 @@ function theme.at_screen_connect(s)
     end)
 
     s.mywibox:connect_signal("mouse::leave", function()
-        systray_widget_timer.timeout = 5
         systray_widget_timer:start()
     end)
 
