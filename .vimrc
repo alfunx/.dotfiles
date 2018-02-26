@@ -564,6 +564,11 @@ augroup Ale
   autocmd VimEnter * ALEDisable
 augroup END
 
+"" AutoPairs
+execute "set <M-p>=\<Esc>p"
+execute "set <M-b>=\<Esc>b"
+let g:AutoPairsMapSpace=0
+
 
 """"""""""""""""
 "  APPEARANCE  "
