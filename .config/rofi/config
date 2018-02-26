@@ -8,7 +8,7 @@ rofi.color-normal: argb:00282828, argb:ffbdae93, argb:00282828, argb:99282828, a
 rofi.color-active: argb:00282828, argb:ffbdae93, argb:00282828, argb:99282828, argb:ffebdbb2
 rofi.color-urgent: argb:00282828, argb:ffbdae93, argb:00282828, argb:99282828, argb:ffebdbb2
 
-rofi.font: Meslo LG S for Powerline 16
+rofi.font: Iosevka Custom 16
 rofi.eh: 1
 rofi.line-margin: 5
 rofi.separator-style: solid
