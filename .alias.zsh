@@ -98,6 +98,14 @@ tmux() {
   fi
 }
 
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias ......='cd ../../../../..'
+alias .......='cd ../../../../../..'
+alias ........='cd ../../../../.././...'
+
 alias :q='exit'
 
 alias cp='cp --reflink=auto -i'
