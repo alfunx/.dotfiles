@@ -1,0 +1,211 @@
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+
+toolbarbutton#alltabs-button {
+    -moz-binding: url("userChrome.xml#js");
+}
+
+/* Hide main tabs toolbar */
+#TabsToolbar {
+    visibility: collapse;
+}
+
+/* Sidebar min and max width removal */
+#sidebar {
+    max-width: none !important;
+    min-width: 0px !important;
+}
+
+/* Hide splitter, when using Tree Style Tab. */
+#sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] + #sidebar-splitter {
+    display: none !important;
+}
+
+/* Hide sidebar header, when using Tree Style Tab. */
+#sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] #sidebar-header {
+    visibility: collapse;
+}
+
+/* Shrink sidebar until hovered, when using Tree Style Tab. */
+:root {
+    --thin-tab-width: 32px !important;
+    --wide-tab-width: 300px !important;
+    --toolbarbutton-border-radius: 0px !important;
+    --toolbarbutton-hover-background: #928374 !important;
+    color: #928374 !important;
+}
+#sidebar-box:not([sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"]) {
+    min-width: var(--wide-tab-width) !important;
+    max-width: none !important;
+}
+#sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] {
+    position: relative !important;
+    transition: all 300ms !important;
+    min-width: var(--thin-tab-width) !important;
+    max-width: var(--thin-tab-width) !important;
+}
+#sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"]:hover {
+    transition: all 300ms !important;
+    min-width: var(--wide-tab-width) !important;
+    max-width: var(--wide-tab-width) !important;
+    margin-right: calc((var(--wide-tab-width) - var(--thin-tab-width)) * -1) !important;
+}
+
+/* flat theme /**/
+#nav-bar textbox {
+    color: #ebdbb2 !important;
+    background-color: transparent !important;
+}
+
+#nav-bar textbox:hover {
+    background-color: transparent !important;
+}
+
+#urlbar, .searchbar-textbox {
+    border: 0px !important;
+    height: 20px !important;
+}
+
+#urlbar {
+    margin-left: 10px !important;
+    margin-right: 10px !important;
+}
+/**/
+
+#nav-bar[id],
+#PersonalToolbar[id],
+#web-developer-toolbar[id],
+#navigator-toolbox[tabsontop="true"] > #nav-bar[id],
+#navigator-toolbox[tabsontop="true"]:not([customizing]) > #nav-bar[collapsed="true"][id] + toolbar,
+#navigator-toolbox[tabsontop="true"]:not([customizing]) > #nav-bar[collapsed="true"] + #customToolbars + #PersonalToolbar[id],
+#navigator-toolbox[tabsontop="false"] > #nav-bar[id],
+#navigator-toolbox[tabsontop="false"]:not([customizing]) > #nav-bar[collapsed="true"][id] + toolbar,
+#navigator-toolbox[tabsontop="false"]:not([customizing]) > #nav-bar[collapsed="true"] + #customToolbars + #PersonalToolbar[id] {
+    background-image: none !important;
+    background: #282828 !important;
+    margin-bottom: -1px !important;
+    padding-bottom: 0px !important;
+}
+
+#navigator-toolbox {
+    border-top: none !important;
+    border-bottom: none !important;
+}
+
+#urlbar[pageproxystate="valid"] > #identity-box.verifiedDomain > #connection-icon,
+#urlbar[pageproxystate="valid"] > #identity-box.verifiedIdentity > #connection-icon,
+#urlbar[pageproxystate="valid"] > #identity-box.mixedActiveBlocked > #connection-icon {
+    fill: #928374 !important;
+}
+
+#urlbar[pageproxystate="valid"] > #identity-box.verifiedIdentity {
+    --urlbar-separator-color: rgba(18, 188, 0, 0) !important;
+}
+
+#identity-icon {
+    width: 0px !important;
+    margin: 0px !important;
+    padding: 0px !important;
+}
+
+#identity-box {
+    padding-inline-start: 0px !important;
+    padding-inline-end: 4px !important;
+}
+
+#urlbar, .searchbar-textbox {
+    box-shadow: none !important;
+}
+
+#urlbar .urlbar-input-box {
+    text-align: center !important;
+}
+
+* {
+    font-family: "Open Sans";
+}
+
+#identity-icon-labels,
+.urlbar-go-button,
+#pageActionSeparator, /*some dash in the search bar*/
+.urlbar-history-dropmarker.urlbar-icon.chromeclass-toolbar-additional /*history arrow in search bar*/
+{
+    display: none !important;
+}
+
+toolbar[brighttext] {
+    --toolbarbutton-icon-fill-attention: #928374 !important;
+}
+
+#urlbar[pageproxystate="valid"] > #identity-box.verifiedIdentity,
+#urlbar[pageproxystate="valid"] > #identity-box.chromeUI,
+#urlbar[pageproxystate="valid"] > #identity-box.extensionPage {
+    padding-inline-end: 6px !important;
+    padding-inline-start: 3px !important;
+}
+
+#urlbar[pageproxystate="valid"] > #identity-box.verifiedIdentity,
+#urlbar[pageproxystate="valid"] > #identity-box.chromeUI,
+#urlbar[pageproxystate="valid"] > #identity-box.extensionPage,
+#urlbar-display-box {
+    margin-inline-end: 1px !important;
+    margin-inline-start: 1px !important;
+}
+
+#urlbar[pageproxystate="valid"] > #identity-box.verifiedIdentity,
+#urlbar[pageproxystate="valid"] > #identity-box.chromeUI,
+#urlbar[pageproxystate="valid"] > #identity-box.extensionPage,
+#urlbar-display-box {
+    border-image-slice: 0 !important;
+}
+
+#main-window #PersonalToolbar {
+  visibility: collapse !important;
+}
+
+/* #main-window[title^="about:newtab"] #PersonalToolbar, */
+/* #main-window[title^="New Tab"] #PersonalToolbar, */
+/* #main-window[title^="Nightly"] #PersonalToolbar, */
+/* #main-window[title^="Mozilla Firefox"] #PersonalToolbar, */
+/* #main-window[title^="Firefox"] #PersonalToolbar { */
+/*   visibility: visible !important; */
+/* } */
+
+#main-window #PersonalToolbar {
+    visibility: collapse !important;
+    opacity:0 !important;
+    margin-top: -23px !important;
+    transition: all 0.2s ease 0.2s !important;
+}
+
+#main-window[title="Mozilla Firefox"] #PersonalToolbar,
+#main-window[title="about:newtab"] #PersonalToolbar,
+#main-window[title="New Tab"] #PersonalToolbar,
+#main-window[title="Firefox"] #PersonalToolbar,
+#main-window[title="Nightly"] #PersonalToolbar {
+    visibility: visible !important;
+    margin-top: 0px !important;
+    transition: all 0.2s ease 0.2s !important;
+    opacity: 1 !important;
+}
+
+#PersonalToolbar .toolbarbutton-1:hover:not([disabled="true"]):not([checked]):not([open]):not(:active),
+.tabbrowser-arrowscrollbox > .scrollbutton-up:hover:not([disabled="true"]),
+.tabbrowser-arrowscrollbox > .scrollbutton-down:hover:not([disabled="true"]),
+.findbar-button:hover:not(:-moz-any([checked="true"],
+[disabled="true"])) > .toolbarbutton-text,
+toolbarbutton.bookmark-item:hover:not(.subviewbutton):not([disabled="true"]):not([open]),
+toolbar .toolbarbutton-1:hover:not([disabled="true"]):not([checked]):not([open]):not(:active) > .toolbarbutton-icon,
+toolbar .toolbarbutton-1:hover:not([disabled="true"]):not([checked]):not([open]):not(:active) > .toolbarbutton-text,
+toolbar .toolbarbutton-1:hover:not([disabled="true"]):not([checked]):not([open]):not(:active) > .toolbarbutton-badge-stack {
+    color: #fbf1c7 !important;
+}
+
+#urlbar-zoom-button:hover {
+    background-color: #504945 !important;
+}
+#urlbar-zoom-button {
+    color: #928374 !important;
+}
+#urlbar-zoom-button {
+    border: 1px solid #928374 !important;
+}
