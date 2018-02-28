@@ -4,6 +4,30 @@
 
 compdef dotfiles=git
 
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias ......='cd ../../../../..'
+alias .......='cd ../../../../../..'
+alias ........='cd ../../../../.././...'
+
+alias :q='exit'
+
+alias cp='cp --reflink=auto -i'
+
+alias pg='ping -c 1 www.google.ch'
+
+alias bcl='bc -l'
+
+alias neofetch='echo "\\n\\n" && neofetch'
+
+foreground-job() {
+  fg
+}
+zle     -N   foreground-job
+bindkey '^Z' foreground-job
+
 con() {
   cmd=$1
   shift
@@ -77,7 +101,7 @@ pacman-date-log() {
 tmux() {
   if [ "$1" = '.' ]; then
     if [ -f ./.tmux ]; then
-      read -k 1 "reply?$fg_bold[white]Source $fg_bold[red]$(dirs)/.tmux$fg_bold[white]? [y/N] $reset_color"
+      read -r -k 1 "reply?$fg_bold[white]Source $fg_bold[red]$(dirs)/.tmux$fg_bold[white]? [y/N] $reset_color"
       echo
       if [[ $reply =~ ^[Yy]$ ]]; then
         if [[ ! -z "$TMUX" ]]; then
@@ -97,30 +121,6 @@ tmux() {
     /usr/bin/tmux "$@"
   fi
 }
-
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
-alias .....='cd ../../../..'
-alias ......='cd ../../../../..'
-alias .......='cd ../../../../../..'
-alias ........='cd ../../../../.././...'
-
-alias :q='exit'
-
-alias cp='cp --reflink=auto -i'
-
-alias pg='ping -c 1 www.google.ch'
-
-alias bcl='bc -l'
-
-alias neofetch='echo "\\n\\n" && neofetch'
-
-foreground-job() {
-  fg
-}
-zle     -N   foreground-job
-bindkey '^Z' foreground-job
 
 #########
 #  fzf  #
@@ -161,7 +161,7 @@ fag() {
 # fda - cd to selected directory
 fda() {
   cd "$(fd --follow --type d '.' "${1:-.}" 2>/dev/null \
-    | fzf +m -q "$1" -0)"
+    | fzf +m -q "$1" -0)" || exit 1
 }
 
 # # c - fda including hidden directories
@@ -173,7 +173,7 @@ fda() {
 # c - fda including hidden directories
 c() {
   cd "$(fd --hidden --follow --type d '.' "${1:-.}" 2>/dev/null \
-    | fzf +m -q "$1" -0)"
+    | fzf +m -q "$1" -0)" || exit 1
 }
 
 # # fr - cd to selected directory and open ranger
@@ -205,7 +205,7 @@ fo() {
 cdf() {
   local file
   local dir
-  file=$(fzf +m -q "$1" -0) && dir=$(dirname "$file") && cd "$dir"
+  file=$(fzf +m -q "$1" -0) && dir=$(dirname "$file") && cd "$dir" || exit 1
 }
 
 # c - browse chrome history
@@ -234,7 +234,7 @@ ch() {
 
 # fdp - cd to selected parent directory
 fdp() {
-  local declare dirs=()
+  local dirs=()
 
   get_parent_dirs() {
     if [[ -d "${1}" ]]; then
@@ -249,8 +249,7 @@ fdp() {
     fi
   }
 
-  local DIR=$(get_parent_dirs "$(realpath "${1:-$PWD}")" | fzf --tac)
-  cd "$DIR"
+  cd "$(get_parent_dirs "$(realpath "${1:-$PWD}")" | fzf --tac)" || exit 1
 }
 
 ############################
