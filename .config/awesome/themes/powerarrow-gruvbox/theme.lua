@@ -59,7 +59,6 @@ local bat_bg_normal     = bw2
 local net_bg_normal     = bw1
 local clock_bg_normal   = bw0
 
-local cairo            = require("lgi").cairo
 local gears            = require("gears")
 local lain             = require("lain")
 local custom_widget    = require("themes.powerarrow-gruvbox.widgets")
@@ -71,9 +70,11 @@ local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-gruvbox"
 theme.scripts_dir                               = os.getenv("HOME") .. "/.bin"
 
-theme.wallpaper_original                        = theme.dir .. "/wallpapers/matterhorn.jpg"
-theme.wallpaper                                 = theme.dir .. "/wallpapers/matterhorn_base.jpg"
-theme.wallpaper_blur                            = theme.dir .. "/wallpapers/matterhorn_blur.jpg"
+-- theme.wallpaper_original                        = theme.dir .. "/wallpapers/matterhorn.jpg"
+-- theme.wallpaper                                 = theme.dir .. "/wallpapers/matterhorn_base.jpg"
+-- theme.wallpaper_blur                            = theme.dir .. "/wallpapers/matterhorn_blur.jpg"
+
+theme.wallpaper                                 = theme.dir .. "/wallpapers/wall.png"
 
 local font_name                                 = "Iosevka Custom"
 local font_size                                 = "11"
@@ -83,9 +84,9 @@ theme.font_italic                               = font_name .. " " .. "Italic"  
 theme.font_bold_italic                          = font_name .. " " .. "Bold Italic" .. " " .. font_size
 theme.font_big                                  = font_name .. " " .. "Bold"        .. " 16"
 
-theme.border_normal                             = bw4
-theme.border_focus                              = bw7
-theme.border_marked                             = bw5
+theme.border_normal                             = bw1
+theme.border_focus                              = bw4
+theme.border_marked                             = bw4
 
 theme.fg_normal                                 = bw9
 theme.fg_focus                                  = red_light
@@ -128,12 +129,9 @@ theme.tasklist_bg_normal                        = bw3
 theme.tasklist_bg_focus                         = bw4
 theme.tasklist_bg_urgent                        = bw2
 
--- theme.titlebar_fg_normal                        = theme.tasklist_fg_normal
--- theme.titlebar_fg_focus                         = theme.tasklist_fg_focus
--- theme.titlebar_fg_marked                        = theme.tasklist_fg_focus
-theme.titlebar_fg_normal                        = textcolor_dark
-theme.titlebar_fg_focus                         = textcolor_dark
-theme.titlebar_fg_marked                        = textcolor_dark
+theme.titlebar_fg_normal                        = bw5
+theme.titlebar_fg_focus                         = bw8
+theme.titlebar_fg_marked                        = bw8
 theme.titlebar_bg_normal                        = theme.border_normal
 theme.titlebar_bg_focus                         = theme.border_focus
 theme.titlebar_bg_marked                        = theme.border_marked
@@ -207,28 +205,28 @@ theme.widget_mail_on                            = theme.dir .. "/icons/mail_on.p
 theme.widget_task                               = theme.dir .. "/icons/task.png"
 theme.widget_scissors                           = theme.dir .. "/icons/scissors.png"
 
-theme.titlebar_close_button_focus               = theme.dir .. "/icons/titlebar/close_focus.png"
-theme.titlebar_close_button_normal              = theme.dir .. "/icons/titlebar/close_normal.png"
-theme.titlebar_ontop_button_focus_active        = theme.dir .. "/icons/titlebar/ontop_focus_active.png"
-theme.titlebar_ontop_button_normal_active       = theme.dir .. "/icons/titlebar/ontop_normal_active.png"
-theme.titlebar_ontop_button_focus_inactive      = theme.dir .. "/icons/titlebar/ontop_focus_inactive.png"
-theme.titlebar_ontop_button_normal_inactive     = theme.dir .. "/icons/titlebar/ontop_normal_inactive.png"
-theme.titlebar_sticky_button_focus_active       = theme.dir .. "/icons/titlebar/sticky_focus_active.png"
-theme.titlebar_sticky_button_normal_active      = theme.dir .. "/icons/titlebar/sticky_normal_active.png"
-theme.titlebar_sticky_button_focus_inactive     = theme.dir .. "/icons/titlebar/sticky_focus_inactive.png"
-theme.titlebar_sticky_button_normal_inactive    = theme.dir .. "/icons/titlebar/sticky_normal_inactive.png"
-theme.titlebar_floating_button_focus_active     = theme.dir .. "/icons/titlebar/floating_focus_active.png"
-theme.titlebar_floating_button_normal_active    = theme.dir .. "/icons/titlebar/floating_normal_active.png"
-theme.titlebar_floating_button_focus_inactive   = theme.dir .. "/icons/titlebar/floating_focus_inactive.png"
-theme.titlebar_floating_button_normal_inactive  = theme.dir .. "/icons/titlebar/floating_normal_inactive.png"
-theme.titlebar_minimize_button_focus_active    = theme.dir .. "/icons/titlebar/minimized_focus_active.png"
-theme.titlebar_minimize_button_normal_active   = theme.dir .. "/icons/titlebar/minimized_normal_active.png"
-theme.titlebar_minimize_button_focus_inactive  = theme.dir .. "/icons/titlebar/minimized_focus_inactive.png"
-theme.titlebar_minimize_button_normal_inactive = theme.dir .. "/icons/titlebar/minimized_normal_inactive.png"
-theme.titlebar_maximized_button_focus_active    = theme.dir .. "/icons/titlebar/maximized_focus_active.png"
-theme.titlebar_maximized_button_normal_active   = theme.dir .. "/icons/titlebar/maximized_normal_active.png"
-theme.titlebar_maximized_button_focus_inactive  = theme.dir .. "/icons/titlebar/maximized_focus_inactive.png"
-theme.titlebar_maximized_button_normal_inactive = theme.dir .. "/icons/titlebar/maximized_normal_inactive.png"
+theme.titlebar_close_button_focus               = theme.dir .. "/icons/titlebar_light/close_focus.png"
+theme.titlebar_close_button_normal              = theme.dir .. "/icons/titlebar_light/close_normal.png"
+theme.titlebar_ontop_button_focus_active        = theme.dir .. "/icons/titlebar_light/ontop_focus_active.png"
+theme.titlebar_ontop_button_normal_active       = theme.dir .. "/icons/titlebar_light/ontop_normal_active.png"
+theme.titlebar_ontop_button_focus_inactive      = theme.dir .. "/icons/titlebar_light/ontop_focus_inactive.png"
+theme.titlebar_ontop_button_normal_inactive     = theme.dir .. "/icons/titlebar_light/ontop_normal_inactive.png"
+theme.titlebar_sticky_button_focus_active       = theme.dir .. "/icons/titlebar_light/sticky_focus_active.png"
+theme.titlebar_sticky_button_normal_active      = theme.dir .. "/icons/titlebar_light/sticky_normal_active.png"
+theme.titlebar_sticky_button_focus_inactive     = theme.dir .. "/icons/titlebar_light/sticky_focus_inactive.png"
+theme.titlebar_sticky_button_normal_inactive    = theme.dir .. "/icons/titlebar_light/sticky_normal_inactive.png"
+theme.titlebar_floating_button_focus_active     = theme.dir .. "/icons/titlebar_light/floating_focus_active.png"
+theme.titlebar_floating_button_normal_active    = theme.dir .. "/icons/titlebar_light/floating_normal_active.png"
+theme.titlebar_floating_button_focus_inactive   = theme.dir .. "/icons/titlebar_light/floating_focus_inactive.png"
+theme.titlebar_floating_button_normal_inactive  = theme.dir .. "/icons/titlebar_light/floating_normal_inactive.png"
+theme.titlebar_minimize_button_focus_active     = theme.dir .. "/icons/titlebar_light/minimized_focus_active.png"
+theme.titlebar_minimize_button_normal_active    = theme.dir .. "/icons/titlebar_light/minimized_normal_active.png"
+theme.titlebar_minimize_button_focus_inactive   = theme.dir .. "/icons/titlebar_light/minimized_focus_inactive.png"
+theme.titlebar_minimize_button_normal_inactive  = theme.dir .. "/icons/titlebar_light/minimized_normal_inactive.png"
+theme.titlebar_maximized_button_focus_active    = theme.dir .. "/icons/titlebar_light/maximized_focus_active.png"
+theme.titlebar_maximized_button_normal_active   = theme.dir .. "/icons/titlebar_light/maximized_normal_active.png"
+theme.titlebar_maximized_button_focus_inactive  = theme.dir .. "/icons/titlebar_light/maximized_focus_inactive.png"
+theme.titlebar_maximized_button_normal_inactive = theme.dir .. "/icons/titlebar_light/maximized_normal_inactive.png"
 
 local markup = lain.util.markup
 local separators = lain.util.separators
@@ -504,7 +502,10 @@ theme.volume = lain.widget.alsa({
     settings = function()
         if volume_now.status == "off" then
             volicon:set_image(theme.widget_vol_mute)
-            naughty.notify {
+            if theme.volume.notification then
+                naughty.destroy(theme.volume.notification)
+            end
+            theme.volume.notification = naughty.notify {
                 title = "Audio",
                 text = "Muted"
             }
@@ -626,6 +627,8 @@ theme.bat_click = custom_widget.eventhandler({
 -- NET
 local neticon = wibox.widget.imagebox(theme.widget_net)
 local net = lain.widget.net({
+    wifi_state = "on",
+    iface = "wlp58s0",
     settings = function()
         local bg_normal_color = textcolor_light
         local bg_normal_font = theme.font

@@ -95,11 +95,6 @@ local altkey       = "Mod1"
 local ctrlkey      = "Control"
 local shiftkey     = "Shift"
 
--- local leftkey      = "Left"
--- local rightkey     = "Right"
--- local upkey        = "Up"
--- local downkey      = "Down"
-
 local leftkey      = "h"
 local rightkey     = "l"
 local upkey        = "k"
@@ -241,24 +236,47 @@ menubar.utils.terminal = terminal -- Set the Menubar terminal for applications t
 -- }}}
 
 -- {{{ Blur Wallpaper
-local set_wallpaper = function(clients)
-    local wallpaper
-    if clients > 0 then
-        if beautiful.wallpaper_blur then
-            wallpaper = beautiful.wallpaper_blur
+local set_wallpaper = function() end
+if beautiful.wallpaper_blur then
+    set_wallpaper = function(clients)
+        local wallpaper
+        if clients > 0 then
+            if beautiful.wallpaper_blur then
+                wallpaper = beautiful.wallpaper_blur
+            end
+        else
+            if beautiful.wallpaper then
+                wallpaper = beautiful.wallpaper
+            end
         end
-    else
-        if beautiful.wallpaper then
-            wallpaper = beautiful.wallpaper
+
+        -- If wallpaper is a function, call it with the screen
+        if type(wallpaper) == "function" then
+            wallpaper = wallpaper(client.screen)
         end
+
+        gears.wallpaper.maximized(wallpaper, client.screen, true)
     end
 
-    -- If wallpaper is a function, call it with the screen
-    if type(wallpaper) == "function" then
-        wallpaper = wallpaper(client.screen)
-    end
+    screen.connect_signal("tag::history::update",
+        function(s)
+            set_wallpaper(#s.clients)
+        end)
 
-    gears.wallpaper.maximized(wallpaper, client.screen, true)
+    client.connect_signal("tagged",
+        function(c)
+            set_wallpaper(#c.screen.clients)
+        end)
+
+    client.connect_signal("untagged",
+        function(c)
+            set_wallpaper(#c.screen.clients)
+        end)
+
+    client.connect_signal("property::minimized",
+        function(c)
+            set_wallpaper(#c.screen.clients)
+        end)
 end
 -- }}}
 
@@ -340,13 +358,13 @@ globalkeys = awful.util.table.join(
     awful.key({ mod_4                     }, "w", function () awful.spawn("Whatsapp") end,
               {description = "open whatsapp", group = "launcher"}),
 
-    awful.key({                          }, "Print", function() os.execute("maim ~/pictures/screenshots/$(date +%Y-%m-%d_%T).png") end,
+    awful.key({                           }, "Print", function() os.execute("maim ~/pictures/screenshots/$(date +%Y-%m-%d_%T).png") end,
               {description = "take screenshot", group = "launcher"}),
-    awful.key({ shiftkey                 }, "Print", function() os.execute("maim -s -b 3 -c 0.98431372549019607843,0.28627450980392156862,0.20392156862745098039,1 ~/pictures/screenshots/$(date +%Y-%m-%d_%T).png") end,
+    awful.key({ shiftkey                  }, "Print", function() os.execute("maim -s -b 3 -c 0.98431372549019607843,0.28627450980392156862,0.20392156862745098039,1 ~/pictures/screenshots/$(date +%Y-%m-%d_%T).png") end,
               {description = "take screenshot, select area", group = "launcher"}),
-    awful.key({ ctrlkey                  }, "Print", function() os.execute("maim -u ~/pictures/screenshots/$(date +%Y-%m-%d_%T).png") end,
+    awful.key({ ctrlkey                   }, "Print", function() os.execute("maim -u ~/pictures/screenshots/$(date +%Y-%m-%d_%T).png") end,
               {description = "take screenshot, hide mouse", group = "launcher"}),
-    awful.key({ ctrlkey, shiftkey        }, "Print", function() os.execute("maim -u -s -b 3 -c 0.98431372549019607843,0.28627450980392156862,0.20392156862745098039,1 ~/pictures/screenshots/$(date +%Y-%m-%d_%T).png") end,
+    awful.key({ ctrlkey, shiftkey         }, "Print", function() os.execute("maim -u -s -b 3 -c 0.98431372549019607843,0.28627450980392156862,0.20392156862745098039,1 ~/pictures/screenshots/$(date +%Y-%m-%d_%T).png") end,
               {description = "take screenshot, hide mouse, select area", group = "launcher"}),
 
     -- -- Copy primary to clipboard (terminals to gtk)
@@ -355,12 +373,12 @@ globalkeys = awful.util.table.join(
     -- awful.key({ mod_4             }, "v", function () awful.spawn("xsel -b | xsel") end),
 
     -- Prompt
-    awful.key({ mod_4             }, "$", function () awful.screen.focused().mypromptbox:run() end),
-    awful.key({ mod_4             }, "r", function () awful.screen.focused().mypromptbox:run() end,
+    awful.key({ mod_4                     }, "$", function () awful.screen.focused().mypromptbox:run() end),
+    awful.key({ mod_4                     }, "r", function () awful.screen.focused().mypromptbox:run() end,
               {description = "run prompt", group = "launcher"}),
-    awful.key({ mod_4             }, "p", function() menubar.show() end,
+    awful.key({ mod_4                     }, "p", function() menubar.show() end,
               {description = "show the menubar", group = "launcher"}),
-    awful.key({ mod_4             }, ".", function ()
+    awful.key({ mod_4                     }, ".", function ()
         awful.spawn("rofi -show drun")
         -- awful.spawn(string.format("dmenu_run -i -t -dim 0.5 -p 'Run: ' -h 21 -fn 'Meslo LG S for Powerline-10' -nb '%s' -nf '%s' -sb '%s' -sf '%s'",
         -- beautiful.tasklist_bg_normal, beautiful.fg_normal, beautiful.tasklist_bg_urgent, beautiful.tasklist_fg_urgent))
@@ -370,7 +388,7 @@ globalkeys = awful.util.table.join(
     --     awful.spawn(string.format("rofi -show run -width 100 -location 1 -lines 5 -bw 2 -yoffset -2",
     --     beautiful.tasklist_bg_normal, beautiful.tasklist_fg_normal, beautiful.tasklist_bg_urgent, beautiful.tasklist_fg_urgent))
     -- end),
-    awful.key({ mod_4             }, "x",
+    awful.key({ mod_4                     }, "x",
               function ()
                   awful.prompt.run {
                     prompt       = "Run Lua code: ",
@@ -420,47 +438,11 @@ globalkeys = awful.util.table.join(
     awful.key({ mod_4, altkey             }, "BackSpace", awful.tag.history.restore,
               {description = "go back", group = "tag"}),
 
-
-    -- -- By direction client focus
-    -- awful.key({ mod_4                     }, downkey, function()
-    --         awful.client.focus.bydirection("down")
-    --         if client.focus then client.focus:raise() end
-    --     end),
-    -- awful.key({ mod_4                     }, upkey, function()
-    --         awful.client.focus.bydirection("up")
-    --         if client.focus then client.focus:raise() end
-    --     end),
-    -- awful.key({ mod_4                     }, leftkey, function()
-    --         awful.client.focus.bydirection("left")
-    --         if client.focus then client.focus:raise() end
-    --     end),
-    -- awful.key({ mod_4                     }, rightkey, function()
-    --         awful.client.focus.bydirection("right")
-    --         if client.focus then client.focus:raise() end
-    --     end),
-
     -- By index client focus
     awful.key({ mod_4                     }, upkey, function () awful.client.focus.byidx(-1) end,
               {description = "focus previous client by index", group = "client"}),
     awful.key({ mod_4                     }, downkey, function () awful.client.focus.byidx(1) end,
               {description = "focus next client by index", group = "client"}),
-
-    -- awful.key({ mod_4                     }, leftkey, awful.tag.viewprev,
-    --           {description = "view previous", group = "tag"}),
-    -- awful.key({ mod_4                     }, rightkey, awful.tag.viewnext,
-    --           {description = "view next", group = "tag"}),
-    -- awful.key({ mod_4, ctrlkey            }, upkey,
-    --     function()
-    --         local columns = awful.util.tagcolumns or #awful.util.tagnames
-    --         awful.tag.viewidx(-columns)
-    --     end,
-    --           {description = "view above", group = "tag"}),
-    -- awful.key({ mod_4, ctrlkey            }, downkey,
-    --     function()
-    --         local columns = awful.util.tagcolumns or #awful.util.tagnames
-    --         awful.tag.viewidx(columns)
-    --     end,
-    --           {description = "view below", group = "tag"}),
 
     -- Non-empty tag browsing
     awful.key({ mod_4, ctrlkey            }, leftkey, function () lain.util.tag_view_nonempty(-1) end,
@@ -468,15 +450,7 @@ globalkeys = awful.util.table.join(
     awful.key({ mod_4, ctrlkey            }, rightkey, function () lain.util.tag_view_nonempty(1) end,
               {description = "view next nonempty", group = "tag"}),
 
-    -- -- Default client focus
-    -- awful.key({ altkey,           }, downkey, function () awful.client.focus.byidx(1) end,
-    --           {description = "focus next by index", group = "client"}),
-    -- awful.key({ altkey,           }, upkey, function () awful.client.focus.byidx(-1) end,
-    --           {description = "focus previous by index", group = "client"}),
-
-    -- awful.key({ mod_4                     }, leftkey, function() select_tag_in_grid("l") end),
-    -- awful.key({ mod_4                     }, rightkey, function() select_tag_in_grid("r") end),
-
+    -- Select tag in grid
     awful.key({ mod_4                     }, leftkey, function() select_tag_in_grid("l") end,
               {description = "view previous", group = "tag"}),
     awful.key({ mod_4                     }, rightkey, function() select_tag_in_grid("r") end,
@@ -486,6 +460,7 @@ globalkeys = awful.util.table.join(
     awful.key({ mod_4, ctrlkey            }, downkey, function() select_tag_in_grid("d") end,
               {description = "view below", group = "tag"}),
 
+    -- Move client to tag in grid
     awful.key({ mod_4, ctrlkey, shiftkey  }, leftkey, function() move_client_in_grid("l") end,
               {description = "move to previous tag", group = "tag"}),
     awful.key({ mod_4, ctrlkey, shiftkey  }, rightkey, function() move_client_in_grid("r") end,
@@ -494,30 +469,6 @@ globalkeys = awful.util.table.join(
               {description = "move to tag above", group = "tag"}),
     awful.key({ mod_4, ctrlkey, shiftkey  }, downkey, function() move_client_in_grid("d") end,
               {description = "move to tag below", group = "tag"}),
-
-    -- -- Move client between tags
-    -- awful.key({ mod_4, ctrlkey, shiftkey  }, leftkey,
-    --     function ()
-    --         if client.focus then
-    --             local current_tag = (client.focus.screen.selected_tags[1].index - 2) % #awful.screen.focused().tags + 1
-    --             local tag = client.focus.screen.tags[current_tag]
-    --             if tag then
-    --                 client.focus:move_to_tag(tag)
-    --             end
-    --         end
-    --         awful.tag.viewprev()
-    --     end,  {description = "move client to previous tag", group = "client"}),
-    -- awful.key({ mod_4, ctrlkey, shiftkey  }, rightkey,
-    --     function ()
-    --         if client.focus then
-    --             local current_tag = (client.focus.screen.selected_tags[1].index) % #awful.screen.focused().tags + 1
-    --             local tag = client.focus.screen.tags[current_tag]
-    --             if tag then
-    --                 client.focus:move_to_tag(tag)
-    --             end
-    --         end
-    --         awful.tag.viewnext()
-    --     end,  {description = "move client to next tag", group = "client"}),
 
     -- Layout manipulation
     awful.key({ mod_4, shiftkey           }, upkey, function () awful.client.swap.byidx(-1) end,
@@ -889,18 +840,6 @@ client.connect_signal("request::titlebars", function(c)
         },
         layout = wibox.layout.align.horizontal
     }
-    -- awful.titlebar(c, {
-    --     size = 4,
-    --     position = "bottom",
-    -- }) : setup { layout = wibox.layout.align.horizontal }
-    -- awful.titlebar(c, {
-    --     size = 4,
-    --     position = "left",
-    -- }) : setup { layout = wibox.layout.align.horizontal }
-    -- awful.titlebar(c, {
-    --     size = 4,
-    --     position = "right",
-    -- }) : setup { layout = wibox.layout.align.horizontal }
 
     -- Hide the titlebar if we are not floating
     if not (awful.layout.get(c.screen) == awful.layout.suit.floating or c.floating) then
@@ -923,118 +862,6 @@ client.connect_signal("property::size",
 --     end
 -- end)
 
--- -- No border for maximized clients
--- client.connect_signal("focus",
---     function(c)
---         if not c.maximized and (awful.layout.get(c.screen) == awful.layout.suit.floating or
---                 c.type == "dialog" or c.floating) then
---             c.border_width = beautiful.border_width
---             c.border_color = beautiful.border_focus
---             awful.titlebar.show(c)
---         elseif c.maximized then
---             c.border_width = 0
---             c.border_color = beautiful.border_normal
---             awful.titlebar.hide(c)
---         elseif awful.layout.get(c.screen) == awful.layout.suit.max
---                 or #awful.screen.focused().clients == 1 then
---             c.border_color = beautiful.border_normal
---             awful.titlebar.hide(c)
---         elseif #awful.screen.focused().clients > 1 then
---             c.border_width = beautiful.border_width
---             c.border_color = beautiful.border_focus
---             awful.titlebar.hide(c)
---         end
---     end)
---
--- client.connect_signal("property::maximized",
---     function(c)
---         if not c.maximized and (awful.layout.get(c.screen) == awful.layout.suit.floating or
---                 c.type == "dialog" or c.floating) then
---             c.border_width = beautiful.border_width
---             c.border_color = beautiful.border_focus
---             awful.titlebar.show(c)
---         elseif c.maximized then
---             c.border_width = 0
---             c.border_color = beautiful.border_normal
---             awful.titlebar.hide(c)
---         elseif awful.layout.get(c.screen) == awful.layout.suit.max
---                 or #awful.screen.focused().clients == 1 then
---             c.border_color = beautiful.border_normal
---             awful.titlebar.hide(c)
---         elseif #awful.screen.focused().clients > 1 then
---             c.border_width = beautiful.border_width
---             c.border_color = beautiful.border_focus
---             awful.titlebar.hide(c)
---         end
---     end)
---
--- tag.connect_signal("property::layout",
---     function(t)
---         if #awful.screen.focused().clients >= 1 and
---                 not client.focus.maximized and (t.layout == awful.layout.suit.floating or
---                 client.focus.type == "dialog" or client.focus.floating) then
---             client.focus.border_width = beautiful.border_width
---             client.focus.border_color = beautiful.border_focus
---             awful.titlebar.show(client.focus)
---         elseif #awful.screen.focused().clients >= 1
---                 and client.focus.maximized then
---             client.focus.border_width = 0
---             client.focus.border_color = beautiful.border_normal
---             awful.titlebar.hide(client.focus)
---         elseif (t.layout == awful.layout.suit.floating
---                 and #awful.screen.focused().clients >= 1)
---                 or #awful.screen.focused().clients == 1 then
---             client.focus.border_color = beautiful.border_normal
---             awful.titlebar.hide(client.focus)
---         elseif #awful.screen.focused().clients > 1 then
---             client.focus.border_width = beautiful.border_width
---             client.focus.border_color = beautiful.border_focus
---             awful.titlebar.hide(client.focus)
---         end
---     end)
---
--- client.connect_signal("property::floating",
---     function(c)
---         if c.floating then
---             awful.titlebar.show(c)
---         else
---             awful.titlebar.hide(c)
---         end
---     end)
---
--- -- awful.tag.attached_connect_signal(s, "property::layout", function (t)
--- --     local float = t.layout.name == "floating"
--- --     for _,c in pairs(t:clients()) do
--- --         c.floating = float
--- --     end
--- -- end)
---
--- client.connect_signal("unfocus",
---     function(c)
---         c.border_width = beautiful.border_width
---         c.border_color = beautiful.border_normal
---     end)
-
-screen.connect_signal("tag::history::update",
-    function(s)
-        set_wallpaper(#s.clients)
-    end)
-
-client.connect_signal("tagged",
-    function(c)
-        set_wallpaper(#c.screen.clients)
-    end)
-
-client.connect_signal("untagged",
-    function(c)
-        set_wallpaper(#c.screen.clients)
-    end)
-
-client.connect_signal("property::minimized",
-    function(c)
-        set_wallpaper(#c.screen.clients)
-    end)
-
 client.connect_signal("focus",
     function(c)
         c.border_color = beautiful.border_focus
@@ -1044,66 +871,6 @@ client.connect_signal("unfocus",
     function(c)
         c.border_color = beautiful.border_normal
     end)
-
--- client.connect_signal("property::fullscreen",
---     function(c)
---         if c.maximized or c.fullscreen then
---             c.border_width = 0
---             awful.titlebar.hide(c, "top")
---             awful.titlebar.hide(c, "bottom")
---             awful.titlebar.hide(c, "left")
---             awful.titlebar.hide(c, "right")
---         else
---             c.border_width = beautiful.border_width
---             awful.titlebar.show(c, "top")
---             awful.titlebar.show(c, "bottom")
---             awful.titlebar.show(c, "left")
---             awful.titlebar.show(c, "right")
---         end
---         -- if beautiful.titlebar_fun then
---         --     beautiful.titlebar_fun(c)
---         -- end
---     end)
---
--- client.connect_signal("property::maximized",
---     function(c)
---         if c.maximized or c.fullscreen then
---             c.border_width = 0
---             awful.titlebar.hide(c, "top")
---             awful.titlebar.hide(c, "bottom")
---             awful.titlebar.hide(c, "left")
---             awful.titlebar.hide(c, "right")
---         else
---             c.border_width = beautiful.border_width
---             awful.titlebar.show(c, "top")
---             awful.titlebar.show(c, "bottom")
---             awful.titlebar.show(c, "left")
---             awful.titlebar.show(c, "right")
---         end
---         -- if beautiful.titlebar_fun then
---         --     beautiful.titlebar_fun(c)
---         -- end
---     end)
---
--- client.connect_signal("property::floating",
---     function(c)
---         if beautiful.titlebar_fun then
---             beautiful.titlebar_fun(c)
---         end
---         if c.maximized or c.fullscreen then
---             c.border_width = 0
---             awful.titlebar.hide(c, "top")
---             awful.titlebar.hide(c, "bottom")
---             awful.titlebar.hide(c, "left")
---             awful.titlebar.hide(c, "right")
---         else
---             c.border_width = beautiful.border_width
---             awful.titlebar.show(c, "top")
---             awful.titlebar.show(c, "bottom")
---             awful.titlebar.show(c, "left")
---             awful.titlebar.show(c, "right")
---         end
---     end)
 
 client.connect_signal("property::fullscreen",
     function(c)
