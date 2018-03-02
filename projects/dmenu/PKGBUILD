@@ -15,7 +15,7 @@ provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 
 _patches=('https://tools.suckless.org/dmenu/patches/dmenu-lineheight-4.7.diff'
-          'https://tools.suckless.org/dmenu/patches/dmenu-fuzzymatch-20170603-f428f3e.diff'
+          'dmenu-fuzzymatch-20180302-8895128.diff'
           'dmenu-config-20180215-8895128.diff')
 
 source=("$pkgname::git+file:///home/amariya/projects/dmenu/dmenu"
@@ -23,7 +23,7 @@ source=("$pkgname::git+file:///home/amariya/projects/dmenu/dmenu"
 
 sha512sums=('SKIP'
             '04d3d7c48ca27a3e939136f5c979eebe4c9e7935a63323576e577e1146c6a7e61f969ba43d06ef9e66c6f3c37907da36aa806ee77393f5f5c6907c3e50ebdd34'
-            'aed4681b24c7d6a82927026eda2bdb7335b3c387f37db87e5ef48183b2056ea184122c0c783056fbd6be3ee3bd0f7c32ff2112022f10f01c0e61c0c7a0fb3894'
+            'a03635159388379319078478abb6ccba1eae0b71d947465d1e1c94c692a11cd3a8b5168ad0f846a0e2987304f3e83fb22e5efa20507f872410ac15eb24f3daf7'
             'ece754e4de001f2a698cd2ceb00bbc0ae9f035f6f6abccfa7e4b7c8418a95cc79843334139a38f42da0c23681c8566f0e12d3027ba12475c6bc4b50d770b6961')
 
 pkgver() {
@@ -40,7 +40,7 @@ prepare() {
       cp "$srcdir/$file" .
     elif [[ "$file" == *.diff || "$file" == *.patch ]]; then
       echo -e "\e[1mApplying patch: $(basename "$file")\e[0m"
-      patch -N <"$srcdir/$(basename "$file")"
+      patch -Np1 <"$srcdir/$(basename "$file")"
     fi
   done
 }

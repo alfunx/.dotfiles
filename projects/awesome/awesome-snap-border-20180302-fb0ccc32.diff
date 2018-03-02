@@ -1,0 +1,19 @@
+diff --git a/lib/awful/mouse/snap.lua b/lib/awful/mouse/snap.lua
+index e212d123..d476a2e4 100644
+--- a/lib/awful/mouse/snap.lua
++++ b/lib/awful/mouse/snap.lua
+@@ -230,6 +230,15 @@ function module.snap(c, snap, x, y, fixed_x, fixed_y)
+             snapper_geom.width = snapper_geom.width + (2 * snapper.border_width)
+             snapper_geom.height = snapper_geom.height + (2 * snapper.border_width)
+             geom = snap_outside(geom, snapper_geom, snap)
++
++            if (beautiful.snapper_gap ~= nil) then
++                local snapper_geom = snapper:geometry()
++                snapper_geom.x = snapper_geom.x - beautiful.snapper_gap
++                snapper_geom.y = snapper_geom.y - beautiful.snapper_gap
++                snapper_geom.width = snapper_geom.width + (2 * snapper.border_width) + (2 * beautiful.snapper_gap)
++                snapper_geom.height = snapper_geom.height + (2 * snapper.border_width) + (2 * beautiful.snapper_gap)
++                geom = snap_outside(geom, snapper_geom, snap)
++            end
+         end
+     end

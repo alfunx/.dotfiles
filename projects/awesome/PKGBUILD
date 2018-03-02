@@ -19,7 +19,12 @@ optdepends=('rlwrap: readline support for awesome-client'
 provides=('notification-daemon' "${_pkgname}")
 conflicts=("${_pkgname}")
 backup=('etc/xdg/awesome/rc.lua')
-source=("$pkgname::git+file:///home/amariya/projects/awesome/awesome")
+
+_patches=()
+
+source=("$pkgname::git+file:///home/amariya/projects/awesome/awesome"
+        "${_patches[@]}")
+
 sha512sums=('SKIP')
 
 pkgver() {
@@ -29,6 +34,18 @@ pkgver() {
 
 prepare() {
   mkdir -p build
+
+  local file
+  cd "$pkgname"
+
+  for file in "${_patches[@]}"; do
+    if [[ "$file" == *.h ]]; then
+      cp "$srcdir/$file" .
+    elif [[ "$file" == *.diff || "$file" == *.patch ]]; then
+      echo -e "\e[1mApplying patch: $(basename "$file")\e[0m"
+      patch -Np1 <"$srcdir/$(basename "$file")"
+    fi
+  done
 }
 
 build() {
