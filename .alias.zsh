@@ -22,6 +22,10 @@ alias bcl='bc -l'
 
 alias neofetch='echo "\\n\\n" && neofetch'
 
+alias grep='grep --color=auto --exclude-dir={.git,.svn}'
+alias pgrep='pgrep --color=auto --exclude-dir={.git,.svn}'
+alias egrep='egrep --color=auto --exclude-dir={.git,.svn}'
+
 foreground-job() {
   fg
 }

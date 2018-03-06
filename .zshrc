@@ -58,11 +58,24 @@ fi
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
+
+#####################
+#  plugin settings  #
+#####################
+
+# bgnotify settings
+bgnotify_threshold=1  ## set your own notification threshold
+bgnotify_formatted() {
+  ## $1=exit_status, $2=command, $3=elapsed_time
+  [ $1 -eq 0 ] && title="Zsh" || title="Zsh (fail)"
+  bgnotify "$title (${3}s)" "$2"
+}
+
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(zsh-syntax-highlighting zsh-completions command-not-found custom-common-aliases colorize)
+plugins=(zsh-syntax-highlighting zsh-completions command-not-found custom-common-aliases colorize bgnotify)
 
 # Completions
 source "$HOME/.completion.zsh"
