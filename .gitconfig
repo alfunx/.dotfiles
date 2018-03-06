@@ -18,7 +18,7 @@
 	ui = true
 
 [color "diff"]
-	meta = bold
+	meta = blue bold
 	frag = yellow bold reverse
 	commit = yellow bold
 	old = red
@@ -49,7 +49,7 @@
 	insteadOf = aur://
 
 [alias]
-	ec = config --global -e
+	ec = config --global --edit
 
 	l = log --format=oneline --abbrev-commit --all --decorate --color
 	ls = log --format=short --abbrev-commit --all --decorate --color --stat
@@ -73,13 +73,13 @@
 	dt = difftool
 	grep = grep -Ii
 
-	s = status -s -b
+	s = status --short --branch
 	a = add
-	au = add -u
-	ai = add -i
-	ap = add -p
-	c = commit -S --verbose
-	ca = commit -S --verbose --amend
+	au = add --update
+	ai = add --interactive
+	ap = add --patch
+	c = commit --gpg-sign --verbose
+	ca = commit --gpg-sign --verbose --amend
 
 	co = checkout
 	com = checkout master
@@ -87,6 +87,8 @@
 	cob = checkout -b
 	b = branch
 	bd = branch --delete
+	bD = branch --delete --force
+	bdr = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git push --delete \"${1-origin}\" \"$CURRENT\"; }; f"
 	bt = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git branch --set-upstream-to=\"${1-origin/$CURRENT}\"; }; f"
 
 	cl = clone
@@ -95,7 +97,10 @@
 	f = fetch --all --tags
 	fp = fetch --prune --all --tags
 	su = submodule update --init --recursive
-	up = "!git p \"$@\" && git su"
+	up = "!f() { git p \"$@\" && git su; }; f"
+
+	pu = push
+	pusu = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git push --set-upstream \"${1-origin}\" \"$CURRENT\"; }; f"
 
 	m = merge
 	mff = merge --ff-only
@@ -103,29 +108,29 @@
 	mt = mergetool
 	cp = cherry-pick
 	r = rebase
-	ri = rebase -i
-	rim = rebase -i master
+	ri = rebase --interactive
+	rim = rebase --interactive master
 
 	# rewrite history, default on origin
-	rwh = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git rebase -i $(git merge-base HEAD \"${1-origin/$CURRENT}\"); }; f"
+	rwh = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git rebase --interactive $(git merge-base HEAD \"${1-origin/$CURRENT}\"); }; f"
 
 	# list branches sorted by last modified
 	lb = "!git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'"
 
 	# list aliases
-	la = "!git config -l | grep alias | cut -c 7- | sed -e 's/=/\\t/' | column -s $'\\t' | less"
+	la = "!git config --list | grep alias | cut -c 7- | sed -e 's/=/\\t/' | column -s $'\\t' | less"
 
 	# initialize repository in current directory
-	this = "!git init && git commit -S -m 'Initialize' --allow-empty"
+	this = "!git init && git commit --gpg-sign --message='Initialize' --allow-empty"
 
 	# open github repository in browser
 	open = "!f() { URL=$(git config remote.\"${1-origin}\".url); xdg-open \"${URL%%.git}\"; }; f"
 
 	# hard reset with commit before (use reflog to restore)
-	wipe = "!f() { git add -A && git commit -qm 'WIPE-SAVEPOINT' && git reset \"${1-HEAD~}\" --hard; }; f"
+	wipe = "!f() { git add --all && git commit --quiet --message='WIPE-SAVEPOINT' && git reset \"${1-HEAD~}\" --hard; }; f"
 
 	# migrate commits to new branch
-	# migrate [new branch] [onto=master] [range=origin]
+	# migrate <new branch> [onto=master] [range=origin]
 	migrate = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git checkout -b \"$1\" && git branch --force \"$CURRENT\" \"${3-\\\"$CURRENT\\\"@\\{u\\}}\" && git rebase --onto \"${2-master}\" \"$CURRENT\"; }; f"
 
 	ctags = "!.git/hooks/ctags"
