@@ -46,7 +46,7 @@ Plug 'junegunn/vim-peekaboo'
 Plug 'easymotion/vim-easymotion'
 Plug 'haya14busa/incsearch.vim'
 Plug 'haya14busa/incsearch-easymotion.vim'
-Plug 'mhinz/vim-grepper'
+Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] }
 Plug 'terryma/vim-multiple-cursors'
 "Plug 'terryma/vim-expand-region'
 Plug 'jiangmiao/auto-pairs'
@@ -595,14 +595,22 @@ set showmatch  " show matching brackets
 set mat=5  " bracket blinking
 set list
 
-augroup ClearCursorLine
+augroup LighterCursorLine
   autocmd!
-  autocmd ColorScheme * highlight clear CursorLine
+  "autocmd ColorScheme * highlight clear CursorLine
+  autocmd ColorScheme * highlight CursorLine guibg=#32302f
 augroup END
 
 augroup BoldCursorLineNr
   autocmd!
-  autocmd ColorScheme * highlight CursorLineNR cterm=bold
+  "autocmd ColorScheme * highlight CursorLineNR cterm=bold guibg=#282828
+  autocmd ColorScheme * highlight CursorLineNR cterm=bold guibg=#32302f
+augroup END
+
+augroup LighterQuickFixLine
+  autocmd!
+  autocmd ColorScheme * highlight QuickFixLine ctermbg=Yellow guibg=#504945
+  autocmd ColorScheme * highlight qfFileName guifg=#fe8019
 augroup END
 
 augroup SearchHighlightColor
