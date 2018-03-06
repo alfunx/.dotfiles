@@ -1,27 +1,42 @@
 # Maintainer: alfunx <alphonse.mariya@hotmail.com>
 
-pkgname="i3lock-color"
-pkgver=2.10.1
-pkgrel=2
+_pkgname=i3lock-color
+pkgname=${_pkgname}-git
+pkgver=r474.95989cc
+pkgrel=1
 pkgdesc="An improved screenlocker based upon XCB and PAM with color configuration support"
 arch=('i686' 'x86_64')
-url="https://github.com/chrjguill/i3lock-color"
+url="https://github.com/PandorasFox/i3lock-color"
 license=('MIT')
-depends=('xcb-util-image' 'xcb-util-keysyms' 'pam' 'libev' 'cairo' 'libxkbcommon-x11')
+depends=('xcb-util-image' 'pam' 'libev' 'cairo' 'libxkbcommon-x11' 'libjpeg-turbo')
 provides=('i3lock' 'i3lock-color')
 conflicts=('i3lock')
-source=("https://github.com/chrjguill/i3lock-color/archive/2.10.1-c.tar.gz")
-sha512sums=('6d3b05008a3e0701d91cedf93c3ec13c3cc61fc66e9a806945e6214dc72571649f88b036249d94af6c3bc126851a654513fac99fef7473dfc406865253d64f5a')
-_version="2.10.1-c"
+makedepends=('git')
+source=("$pkgname::git+file:///home/amariya/projects/i3lock-color/i3lock-color")
+md5sums=('SKIP')
+
+pkgver() {
+    cd "$pkgname"
+    echo "r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+    cd "$pkgname"
+}
 
 build() {
-  cd "${srcdir}/${pkgname}-${_version}"
-  make
+    cd "$pkgname"
+    # https://bugs.archlinux.org/task/31544
+    sed -i -e 's:login:system-auth:' pam/i3lock
+
+    git tag -f "aur-$(git rev-parse --short HEAD)"
+    autoreconf -fi
+    ./configure --prefix="/usr" --sysconfdir="/etc"
+    make -j8
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${_version}"
-  make DESTDIR="$pkgdir" install
-  install -Dm644 i3lock.1 ${pkgdir}/usr/share/man/man1/i3lock.1
-  install -Dm644 LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+    cd "$pkgname"
+    make DESTDIR="$pkgdir" install
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }

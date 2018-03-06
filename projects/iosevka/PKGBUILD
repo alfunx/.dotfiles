@@ -2,7 +2,7 @@
 
 _pkgname=ttf-iosevka-custom
 pkgname=${_pkgname}-git
-pkgver=r1090.41301fa
+pkgver=r1101.8a860c1
 pkgrel=1
 pkgdesc='A slender monospace typeface. (Customized)'
 arch=('any')
