@@ -1,8 +1,8 @@
 # gruvbox
 
 set font                        "Iosevka Custom 11"
-set default-bg                  "#fbf1c7"
-set default-fg                  "#3c3836"
+set default-bg                  "#282828"
+set default-fg                  "#fbf1c7"
 
 set statusbar-bg                "#282828"
 set statusbar-fg                "#ebdbb2"
@@ -38,20 +38,22 @@ set recolor-keephue             "false"
 
 # Rest of your configs go here:
 
-set adjust-open "width"
+set adjust-open width
 set pages-per-row 1
-set smooth-scroll "true"
+set smooth-scroll true
 set selection-clipboard clipboard
-set incremental-search "true"
+set incremental-search true
 set guioptions ""
 
-set window-title-home-tilde "true"
-set window-title-basename "true"
-set statusbar-home-tilde "true"
-set show-hidden "true"
+set window-title-home-tilde true
+set window-title-basename true
+set statusbar-home-tilde true
+set show-hidden true
 
 map d scroll half-down
 map u scroll half-up
 map x toggle_page_mode
 map <C-r> rotate
 map r recolor
+map <S-Up> zoom in
+map <S-Down> zoom out
