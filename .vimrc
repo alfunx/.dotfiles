@@ -541,11 +541,33 @@ let g:VimuxUseNearest=1
 function! VimuxSlime()
   call VimuxOpenRunner()
   call VimuxSendText(@v)
-  "call VimuxSendKeys('Enter')
 endfunction
 
-xnoremap <leader>v "vy:call VimuxSlime()<CR>
-nnoremap <leader>v vap"vy:call VimuxSlime()<CR>
+function! SendToTmuxSplit(type, ...)
+  let sel_save = &selection
+  let &selection = "inclusive"
+  let reg_save = @@
+
+  if a:0  " Invoked from Visual mode, use gv command.
+    silent exe "normal! gv\"vy"
+  elseif a:type == 'line'
+    silent exe "normal! '[V']\"vy"
+  else
+    silent exe "normal! `[v`]\"vy"
+  endif
+
+  call VimuxSlime()
+  silent exe "normal! `v"
+
+  let &selection = sel_save
+  let @@ = reg_save
+endfunction
+
+nnoremap <silent> _ mv:set opfunc=SendToTmuxSplit<CR>g@
+vnoremap <silent> _ mv:<C-U>call SendToTmuxSplit(visualmode(), 1)<CR>
+
+" xnoremap _ "vy:call VimuxSlime()<CR>
+" nnoremap _ vap"vy:call VimuxSlime()<CR>
 
 "" Ale
 " Using special space, U+2000 (EN QUAD)
@@ -625,17 +647,17 @@ augroup VCSConflictMarker
   autocmd BufEnter,WinEnter * match VCSConflict '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
 augroup END
 
-""" Color overlength
-augroup OverLength
-  autocmd!
-  autocmd ColorScheme * highlight OverLength guibg=#cc241d guifg=#282828
-  "autocmd BufEnter,WinEnter * match OverLength /\%81v./
-  "autocmd BufEnter,WinEnter * match OverLength /\%>80v.\+/
-  let collumnLimit=80
-  let pattern='\%' . (collumnLimit+1) . 'v.'
-  autocmd BufEnter,WinEnter *
-        \ let w:m1=matchadd('OverLength', pattern, -1)
-augroup END
+" """ Color overlength
+" augroup OverLength
+"   autocmd!
+"   autocmd ColorScheme * highlight OverLength guibg=#cc241d guifg=#282828
+"   "autocmd BufEnter,WinEnter * match OverLength /\%81v./
+"   "autocmd BufEnter,WinEnter * match OverLength /\%>80v.\+/
+"   let collumnLimit=80
+"   let pattern='\%' . (collumnLimit+1) . 'v.'
+"   autocmd BufEnter,WinEnter *
+"         \ let w:m1=matchadd('OverLength', pattern, -1)
+" augroup END
 
 augroup RefreshAirline
   autocmd!
@@ -643,16 +665,16 @@ augroup RefreshAirline
 augroup END
 
 if &term !=? 'linux' || has('gui_running')
-  set listchars=tab:▸\ ,eol:↵,trail:~,extends:>,precedes:<,nbsp:+
+  set listchars=tab:▸\ ,extends:>,precedes:<,nbsp:+,eol:↵,trail:~,space:\·
   set fillchars=vert:│,fold:─,diff:-
 
   augroup TrailingSpaces
     autocmd!
-    autocmd InsertEnter * set listchars-=eol:↵,trail:~
-    autocmd InsertLeave * set listchars+=eol:↵,trail:~
+    autocmd InsertEnter * set listchars-=eol:↵,trail:~,space:\·
+    autocmd InsertLeave * set listchars+=eol:↵,trail:~,space:\·
   augroup END
 else
-  set listchars=tab:>\ ,eol:$,trail:~,extends:>,precedes:<,nbsp:+
+  set listchars=tab:>\ ,extends:>,precedes:<,nbsp:+,eol:$,trail:~
   set fillchars=vert:\|,fold:-,diff:-
 
   augroup TrailingSpaces
@@ -670,9 +692,9 @@ set showtabline=2  " always show tab line
 set noshowmode  " Hide the default mode text (e.g. -- INSERT -- below the statusline)
 
 "" Tabs
-set tabstop=2
-set softtabstop=2
-set shiftwidth=2
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
 set expandtab
 
 "" Spaces, indents
@@ -758,10 +780,8 @@ let &t_SI="\<Esc>[6 q"
 let &t_SR="\<Esc>[4 q"
 let &t_EI="\<Esc>[2 q"
 
-augroup VimEnterNohl
-  autocmd!
-  autocmd VimEnter * nohl
-augroup END
+""" TODO Disable highlighting on re-source (bug)
+nohlsearch
 
 
 """"""""""""""""""""""""""

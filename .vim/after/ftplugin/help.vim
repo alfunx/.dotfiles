@@ -1,7 +1,8 @@
-" autocmd BufWinEnter <buffer> wincmd L
-nnoremap <buffer> <CR> <C-]>
-nnoremap <buffer> <BS> <C-t>
-nnoremap <buffer> o /'\l\{2,\}'<CR>:nohlsearch<CR>
-nnoremap <buffer> O ?'\l\{2,\}'<CR>:nohlsearch<CR>
-nnoremap <buffer> s /\|\zs\S\+\ze\|<CR>:nohlsearch<CR>
-nnoremap <buffer> S ?\|\zs\S\+\ze\|<CR>:nohlsearch<CR>
+"autocmd BufWinEnter <buffer> wincmd L
+nnoremap <buffer><silent> q :q<CR>
+nnoremap <buffer><silent> <CR> <C-]>
+nnoremap <buffer><silent> <BS> <C-t>
+nnoremap <buffer><silent> o /'\l\{2,\}'<CR>:nohlsearch<CR>
+nnoremap <buffer><silent> O ?'\l\{2,\}'<CR>:nohlsearch<CR>
+nnoremap <buffer><silent> s /\|\zs\S\+\ze\|<CR>:nohlsearch<CR>
+nnoremap <buffer><silent> S ?\|\zs\S\+\ze\|<CR>:nohlsearch<CR>
