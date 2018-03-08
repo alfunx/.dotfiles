@@ -5,6 +5,7 @@ adobe-source-code-pro-fonts
 alsa-utils
 arch-wiki-lite
 asciinema
+asp
 autoconf
 automake
 avahi
@@ -33,6 +34,7 @@ dhcpcd
 dialog
 diffutils
 dmidecode
+docker
 e2fsprogs
 efibootmgr
 emacs
@@ -137,6 +139,7 @@ pciutils
 pcmciautils
 perl
 perl-file-mimeinfo
+pigz
 pkg-config
 pkgfile
 postgresql
@@ -149,6 +152,7 @@ python-jedi
 python-pip
 python2-jedi
 qt4
+qt5ct
 r
 ranger
 redshift
