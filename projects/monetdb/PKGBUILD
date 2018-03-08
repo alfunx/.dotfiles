@@ -1,9 +1,4 @@
-# Maintainer: Brian Hood <brianh6854@googlemail.com>
-# Contributor: Benjamin van der Burgh <gringo@archlinux.info>
-# Contributor: symen
-# Contributor: Thiago Perrotta <perrotta dot thiago at poli dot ufrj dot br>
-# Contributor: artemklevtsov
-# Contributor: Moritz Bruder <muesli4 at gmail dot com>
+# Maintainer: alfunx <alphonse.mariya@hotmail.com>
 
 _pkgname=monetdb
 pkgname=${_pkgname}-git
@@ -20,24 +15,25 @@ source=("$pkgname::git+file:///home/amariya/projects/monetdb/monetdb")
 sha256sums=('SKIP')
 
 pkgver() {
-    cd "$pkgname"
-    echo "r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+  cd "$pkgname"
+  echo "r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
 }
 
 prepare() {
-    cd "$pkgname"
+  cd "$pkgname"
 }
 
 build() {
-    cd "$pkgname"
-    ./bootstrap
-    ./configure --libdir=/usr/lib --prefix=/usr --sysconfdir=/etc --localstatedir=/var \
-        --disable-assert --disable-testing --enable-optimize --enable-rintegration
-    make
+  cd "$pkgname"
+  ./bootstrap
+  ./configure --libdir=/usr/lib --prefix=/usr --sysconfdir=/etc --localstatedir=/var \
+    --disable-assert --disable-testing --enable-optimize --enable-rintegration
+  make
 }
 
 package() {
-    cd "$pkgname"
-    make "DESTDIR=$pkgdir" install
-    mkdir -p "$pkgdir/var/log/monetdb"
+  cd "$pkgname"
+  make "DESTDIR=$pkgdir" install
+  install -Dm644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+  mkdir -p "$pkgdir/var/log/monetdb"
 }
