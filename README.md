@@ -1,6 +1,6 @@
 # .dotfiles
 
-![Awesome WM](https://i.imgur.com/hInDVh0.png)
+![Awesome WM](https://i.imgur.com/JMw6lXr.png)
 
 ## Table of Contents
 
