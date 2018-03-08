@@ -6,6 +6,9 @@
 	name = Alphonse Mariya
 	signingkey = 24D4C85E7B4585A9
 
+[commit]
+	gpgSign = true
+
 [core]
 	editor = vim
 	whitespace = fix,trailing-space,cr-at-eol
@@ -39,6 +42,22 @@
 	trustExitCode = true
 	keepBackup = false
 
+[pull]
+	rebase = interactive
+
+[push]
+	gpgSign = if-asked
+
+[status]
+	short = true
+	branch = true
+	showStash = true
+	submoduleSummary = true
+
+[log]
+	abbrevCommit = true
+	decorate = short
+
 [url "git@github.com:"]
 	insteadOf = @gh:
 
@@ -51,19 +70,19 @@
 [alias]
 	ec = config --global --edit
 
-	l = log --format=oneline --abbrev-commit --all --decorate --color
-	ls = log --format=short --abbrev-commit --all --decorate --color --stat
-	lm = log --format=medium --abbrev-commit --all --decorate --color --stat
-	lf = log --format=full --abbrev-commit --all --decorate --color --stat
-	lff = log --format=fuller --abbrev-commit --all --decorate --color --stat
-	gl = log --format=oneline --abbrev-commit --all --decorate --color --graph
-	gls = log --format=short --abbrev-commit --all --decorate --color --stat --graph
-	glm = log --format=medium --abbrev-commit --all --decorate --color --stat --graph
-	glf = log --format=full --abbrev-commit --all --decorate --color --stat --graph
-	glff = log --format=fuller --abbrev-commit --all --decorate --color --stat --graph
+	l = log --format=oneline --all --color
+	ls = log --format=short --all --color --stat
+	lm = log --format=medium --all --color --stat
+	lf = log --format=full --all --color --stat
+	lff = log --format=fuller --all --color --stat
+	gl = log --format=oneline --all --color --graph
+	gls = log --format=short --all --color --stat --graph
+	glm = log --format=medium --all --color --stat --graph
+	glf = log --format=full --all --color --stat --graph
+	glff = log --format=fuller --all --color --stat --graph
 	lr = "!f() { git lff \"${1-HEAD}\"~..\"${1-HEAD}\"; }; f"
-	lnc = log --format=oneline --abbrev-commit --all --decorate --no-color
-	fl = log --patch --all --decorate --color
+	lnc = log --format=oneline --all --no-color
+	fl = log --patch --all --color
 
 	d = diff
 	ds = diff --stat
@@ -73,13 +92,13 @@
 	dt = difftool
 	grep = grep -Ii
 
-	s = status --short --branch
+	s = status
 	a = add
 	au = add --update
 	ai = add --interactive
 	ap = add --patch
-	c = commit --gpg-sign --verbose
-	ca = commit --gpg-sign --verbose --amend
+	c = commit --verbose
+	ca = commit --verbose --amend
 
 	co = checkout
 	com = checkout master
@@ -92,10 +111,8 @@
 	bt = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git branch --set-upstream-to=\"${1-origin/$CURRENT}\"; }; f"
 
 	cl = clone
-	p = pull --rebase=interactive
-	pp = pull --rebase=interactive --prune
-	f = fetch --all --tags
-	fp = fetch --prune --all --tags
+	p = pull --prune
+	f = fetch --prune --all --tags
 	su = submodule update --init --recursive
 	up = "!f() { git p \"$@\" && git su; }; f"
 
@@ -121,7 +138,7 @@
 	la = "!git config --list | grep alias | cut -c 7- | sed -e 's/=/\\t/' | column -s $'\\t' | less"
 
 	# initialize repository in current directory
-	this = "!git init && git commit --gpg-sign --message='Initialize' --allow-empty"
+	this = "!git init && git commit --message='Initialize' --allow-empty"
 
 	# open github repository in browser
 	open = "!f() { URL=$(git config remote.\"${1-origin}\".url); xdg-open \"${URL%%.git}\"; }; f"
