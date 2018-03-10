@@ -23,7 +23,6 @@ alias bcl='bc -l'
 alias neofetch='echo "\\n\\n" && neofetch'
 
 alias grep='grep --color=auto --exclude-dir={.git,.svn}'
-alias pgrep='pgrep --color=auto --exclude-dir={.git,.svn}'
 alias egrep='egrep --color=auto --exclude-dir={.git,.svn}'
 
 foreground-job() {
@@ -82,7 +81,7 @@ pacman() {
 }
 
 officer() {
-  local pattern="^-S[cuy]|^-S$|^-R[sn]|^-R$|^-U"
+  local pattern="^-S[cuy]|^-S$|^-R[sn]|^-R$|^-U$|^-F[y]"
   if [[ "$1" =~ $pattern ]]; then
     sudo /usr/bin/officer "$@"
   else
@@ -156,43 +155,43 @@ fag() {
 # fuzzy commands #
 ##################
 
-# # fda - cd to selected directory
-# fda() {
-#   cd "$(find ${1:-.} -path '*/\.*' -prune -o -type d -print 2>/dev/null \
+# # cd to selected directory (no hidden files)
+# cnh() {
+#   cd "$(find ${1:-.} -path '*/\.*' -prune -o -type d -print 2> /dev/null \
 #     | fzf +m -q "$1" -0)"
 # }
 
-# fda - cd to selected directory
-fda() {
-  cd "$(fd --follow --type d '.' "${1:-.}" 2>/dev/null \
+# cd to selected directory (no hidden files)
+cnh() {
+  cd "$(fd --follow --type d '.' "${1:-.}" 2> /dev/null \
     | fzf +m -q "$1" -0)" || exit 1
 }
 
-# # c - fda including hidden directories
+# # cnh, but including hidden directories
 # c() {
-#   cd "$(find -L ${1:-.} -type d 2>/dev/null \
+#   cd "$(find -L ${1:-.} -type d 2> /dev/null \
 #     | fzf +m -q "$1" -0)"
 # }
 
-# c - fda including hidden directories
+# cnh, but including hidden directories
 c() {
-  cd "$(fd --hidden --follow --type d '.' "${1:-.}" 2>/dev/null \
+  cd "$(fd --hidden --follow --type d '.' "${1:-.}" 2> /dev/null \
     | fzf +m -q "$1" -0)" || exit 1
 }
 
-# # fr - cd to selected directory and open ranger
+# # cd to selected directory and open ranger
 # fr() {
-#   cd "$(find -L ${1:-.} -type d 2>/dev/null \
+#   cd "$(find -L ${1:-.} -type d 2> /dev/null \
 #     | fzf +m -q "$1" -0)" && ranger
 # }
 
-# fr - cd to selected directory and open ranger
+# cd to selected directory and open ranger
 fr() {
-  cd "$(fd --hidden --follow --type d '.' "${1:-.}" 2>/dev/null \
+  cd "$(fd --hidden --follow --type d '.' "${1:-.}" 2> /dev/null \
     | fzf +m -q "$1" -0)" && ranger
 }
 
-# fo - Open the selected file with the default editor
+# open the selected file with the default editor
 #   - CTRL-O to open with `open` command,
 #   - CTRL-E or Enter key to open with the $EDITOR
 fo() {
@@ -205,14 +204,14 @@ fo() {
   fi
 }
 
-# cdf - cd into the directory of the selected file
+# cd into the directory of the selected file
 cdf() {
   local file
   local dir
   file=$(fzf +m -q "$1" -0) && dir=$(dirname "$file") && cd "$dir" || exit 1
 }
 
-# c - browse chrome history
+# browse chrome history
 ch() {
   local cols sep google_history open
   cols=$(( COLUMNS / 3 ))
@@ -236,7 +235,7 @@ ch() {
     | xargs "$open" > /dev/null 2> /dev/null
 }
 
-# fdp - cd to selected parent directory
+# cd to selected parent directory
 fdp() {
   local dirs=()
 
@@ -260,7 +259,7 @@ fdp() {
 # fuzzy processes commands #
 ############################
 
-# fkill - kill process
+# kill process
 fkill() {
   local pid
   pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
@@ -276,12 +275,9 @@ fkill() {
 
 # example usage: pacman -S $(fp)
 fp() {
-  local arg="-Ss"
-  (( $# )) && { arg=$*; }
-  echo -n "$(pacman "$arg" \
+  echo -n "$(pacman --color always "${@:--Ss}" \
     | sed 'N;s/\n//' \
-    | fzf -m \
-    | sed 's/.*\///' \
+    | fzf -m --ansi \
     | sed 's/ .*//')"
 }
 

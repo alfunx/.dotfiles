@@ -8,5 +8,5 @@ file_suffix="$(date +%Y-%m-%d_%T)"
 cp -f /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-"$file_suffix".bak
 cp -f /etc/pacman.d/mirrorlist.pacnew /etc/pacman.d/mirrorlist-"$file_suffix".pacnew
 sed -i 's/^#Server/Server/' /etc/pacman.d/mirrorlist.pacnew
-rankmirrors -n "${1:-0}" /etc/pacman.d/mirrorlist.pacnew >/etc/pacman.d/mirrorlist
+rankmirrors -n "${1:-0}" /etc/pacman.d/mirrorlist.pacnew > /etc/pacman.d/mirrorlist
 rm -f /etc/pacman.d/mirrorlist.pacnew

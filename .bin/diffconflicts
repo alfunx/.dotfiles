@@ -94,7 +94,7 @@ printf -v QMERGED '%q' "${MERGED}"
 
 # Use gnu sed if on OSX for better portability (brew install gnu-sed)
 GNU_SED="gsed"
-type $GNU_SED >/dev/null 2>&1 || GNU_SED="sed"
+type $GNU_SED > /dev/null 2>&1 || GNU_SED="sed"
 
 # Temporary files for left and right side, keeping file extensions for syntax highlighting
 MERGED_PATH="$(dirname "${MERGED}")"
