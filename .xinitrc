@@ -25,16 +25,16 @@ if [ -f "$usermodmap" ]; then
 fi
 
 if [ -d /etc/X11/xinit/xinitrc.d ] ; then
- for f in /etc/X11/xinit/xinitrc.d/?*.sh ; do
-  [ -x "$f" ] && . "$f"
- done
- unset f
+    for f in /etc/X11/xinit/xinitrc.d/?*.sh ; do
+        [ -x "$f" ] && . "$f"
+    done
+    unset f
 fi
 
 xautolock -detectsleep \
-  -time 9 -notify 20 \
-  -notifier "notify-send -t 18000 'Lock' 'Locking screen in 20 seconds.'" \
-  -locker /usr/local/bin/custom-lockscreen &
+    -time 9 -notify 20 \
+    -notifier "notify-send -t 18000 'Lock' 'Locking screen in 20 seconds.'" \
+    -locker /usr/local/bin/custom-lockscreen &
 dropbox &
 amixer set "Master" mute &
 unclutter -root -reset &
@@ -45,19 +45,14 @@ compton --config .config/compton.conf &
 session=${1:-awesome}
 
 case "$session" in
-  awesome)
-    exec awesome
-    ;;
-  termite|term)
-    exec termite --geometry='1920x1080'
-    ;;
-  alacritty)
-    exec alacritty --dimensions 213 56
-    ;;
-  i3|i3wm)
-    exec i3
-    ;;
-  *)
-    exec "$session"
-    ;;
+    awesome)
+        exec awesome ;;
+    termite|term)
+        exec termite --geometry='1920x1080' ;;
+    alacritty)
+        exec alacritty --dimensions 213 56 ;;
+    i3|i3wm)
+        exec i3 ;;
+    *)
+        exec "$session"
 esac
