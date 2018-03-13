@@ -16,26 +16,26 @@ source=("git+https://github.com/be5invis/Iosevka")
 md5sums=('SKIP')
 
 pkgver() {
-  cd "Iosevka"
-  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+    cd "Iosevka"
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 build() {
-  design='v-l-italic v-i-italic v-q-straight v-eszet-traditional v-tilde-low v-asterisk-low v-underscore-low v-at-short expanded term'
-  upright='v-g-opendoublestorey'
-  italic='v-g-singlestorey'
-  oblique='v-g-opendoublestorey'
-  cd Iosevka
-  npm install
-  make custom-config design="$design" upright="$upright" italic="$italic" oblique="$oblique" family='Iosevka Custom'
-  make custom
+    design='v-l-italic v-i-italic v-q-straight v-eszet-traditional v-tilde-low v-asterisk-low v-underscore-low v-at-short expanded term'
+    upright='v-g-opendoublestorey'
+    italic='v-g-singlestorey'
+    oblique='v-g-opendoublestorey'
+    cd Iosevka
+    npm install
+    make custom-config design="$design" upright="$upright" italic="$italic" oblique="$oblique" family='Iosevka Custom'
+    make custom
 }
 
 package() {
-  install -d "${pkgdir}/usr/share/fonts/TTF"
-  install -m644 Iosevka/dist/*/ttf/*.ttf "${pkgdir}/usr/share/fonts/TTF/"
-  install -d "${pkgdir}/usr/share/licenses/${pkgname}"
-  install -m644 Iosevka/LICENSE.md "${pkgdir}/usr/share/licenses/${pkgname}/"
+    install -d "${pkgdir}/usr/share/fonts/TTF"
+    install -m644 Iosevka/dist/*/ttf/*.ttf "${pkgdir}/usr/share/fonts/TTF/"
+    install -d "${pkgdir}/usr/share/licenses/${pkgname}"
+    install -m644 Iosevka/LICENSE.md "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
 
 # The current available styles for design/upright/italic/oblique options are:

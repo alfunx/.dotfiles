@@ -26,11 +26,10 @@ _patches=('https://st.suckless.org/patches/vertcenter/st-vertcenter-20170601-5a1
           'st-worddelimiters-20180215.diff')
 
 source=("$pkgname::git+file:///home/amariya/projects/st/st"
-        "simple-terminal.desktop"
-        "${_patches[@]}")
+        "${_patches[@]}"
+        "simple-terminal.desktop")
 
 sha512sums=('SKIP'
-            '717dd4134ca8c39b8f950fe3c88e728656f2d08c537b8df0aeaae98023861ccf3802fe6c9ebc92cb79b2182fd528a3c0c7278fc6f31a7c3b05d07f2842ee0cd1'
             '319d8d456011cc1c3cc3abb9c7a8ba5018f315d8fec69141b23595d275f979e3146a3eb83a07b995c77a2027b14d784e5aeb745a0d6159fd57cbabd77bcaff18'
             '35a533e66069439cbca9c1c0eee4d73eaca527b011f4a1fdc09d7130f8f44711410117fed1fc9ac0a8666217228992b2edfa70284859bcf2ec740b37d3fc7de7'
             'a090914549f5161b7cd37f2994a32a4d5e1711505f6feb686734412249de7f28d7cc72946e157095857b88127e39742c978d6e190645028c5bb15b204723358b'
@@ -40,40 +39,41 @@ sha512sums=('SKIP'
             '9ddb2d3dcb75e98952bae6577035e4733eb90d53d7593202efb36eb325de59524c278dc7dc7536814161974861888e94a36a21db3c7f595c058705c1a8ad7de2'
             '0f03adefac9baa779dffb4ccf0c9f8b71c4d030a22f73a9411c364f4aa257d2d1eab4f0ed67aba7d08a269549f60c79d411dc86499b016964daca5a41fa67a5d'
             'db5d66fee4a7fe42174331e87e9859bbb4b17ba4bd9fa26536b897e54e2edc925f3b593f406bf3009ca0983bc5749a75b80c4560c01facc253010c0444353982'
-            'b983cfbe37ccbc443078a33190433b34719b03e90ac6d16073818f7c5a46c5d729ca2d2cd55480d1387b18f88f4655f1cb751e082b0b23d8a2ea2e23189d30f1')
+            'b983cfbe37ccbc443078a33190433b34719b03e90ac6d16073818f7c5a46c5d729ca2d2cd55480d1387b18f88f4655f1cb751e082b0b23d8a2ea2e23189d30f1'
+            '717dd4134ca8c39b8f950fe3c88e728656f2d08c537b8df0aeaae98023861ccf3802fe6c9ebc92cb79b2182fd528a3c0c7278fc6f31a7c3b05d07f2842ee0cd1')
 
 pkgver() {
-  cd "$pkgname"
-  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+    cd "$pkgname"
+    git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 prepare() {
-  local file
-  cd "$pkgname"
+    local file
+    cd "$pkgname"
 
-  # skip terminfo which conflicts with nsurses
-  # sed -i '/tic /,+1d' Makefile
-  sed -i '/tic /d' Makefile
+    # skip terminfo which conflicts with nsurses
+    # sed -i '/tic /,+1d' Makefile
+    sed -i '/tic /d' Makefile
 
-  for file in "${_patches[@]}"; do
-    if [[ "$file" == *.h ]]; then
-      cp "$srcdir/$file" .
-    elif [[ "$file" == *.diff || "$file" == *.patch ]]; then
-      echo -e "\e[1mApplying patch: $(basename "$file")\e[0m"
-      patch -Np1 <"$srcdir/$(basename "$file")"
-    fi
-  done
+    for file in "${_patches[@]}"; do
+        if [[ "$file" == *.h ]]; then
+            cp "$srcdir/$file" .
+        elif [[ "$file" == *.diff || "$file" == *.patch ]]; then
+            echo -e "\e[1mApplying patch: $(basename "$file")\e[0m"
+            patch -Np1 <"$srcdir/$(basename "$file")"
+        fi
+    done
 }
 
 build() {
-  cd "$pkgname"
-  make X11INC=/usr/include/X11 X11LIB=/usr/lib/X11
+    cd "$pkgname"
+    make X11INC=/usr/include/X11 X11LIB=/usr/lib/X11
 }
 
 package() {
-  cd "$pkgname"
-  make PREFIX=/usr DESTDIR="$pkgdir" TERMINFO="$pkgdir/usr/share/terminfo" install
-  install -Dm644 "$srcdir/simple-terminal.desktop" "$pkgdir/usr/share/applications/simple-terminal.desktop"
-  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-  install -Dm644 README "$pkgdir/usr/share/doc/$pkgname/README"
+    cd "$pkgname"
+    make PREFIX=/usr DESTDIR="$pkgdir" TERMINFO="$pkgdir/usr/share/terminfo" install
+    install -Dm644 "$srcdir/simple-terminal.desktop" "$pkgdir/usr/share/applications/simple-terminal.desktop"
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    install -Dm644 README "$pkgdir/usr/share/doc/$pkgname/README"
 }
