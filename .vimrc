@@ -3,12 +3,12 @@
 """""""""""
 
 if !filereadable($HOME . '/.vim/autoload/plug.vim')
-  silent !mkdir -p ~/.vim/autoload >/dev/null 2>&1
-  silent !mkdir -p ~/.vim/plugged >/dev/null 2>&1
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-        \ >/dev/null 2>&1
-  autocmd VimEnter * PlugInstall
+    silent !mkdir -p ~/.vim/autoload >/dev/null 2>&1
+    silent !mkdir -p ~/.vim/plugged >/dev/null 2>&1
+    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+                \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+                \ >/dev/null 2>&1
+    autocmd VimEnter * PlugInstall
 endif
 
 
@@ -82,6 +82,7 @@ Plug 'honza/vim-snippets'
 " Language specific
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 Plug 'lervag/vimtex', { 'for': ['latex', 'tex'] }
+Plug 'racer-rust/vim-racer', { 'for': 'rust' }
 
 " Themes
 "Plug 'morhetz/gruvbox'
@@ -89,8 +90,8 @@ Plug 'alfunx/gruvbox'  " fork
 
 " Don't load in console
 if &term !=? 'linux' || has('gui_running')
-  Plug 'vim-airline/vim-airline'
-  "Plug 'vim-airline/vim-airline-themes'
+    Plug 'vim-airline/vim-airline'
+    "Plug 'vim-airline/vim-airline-themes'
 endif
 
 call plug#end()
@@ -134,27 +135,27 @@ nnoremap <C-w>l :vertical resize +5<CR>
 "augroup Quickfix
 "  autocmd!
 "  autocmd QuickFixCmdPost [^l]* cwindow
-"  autocmd QuickFixCmdPost l*    lwindow
+"  autocmd QuickFixCmdPost l*        lwindow
 "augroup END
 
 " German keyboard mappings
-nmap ä {
-nmap ö }
-xmap ä {
-xmap ö }
+nmap ä ^
+xmap ä ^
+nmap ö "
+xmap ö "
 nmap ü [
-nmap ¨ ]
 xmap ü [
+nmap ¨ ]
 xmap ¨ ]
 
 execute "set <M-h>=\<Esc>h"
 execute "set <M-j>=\<Esc>j"
 execute "set <M-k>=\<Esc>k"
 execute "set <M-l>=\<Esc>l"
-"noremap <M-h> [
-"noremap <M-l> ]
-noremap <M-j> }
-noremap <M-k> {
+nnoremap <M-j> }
+xnoremap <M-j> }
+nnoremap <M-k> {
+xnoremap <M-k> {
 
 " Previous paragraph
 nnoremap <BS> {
@@ -188,6 +189,10 @@ nnoremap <silent> <C-s> :write<CR>
 xnoremap <silent> <C-s> <Esc>:write<CR>
 inoremap <silent> <C-s> <C-o>:write<CR><Esc>
 
+"" Quickfix & Loclist
+nnoremap <silent> <leader>q :copen<CR>
+nnoremap <silent> <leader>l :lopen<CR>
+
 "" Insert mode mappings
 inoremap <C-u> <C-g>u<C-u>
 inoremap àà <C-o>O
@@ -219,8 +224,8 @@ nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>
 
 " Run macro on visual selection
 function! ExecuteMacroOverVisualRange()
-  echo "@".getcmdline()
-  execute ":'<,'>normal @".nr2char(getchar())
+    echo "@".getcmdline()
+    execute ":'<,'>normal @".nr2char(getchar())
 endfunction
 xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
 
@@ -232,8 +237,8 @@ execute "set <M-t>=\<Esc>t"
 nnoremap <M-t> :nohlsearch<CR>
 
 function! ChangeReg() abort
-  let x = nr2char(getchar())
-  call feedkeys("q:ilet @" . x . " = \<c-r>\<c-r>=string(@" . x . ")\<cr>\<esc>$", 'n')
+    let x = nr2char(getchar())
+    call feedkeys("q:ilet @" . x . " = \<c-r>\<c-r>=string(@" . x . ")\<cr>\<esc>$", 'n')
 endfunction
 nnoremap cr :call ChangeReg()<cr>
 
@@ -244,9 +249,9 @@ nnoremap cr :call ChangeReg()<cr>
 
 " Default key bindings
 let g:fzf_action = {
-  \ 'ctrl-t': 'tab split',
-  \ 'ctrl-x': 'split',
-  \ 'ctrl-v': 'vsplit' }
+            \ 'ctrl-t': 'tab split',
+            \ 'ctrl-x': 'split',
+            \ 'ctrl-v': 'vsplit' }
 
 " Default fzf layout
 let g:fzf_layout = { 'down': '~30%' }
@@ -265,10 +270,10 @@ omap <leader><tab> <plug>(fzf-maps-o)
 
 "" FZF
 if executable('fzf')
-  augroup Fzf
-    autocmd!
-    autocmd VimEnter * nnoremap <Leader>f :FZF<CR>
-  augroup End
+    augroup Fzf
+        autocmd!
+        autocmd VimEnter * nnoremap <Leader>f :FZF<CR>
+    augroup End
 endif
 
 nnoremap <leader>b :Buffers<CR>
@@ -286,52 +291,50 @@ inoremap <expr> <c-x><c-k> fzf#complete('cat /usr/share/dict/words-insane')
 
 "" RG
 command! -bang -nargs=* Rg
-  \ call fzf#vim#grep(
-  \ 'rg --hidden --line-number --column --no-heading --smart-case --follow --color=always --colors="match:none" --colors="path:fg:white" --colors="line:fg:white" '.shellescape(<q-args>), 1,
-  \ <bang>0)
+            \ call fzf#vim#grep(
+            \ 'rg --hidden --line-number --column --no-heading --smart-case --follow --color=always --colors="match:none" --colors="path:fg:white" --colors="line:fg:white" '.shellescape(<q-args>), 1,
+            \ <bang>0)
 
 "" AG
 command! -bang -nargs=* Ag
-  \ call fzf#vim#ag(
-  \ <q-args>, '--color-path "0;37" --color-line-number "0;37" --color-match "" --hidden --smart-case --follow',
-  \ <bang>0)
+            \ call fzf#vim#ag(
+            \ <q-args>, '--color-path "0;37" --color-line-number "0;37" --color-match "" --hidden --smart-case --follow',
+            \ <bang>0)
 
 if executable('rg')
-  augroup Rg
-    autocmd!
-    autocmd VimEnter * nnoremap <Leader>r :Rg<CR>
-  augroup End
-endif
-
-if executable('ag')
-  augroup Ag
-    autocmd!
-    autocmd VimEnter * nnoremap <Leader>a :Ag<CR>
-  augroup End
-endif
-
-if executable('rg')
-  set grepprg=rg\ --smart-case\ --vimgrep
-  set grepformat^=%f:%l:%c:%m
+    augroup Rg
+        autocmd!
+        autocmd VimEnter * nnoremap <Leader>r :Rg<CR>
+    augroup End
 elseif executable('ag')
-  set grepprg=ag\ --smart-case\ --vimgrep
-  set grepformat^=%f:%l:%c:%m
+    augroup Ag
+        autocmd!
+        autocmd VimEnter * nnoremap <Leader>r :Ag<CR>
+    augroup End
+endif
+
+if executable('rg')
+    set grepprg=rg\ --smart-case\ --vimgrep
+    set grepformat^=%f:%l:%c:%m
+elseif executable('ag')
+    set grepprg=ag\ --smart-case\ --vimgrep
+    set grepformat^=%f:%l:%c:%m
 endif
 
 "" Grepper
 let g:grepper={}
 let g:grepper.tools=[]
 if executable('rg')
-  let g:grepper.tools+=['rg']
+    let g:grepper.tools+=['rg']
 elseif executable('ag')
-  let g:grepper.tools+=['ag']
+    let g:grepper.tools+=['ag']
 endif
 let g:grepper.tools+=['git', 'grep']
 let g:grepper.rg = {
-      \ 'grepprg':    'rg --vimgrep',
-      \ 'grepformat': '%f:%l:%c:%m',
-      \ 'escape':     '\^$.*+?()[]{}|'
-      \ }
+            \ 'grepprg':        'rg --vimgrep',
+            \ 'grepformat': '%f:%l:%c:%m',
+            \ 'escape':         '\^$.*+?()[]{}|'
+            \ }
 let g:grepper.next_tool='<leader>g'
 let g:grepper.jump=0
 let g:grepper.quickfix=1
@@ -347,7 +350,7 @@ command! Note :Grepper -tool rg -query '(NOTE)'
 
 "" Airline
 if !exists('g:airline_symbols')
-  let g:airline_symbols={}
+    let g:airline_symbols={}
 endif
 
 """ Unicode symbols
@@ -391,18 +394,18 @@ let g:airline#extensions#tabline#buffers_label='buffers'
 let g:airline#extensions#tabline#tabs_label='tabs'
 
 " let g:airline_mode_map = {
-"     \ '__' : ' - ',
-"     \ 'n'  : ' N ',
-"     \ 'i'  : ' I ',
-"     \ 'R'  : ' R ',
-"     \ 'c'  : ' C ',
-"     \ 'v'  : ' V ',
-"     \ 'V'  : 'V-L',
-"     \ '' : 'V-B',
-"     \ 's'  : ' S ',
-"     \ 'S'  : ' S ',
-"     \ '' : ' S ',
-"     \ }
+"             \ '__' : ' - ',
+"             \ 'n'  : ' N ',
+"             \ 'i'  : ' I ',
+"             \ 'R'  : ' R ',
+"             \ 'c'  : ' C ',
+"             \ 'v'  : ' V ',
+"             \ 'V'  : 'V-L',
+"             \ '' : 'V-B',
+"             \ 's'  : ' S ',
+"             \ 'S'  : ' S ',
+"             \ '' : ' S ',
+"             \ }
 
 "" GitGutter
 nmap <Leader>ha <Plug>GitGutterStageHunk
@@ -441,17 +444,17 @@ map g# <Plug>(incsearch-nohl-g#)
 let g:incsearch#auto_nohlsearch=1
 let g:incsearch#no_inc_hlsearch = 1
 let g:incsearch#highlight = {
-\   'match' : {
-\     'priority' : '10'
-\   },
-\   'on_cursor' : {
-\     'priority' : '100'
-\   },
-\   'cursor' : {
-\     'group' : 'ErrorMsg',
-\     'priority' : '1000'
-\   }
-\ }
+            \       'match' : {
+            \           'priority' : '10'
+            \       },
+            \       'on_cursor' : {
+            \           'priority' : '100'
+            \       },
+            \       'cursor' : {
+            \           'group' : 'ErrorMsg',
+            \           'priority' : '1000'
+            \       }
+            \ }
 
 "" Incsearch-EasyMotion
 map z/ <Plug>(incsearch-easymotion-/)
@@ -488,8 +491,8 @@ nnoremap <F4> :UndotreeToggle<CR>
 
 "" After text object
 augroup AfterTextObject
-  autocmd!
-  autocmd VimEnter * call after_object#enable(['m', 'mm'], '=', ':', '+', '-', '*', '/', '#', ' ')
+    autocmd!
+    autocmd VimEnter * call after_object#enable(['m', 'mm'], '=', ':', '+', '-', '*', '/', '#', ' ')
 augroup End
 
 "" Vimtex
@@ -512,55 +515,55 @@ let g:multi_cursor_exit_from_insert_mode=0
 
 "" Goyo + Limelight
 function! s:goyo_enter()
-  set nolist
-  set noshowmode
-  set noshowcmd
-  set scrolloff=999
-  set sidescrolloff=20
-  Limelight
+    set nolist
+    set noshowmode
+    set noshowcmd
+    set scrolloff=999
+    set sidescrolloff=20
+    Limelight
 endfunction
 
 function! s:goyo_leave()
-  set list
-  set noshowmode
-  set showcmd
-  set scrolloff=3
-  set sidescrolloff=5
-  Limelight!
+    set list
+    set noshowmode
+    set showcmd
+    set scrolloff=3
+    set sidescrolloff=5
+    Limelight!
 endfunction
 
 augroup Goyo
-  autocmd!
-  autocmd User GoyoEnter nested call <SID>goyo_enter()
-  autocmd User GoyoLeave nested call <SID>goyo_leave()
+    autocmd!
+    autocmd User GoyoEnter nested call <SID>goyo_enter()
+    autocmd User GoyoLeave nested call <SID>goyo_leave()
 augroup END
 
 "" Vimux
 let g:VimuxUseNearest=1
 
 function! VimuxSlime()
-  call VimuxOpenRunner()
-  call VimuxSendText(@v)
+    call VimuxOpenRunner()
+    call VimuxSendText(@v)
 endfunction
 
 function! SendToTmuxSplit(type, ...)
-  let sel_save = &selection
-  let &selection = "inclusive"
-  let reg_save = @@
+    let sel_save = &selection
+    let &selection = "inclusive"
+    let reg_save = @@
 
-  if a:0  " Invoked from Visual mode, use gv command.
-    silent exe "normal! gv\"vy"
-  elseif a:type == 'line'
-    silent exe "normal! '[V']\"vy"
-  else
-    silent exe "normal! `[v`]\"vy"
-  endif
+    if a:0  " Invoked from Visual mode, use gv command.
+        silent exe "normal! gv\"vy"
+    elseif a:type == 'line'
+        silent exe "normal! '[V']\"vy"
+    else
+        silent exe "normal! `[v`]\"vy"
+    endif
 
-  call VimuxSlime()
-  silent exe "normal! `v"
+    call VimuxSlime()
+    silent exe "normal! `v"
 
-  let &selection = sel_save
-  let @@ = reg_save
+    let &selection = sel_save
+    let @@ = reg_save
 endfunction
 
 nnoremap <silent> _ mv:set opfunc=SendToTmuxSplit<CR>g@
@@ -571,6 +574,7 @@ vnoremap <silent> _ mv:<C-U>call SendToTmuxSplit(visualmode(), 1)<CR>
 
 "" Ale
 " Using special space, U+2000 (EN QUAD)
+let g:ale_set_loclist=1
 let g:ale_sign_error=' ●'
 let g:ale_sign_warning=' ●'
 let g:ale_lint_on_text_changed='never'
@@ -581,15 +585,21 @@ let g:ale_set_signs=1
 "nnoremap <silent> <C-w>p <Plug>(ale_previous_wrap)
 "nnoremap <silent> <C-w>n <Plug>(ale_next_wrap)
 
+nnoremap <leader>a :ALEEnable<CR>
+
 augroup Ale
-  autocmd!
-  autocmd VimEnter * ALEDisable
+    autocmd!
+    autocmd VimEnter * ALEDisable
 augroup END
 
 "" AutoPairs
 execute "set <M-p>=\<Esc>p"
 execute "set <M-b>=\<Esc>b"
 let g:AutoPairsMapSpace=0
+
+"" RustRacer
+let g:racer_cmd="/usr/bin/racer"
+let g:racer_experimental_completer=1
 
 
 """"""""""""""""
@@ -618,70 +628,68 @@ set mat=5  " bracket blinking
 set list
 
 augroup LighterCursorLine
-  autocmd!
-  "autocmd ColorScheme * highlight clear CursorLine
-  autocmd ColorScheme * highlight CursorLine guibg=#32302f
+    autocmd!
+    "autocmd ColorScheme * highlight clear CursorLine
+    autocmd ColorScheme * highlight CursorLine guibg=#32302f
 augroup END
 
 augroup BoldCursorLineNr
-  autocmd!
-  "autocmd ColorScheme * highlight CursorLineNR cterm=bold guibg=#282828
-  autocmd ColorScheme * highlight CursorLineNR cterm=bold guibg=#32302f
+    autocmd!
+    "autocmd ColorScheme * highlight CursorLineNR cterm=bold guibg=#282828
+    autocmd ColorScheme * highlight CursorLineNR cterm=bold guibg=#32302f
 augroup END
 
 augroup LighterQuickFixLine
-  autocmd!
-  autocmd ColorScheme * highlight QuickFixLine ctermbg=Yellow guibg=#504945
-  autocmd ColorScheme * highlight qfFileName guifg=#fe8019
+    autocmd!
+    autocmd ColorScheme * highlight QuickFixLine ctermbg=Yellow guibg=#504945
+    autocmd ColorScheme * highlight qfFileName guifg=#fe8019
 augroup END
 
 augroup SearchHighlightColor
-  autocmd!
-  autocmd ColorScheme * highlight Search guibg=#282828 guifg=#fe8019
+    autocmd!
+    autocmd ColorScheme * highlight Search guibg=#282828 guifg=#fe8019
 augroup END
 
 """ Color VCS conflict markers
 augroup VCSConflictMarker
-  autocmd!
-  autocmd ColorScheme * highlight VCSConflict guibg=#cc241d guifg=#282828
-  autocmd BufEnter,WinEnter * match VCSConflict '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
+    autocmd!
+    autocmd ColorScheme * highlight VCSConflict guibg=#cc241d guifg=#282828
+    autocmd BufEnter,WinEnter * match VCSConflict '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
 augroup END
 
 " """ Color overlength
 " augroup OverLength
-"   autocmd!
-"   autocmd ColorScheme * highlight OverLength guibg=#cc241d guifg=#282828
-"   "autocmd BufEnter,WinEnter * match OverLength /\%81v./
-"   "autocmd BufEnter,WinEnter * match OverLength /\%>80v.\+/
-"   let collumnLimit=80
-"   let pattern='\%' . (collumnLimit+1) . 'v.'
-"   autocmd BufEnter,WinEnter *
-"         \ let w:m1=matchadd('OverLength', pattern, -1)
+"     autocmd!
+"     autocmd ColorScheme * highlight OverLength guibg=#cc241d guifg=#282828
+"     "autocmd BufEnter,WinEnter * match OverLength /\%81v./
+"     "autocmd BufEnter,WinEnter * match OverLength /\%>80v.\+/
+"     let collumnLimit=80
+"     let pattern='\%' . (collumnLimit+1) . 'v.'
+"     autocmd BufEnter,WinEnter *
+"                 \ let w:m1=matchadd('OverLength', pattern, -1)
 " augroup END
 
 augroup RefreshAirline
-  autocmd!
-  autocmd ColorScheme * if exists(':AirlineRefresh') | :AirlineRefresh | endif
+    autocmd!
+    autocmd ColorScheme * if exists(':AirlineRefresh') | :AirlineRefresh | endif
 augroup END
 
 if &term !=? 'linux' || has('gui_running')
-  set listchars=tab:▸\ ,extends:>,precedes:<,nbsp:+,eol:↵,trail:~,space:\·
-  set fillchars=vert:│,fold:─,diff:-
-
-  augroup TrailingSpaces
-    autocmd!
-    autocmd InsertEnter * set listchars-=eol:↵,trail:~,space:\·
-    autocmd InsertLeave * set listchars+=eol:↵,trail:~,space:\·
-  augroup END
+    set listchars=tab:▸\ ,extends:>,precedes:<,nbsp:·,eol:↵,trail:~
+    set fillchars=vert:│,fold:─,diff:-
+    augroup TrailingSpaces
+        autocmd!
+        autocmd InsertEnter * set listchars-=eol:↵,trail:~
+        autocmd InsertLeave * set listchars+=eol:↵,trail:~
+    augroup END
 else
-  set listchars=tab:>\ ,extends:>,precedes:<,nbsp:+,eol:$,trail:~
-  set fillchars=vert:\|,fold:-,diff:-
-
-  augroup TrailingSpaces
-    autocmd!
-    autocmd InsertEnter * set listchars-=eol:$,trail:~
-    autocmd InsertLeave * set listchars+=eol:$,trail:~
-  augroup END
+    set listchars=tab:>\ ,extends:>,precedes:<,nbsp:+,eol:$,trail:~
+    set fillchars=vert:\|,fold:-,diff:-
+    augroup TrailingSpaces
+        autocmd!
+        autocmd InsertEnter * set listchars-=eol:$,trail:~
+        autocmd InsertLeave * set listchars+=eol:$,trail:~
+    augroup END
 endif
 
 set novisualbell  " no blinking
@@ -696,6 +704,17 @@ set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 set expandtab
+
+function! ExpandSpaces()
+    set tabstop=2
+    set noexpandtab
+    '<,'>retab!
+    set tabstop=4
+    set expandtab
+    '<,'>retab
+endfunction
+
+nnoremap <silent> <leader>i :call ExpandSpaces()<CR>
 
 "" Spaces, indents
 set encoding=utf-8
@@ -715,7 +734,7 @@ set ttimeout
 set ttimeoutlen=100
 
 if filereadable('/bin/zsh')
-  set shell=/bin/zsh\ --login
+    set shell=/bin/zsh\ --login
 endif
 
 "" Searching
@@ -729,8 +748,8 @@ set foldenable
 set foldmethod=indent
 set foldnestmax=100
 augroup CustomFolding
-  autocmd!
-  autocmd BufWinEnter * let &foldlevel=max(add(map(range(1, line('$')), 'foldlevel(v:val)'), 10))  " with this, everything is unfolded at start
+    autocmd!
+    autocmd BufWinEnter * let &foldlevel=max(add(map(range(1, line('$')), 'foldlevel(v:val)'), 10))  " with this, everything is unfolded at start
 augroup End
 
 "set clipboard+=unnamed  " yanks go on clipboard instead.
@@ -744,22 +763,22 @@ set nohidden
 set sessionoptions-=options
 
 function! NeatFoldText()
-  let line = ' ' . substitute(getline(v:foldstart), '^\s*"\?\s*\|\s*"\?\s*{{' . '{\d*\s*', '', 'g') . ' '
-  let lines_count = v:foldend - v:foldstart + 1
-  let lines_count_text = '┤ ' . printf("%10s", lines_count . ' lines') . ' ├'
-  let foldchar = matchstr(&fillchars, 'fold:\zs.')
-  let foldtextstart = strpart('+ ' . repeat(foldchar, v:foldlevel*2) . line, 0, (winwidth(0)*2)/3)
-  let foldtextend = lines_count_text . repeat(foldchar, 8)
-  let foldtextlength = strlen(substitute(foldtextstart . foldtextend, '.', 'x', 'g')) + &foldcolumn
-  return foldtextstart . repeat(foldchar, winwidth(0)-foldtextlength) . foldtextend
+    let line = ' ' . substitute(getline(v:foldstart), '^\s*"\?\s*\|\s*"\?\s*{{' . '{\d*\s*', '', 'g') . ' '
+    let lines_count = v:foldend - v:foldstart + 1
+    let lines_count_text = '┤ ' . printf("%10s", lines_count . ' lines') . ' ├'
+    let foldchar = matchstr(&fillchars, 'fold:\zs.')
+    let foldtextstart = strpart('+ ' . repeat(foldchar, v:foldlevel*2) . line, 0, (winwidth(0)*2)/3)
+    let foldtextend = lines_count_text . repeat(foldchar, 8)
+    let foldtextlength = strlen(substitute(foldtextstart . foldtextend, '.', 'x', 'g')) + &foldcolumn
+    return foldtextstart . repeat(foldchar, winwidth(0)-foldtextlength) . foldtextend
 endfunction
 set foldtext=NeatFoldText()
 
 "" Last position
 set viminfo='10,\"100,:20,%,n~/.viminfo
 augroup SavePosition
-  autocmd!
-  autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | execute 'normal! g`"zvzz' | endif
+    autocmd!
+    autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | execute 'normal! g`"zvzz' | endif
 augroup END
 
 "" Dictionary
@@ -789,7 +808,7 @@ nohlsearch
 """"""""""""""""""""""""""
 
 if !isdirectory($HOME . '/.vim/.backup')
-  silent !mkdir -p ~/.vim/.backup >/dev/null 2>&1
+    silent !mkdir -p ~/.vim/.backup >/dev/null 2>&1
 endif
 set backupdir-=.
 set backupdir+=.
@@ -799,7 +818,7 @@ set backupdir^=./.vim-backup/
 set backup
 
 if !isdirectory($HOME . '/.vim/.swap')
-  silent !mkdir -p ~/.vim/.swap >/dev/null 2>&1
+    silent !mkdir -p ~/.vim/.swap >/dev/null 2>&1
 endif
 set directory=./.vim-swap//
 set directory+=~/.vim/.swap//
@@ -807,12 +826,12 @@ set directory+=~/.tmp//
 set directory+=.
 
 if exists('+undofile')
-  if !isdirectory($HOME . '/.vim/.undo')
-    silent !mkdir -p ~/.vim/.undo >/dev/null 2>&1
-  endif
-  set undodir=./.vim-undo//
-  set undodir+=~/.vim/.undo//
-  set undofile
+    if !isdirectory($HOME . '/.vim/.undo')
+        silent !mkdir -p ~/.vim/.undo >/dev/null 2>&1
+    endif
+    set undodir=./.vim-undo//
+    set undodir+=~/.vim/.undo//
+    set undofile
 endif
 
 
@@ -825,59 +844,58 @@ endif
 
 """ Defines a foldlevel for each line of code
 function! VimFolds(lnum)
-  let s:thisline = getline(a:lnum)
-  if match(s:thisline, '^"" ') >= 0
-    return '>2'
-  endif
-  if match(s:thisline, '^""" ') >= 0
-    return '>3'
-  endif
-  let s:two_following_lines = 0
-  if line(a:lnum) + 2 <= line('$')
-    let s:line_1_after = getline(a:lnum+1)
-    let s:line_2_after = getline(a:lnum+2)
-    let s:two_following_lines = 1
-  endif
-  if !s:two_following_lines
-      return '='
+    let s:thisline = getline(a:lnum)
+    if match(s:thisline, '^"" ') >= 0
+        return '>2'
     endif
-  else
-    if (match(s:thisline, '^"""""') >= 0) &&
-       \ (match(s:line_1_after, '^"  ') >= 0) &&
-       \ (match(s:line_2_after, '^""""') >= 0)
-      return '>1'
+    if match(s:thisline, '^""" ') >= 0
+        return '>3'
+    endif
+    let s:two_following_lines = 0
+    if line(a:lnum) + 2 <= line('$')
+        let s:line_1_after = getline(a:lnum+1)
+        let s:line_2_after = getline(a:lnum+2)
+        let s:two_following_lines = 1
+    endif
+    if !s:two_following_lines
+        return '='
     else
-      return '='
+        if (match(s:thisline, '^"""""') >= 0) &&
+                    \ (match(s:line_1_after, '^"  ') >= 0) &&
+                    \ (match(s:line_2_after, '^""""') >= 0)
+            return '>1'
+        else
+            return '='
+        endif
     endif
-  endif
 endfunction
 
 """ Defines a foldtext
 function! VimFoldText()
-  " handle special case of normal comment first
-  let s:info = '('.string(v:foldend-v:foldstart).' l)'
-  if v:foldlevel == 1
-    let s:line = ' ◇ '.getline(v:foldstart+1)[3:-2]
-  elseif v:foldlevel == 2
-    let s:line = '   ●  '.getline(v:foldstart)[3:]
-  elseif v:foldlevel == 3
-    let s:line = '     ▪ '.getline(v:foldstart)[4:]
-  endif
-  if strwidth(s:line) > 80 - len(s:info) - 3
-    return s:line[:79-len(s:info)-3+len(s:line)-strwidth(s:line)].'...'.s:info
-  else
-    return s:line.repeat(' ', 80 - strwidth(s:line) - len(s:info)).s:info
-  endif
+    " handle special case of normal comment first
+    let s:info = '('.string(v:foldend-v:foldstart).' l)'
+    if v:foldlevel == 1
+        let s:line = ' ◇ '.getline(v:foldstart+1)[3:-2]
+    elseif v:foldlevel == 2
+        let s:line = '   ●  '.getline(v:foldstart)[3:]
+    elseif v:foldlevel == 3
+        let s:line = '       ▪ '.getline(v:foldstart)[4:]
+    endif
+    if strwidth(s:line) > 80 - len(s:info) - 3
+        return s:line[:79-len(s:info)-3+len(s:line)-strwidth(s:line)].'...'.s:info
+    else
+        return s:line.repeat(' ', 80 - strwidth(s:line) - len(s:info)).s:info
+    endif
 endfunction
 
 """ Set foldsettings automatically for vim files
 augroup VimFolding
-  autocmd!
-  autocmd FileType vim
-                   \ setlocal foldmethod=expr |
-                   \ setlocal foldexpr=VimFolds(v:lnum) |
-                   \ setlocal foldtext=VimFoldText() |
-                   " \ set foldcolumn=2 foldminlines=2
+    autocmd!
+    autocmd FileType vim
+                \ setlocal foldmethod=expr |
+                \ setlocal foldexpr=VimFolds(v:lnum) |
+                \ setlocal foldtext=VimFoldText() |
+                " \ set foldcolumn=2 foldminlines=2
 augroup END
 
 
