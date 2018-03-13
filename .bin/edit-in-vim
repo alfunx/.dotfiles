@@ -7,7 +7,7 @@ vim --nofork "$file"
 EC=$?
 
 if [[ $EC == '0' ]]; then
-  nohup xclip -i -selection clipboard -rmlastnl "$file" > /dev/null 2>&1
+    nohup xclip -i -selection clipboard -rmlastnl "$file" > /dev/null 2>&1
 fi
 
 exit $EC

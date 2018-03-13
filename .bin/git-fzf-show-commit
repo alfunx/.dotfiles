@@ -5,16 +5,16 @@ alias fzf='fzf-tmux -d 30%'
 # git commit browser
 
 if ! $(git rev-parse --is-inside-work-tree > /dev/null 2>&1); then
-  exit 1
+    exit 1
 fi
 
 # --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"
 
 git log --format=oneline --abbrev-commit --all --decorate --color=always \
-  --graph "$@" \
-  | fzf +s +m -e --ansi --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
-  --bind "ctrl-m:execute:
+    --graph "$@" \
+    | fzf +s +m -e --ansi --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
+    --bind "ctrl-m:execute:
 (grep -o '[a-f0-9]\{7\}' | head -1 |
-  xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
+    xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
 {}
 FZF-EOF"

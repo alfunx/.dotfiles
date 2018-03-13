@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if [ ! -f /etc/pacman.d/mirrorlist.pacnew ]; then
-  cp -f /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.pacnew
+    cp -f /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.pacnew
 fi
 
 file_suffix="$(date +%Y-%m-%d_%T)"

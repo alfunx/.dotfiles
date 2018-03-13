@@ -78,8 +78,8 @@
 # NOTE: Use :cq to abort the merge and exit Vim with an error code.
 
 if [[ -z $* || $# != "5" ]] ; then
-  echo -e "Usage: $0 \$EDITOR \$BASE \$LOCAL \$REMOTE \$MERGED"
-  exit 1
+    echo -e "Usage: $0 \$EDITOR \$BASE \$LOCAL \$REMOTE \$MERGED"
+    exit 1
 fi
 
 cmd=$1
@@ -118,7 +118,7 @@ EC=$?
 
 # Overwrite $MERGED only if vimdiff exits cleanly.
 if [[ $EC == "0" ]] ; then
-  cat "${LCONFL}" > "${MERGED}"
+    cat "${LCONFL}" > "${MERGED}"
 fi
 
 exit $EC

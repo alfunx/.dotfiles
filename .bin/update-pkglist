@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 pacman -Qeq \
-  | grep -v "$(paclist aur | sed 's/\s.*//')" \
-  | grep -v "$(paclist manual | sed 's/\s.*//')" \
-  > ~/.pkglist/pacman
+    | grep -v "$(paclist aur | sed 's/\s.*//')" \
+    | grep -v "$(paclist manual | sed 's/\s.*//')" \
+    > ~/.pkglist/pacman
 paclist aur \
-  | sed 's/\s.*//' \
-  > ~/.pkglist/aur
+    | sed 's/\s.*//' \
+    > ~/.pkglist/aur
 paclist manual \
-  | sed 's/\s.*//' \
-  > ~/.pkglist/manual
+    | sed 's/\s.*//' \
+    > ~/.pkglist/manual
