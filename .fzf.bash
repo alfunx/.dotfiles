@@ -10,8 +10,8 @@ source '/usr/share/fzf/key-bindings.bash'
 
 # default options
 export FZF_DEFAULT_OPTS='--height 30%
-  --color fg:223,bg:235,hl:208,fg+:229,bg+:237,hl+:167
-  --color info:246,prompt:214,pointer:214,marker:142,spinner:246,header:214'
+    --color fg:223,bg:235,hl:208,fg+:229,bg+:237,hl+:167
+    --color info:246,prompt:214,pointer:214,marker:142,spinner:246,header:214'
 
 # export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*" 2> /dev/null'
 # export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
