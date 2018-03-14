@@ -1,0 +1,69 @@
+diff -U 3 b/config.def.h n/config.def.h
+--- b/config.def.h	2018-03-11 01:28:05.373079100 -0500
++++ n/config.def.h	2018-03-11 01:28:33.915179100 -0500
+@@ -156,8 +156,14 @@
+  */
+ static MouseShortcut mshortcuts[] = {
+ 	/* button               mask            string */
+-	{ Button4,              XK_ANY_MOD,     "\031" },
+-	{ Button5,              XK_ANY_MOD,     "\005" },
++	{ Button4,              XK_NO_MOD,      "\031" },
++	{ Button5,              XK_NO_MOD,      "\005" },
++};
++
++MouseKey mkeys[] = {
++	/* button               mask            function        argument */
++	{ Button4,              ShiftMask,      kscrollup,      {.i =  1} },
++	{ Button5,              ShiftMask,      kscrolldown,    {.i =  1} },
+ };
+ 
+ /* Internal keyboard shortcuts. */
+diff -U 3 b/st.h n/st.h
+--- b/st.h	2018-03-11 01:28:05.382581000 -0500
++++ n/st.h	2018-03-11 01:28:33.918187000 -0500
+@@ -81,6 +81,13 @@
+ 	const void *v;
+ } Arg;
+ 
++typedef struct {
++	uint b;
++	uint mask;
++	void (*func)(const Arg *);
++	const Arg arg;
++} MouseKey;
++
+ void die(const char *, ...);
+ void redraw(void);
+ void draw(void);
+@@ -129,3 +136,4 @@
+ extern unsigned int tabspaces;
+ extern unsigned int defaultfg;
+ extern unsigned int defaultbg;
++extern MouseKey mkeys[];
+Only in n/: st.h.orig
+diff -U 3 b/x.c n/x.c
+--- b/x.c	2018-03-11 01:28:05.240708700 -0500
++++ n/x.c	2018-03-11 01:28:33.923701700 -0500
+@@ -409,6 +409,7 @@
+ {
+ 	struct timespec now;
+ 	MouseShortcut *ms;
++    MouseKey *mk;
+ 	int snap;
+ 
+ 	if (IS_SET(MODE_MOUSE) && !(e->xbutton.state & forceselmod)) {
+@@ -423,6 +424,14 @@
+ 			return;
+ 		}
+ 	}
++ 
++	for (mk = mkeys; mk < mkeys + LEN(mkeys); mk++) {
++		if (e->xbutton.button == mk->b
++				&& match(mk->mask, e->xbutton.state)) {
++			mk->func(&mk->arg);
++			return;
++		}
++	}
+ 
+ 	if (e->xbutton.button == Button1) {
+ 		/*

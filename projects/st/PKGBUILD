@@ -2,7 +2,7 @@
 
 _pkgname=st
 pkgname=${_pkgname}-git
-pkgver=0.7.r41.g1f24bde
+pkgver=0.8.r0.g8ab6290
 pkgrel=1
 pkgdesc='A simple virtual terminal emulator for X. (Including patches and colorschemes)'
 arch=('i686' 'x86_64')
@@ -14,32 +14,28 @@ makedepends=('ncurses' 'libxext' 'git')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 
-_patches=('https://st.suckless.org/patches/vertcenter/st-vertcenter-20170601-5a10aca.diff'
-          'https://st.suckless.org/patches/hidecursor/st-hidecursor-20170404-745c40f.diff'
-          'https://st.suckless.org/patches/scrollback/st-scrollback-20170329-149c0d3.diff'
-          'https://st.suckless.org/patches/scrollback/st-scrollback-mouse-20170427-5a10aca.diff'
-          'https://st.suckless.org/patches/clipboard/st-clipboard-20170925-b1338e9.diff'
-          'https://st.suckless.org/patches/relativeborder/st-relativeborder-20171207-0ac685f.diff'
-          'st-config-20180221-1f24bde.diff'
-          'st-gruvbox-colorscheme-20180212-1f24bde.diff'
-          'st-font-iosevka-custom-20180212-1f24bde.diff'
-          'st-worddelimiters-20180215.diff')
+_patches=('https://st.suckless.org/patches/hidecursor/st-hidecursor-20170404-745c40f.diff'
+          'https://st.suckless.org/patches/scrollback/st-scrollback-20180311-c5ba9c0.diff'
+          'https://st.suckless.org/patches/scrollback/st-scrollback-mouse-20180311-c5ba9c0.diff'
+          'https://st.suckless.org/patches/clipboard/st-clipboard-20180309-c5ba9c0.diff'
+          'st-config-20180314-8ab6290.diff'
+          'st-gruvbox-colorscheme-20180314-8ab6290.diff'
+          'st-font-iosevka-custom-20180314-8ab6290.diff'
+          'st-worddelimiters-20180314-8ab6290.diff')
 
 source=("$pkgname::git+file:///home/amariya/projects/st/st"
         "${_patches[@]}"
         "simple-terminal.desktop")
 
 sha512sums=('SKIP'
-            '319d8d456011cc1c3cc3abb9c7a8ba5018f315d8fec69141b23595d275f979e3146a3eb83a07b995c77a2027b14d784e5aeb745a0d6159fd57cbabd77bcaff18'
             '35a533e66069439cbca9c1c0eee4d73eaca527b011f4a1fdc09d7130f8f44711410117fed1fc9ac0a8666217228992b2edfa70284859bcf2ec740b37d3fc7de7'
-            'a090914549f5161b7cd37f2994a32a4d5e1711505f6feb686734412249de7f28d7cc72946e157095857b88127e39742c978d6e190645028c5bb15b204723358b'
-            'ffd0594e88de6f5aab7aebccb9e0efdb36be8ce43aa25b1a5ff1432075d23ab8d4dd2c75e74f3f716362b8ff2548080d44493c6ffe5aeaa3d1a8a84cf53ec231'
-            'b7a854c26ebcc480606289b3dc25c4a482ce02eb5138918f35152b0a139b71084be658a39e79461ceaeabdee924872bae9e7c01bdd37514bcdb4eea1d2c01e0a'
-            '243da02f4dc074d41bf234cc35609297bbf671532faea2cdff1f6aad9d7260b348e1d6a25e112467fab47558e5a7de3e34abd6905eddbdc1cd4197e90268bcc4'
-            '9ddb2d3dcb75e98952bae6577035e4733eb90d53d7593202efb36eb325de59524c278dc7dc7536814161974861888e94a36a21db3c7f595c058705c1a8ad7de2'
-            '0f03adefac9baa779dffb4ccf0c9f8b71c4d030a22f73a9411c364f4aa257d2d1eab4f0ed67aba7d08a269549f60c79d411dc86499b016964daca5a41fa67a5d'
-            'db5d66fee4a7fe42174331e87e9859bbb4b17ba4bd9fa26536b897e54e2edc925f3b593f406bf3009ca0983bc5749a75b80c4560c01facc253010c0444353982'
-            'b983cfbe37ccbc443078a33190433b34719b03e90ac6d16073818f7c5a46c5d729ca2d2cd55480d1387b18f88f4655f1cb751e082b0b23d8a2ea2e23189d30f1'
+            '83e5d257db642eb403ca44d45119f294d5df7ebcec34a4f26ee214a8c87fbdcb5ae7c714f95859d8f5eafdfc282a8582c8419f8883c67990a2136c7cb0fa4009'
+            'b0f7c8716019313299dc0cd008e127bd2d7838e1f31cbf8b6945d62c48472e0cd3f691d590354c0df6c16f108b4d944613aa0ca0662dc6fabe438f34aca23b2e'
+            '02cd4d03d35f18b8d419d6bd5cd13fe4db994a5b9e83886d99cf53d5015f5e4ef0856e4a05f624f2e2a7a1e4d5ef4fa038f4eed0d140bc4db06d9e8d2f2062cd'
+            'fee353e53aaa3936e614df472d9ab5c7258e3d898878cc2a611d8aa027d5ee74fc6e9c6727015ca747ff8994756d4076f0e3178f63a316533a230cfc9d41175e'
+            '3626b61d82425ec0afad1a5a727401f836b071b66f5074ab88a86e2a50bcc8189e71eee0eaaea3767b3f3df27181a05b47c349649c7a1c7760fd509a6f2b26f7'
+            'd0c1ac5338432c33c5292b379a5ef99f577c52f9ef8a08f6b25ccc3ce3ef58baa7608bb6af0e683d5e9946df7c24ebfc8fbe2744757e2b662364f45cdff14cbf'
+            '95b211b9c6a69263a8201cc4462d8f7c2c6b62fca53598b7aa6fc8c3dfc849e4a4c551ec649d71425d90064e1f45128fcfc575fb3997429c3acaa1ea30d200da'
             '717dd4134ca8c39b8f950fe3c88e728656f2d08c537b8df0aeaae98023861ccf3802fe6c9ebc92cb79b2182fd528a3c0c7278fc6f31a7c3b05d07f2842ee0cd1')
 
 pkgver() {

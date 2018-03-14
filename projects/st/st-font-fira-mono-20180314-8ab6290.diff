@@ -1,0 +1,26 @@
+diff --git a/config.def.h b/config.def.h
+index 877afab..96575a3 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -5,8 +5,8 @@
+  *
+  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
+  */
+-static char *font = "Liberation Mono:pixelsize=12:antialias=true:autohint=true";
+-static int borderperc = 20;
++static char *font = "Fira Mono:pixelsize=15:antialias=true:autohint=true";
++static int borderperc = 50;
+ 
+ /*
+  * What program is execed by st depends of these precedence rules:
+@@ -24,8 +24,8 @@ static char stty_args[] = "stty raw pass8 nl -echo -iexten -cstopb 38400";
+ static char vtiden[] = "\033[?6c";
+ 
+ /* Kerning / character bounding-box multipliers */
+-static float cwscale = 1.0;
+-static float chscale = 1.0;
++static float cwscale = 1.0;
++static float chscale = 1.0;
+ 
+ /*
+  * word delimiter string
