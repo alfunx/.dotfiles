@@ -1,6 +1,8 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
-alias fzf='fzf-tmux -d 30%'
+fzf() {
+    fzf-tmux -d 30% -- "$@"
+}
 
 # manage git stash
 # type fstash to get a list of your stashes

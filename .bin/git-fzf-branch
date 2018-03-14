@@ -1,6 +1,8 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
-alias fzf='fzf-tmux -d 30%'
+fzf() {
+    fzf-tmux -d 30% -- "$@"
+}
 
 # checkout git branch (including remote branches)
 
