@@ -2,9 +2,6 @@
 #  ZSHRC  #
 ###########
 
-# Dircolors
-eval "$(dircolors "$HOME/.dir_colors")"
-
 # fpath=("$HOME/.zsh" $fpath)
 
 # If you come from bash you might have to change your $PATH.
@@ -14,10 +11,10 @@ eval "$(dircolors "$HOME/.dir_colors")"
 export ZSH="$HOME/.oh-my-zsh"
 
 if [ "$TERM" != "linux" ]; then
-  # Set name of the theme to load. Optionally, if you set this to "random"
-  # it'll load a random theme each time that oh-my-zsh is loaded.
-  # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-  ZSH_THEME="agnoster"
+    # Set name of the theme to load. Optionally, if you set this to "random"
+    # it'll load a random theme each time that oh-my-zsh is loaded.
+    # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
+    ZSH_THEME="agnoster"
 fi
 
 # Uncomment the following line to use case-sensitive completion.
@@ -59,16 +56,23 @@ fi
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
 
+#############
+#  PROFILE  #
+#############
+
+[[ -f ~/.zprofile ]] && source ~/.zprofile
+
+
 #####################
-#  plugin settings  #
+#  PLUGIN SETTINGS  #
 #####################
 
 # bgnotify settings
-bgnotify_threshold=1  ## set your own notification threshold
+bgnotify_threshold=1    ## set your own notification threshold
 bgnotify_formatted() {
-  ## $1=exit_status, $2=command, $3=elapsed_time
-  [ $1 -eq 0 ] && title="Zsh" || title="Zsh (fail)"
-  bgnotify "$title (${3}s)" "$2"
+    ## $1=exit_status, $2=command, $3=elapsed_time
+    [ $1 -eq 0 ] && title="Zsh" || title="Zsh (fail)"
+    bgnotify "$title (${3}s)" "$2"
 }
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
@@ -83,7 +87,10 @@ source "$HOME/.completion.zsh"
 # Oh-My-Zsh
 source "$ZSH/oh-my-zsh.sh"
 
-# User configuration
+
+########################
+#  USER CONFIGURATION  #
+########################
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
@@ -92,9 +99,9 @@ source "$ZSH/oh-my-zsh.sh"
 
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
+#     export EDITOR='vim'
 # else
-#   export EDITOR='mvim'
+#     export EDITOR='mvim'
 # fi
 
 # Compilation flags
@@ -103,18 +110,9 @@ source "$ZSH/oh-my-zsh.sh"
 # ssh
 # export SSH_KEY_PATH="~/.ssh/rsa_id"
 
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-
 
 ############
-#  custom  #
+#  CUSTOM  #
 ############
 
 # Zsh options
@@ -132,9 +130,6 @@ source "$HOME/.highlight.zsh"
 # Aliases
 source "$HOME/.alias.zsh"
 
-# Export
-source "$HOME/.env.sh"
-
 # FZF
 source "$HOME/.fzf.zsh"
 
@@ -143,20 +138,20 @@ source "$HOME/.bin/fix-gruvbox-palette"
 
 # TMUX
 main_attached="$(tmux list-sessions -F '#S #{session_attached}' \
-  2>/dev/null \
-  | sed -n 's/^main[[:space:]]//p')"
+    2>/dev/null \
+    | sed -n 's/^main[[:space:]]//p')"
 if [ ! "$main_attached" -gt '0' ] && [ ! "$TERM" = 'linux' ]; then
-  tmux attach -t main >/dev/null 2>&1 || tmux new -s main >/dev/null 2>&1
-  exit
+    tmux attach -t main >/dev/null 2>&1 || tmux new -s main >/dev/null 2>&1
+    exit
 fi
 
 # Alternative prompt
 if [[ "$TERM" == "linux" ]]; then
-  PROMPT='[%F{red}%B%n%b%f@%m %~]'
-  PROMPT+='$(git_prompt_info)'
-  PROMPT+=' %(?.%F{cyan}.%F{red})%B%(!.#.$)%b%f '
-  ZSH_THEME_GIT_PROMPT_PREFIX=" [%F{yellow}%B"
-  ZSH_THEME_GIT_PROMPT_SUFFIX="%b%f]"
-  ZSH_THEME_GIT_PROMPT_DIRTY="%F{red}%B*%b%f"
-  ZSH_THEME_GIT_PROMPT_CLEAN=""
+    PROMPT='[%F{red}%B%n%b%f@%m %~]'
+    PROMPT+='$(git_prompt_info)'
+    PROMPT+=' %(?.%F{cyan}.%F{red})%B%(!.#.$)%b%f '
+    ZSH_THEME_GIT_PROMPT_PREFIX=" [%F{yellow}%B"
+    ZSH_THEME_GIT_PROMPT_SUFFIX="%b%f]"
+    ZSH_THEME_GIT_PROMPT_DIRTY="%F{red}%B*%b%f"
+    ZSH_THEME_GIT_PROMPT_CLEAN=""
 fi

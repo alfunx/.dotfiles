@@ -27,7 +27,7 @@ export LESS_TERMCAP_ue=$'\e[0m'
 export MANROFFOPT='-c'
 export LESS='-iMRj.3'
 
-# # man / less colors
+# # man / less colors (using tput)
 # export LESS_TERMCAP_mb=$(tput bold; tput setaf 2)
 # export LESS_TERMCAP_md=$(tput bold; tput setaf 4)
 # export LESS_TERMCAP_me=$(tput sgr0)
@@ -42,3 +42,14 @@ export LESS='-iMRj.3'
 
 # gpg (for Github)
 export GPG_TTY=$(tty)
+
+# qt theme
+export QT_QPA_PLATFORMTHEME="qt5ct"
+
+
+###############
+#  DIRCOLORS  #
+###############
+
+# eval dircolors
+eval "$(dircolors "$HOME/.dircolors")"

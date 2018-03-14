@@ -45,5 +45,5 @@ fzf-git-tag() {
         fzf-tmux -d 70% --multi --preview-window right:70% \
                          --preview 'git show --color=always {} | head -'"$LINES"
 }
-zle         -N       fzf-git-tag
+zle     -N     fzf-git-tag
 bindkey '^G^T' fzf-git-tag

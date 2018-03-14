@@ -1,5 +1,5 @@
 ##################
-#  highlighting  #
+#  HIGHLIGHTING  #
 ##################
 
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)

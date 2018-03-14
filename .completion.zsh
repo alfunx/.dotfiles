@@ -1,5 +1,5 @@
 ################
-#  completion  #
+#  COMPLETION  #
 ################
 
 # The following lines were added by compinstall

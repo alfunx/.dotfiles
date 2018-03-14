@@ -5,15 +5,21 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-eval "$(dircolors "$HOME"/.dir_colors)"
 
-alias ls='ls --color=auto'
-PS1='[\u@\h \W]\$ '
+#############
+#  PROFILE  #
+#############
+
+[[ -f ~/.bash_profile ]] && source ~/.bash_profile
+
+
+############
+#  CUSTOM  #
+############
+
+alias ls='ls --color=tty'
 
 PS1='[\[\033[1;31m\]\u\[\033[0m\]@\H \w]$ '
-
-# Export
-source "$HOME/.env.sh"
 
 # FZF
 source "$HOME/.fzf.bash"

@@ -1,5 +1,5 @@
 #############
-#  aliases  #
+#  ALIASES  #
 #############
 
 compdef dotfiles=git
@@ -25,10 +25,12 @@ alias neofetch='echo "\\n\\n" && neofetch'
 alias grep='grep --color=auto --exclude-dir={.git,.svn}'
 alias egrep='egrep --color=auto --exclude-dir={.git,.svn}'
 
+alias -g C='| xclip -selection clipboard -rmlastnl'
+
 foreground-job() {
     fg
 }
-zle         -N   foreground-job
+zle     -N   foreground-job
 bindkey '^Z' foreground-job
 
 con() {
@@ -126,13 +128,13 @@ tmux() {
 }
 
 #########
-#  fzf  #
+#  FZF  #
 #########
 
-alias fzf="fzf-tmux -d 30%"
+alias fzf="fzf-tmux -d 30% --"
 
 #############
-#  ripgrep  #
+#  RIPGREP  #
 #############
 
 # fuzzy rg
@@ -141,7 +143,7 @@ frg() {
 }
 
 #######################
-# the silver searcher #
+# THE SILVER SEARCHER #
 #######################
 
 alias ag="ag --hidden --follow --smart-case --numbers --color-match '1;31' --color-path '0;37' --color-line-number '1;33'"
@@ -152,7 +154,7 @@ fag() {
 }
 
 ##################
-# fuzzy commands #
+# FUZZY COMMANDS #
 ##################
 
 # # cd to selected directory (no hidden files)
@@ -255,10 +257,6 @@ fdp() {
     cd "$(get_parent_dirs "$(realpath "${1:-$PWD}")" | fzf --tac)" || exit 1
 }
 
-############################
-# fuzzy processes commands #
-############################
-
 # kill process
 fkill() {
     local pid
@@ -269,10 +267,7 @@ fkill() {
     fi
 }
 
-#########################
-#  fuzzy pacman search  #
-#########################
-
+# pacman search
 # example usage: pacman -S $(fp)
 fp() {
     echo -n "$(pacman --color always "${@:--Ss}" \
@@ -281,10 +276,7 @@ fp() {
         | sed 's/ .*//')"
 }
 
-######################
-#  fuzzy man search  #
-######################
-
+# man search
 fman() {
     man "$(apropos . | fzf | sed 's/ .*//')"
 }
