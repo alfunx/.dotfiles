@@ -57,6 +57,7 @@
 [log]
 	abbrevCommit = true
 	decorate = short
+	date = format:%a  %Y-%m-%d  %R  %z
 
 [url "git@github.com:"]
 	insteadOf = @gh:
@@ -71,18 +72,24 @@
 	ec = config --global --edit
 
 	l = log --format=oneline --all --color
-	ls = log --format=short --all --color --stat
-	lm = log --format=medium --all --color --stat
-	lf = log --format=full --all --color --stat
-	lff = log --format=fuller --all --color --stat
+	ls = log --format=short --all --color
+	lss = log --format=short --all --color --stat --summary
+	lm = log --format=medium --all --color
+	lmm = log --format=medium --all --color --stat --summary
+	lf = log --format=fuller --all --color
+	lff = log --format=fuller --all --color --stat --summary
 	gl = log --format=oneline --all --color --graph
-	gls = log --format=short --all --color --stat --graph
-	glm = log --format=medium --all --color --stat --graph
-	glf = log --format=full --all --color --stat --graph
-	glff = log --format=fuller --all --color --stat --graph
-	lr = "!f() { git lff \"${1-HEAD}\"~..\"${1-HEAD}\"; }; f"
+	gls = log --format=short --all --color --graph
+	glss = log --format=short --all --color --graph --stat --summary
+	glm = log --format=medium --all --color --graph
+	glmm = log --format=medium --all --color --graph --stat --summary
+	glf = log --format=fuller --all --color --graph
+	glff = log --format=fuller --all --color --graph --stat --summary
+
 	lnc = log --format=oneline --all --no-color
-	fl = log --patch --all --color
+	lr = "!f() { git lff \"${1-HEAD}\"~..\"${1-HEAD}\"; }; f"
+	lp = log --patch --all --color
+	glp = log --patch --all --color --graph
 
 	d = diff
 	ds = diff --stat
@@ -106,7 +113,7 @@
 	cob = checkout -b
 	b = branch
 	bd = branch --delete
-	bD = branch --delete --force
+	bdf = branch --delete --force
 	bdr = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git push --delete \"${1-origin}\" \"$CURRENT\"; }; f"
 	bt = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git branch --set-upstream-to=\"${1-origin/$CURRENT}\"; }; f"
 
@@ -120,11 +127,15 @@
 	pusu = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git push --set-upstream \"${1-origin}\" \"$CURRENT\"; }; f"
 
 	m = merge
+	ma = merge --abort
+	mc = merge --continue
 	mff = merge --ff-only
 	mnff = merge --no-ff
 	mt = mergetool
 	cp = cherry-pick
 	r = rebase
+	ra = rebase --abort
+	rc = rebase --interactive --continue
 	ri = rebase --interactive
 	rim = rebase --interactive master
 

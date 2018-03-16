@@ -19,7 +19,7 @@ branches=$(git branch --all | grep -v HEAD \
     || exit 1
 
 target=$(echo "$tags\\n$branches" \
-    | fzf -- +s +m -e --ansi --tac -d '\t' -n 2) \
+    | fzf +s +m -e --ansi --tac -d '\t' -n 2) \
     || exit 1
 
 git checkout $(echo "$target" | awk '{print $2}')
