@@ -298,6 +298,7 @@ root.buttons(awful.util.table.join(
 ))
 -- }}}
 
+-- Select tag by direction in a grid (taggrid feature)
 local select_tag_in_grid
 do
     local columns = awful.util.tagcolumns or #awful.util.tagnames
@@ -380,6 +381,7 @@ globalkeys = awful.util.table.join(
               {description = "show the menubar", group = "launcher"}),
     awful.key({ mod_4                     }, ".", function ()
         awful.spawn("rofi -show drun")
+        -- awful.spawn("dmenu_run")
         -- awful.spawn(string.format("dmenu_run -i -t -dim 0.5 -p 'Run: ' -h 21 -fn 'Meslo LG S for Powerline-10' -nb '%s' -nf '%s' -sb '%s' -sf '%s'",
         -- beautiful.tasklist_bg_normal, beautiful.fg_normal, beautiful.tasklist_bg_urgent, beautiful.tasklist_fg_urgent))
     end),
@@ -759,6 +761,9 @@ awful.rules.rules = {
     { rule_any = { type = { "normal", "dialog" } },
       properties = { titlebars_enabled = true } },
 
+    { rule = { class = "Thunderbird" },
+      properties = { screen = 1, tag = awful.util.tagnames[6] } },
+
     { rule = { class = "Gimp", role = "gimp-image-window" },
       properties = { screen = 1, tag = awful.util.tagnames[7] } },
 
@@ -915,7 +920,9 @@ awful.tag.attached_connect_signal(s, "property::layout",
 -- Rounded corners
 client.connect_signal("manage",
     function(c)
-        c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, beautiful.border_radius or 0) end
+        c.shape = function(cr, w, h)
+            gears.shape.rounded_rect(cr, w, h, beautiful.border_radius or 0)
+        end
     end)
 
 -- }}}

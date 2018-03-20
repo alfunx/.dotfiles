@@ -4,6 +4,10 @@
      Licensed under GNU General Public License v2
       * (c) 2017, Alphonse Mariyagnanaseelan
 
+      ------------------
+      --  DEPRECATED  --
+      ------------------
+
 --]]
 
 local helpers      = require("lain.helpers")
@@ -34,9 +38,9 @@ end
 function eventhandler.attach_hover(widget)
     widget:connect_signal("mouse::enter", eventhandler.execute)
     widget:connect_signal("mouse::leave", function()
-        if not eventhandler.notification then return end
-        naughty.destroy(eventhandler.notification)
-        eventhandler.notifications = nil
+        if not widget.notification then return end
+        naughty.destroy(widget.notification)
+        widget.notifications = nil
     end)
 end
 

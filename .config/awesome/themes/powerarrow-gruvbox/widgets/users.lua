@@ -20,8 +20,8 @@ local function factory(args)
     local args     = args or {}
     local timeout  = args.timeout or 120
     local settings = args.settings or function() end
-    -- local cmd      = "users | wc -w"
-    local cmd      = "echo \"$(users | wc -w)-$(tmux list-panes -a | wc -l)\" | bc"
+    local cmd      = "users | wc -w"
+    -- local cmd      = "echo \"$(users | wc -w)-$(tmux list-panes -a | wc -l)\" | bc"
 
 
     function users.update()

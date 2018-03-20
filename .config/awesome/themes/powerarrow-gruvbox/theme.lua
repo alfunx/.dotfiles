@@ -64,17 +64,18 @@ local lain             = require("lain")
 local custom_widget    = require("themes.powerarrow-gruvbox.widgets")
 local awful            = require("awful")
 local wibox            = require("wibox")
+local naughty          = require("naughty")
 local os, math, string = os, math, string
 
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-gruvbox"
 theme.scripts_dir                               = os.getenv("HOME") .. "/.bin"
 
--- theme.wallpaper_original                        = theme.dir .. "/wallpapers/matterhorn.jpg"
--- theme.wallpaper                                 = theme.dir .. "/wallpapers/matterhorn_base.jpg"
--- theme.wallpaper_blur                            = theme.dir .. "/wallpapers/matterhorn_blur.jpg"
+theme.wallpaper_original                        = theme.dir .. "/wallpapers/matterhorn.jpg"
+theme.wallpaper                                 = theme.dir .. "/wallpapers/matterhorn_base.jpg"
+theme.wallpaper_blur                            = theme.dir .. "/wallpapers/matterhorn_blur.jpg"
 
-theme.wallpaper                                 = theme.dir .. "/wallpapers/wall.png"
+-- theme.wallpaper                                 = theme.dir .. "/wallpapers/wall.png"
 
 local font_name                                 = "Iosevka Custom"
 local font_size                                 = "11"
@@ -84,9 +85,9 @@ theme.font_italic                               = font_name .. " " .. "Italic"  
 theme.font_bold_italic                          = font_name .. " " .. "Bold Italic" .. " " .. font_size
 theme.font_big                                  = font_name .. " " .. "Bold"        .. " 16"
 
-theme.border_normal                             = bw1
-theme.border_focus                              = bw4
-theme.border_marked                             = bw4
+theme.border_normal                             = bw2
+theme.border_focus                              = bw5
+theme.border_marked                             = bw5
 
 theme.fg_normal                                 = bw9
 theme.fg_focus                                  = red_light
@@ -94,18 +95,6 @@ theme.fg_urgent                                 = bw0
 theme.bg_normal                                 = bw0
 theme.bg_focus                                  = bw2
 theme.bg_urgent                                 = red_light
-
-theme.notification_fg                           = textcolor_light
-theme.notification_bg                           = bw0
-theme.notification_border_color                 = bw0
-theme.notification_border_width                 = 4
-theme.notification_icon_size                    = 80
-theme.notification_opacity                      = 0.9
-theme.notification_max_width                    = 600
-theme.notification_margin                       = 100
-theme.notification_shape                        = function(cr, width, height)
-                                                      gears.shape.rounded_rect(cr, width, height, 5)
-                                                  end
 
 theme.taglist_font                              = theme.font_bold
 theme.taglist_fg_normal                         = theme.fg_normal
@@ -136,6 +125,11 @@ theme.titlebar_bg_normal                        = theme.border_normal
 theme.titlebar_bg_focus                         = theme.border_focus
 theme.titlebar_bg_marked                        = theme.border_marked
 
+theme.snap_bg                                   = theme.border_focus
+-- theme.snap_shape                                = function(cr, w, h)
+--                                                       gears.shape.rounded_rect(cr, w, h, theme.border_radius or 0)
+--                                                   end
+
 theme.hotkeys_border_width                      = 30
 theme.hotkeys_border_color                      = bw0
 theme.hotkeys_group_margin                      = 30
@@ -156,6 +150,18 @@ theme.tasklist_disable_icon                     = true
 theme.tasklist_spacing                          = 3
 theme.useless_gap                               = 14
 theme.systray_icon_spacing                      = 4
+
+theme.notification_fg                           = textcolor_light
+theme.notification_bg                           = theme.bg_normal
+theme.notification_border_color                 = theme.border_normal
+theme.notification_border_width                 = theme.border_width
+theme.notification_icon_size                    = 80
+-- theme.notification_opacity                      = 0.9
+theme.notification_max_width                    = 600
+theme.notification_margin                       = 10
+theme.notification_shape                        = function(cr, width, height)
+                                                      gears.shape.rounded_rect(cr, width, height, 5)
+                                                  end
 
 theme.menu_submenu_icon                         = theme.dir .. "/icons/submenu.png"
 theme.awesome_icon                              = theme.dir .. "/icons/awesome.png"
@@ -228,6 +234,33 @@ theme.titlebar_maximized_button_normal_active   = theme.dir .. "/icons/titlebar_
 theme.titlebar_maximized_button_focus_inactive  = theme.dir .. "/icons/titlebar_light/maximized_focus_inactive.png"
 theme.titlebar_maximized_button_normal_inactive = theme.dir .. "/icons/titlebar_light/maximized_normal_inactive.png"
 
+naughty.config.padding                          = 15
+naughty.config.spacing                          = 10
+
+naughty.config.presets.low                      = {
+                                                      font         = theme.font,
+                                                      fg           = theme.notification_fg,
+                                                      bg           = theme.notification_bg,
+                                                      border_width = theme.notification_border_width,
+                                                      margin       = theme.notification_margin,
+                                                  }
+
+naughty.config.presets.normal                   = {
+                                                      font         = theme.font,
+                                                      fg           = theme.notification_fg,
+                                                      bg           = theme.notification_bg,
+                                                      border_width = theme.notification_border_width,
+                                                      margin       = theme.notification_margin,
+                                                  }
+
+naughty.config.presets.critical                 = {
+                                                      font         = theme.font,
+                                                      fg           = bw9,
+                                                      bg           = red_dark,
+                                                      border_width = theme.notification_border_width,
+                                                      margin       = theme.notification_margin,
+                                                  }
+
 local markup = lain.util.markup
 local separators = lain.util.separators
 
@@ -243,7 +276,7 @@ local clock = awful.widget.watch(
 
 clock_widget = wibox.widget {
     clock,
-    layout = wibox.layout.align.horizontal
+    layout = wibox.layout.align.horizontal,
 }
 
 -- Calendar
@@ -251,11 +284,7 @@ theme.cal = lain.widget.calendar({
     cal = "cal --color=always --monday",
     attach_to = { clock_widget },
     icons = "",
-    notification_preset = {
-        font = theme.font,
-        fg   = theme.fg_normal,
-        bg   = theme.bg_normal
-    }
+    notification_preset = naughty.config.presets.normal,
 })
 
 -- -- Mail IMAP check
@@ -275,7 +304,7 @@ theme.cal = lain.widget.calendar({
 --             widget:set_text("")
 --             mailicon:set_image(theme.widget_mail)
 --         end
---     end
+--     end,
 -- })
 -- --]]
 
@@ -310,7 +339,7 @@ theme.mpd = lain.widget.mpd({
             widget:set_text("")
             mpdicon:set_image(theme.widget_music)
         end
-    end
+    end,
 })
 
 -- MEM
@@ -333,12 +362,12 @@ local mem = lain.widget.mem({
         end
 
         widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, mem_now.perc))
-    end
+    end,
 })
 
 mem_widget = wibox.widget {
     memicon, mem.widget,
-    layout = wibox.layout.align.horizontal
+    layout = wibox.layout.align.horizontal,
 }
 
 -- CPU
@@ -361,12 +390,12 @@ local cpu = lain.widget.cpu({
         end
 
         widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, cpu_now.usage))
-    end
+    end,
 })
 
 cpu_widget = wibox.widget {
     cpuicon, cpu.widget,
-    layout = wibox.layout.align.horizontal
+    layout = wibox.layout.align.horizontal,
 }
 
 -- SYSLOAD
@@ -391,12 +420,12 @@ local sysload = lain.widget.sysload({
             bg_normal_font = theme.font_bold
         end
         widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, load_1))
-    end
+    end,
 })
 
 sysload_widget = wibox.widget {
     sysloadicon, sysload.widget,
-    layout = wibox.layout.align.horizontal
+    layout = wibox.layout.align.horizontal,
 }
 
 -- PACMAN
@@ -404,22 +433,22 @@ local pacmanicon = wibox.widget.imagebox(theme.widget_pacman)
 theme.pacman = custom_widget.pacman({
     command = "( checkupdates & pacaur -k --color never | sed 's/:: [a-zA-Z0-9]\\+ //' ) | sed 's/->/→/' | sort | column -t",
     notify = "on",
+    notification_preset = naughty.config.presets.normal,
     settings = function()
         local bg_normal_color = textcolor_light
         local bg_normal_font = theme.font
         widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, available))
-    end
+    end,
 })
 
 pacman_widget = wibox.widget {
     pacmanicon, theme.pacman.widget,
-    layout = wibox.layout.align.horizontal
+    layout = wibox.layout.align.horizontal,
 }
 
-theme.pacman_click = custom_widget.eventhandler({
-    attach_to = { pacman_widget },
-    execute = theme.pacman.manual_update
-})
+pacman_widget:buttons(awful.button({}, 1, function()
+    theme.pacman.manual_update()
+end))
 
 -- USERS
 local usersicon = wibox.widget.imagebox(theme.widget_users)
@@ -433,12 +462,12 @@ local users = custom_widget.users({
             bg_normal_font = theme.font_bold
         end
         widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, logged_in))
-    end
+    end,
 })
 
 users_widget = wibox.widget {
     usersicon, users.widget,
-    layout = wibox.layout.align.horizontal
+    layout = wibox.layout.align.horizontal,
 }
 
 --[[ Coretemp (lm_sensors, per core)
@@ -471,12 +500,12 @@ end)
 --             bg_normal_font = theme.font_bold
 --         end
 --         widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, coretemp_now))
---     end
+--     end,
 -- })
 
 -- temp_widget = wibox.widget {
 --     tempicon, temp.widget,
---     layout = wibox.layout.align.horizontal
+--     layout = wibox.layout.align.horizontal,
 -- }
 
 -- -- FS
@@ -486,19 +515,18 @@ end)
 --     notification_preset = { fg = theme.fg_normal, bg = theme.border_normal, font = "xos4 Terminus 10" },
 --     settings = function()
 --         widget:set_markup(markup.fontfg(theme.font, textcolor_light, " " .. fs_now.available_gb .. "GB "))
---     end
+--     end,
 -- })
 
 -- fs_widget = wibox.widget {
 --     fsicon, theme.fs.widget,
---     layout = wibox.layout.align.horizontal
+--     layout = wibox.layout.align.horizontal,
 -- }
 
 -- ALSA volume
 local volicon = wibox.widget.imagebox(theme.widget_vol)
 theme.volume = lain.widget.alsa({
     -- togglechannel = "IEC958,3",
-    -- notification_preset = { font = "xos4 Terminus 10", fg = theme.fg_normal },
     settings = function()
         if volume_now.status == "off" then
             volicon:set_image(theme.widget_vol_mute)
@@ -523,17 +551,19 @@ theme.volume = lain.widget.alsa({
 
 vol_widget = wibox.widget {
     volicon, theme.volume.widget,
-    layout = wibox.layout.align.horizontal
+    layout = wibox.layout.align.horizontal,
 }
 
-theme.volume_click = custom_widget.eventhandler({
-    attach_to = { vol_widget },
-    execute = function() awful.spawn(awful.util.terminal .. " \"alsamixer\"") end,
-})
+vol_widget:buttons(awful.button({}, 1, function()
+    awful.spawn(awful.util.terminal .. " \"alsamixer\"")
+end))
 
 -- BAT
 local baticon = wibox.widget.imagebox(theme.widget_battery)
 local bat = lain.widget.bat({
+    notify = "off",
+    batteries = {"BAT0"},
+    ac = "AC",
     settings = function()
         local bg_normal_color = textcolor_light
         local bg_normal_font = theme.font
@@ -566,49 +596,25 @@ local bat = lain.widget.bat({
 
         widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, bat_now.perc))
     end,
-    notify = "off",
-    batteries = {"BAT0"},
-    ac = "AC"
 })
 
 bat_widget = wibox.widget {
     baticon, bat.widget,
-    layout = wibox.layout.align.horizontal
+    layout = wibox.layout.align.horizontal,
 }
 
--- theme.bat_hover = awful.tooltip({
---     objects = { bat.widget },
---     margin_leftright = 10,
---     margin_topbottom = 20,
---     shape = gears.shape.infobubble,
---     -- timer_function = awful.spawn.easy_async(theme.scripts_dir .. "/show-battery-status", function(stdout, stderr, reason, exit_code)
---     --     text = stdout, height = 31, timeout = 10
---     -- end)
--- })
-
--- theme.bat_hover = custom_widget.eventhandler({
---     attach_to = { bat.widget },
---     attach = eventhandler.attach_hover,
---     execute = function()
---         awful.spawn.easy_async(theme.scripts_dir .. "/show-battery-status", function(stdout, stderr, reason, exit_code)
---             eventhandler.notify {
---                 text = stdout, height = 31, timeout = 10
---             }
---         end)
---     end
--- })
-
-theme.bat_click = custom_widget.eventhandler({
-    attach_to = { bat_widget },
-    execute = function()
-        awful.spawn.easy_async(theme.scripts_dir .. "/show-battery-status", function(stdout, stderr, reason, exit_code)
-            eventhandler.notify {
-                text = string.gsub(stdout, '\n*$', ''),
-                timeout = 10
-            }
-        end)
-    end
-})
+bat_widget:buttons(awful.button({}, 1, function()
+    awful.spawn.easy_async(theme.scripts_dir .. "/show-battery-status", function(stdout, stderr, reason, exit_code)
+        if bat_widget.notification then
+            naughty.destroy(bat_widget.notification)
+        end
+        bat_widget.notification = naughty.notify {
+            title = "Battery",
+            text = string.gsub(stdout, '\n*$', ''),
+            timeout = 10,
+        }
+    end)
+end))
 
 -- -- WEATHER
 -- local weather = lain.widget.weather({
@@ -616,12 +622,12 @@ theme.bat_click = custom_widget.eventhandler({
 --     settings = function()
 --         units = math.floor(weather_now["main"]["temp"])
 --         widget:set_markup(markup.fontfg(theme.font, textcolor_light, " " .. units .. "°C "))
---     end
+--     end,
 -- })
 
 -- weather_widget = wibox.widget {
 --     weather.icon, weather.widget,
---     layout = wibox.layout.align.horizontal
+--     layout = wibox.layout.align.horizontal,
 -- }
 
 -- NET
@@ -629,6 +635,9 @@ local neticon = wibox.widget.imagebox(theme.widget_net)
 local net = lain.widget.net({
     wifi_state = "on",
     iface = "wlp58s0",
+    notify = "off",
+    units = 1048576, -- in MB/s (1024^2)
+    -- units = 131072, -- in Mbit/s / Mbps (1024^2/8)
     settings = function()
         local bg_normal_color = textcolor_light
         local bg_normal_font = theme.font
@@ -641,45 +650,25 @@ local net = lain.widget.net({
             widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, net_now.received .. " ↓↑ " .. net_now.sent))
         end
     end,
-    notify = "off",
-    units = 1048576, -- in MB (1024^2)
-    -- units = 131072, -- in mbps (1024^2/8)
 })
 
 net_widget = wibox.widget {
     net.widget,
-    layout = wibox.layout.align.horizontal
+    layout = wibox.layout.align.horizontal,
 }
 
--- theme.net_click = custom_widget.eventhandler({
---     attach_to = { net.widget },
---     execute = function() awful.spawn(awful.util.terminal .. " \"sudo wifi-menu\"") end,
--- })
-
--- theme.net_hover = custom_widget.eventhandler({
---     attach_to = { net.widget },
---     attach = eventhandler.attach_hover,
---     execute = function()
---         awful.spawn.easy_async(theme.scripts_dir .. "/show-ip-address", function(stdout, stderr, reason, exit_code)
---             eventhandler.notify {
---                 text = stdout, timeout = 10
---             }
---         end)
---     end
--- })
-
-theme.net_click = custom_widget.eventhandler({
-    attach_to = { net_widget },
-    execute = function()
-        awful.spawn.easy_async(theme.scripts_dir .. "/show-ip-address", function(stdout, stderr, reason, exit_code)
-            eventhandler.notify {
-                title = "Network",
-                text = string.gsub(stdout, '\n$', ''),
-                timeout = 10
-            }
-        end)
-    end
-})
+net_widget:buttons(awful.button({}, 1, function()
+    awful.spawn.easy_async(theme.scripts_dir .. "/show-ip-address", function(stdout, stderr, reason, exit_code)
+        if net_widget.notification then
+            naughty.destroy(net_widget.notification)
+        end
+        net_widget.notification = naughty.notify {
+            title = "Network",
+            text = string.gsub(stdout, '\n*$', ''),
+            timeout = 10,
+        }
+    end)
+end))
 
 -- SEPARATORS
 local arrow_l = separators.arrow_left
@@ -708,7 +697,7 @@ local function pl(widget, bgcolor, padding)
     return wibox.container.background(wibox.container.margin(widget, 16, 16), bgcolor, theme.powerline_rl)
 end
 
--- Show only tags of current row
+-- Show only tags of current row (taggrid feature)
 local function rowfilter(t)
     local index = t.index
     local selected = awful.screen.focused().selected_tag.index
@@ -763,7 +752,7 @@ function theme.at_screen_connect(s)
 
     local systray_widget = wibox.container.margin(wibox.widget {
         wibox.widget.systray(),
-        layout = wibox.layout.align.horizontal
+        layout = wibox.layout.align.horizontal,
     }, 8, 0, 3, 3)
     systray_widget:set_visible(false)
 
@@ -771,7 +760,7 @@ function theme.at_screen_connect(s)
         timeout   = 5,
         callback  = function()
             systray_widget:set_visible(false)
-        end
+        end,
     }
 
     s.mywibox:connect_signal("mouse::enter", function()
@@ -791,15 +780,18 @@ function theme.at_screen_connect(s)
             layout = wibox.layout.fixed.horizontal,
 
             wibox.container.background(wibox.container.margin(wibox.widget {
-                s.mylayoutbox, layout = wibox.layout.align.horizontal
+                s.mylayoutbox,
+                layout = wibox.layout.align.horizontal,
             }, 8, 3, 4, 4), clock_bg_normal),
             wibox.container.background(wibox.container.margin(wibox.widget {
-                s.mytaglist, layout = wibox.layout.align.horizontal
+                s.mytaglist,
+                layout = wibox.layout.align.horizontal,
             }, 3, 8), theme.taglist_bg_normal),
             arrow_r(theme.taglist_bg_normal, theme.prompt_bg),
 
             wibox.container.background(wibox.container.margin(wibox.widget {
-                s.mypromptbox, layout = wibox.layout.align.horizontal
+                s.mypromptbox,
+                layout = wibox.layout.align.horizontal,
             }, 8, 4), theme.prompt_bg),
             arrow_r(theme.prompt_bg, theme.tasklist_bg_normal),
         },

@@ -35,12 +35,7 @@ local function factory(args)
     -- pip:             "pip list --outdated --format=legacy"
 
     local notification_preset = args.notification_preset
-    if not notification_preset then
-        notification_preset = {
-            title    = "Updates",
-            timeout  = 15
-        }
-    end
+    local notification_title = args.notification_title or "Updates"
 
     local update_count = 0
 
@@ -69,14 +64,15 @@ local function factory(args)
         else
             notification_preset.text = string.gsub(update_text, '[\n%s]*$', '')
         end
-        notification_preset.screen = scr or (pacman.followtag and awful.screen.focused()) or 1
+        notification_preset.screen = (pacman.followtag and awful.screen.focused()) or 1
 
         if pacman.notification then
             naughty.destroy(pacman.notification)
         end
         pacman.notification = naughty.notify({
             preset = notification_preset,
-            timeout = notification_preset.timeout or 15
+            timeout = notification_preset.timeout or 15,
+            title = notification_title,
         })
     end
 
