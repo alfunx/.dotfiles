@@ -116,10 +116,9 @@ source "$ZSH/oh-my-zsh.sh"
 ############
 
 # Zsh options
-setopt extendedglob
-setopt complete_aliases
-setopt hist_ignore_space
-setopt no_auto_cd
+setopt COMPLETE_ALIASES
+setopt HIST_IGNORE_SPACE
+setopt NO_AUTO_CD
 
 # No scrolllock
 stty -ixon

@@ -4,3 +4,9 @@
 [submodule ".config/awesome/freedesktop"]
 	path = .config/awesome/freedesktop
 	url = https://github.com/copycat-killer/awesome-freedesktop
+[submodule ".oh-my-zsh/custom/plugins/zsh-completions"]
+	path = .oh-my-zsh/custom/plugins/zsh-completions
+	url = https://github.com/zsh-users/zsh-completions
+[submodule ".oh-my-zsh/custom/plugins/zsh-syntax-highlighting"]
+	path = .oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+	url = https://github.com/zsh-users/zsh-syntax-highlighting

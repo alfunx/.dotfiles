@@ -474,6 +474,7 @@ EXEC 91  # Unix
 
 # Sensitive files
 *_history 96
+*_hist 96
 *_rsa 96
 *_keys 96
 
