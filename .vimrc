@@ -65,7 +65,6 @@ Plug 'wellle/targets.vim'
 Plug 'junegunn/vim-after-object'
 "Plug 'michaeljsmith/vim-indent-object'
 Plug 'alfunx/vim-indent-object'  " fork
-
 Plug 'kana/vim-textobj-user'
 Plug 'kana/vim-textobj-entire'
 Plug 'Julian/vim-textobj-variable-segment'
@@ -79,6 +78,11 @@ Plug 'wellle/tmux-complete.vim'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 
+" " Language server
+" Plug 'roxma/vim-hug-neovim-rpc'
+" Plug 'roxma/nvim-yarp'
+" Plug 'autozimu/LanguageClient-neovim'
+
 " Language specific
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 Plug 'lervag/vimtex', { 'for': ['latex', 'tex'] }
@@ -91,7 +95,6 @@ Plug 'alfunx/gruvbox'  " fork
 " Don't load in console
 if &term !=? 'linux' || has('gui_running')
     Plug 'vim-airline/vim-airline'
-    "Plug 'vim-airline/vim-airline-themes'
 endif
 
 call plug#end()
@@ -127,10 +130,10 @@ nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
 nnoremap <silent> <C-BS> :TmuxNavigatePrevious<cr>
 
 "" Split resize
-nnoremap <C-w>h :vertical resize -5<CR>
-nnoremap <C-w>j :resize -5<CR>
-nnoremap <C-w>k :resize +5<CR>
-nnoremap <C-w>l :vertical resize +5<CR>
+nnoremap <silent> <C-w>h :vertical resize -5<CR>
+nnoremap <silent> <C-w>j :resize -5<CR>
+nnoremap <silent> <C-w>k :resize +5<CR>
+nnoremap <silent> <C-w>l :vertical resize +5<CR>
 
 "augroup Quickfix
 "  autocmd!
@@ -141,12 +144,10 @@ nnoremap <C-w>l :vertical resize +5<CR>
 " German keyboard mappings
 nmap ä ^
 xmap ä ^
+omap ä ^
 nmap ö "
 xmap ö "
-nmap ü [
-xmap ü [
-nmap ¨ ]
-xmap ¨ ]
+omap ö "
 
 execute "set <M-h>=\<Esc>h"
 execute "set <M-j>=\<Esc>j"
@@ -154,8 +155,10 @@ execute "set <M-k>=\<Esc>k"
 execute "set <M-l>=\<Esc>l"
 nnoremap <M-j> }
 xnoremap <M-j> }
+onoremap <M-j> }
 nnoremap <M-k> {
 xnoremap <M-k> {
+onoremap <M-k> {
 
 " Previous paragraph
 nnoremap <BS> {
@@ -390,6 +393,7 @@ let g:airline#extensions#whitespace#mixed_indent_algo=1
 let g:airline_powerline_fonts=1
 let g:airline_skip_empty_sections=0
 let g:airline#extensions#tabline#show_tab_nr=0
+let g:airline#extensions#tabline#show_close_button=0
 let g:airline#extensions#tabline#buffers_label='buffers'
 let g:airline#extensions#tabline#tabs_label='tabs'
 
@@ -413,11 +417,11 @@ nmap <Leader>hu <Plug>GitGutterUndoHunk
 nmap ]c <Plug>GitGutterNextHunk
 nmap [c <Plug>GitGutterPrevHunk
 
-let g:gitgutter_sign_added='●'
-let g:gitgutter_sign_modified='●'
-let g:gitgutter_sign_removed='●'
-let g:gitgutter_sign_removed_first_line='●'
-let g:gitgutter_sign_modified_removed='●'
+let g:gitgutter_sign_added='┃'
+let g:gitgutter_sign_modified='┃'
+let g:gitgutter_sign_removed='◢'
+let g:gitgutter_sign_removed_first_line='◥'
+let g:gitgutter_sign_modified_removed='┃'
 
 "" EasyMotion
 "let g:EasyMotion_do_mapping=0  " Disable default mappings
@@ -465,13 +469,17 @@ map z? <Plug>(incsearch-easymotion-?)
 let g:netrw_liststyle=0
 let g:netrw_preview=1
 
-" "" Unimpaired
-" nmap <S-H> [
-" nmap <S-L> ]
-" omap <S-H> [
-" omap <S-L> ]
-" xmap <S-H> [
-" xmap <S-L> ]
+"" Unimpaired
+let g:nremap = {"[": "ü", "]": "¨"}
+let g:xremap = {"[": "ü", "]": "¨"}
+let g:oremap = {"[": "ü", "]": "¨"}
+
+nnoremap ü [
+xnoremap ü [
+onoremap ü [
+nnoremap ¨ ]
+xnoremap ¨ ]
+onoremap ¨ ]
 
 "" Vim RSI
 let g:rsi_no_meta=1
@@ -573,7 +581,7 @@ vnoremap <silent> _ mv:<C-U>call SendToTmuxSplit(visualmode(), 1)<CR>
 " nnoremap _ vap"vy:call VimuxSlime()<CR>
 
 "" Ale
-" Using special space, U+2000 (EN QUAD)
+" Using special space: U+2000 (EN QUAD)
 let g:ale_set_loclist=1
 let g:ale_sign_error=' ●'
 let g:ale_sign_warning=' ●'
@@ -581,10 +589,11 @@ let g:ale_lint_on_text_changed='never'
 let g:ale_lint_on_enter=1
 let g:ale_lint_on_save=1
 let g:ale_lint_on_filetype_changed=1
+let g:ale_set_highlights=1
 let g:ale_set_signs=1
-"nnoremap <silent> <C-w>p <Plug>(ale_previous_wrap)
-"nnoremap <silent> <C-w>n <Plug>(ale_next_wrap)
 
+nmap <silent> <C-w><C-p> <plug>(ale_previous_wrap)
+nmap <silent> <C-w><C-n> <plug>(ale_next_wrap)
 nnoremap <leader>a :ALEEnable<CR>
 
 augroup Ale
@@ -600,6 +609,19 @@ let g:AutoPairsMapSpace=0
 "" RustRacer
 let g:racer_cmd="/usr/bin/racer"
 let g:racer_experimental_completer=1
+
+"" LanguageClient
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
+    \ 'javascript': ['/opt/javascript-typescript-langserver/lib/language-server-stdio.js'],
+    \ }
+
+" Automatically start language servers.
+let g:LanguageClient_autoStart=1
+
+"nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
+"nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
+"nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
 
 
 """"""""""""""""
@@ -630,37 +652,43 @@ set list
 augroup LighterCursorLine
     autocmd!
     "autocmd ColorScheme * highlight clear CursorLine
-    autocmd ColorScheme * highlight CursorLine guibg=#32302f
+    "autocmd ColorScheme * highlight CursorLine guibg=#32302f
+    autocmd ColorScheme * if &background == "dark" | highlight CursorLine guibg=#32302f | else | highlight CursorLine guibg=#f2e5bc | endif
 augroup END
 
 augroup BoldCursorLineNr
     autocmd!
     "autocmd ColorScheme * highlight CursorLineNR cterm=bold guibg=#282828
-    autocmd ColorScheme * highlight CursorLineNR cterm=bold guibg=#32302f
+    autocmd ColorScheme * if &background == "dark" | highlight CursorLineNR cterm=bold guibg=#32302f | else | highlight CursorLineNR cterm=bold guibg=#f2e5bc | endif
 augroup END
 
 augroup LighterQuickFixLine
     autocmd!
-    autocmd ColorScheme * highlight QuickFixLine ctermbg=Yellow guibg=#504945
-    autocmd ColorScheme * highlight qfFileName guifg=#fe8019
+    "autocmd ColorScheme * highlight QuickFixLine ctermbg=Yellow guibg=#504945
+    "autocmd ColorScheme * highlight qfFileName guifg=#fe8019
+    autocmd ColorScheme * if &background == "dark" | highlight QuickFixLine ctermbg=Yellow guibg=#504945 | else | highlight QuickFixLine ctermbg=Yellow guibg=#d5c4a1 | endif
+    autocmd ColorScheme * if &background == "dark" | highlight qfFileName guifg=#fe8019 | else | highlight qfFileName guifg=#af3a03 | endif
 augroup END
 
 augroup SearchHighlightColor
     autocmd!
-    autocmd ColorScheme * highlight Search guibg=#282828 guifg=#fe8019
+    "autocmd ColorScheme * highlight Search guibg=#282828 guifg=#fe8019
+    autocmd ColorScheme * if &background == "dark" | highlight Search guibg=#282828 guifg=#fe8019 | else | highlight Search guibg=#fbf1c7 guifg=#af3a03 | endif
 augroup END
 
 """ Color VCS conflict markers
 augroup VCSConflictMarker
     autocmd!
-    autocmd ColorScheme * highlight VCSConflict guibg=#cc241d guifg=#282828
+    "autocmd ColorScheme * highlight VCSConflict guibg=#cc241d guifg=#282828
+    autocmd ColorScheme * if &background == "dark" | highlight VCSConflict guibg=#cc241d guifg=#282828 | else | highlight VCSConflict guibg=#cc241d guifg=#fbf1c7 | endif
     autocmd BufEnter,WinEnter * match VCSConflict '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
 augroup END
 
 " """ Color overlength
 " augroup OverLength
 "     autocmd!
-"     autocmd ColorScheme * highlight OverLength guibg=#cc241d guifg=#282828
+"     "autocmd ColorScheme * highlight OverLength guibg=#cc241d guifg=#282828
+"     autocmd ColorScheme * if &background == "dark" | highlight OverLength guibg=#cc241d guifg=#282828 | else | highlight OverLength guibg=#cc241d guifg=#fbf1c7 | endif
 "     "autocmd BufEnter,WinEnter * match OverLength /\%81v./
 "     "autocmd BufEnter,WinEnter * match OverLength /\%>80v.\+/
 "     let collumnLimit=80
@@ -672,6 +700,11 @@ augroup END
 augroup RefreshAirline
     autocmd!
     autocmd ColorScheme * if exists(':AirlineRefresh') | :AirlineRefresh | endif
+augroup END
+
+augroup SpellBadUnderline
+    autocmd!
+    autocmd BufEnter,WinEnter * highlight SpellBad gui=underline term=underline cterm=underline
 augroup END
 
 if &term !=? 'linux' || has('gui_running')
@@ -732,6 +765,7 @@ set pastetoggle=<F2>
 set notimeout
 set ttimeout
 set ttimeoutlen=100
+set updatetime=100
 
 if filereadable('/bin/zsh')
     set shell=/bin/zsh\ --login
@@ -785,7 +819,6 @@ augroup END
 set dictionary+=/usr/share/dict/words-insane
 
 "" Theme and colors
-set guifont=Meslo\ LG\ S\ for\ Powerline
 set termguicolors
 set background=dark
 let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
@@ -793,6 +826,13 @@ let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
 "set t_Co=256
 let g:gruvbox_italic=1
 silent! colorscheme gruvbox
+
+"" GUI options
+set guifont=Iosevka\ Custom
+set guioptions-=m  "remove menu bar
+set guioptions-=T  "remove toolbar
+set guioptions-=r  "remove right-hand scroll bar
+set guioptions-=L  "remove left-hand scroll bar
 
 "" Switch cursor according to mode
 let &t_SI="\<Esc>[6 q"
