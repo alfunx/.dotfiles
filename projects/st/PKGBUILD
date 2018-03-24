@@ -2,7 +2,7 @@
 
 _pkgname=st
 pkgname=${_pkgname}-git
-pkgver=0.8.r0.g8ab6290
+pkgver=0.8.1.r0.g6f0f2b7
 pkgrel=1
 pkgdesc='A simple virtual terminal emulator for X. (Including patches and colorschemes)'
 arch=('i686' 'x86_64')

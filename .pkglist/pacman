@@ -21,7 +21,6 @@ chrony
 clisp
 cmake
 cmatrix
-compton
 coreutils
 crda
 cronie
@@ -69,7 +68,6 @@ i3-wm
 imagemagick
 inetutils
 intel-ucode
-inxi
 iproute2
 iputils
 irssi
@@ -115,6 +113,7 @@ mpv
 nano
 ncdu
 ncmpcpp
+neofetch
 neovim
 net-tools
 netctl
@@ -151,7 +150,6 @@ python
 python-jedi
 python-pip
 python2-jedi
-qt4
 qt5ct
 r
 ranger
@@ -161,6 +159,9 @@ ripgrep
 rlwrap
 rofi
 rsync
+rust
+rust-docs
+rust-racer
 s-nail
 scrot
 sed
@@ -194,7 +195,6 @@ the_silver_searcher
 thunderbird
 tk
 tlp
-tmux
 tree
 ttf-fira-mono
 ttf-fira-sans
@@ -208,6 +208,7 @@ vi
 vifm
 virtualbox
 vlc
+vulkan-intel
 w3m
 wget
 which
@@ -215,10 +216,10 @@ wmctrl
 wpa_actiond
 wpa_supplicant
 xautolock
+xcompmgr
 xdg-user-dirs
 xdotool
 xf86-input-synaptics
-xf86-video-intel
 xfsprogs
 xorg-server
 xorg-server-xephyr
@@ -232,7 +233,6 @@ xorg-xinput
 xorg-xlsfonts
 xorg-xprop
 xorg-xrandr
-xsel
 xterm
 youtube-dl
 zathura

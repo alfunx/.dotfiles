@@ -3,12 +3,13 @@ alacritty-terminfo-git
 aurutils
 awmtt
 bash-pipes
+compton-git
 cower
 dropbox
 grabc
-kitty
+kitty-git
 luacheck
-neofetch
+modprobed-db
 netctl-dispatcher-chrony
 nvme-cli
 oomox-git
