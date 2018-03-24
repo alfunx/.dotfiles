@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 pictures_dir="$(xdg-user-dir PICTURES 2> /dev/null)"
-lock="${pictures_dir:-$HOME/Pictures}"/lock.png
+lock="${pictures_dir:-$HOME/Pictures}/lock.png"
 image=$(mktemp --suffix=.png)
 trap 'rm -f "$image"' SIGINT SIGTERM EXIT
 

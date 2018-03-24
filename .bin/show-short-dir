@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-width=${2-$(tput cols)}
+path=${1:-$(pwd)}
+width=${2:-900}
 
-echo "$1" \
+echo "$path" \
     | sed -e "s@^/home/$USER@~@" \
     | sed -e 's@^/home/\([^/][^/]*\)@~\1@' \
     | sed -e 's@\(^/[^/]*/\|[^/]*/\).*\(/[^/][^/]*/[^/][^/]*/[^/][^/]*\)@\1…\2@' \

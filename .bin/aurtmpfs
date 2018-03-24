@@ -23,8 +23,8 @@ readonly mount
 if [[ "$mount" -eq "0" ]]; then
     mountpoint -q /var/lib/aurbuild \
         && echo 'Already mounted.' \
-        && exit 1 \
-        || sudo mount /var/lib/aurbuild
+        && exit 1
+    sudo mount /var/lib/aurbuild
 else
     mountpoint -q /var/lib/aurbuild \
         && sudo umount /var/lib/aurbuild

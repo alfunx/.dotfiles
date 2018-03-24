@@ -10,7 +10,7 @@ fzf() {
 # ctrl-d shows a diff of the stash against your current HEAD
 # ctrl-b checks the stash out as a branch, for easier merging
 
-if ! $(git rev-parse --is-inside-work-tree > /dev/null 2>&1); then
+if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
     exit 1
 fi
 
@@ -27,11 +27,11 @@ do
     [[ -z "$sha" ]] && continue
 
     if [[ "$k" == 'ctrl-d' ]]; then
-        git diff $sha
+        git diff "$sha"
     elif [[ "$k" == 'ctrl-b' ]]; then
-        git stash branch "stash-$sha" $sha
+        git stash branch "stash-$sha" "$sha"
         break;
     else
-        git stash show -p $sha
+        git stash show -p "$sha"
     fi
 done

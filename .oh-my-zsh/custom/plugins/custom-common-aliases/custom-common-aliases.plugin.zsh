@@ -47,7 +47,7 @@ alias unexport='unset'
 alias whereami=display_info
 
 alias rm='rm -i'
-alias cp='cp -i'
+alias cp='cp -i --reflink=auto'
 alias mv='mv -i'
 
 # zsh is able to auto-do some kungfoo

@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+cmd=$1
+shift
+
+case $cmd in
+    vim)
+        vim ~/.vimrc "$@" ;;
+    tmux)
+        vim ~/.tmux.conf "$@" ;;
+    git)
+        vim ~/.gitconfig ~/.gitignore ~/.gitmodules "$@" ;;
+    zsh)
+        vim ~/.zshrc ~/.zsh_aliases ~/.oh-my-zsh/themes/agnoster-custom.zsh-theme "$@" ;;
+    bash)
+        vim ~/.bashrc ~/.bash_profile "$@" ;;
+    aw)
+        vim ~/.config/awesome/rc.lua ~/.config/awesome/themes/powerarrow-gruvbox/theme.lua "$@" ;;
+    xorg)
+        vim ~/.xinitrc "$@" ;;
+    script)
+        vim ~/scripts/* "$@" ;;
+    *)
+        vim ~/.zsh_aliases "$@" ;;
+esac

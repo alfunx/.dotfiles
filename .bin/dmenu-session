@@ -2,7 +2,7 @@
 
 choice_by_dmenu() {
     if [[ -f "$HOME/.dmenurc" ]]; then
-        . "$HOME/.dmenurc"
+        source "$HOME/.dmenurc"
         # DMENU='rofi -dmenu'
     else
         DMENU='dmenu -i'

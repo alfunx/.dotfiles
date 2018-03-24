@@ -6,7 +6,7 @@ fzf() {
 
 # checkout git branch (including remote branches)
 
-if ! $(git rev-parse --is-inside-work-tree > /dev/null 2>&1); then
+if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
     exit 1
 fi
 
@@ -17,4 +17,4 @@ branch=$(echo "$branches" \
     | fzf +s +m -e --ansi -d $(( 2 + $(wc -l <<< "$branches") ))) \
     || exit 1
 
-git checkout $(echo "$branch" | sed 's/.* //' | sed 's#remotes/[^/]*/##')
+git checkout "$(echo "${branch//* /}" | sed 's#remotes/[^/]*/##')"

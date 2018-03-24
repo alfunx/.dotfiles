@@ -6,7 +6,7 @@ fzf() {
 
 # checkout git commit
 
-if ! $(git rev-parse --is-inside-work-tree > /dev/null 2>&1); then
+if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
     exit 1
 fi
 
@@ -17,4 +17,4 @@ commits=$(git log --format=oneline --abbrev-commit --all \
 commit=$(echo "$commits" | fzf +s +m -e --ansi) \
     || exit 1
 
-git checkout $(echo "$commit" | sed 's/ .*//')
+git checkout "${commit// */}"

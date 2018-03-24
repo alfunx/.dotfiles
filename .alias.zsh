@@ -14,8 +14,6 @@ alias ........='cd ../../../../.././...'
 
 alias :q='exit'
 
-alias cp='cp --reflink=auto -i'
-
 alias pg='ping -c 1 www.google.ch'
 
 alias bcl='bc -l'
@@ -33,32 +31,6 @@ foreground-job() {
 zle     -N   foreground-job
 bindkey '^Z' foreground-job
 
-con() {
-    cmd=$1
-    shift
-
-    case "$cmd" in
-        vim)
-            vim ~/.vimrc "$@" ;;
-        tmux)
-            vim ~/.tmux.conf "$@" ;;
-        git)
-            vim ~/.gitconfig ~/.gitignore ~/.gitmodules "$@" ;;
-        zsh)
-            vim ~/.zshrc ~/.zsh_aliases ~/.oh-my-zsh/themes/agnoster-custom.zsh-theme "$@" ;;
-        bash)
-            vim ~/.bashrc ~/.bash_profile "$@" ;;
-        aw)
-            vim ~/.config/awesome/rc.lua ~/.config/awesome/themes/powerarrow-gruvbox/theme.lua "$@" ;;
-        xorg)
-            vim ~/.xinitrc "$@" ;;
-        script)
-            vim ~/scripts/* "$@" ;;
-        *)
-            vim ~/.zsh_aliases "$@" ;;
-    esac
-}
-
 mkcd() {
     [ $# -gt 1 ] && exit 1
     mkdir -p "$1" && cd "$1" || exit 1
@@ -68,64 +40,6 @@ toilol() {
     toilet -f mono12 -w "$(tput cols)" | lolcat "$@"
 }
 
-pacman() {
-    local pattern="^-S[cuy]|^-S$|^-R[sn]|^-R$|^-U$|^-F[y]"
-    if [[ "$1" =~ $pattern ]]; then
-        sudo /usr/bin/pacman "$@"
-    else
-        /usr/bin/pacman "$@"
-    fi
-
-    # Update pacman widget
-    dbus-send --dest=org.awesomewm.awful --type=method_call \
-        / org.awesomewm.awful.Remote.Eval \
-        string:'pacman = require("beautiful").pacman; if pacman then pacman.update() end'
-}
-
-officer() {
-    local pattern="^-S[cuy]|^-S$|^-R[sn]|^-R$|^-U$|^-F[y]"
-    if [[ "$1" =~ $pattern ]]; then
-        sudo /usr/bin/officer "$@"
-    else
-        /usr/bin/officer "$@"
-    fi
-}
-compdef officer=pacman
-
-pacman-date-log() {
-    { pacman "${1:--Qeq}"; cat /var/log/pacman.log; } | awk '
-        NF == 1 { pkgs[$0] = 1; }
-        $4 == "installed" {
-            if ($5 in pkgs) { pkgs[$5] = $1 " " $2; }
-        }
-        END {
-            for (p in pkgs) { print pkgs[p], p; }
-        }' | sort
-}
-
-tmux() {
-    if [ "$1" = '.' ]; then
-        if [ -f ./.tmux ]; then
-            read -r -k 1 "reply?$fg_bold[white]Source $fg_bold[red]$(dirs)/.tmux$fg_bold[white]? [y/N] $reset_color"
-            echo
-            if [[ $reply =~ ^[Yy]$ ]]; then
-                if [[ ! -z "$TMUX" ]]; then
-                    tmux source-file "$(pwd)/.tmux"
-                else
-                    echo "No tmux session attached."; return 1
-                fi
-            else
-                echo "Not sourced .tmux file."; return 0
-            fi
-        else
-            echo "No .tmux file found."; return 1
-        fi
-    elif [ "$TERM" = "linux" ]; then
-        /usr/bin/tmux -L linux -f "$HOME/.tmux.minimal.conf" "$@"
-    else
-        /usr/bin/tmux "$@"
-    fi
-}
 
 #########
 #  FZF  #
@@ -133,25 +47,50 @@ tmux() {
 
 alias fzf="fzf-tmux -d 30% --"
 
+
 #############
 #  RIPGREP  #
 #############
 
 # fuzzy rg
 frg() {
-    rg --line-number --column --no-heading --color=always --colors='match:none' --colors='path:fg:white' --colors='line:fg:white' "$@" . 2> /dev/null | fzf --ansi
+    rg --line-number \
+        --column \
+        --no-heading \
+        --color=always \
+        --colors='match:none' \
+        --colors='path:fg:white' \
+        --colors='line:fg:white' \
+        "$@" . 2> /dev/null \
+        | fzf --ansi
 }
+
 
 #######################
 # THE SILVER SEARCHER #
 #######################
 
-alias ag="ag --hidden --follow --smart-case --numbers --color-match '1;31' --color-path '0;37' --color-line-number '1;33'"
+alias ag="ag \
+    --hidden \
+    --follow \
+    --smart-case \
+    --numbers \
+    --color-match '1;31' \
+    --color-path '0;37' \
+    --color-line-number '1;33'"
 
 # fuzzy ag
 fag() {
-    ag --nobreak --noheading --color --color-match '' --color-path '0;37' --color-line-number '0;37' "$@" . 2> /dev/null | fzf --ansi
+    ag --nobreak \
+        --noheading \
+        --color \
+        --color-match '' \
+        --color-path '0;37' \
+        --color-line-number '0;37' \
+        "$@" . 2> /dev/null \
+        | fzf --ansi
 }
+
 
 ##################
 # FUZZY COMMANDS #
@@ -166,7 +105,8 @@ fag() {
 # cd to selected directory (no hidden files)
 cnh() {
     cd "$(fd --follow --type d '.' "${1:-.}" 2> /dev/null \
-        | fzf +m -q "$1" -0)" || exit 1
+        | fzf +m -q "$1" -0)" \
+        || exit 1
 }
 
 # # cnh, but including hidden directories
@@ -178,7 +118,8 @@ cnh() {
 # cnh, but including hidden directories
 c() {
     cd "$(fd --hidden --follow --type d '.' "${1:-.}" 2> /dev/null \
-        | fzf +m -q "$1" -0)" || exit 1
+        | fzf +m -q "$1" -0)" \
+        || exit 1
 }
 
 # # cd to selected directory and open ranger
@@ -190,7 +131,8 @@ c() {
 # cd to selected directory and open ranger
 fr() {
     cd "$(fd --hidden --follow --type d '.' "${1:-.}" 2> /dev/null \
-        | fzf +m -q "$1" -0)" && ranger
+        | fzf +m -q "$1" -0)" \
+        && ranger
 }
 
 # open the selected file with the default editor
@@ -202,7 +144,9 @@ fo() {
     key=$(head -1 <<< "$out")
     file=$(head -2 <<< "$out" | tail -1)
     if [ -n "$file" ]; then
-        [ "$key" = ctrl-o ] && mimeopen -n "$file" || ${EDITOR:-vim} "$file"
+        [ "$key" = ctrl-o ] \
+            && mimeopen -n "$file" \
+            || ${EDITOR:-vim} "$file"
     fi
 }
 
@@ -210,7 +154,10 @@ fo() {
 cdf() {
     local file
     local dir
-    file=$(fzf +m -q "$1" -0) && dir=$(dirname "$file") && cd "$dir" || exit 1
+    file=$(fzf +m -q "$1" -0) \
+        && dir=$(dirname "$file") \
+        && cd "$dir" \
+        || exit 1
 }
 
 # browse chrome history
@@ -254,7 +201,8 @@ fdp() {
         fi
     }
 
-    cd "$(get_parent_dirs "$(realpath "${1:-$PWD}")" | fzf --tac)" || exit 1
+    cd "$(get_parent_dirs "$(realpath "${1:-$PWD}")" | fzf --tac)" \
+        || exit 1
 }
 
 # kill process

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+pacman-date-log() {
+    { pacman "${1:--Qeq}"; cat /var/log/pacman.log; } | awk '
+        NF == 1 { pkgs[$0] = 1; }
+        $4 == "installed" {
+            if ($5 in pkgs) { pkgs[$5] = $1 " " $2; }
+        }
+        END {
+            for (p in pkgs) { print pkgs[p], p; }
+        }' | sort
+}
+
+pattern="^-S[cuy]|^-S$|^-R[sn]|^-R$|^-U$|^-F[y]"
+if [[ $1 =~ $pattern ]]; then
+    sudo /usr/bin/pacman "$@"
+elif [[ $1 == '--log' ]]; then
+    shift
+    pacman-date-log "$@"
+else
+    /usr/bin/pacman "$@"
+fi
+
+# Update pacman widget
+dbus-send --dest=org.awesomewm.awful --type=method_call \
+    / org.awesomewm.awful.Remote.Eval \
+    string:'pacman = require("beautiful").pacman; if pacman then pacman.update() end'

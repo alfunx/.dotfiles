@@ -6,7 +6,7 @@ fzf() {
 
 # checkout git branch/tag
 
-if ! $(git rev-parse --is-inside-work-tree > /dev/null 2>&1); then
+if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
     exit 1
 fi
 
@@ -22,4 +22,4 @@ target=$(echo "$tags\\n$branches" \
     | fzf +s +m -e --ansi --tac -d '\t' -n 2) \
     || exit 1
 
-git checkout $(echo "$target" | awk '{print $2}')
+git checkout "$(echo "$target" | awk '{print $2}')"

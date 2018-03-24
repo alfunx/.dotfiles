@@ -13,9 +13,9 @@ usage() {
 		    all-dec         Print all 255 colors and according hex values
 		    to-hex          Convert color from dec to hex
 		    from-hex        Convert color from hex to dec
+		    gruvbox         Show gruvbox colors
 _EOF_
 }
-
 
 print-colors(){
     for c; do
@@ -72,6 +72,40 @@ all-dec() {
     done
 }
 
+gruvbox() {
+    echo -n          "bg       #282828   235    0   $(print-colors   0)"
+    echo "            bg0_h    #1d2021   234    0   $(print-colors 234)"
+    echo -n          "red      #cc241d   124    1   $(print-colors   1)"
+    echo "            bg0      #282828   235    0   $(print-colors 235)"
+    echo -n          "green    #98971a   106    2   $(print-colors   2)"
+    echo "            bg0_s    #32302f   236    0   $(print-colors 236)"
+    echo -n          "yellow   #d79921   172    3   $(print-colors   3)"
+    echo "            bg1      #3c3836   237    -   $(print-colors 237)"
+    echo -n          "blue     #458588    66    4   $(print-colors   4)"
+    echo "            bg2      #504945   239    -   $(print-colors 239)"
+    echo -n          "purple   #b16286   132    5   $(print-colors   5)"
+    echo "            bg3      #665c54   241    -   $(print-colors 241)"
+    echo -n          "aqua     #689d6a    72    6   $(print-colors   6)"
+    echo "            bg4      #7c6f64   243    -   $(print-colors 243)"
+    echo -n          "gray     #a89984   246    7   $(print-colors   7)"
+    echo "            gray     #928374   245    8   $(print-colors 245)"
+    echo -n          "gray     #928374   245    8   $(print-colors   8)"
+    echo "            fg4      #a89984   246    7   $(print-colors 246)"
+    echo -n          "red      #fb4934   167    9   $(print-colors   9)"
+    echo "            fg3      #bdae93   248    -   $(print-colors 248)"
+    echo -n          "green    #b8bb26   142   10   $(print-colors  10)"
+    echo "            fg2      #d5c4a1   250    -   $(print-colors 250)"
+    echo -n          "yellow   #fabd2f   214   11   $(print-colors  11)"
+    echo "            fg1      #ebdbb2   223   15   $(print-colors 223)"
+    echo -n          "blue     #83a598   109   12   $(print-colors  12)"
+    echo "            fg0      #fbf1c7   229    -   $(print-colors 229)"
+    echo -n          "purple   #d3869b   175   13   $(print-colors  13)"
+    echo "            orange   #d65d0e   166    -   $(print-colors 166)"
+    echo -n          "aqua     #8ec07c   108   14   $(print-colors  14)"
+    echo "            orange   #fe8019   208    -   $(print-colors 208)"
+    echo             "fg       #ebdbb2   223   15   $(print-colors  15)" 
+}
+
 # Main
 
 color_cmd="$1"
@@ -93,6 +127,9 @@ case $color_cmd in
         ;;
     to-hex|tohex|to)
         to-hex "$@"
+        ;;
+    gruvbox)
+        gruvbox "$@"
         ;;
     *)
         all

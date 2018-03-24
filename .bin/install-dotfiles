@@ -11,8 +11,8 @@ git clone --bare https://github.com/alfunx/.dotfiles \
 function dotfiles() {
     /usr/bin/env git --git-dir="$HOME/.dotfiles/" --work-tree="$HOME" "$@"
 }
-dotfiles checkout
-if [ "$?" -ne 0 ]; then
+
+if ! dotfiles checkout; then
     mkdir -p "$HOME/.dotfiles.bak"
     dotfiles checkout 2>&1 \
         | grep -P '^\s+[\w.]' \
