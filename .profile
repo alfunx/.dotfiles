@@ -45,11 +45,3 @@ export GPG_TTY=$(tty)
 
 # qt theme
 export QT_QPA_PLATFORMTHEME="qt5ct"
-
-
-###############
-#  DIRCOLORS  #
-###############
-
-# eval dircolors
-eval "$(dircolors "$HOME/.dircolors")"

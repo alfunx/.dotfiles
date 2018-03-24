@@ -63,6 +63,14 @@ fi
 [[ -f ~/.zprofile ]] && source ~/.zprofile
 
 
+###############
+#  DIRCOLORS  #
+###############
+
+# eval dircolors
+eval "$(dircolors "$HOME/.dircolors")"
+
+
 #####################
 #  PLUGIN SETTINGS  #
 #####################

@@ -13,6 +13,14 @@
 [[ -f ~/.bash_profile ]] && source ~/.bash_profile
 
 
+###############
+#  DIRCOLORS  #
+###############
+
+# eval dircolors
+eval "$(dircolors "$HOME/.dircolors")"
+
+
 ############
 #  CUSTOM  #
 ############
