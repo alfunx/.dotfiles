@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+width=${2-$(tput cols)}
+
+echo "$1" \
+    | sed -e "s@^/home/$USER@~@" \
+    | sed -e 's@^/home/\([^/][^/]*\)@~\1@' \
+    | sed -e 's@\(^/[^/]*/\|[^/]*/\).*\(/[^/][^/]*/[^/][^/]*/[^/][^/]*\)@\1…\2@' \
+    | cut -c1-"$(echo "$width" / 3 | bc -l | sed 's/\..*//')"
