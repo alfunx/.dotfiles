@@ -1,7 +1,7 @@
 local cairo            = require("lgi").cairo
 local gears            = require("gears")
 local lain             = require("lain")
-local custom_widget    = require("themes.powerarrow-gruvbox.widgets")
+local widgets          = require("widgets")
 local awful            = require("awful")
 local wibox            = require("wibox")
 local os, math, string = os, math, string

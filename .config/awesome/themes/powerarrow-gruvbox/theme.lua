@@ -44,9 +44,6 @@ local bw8              = "#d5c4a1"
 local bw9              = "#ebdbb2"
 local bw10             = "#fbf1c7"
 
-local textcolor_dark   = bw0
-local textcolor_light  = bw9
-
 -- local fs_bg_normal      = bw2
 -- local temp_bg_normal    = bw2
 local pacman_bg_normal  = bw2
@@ -61,15 +58,16 @@ local clock_bg_normal   = bw0
 
 local gears            = require("gears")
 local lain             = require("lain")
-local custom_widget    = require("themes.powerarrow-gruvbox.widgets")
+local widgets          = require("widgets")
 local awful            = require("awful")
 local wibox            = require("wibox")
 local naughty          = require("naughty")
+local xresources       = require("beautiful.xresources")
+local dpi              = xresources.apply_dpi
 local os, math, string = os, math, string
 
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-gruvbox"
-theme.scripts_dir                               = os.getenv("HOME") .. "/.bin"
 
 theme.wallpaper_original                        = theme.dir .. "/wallpapers/matterhorn.jpg"
 theme.wallpaper                                 = theme.dir .. "/wallpapers/matterhorn_base.jpg"
@@ -125,43 +123,31 @@ theme.titlebar_bg_normal                        = theme.border_normal
 theme.titlebar_bg_focus                         = theme.border_focus
 theme.titlebar_bg_marked                        = theme.border_marked
 
+theme.hotkeys_border_width                      = dpi(30)
+theme.hotkeys_border_color                      = bw0
+theme.hotkeys_group_margin                      = dpi(30)
+theme.hotkeys_shape                             = function(cr, width, height)
+                                                      gears.shape.rounded_rect(cr, width, height, dpi(20))
+                                                  end
+
+theme.prompt_bg                                 = bw2
+theme.prompt_fg                                 = theme.fg_normal
+theme.bg_systray                                = theme.tasklist_bg_normal
+
+theme.border_width                              = dpi(4)
+theme.border_radius                             = dpi(8)
+theme.menu_height                               = dpi(20)
+theme.menu_width                                = dpi(250)
+theme.tasklist_plain_task_name                  = true
+theme.tasklist_disable_icon                     = true
+theme.tasklist_spacing                          = dpi(3)
+theme.useless_gap                               = dpi(14)
+theme.systray_icon_spacing                      = dpi(4)
+
 theme.snap_bg                                   = theme.border_focus
 -- theme.snap_shape                                = function(cr, w, h)
 --                                                       gears.shape.rounded_rect(cr, w, h, theme.border_radius or 0)
 --                                                   end
-
-theme.hotkeys_border_width                      = 30
-theme.hotkeys_border_color                      = bw0
-theme.hotkeys_group_margin                      = 30
-theme.hotkeys_shape                             = function(cr, width, height)
-                                                      gears.shape.rounded_rect(cr, width, height, 20)
-                                                  end
-
-theme.prompt_bg                                 = bw2
-theme.prompt_fg                                 = textcolor_light
-theme.bg_systray                                = theme.tasklist_bg_normal
-
-theme.border_width                              = 4
-theme.border_radius                             = 8
-theme.menu_height                               = 20
-theme.menu_width                                = 250
-theme.tasklist_plain_task_name                  = true
-theme.tasklist_disable_icon                     = true
-theme.tasklist_spacing                          = 3
-theme.useless_gap                               = 14
-theme.systray_icon_spacing                      = 4
-
-theme.notification_fg                           = textcolor_light
-theme.notification_bg                           = theme.bg_normal
-theme.notification_border_color                 = theme.border_normal
-theme.notification_border_width                 = theme.border_width
-theme.notification_icon_size                    = 80
--- theme.notification_opacity                      = 0.9
-theme.notification_max_width                    = 600
-theme.notification_margin                       = 10
-theme.notification_shape                        = function(cr, width, height)
-                                                      gears.shape.rounded_rect(cr, width, height, 5)
-                                                  end
 
 theme.menu_submenu_icon                         = theme.dir .. "/icons/submenu.png"
 theme.awesome_icon                              = theme.dir .. "/icons/awesome.png"
@@ -234,8 +220,24 @@ theme.titlebar_maximized_button_normal_active   = theme.dir .. "/icons/titlebar_
 theme.titlebar_maximized_button_focus_inactive  = theme.dir .. "/icons/titlebar_light/maximized_focus_inactive.png"
 theme.titlebar_maximized_button_normal_inactive = theme.dir .. "/icons/titlebar_light/maximized_normal_inactive.png"
 
-naughty.config.padding                          = 15
-naughty.config.spacing                          = 10
+theme.notification_fg                           = theme.fg_normal
+theme.notification_bg                           = theme.bg_normal
+theme.notification_border_color                 = theme.border_normal
+theme.notification_border_width                 = theme.border_width
+theme.notification_icon_size                    = dpi(80)
+-- theme.notification_opacity                      = 0.9
+theme.notification_max_width                    = dpi(600)
+theme.notification_max_height                   = dpi(400)
+theme.notification_margin                       = dpi(10)
+theme.notification_shape                        = function(cr, width, height)
+                                                      gears.shape.rounded_rect(cr, width, height, theme.border_radius or 0)
+                                                  end
+
+naughty.config.padding                          = dpi(15)
+naughty.config.spacing                          = dpi(10)
+naughty.config.defaults.timeout                 = 5
+naughty.config.defaults.margin                  = theme.notification_margin
+naughty.config.defaults.border_width            = theme.notification_border_width
 
 naughty.config.presets.low                      = {
                                                       font         = theme.font,
@@ -265,16 +267,16 @@ local markup = lain.util.markup
 local separators = lain.util.separators
 
 -- Textclock
-local clockicon = wibox.widget.imagebox(theme.widget_clock)
+-- local clockicon = wibox.widget.imagebox(theme.widget_clock)
 local clock = awful.widget.watch(
     -- "date +'%a %d %b %R'", 60,
     "date +'%R'", 5,
     function(widget, stdout)
-        widget:set_markup(markup.fontfg(theme.font_bold, textcolor_light, stdout))
+        widget:set_markup(markup.fontfg(theme.font_bold, theme.fg_normal, stdout))
     end
 )
 
-clock_widget = wibox.widget {
+local clock_widget = wibox.widget {
     clock,
     layout = wibox.layout.align.horizontal,
 }
@@ -309,22 +311,26 @@ theme.cal = lain.widget.calendar({
 -- --]]
 
 -- MPD
-local musicplr = awful.util.terminal .. " -title Music -g 130x34-320+16 ncmpcpp"
+-- local musicplr = awful.util.terminal .. " -title Music -g 130x34-320+16 ncmpcpp"
 local mpdicon = wibox.widget.imagebox(theme.widget_music)
-mpdicon:buttons(awful.util.table.join(
-    awful.button({ modkey }, 1, function () awful.spawn.with_shell(musicplr) end),
-    awful.button({ }, 1, function ()
-        awful.spawn.with_shell("mpc prev")
-        theme.mpd.update()
-    end),
-    awful.button({ }, 2, function ()
-        awful.spawn.with_shell("mpc toggle")
-        theme.mpd.update()
-    end),
-    awful.button({ }, 3, function ()
-        awful.spawn.with_shell("mpc next")
-        theme.mpd.update()
-    end)))
+
+-- mpdicon:buttons(awful.util.table.join(
+--     awful.button({ awful.util.mod_4 }, 1, function ()
+--         awful.spawn.with_shell(musicplr)
+--     end),
+--     awful.button({ }, 1, function ()
+--         awful.spawn.with_shell("mpc prev")
+--         theme.mpd.update()
+--     end),
+--     awful.button({ }, 2, function ()
+--         awful.spawn.with_shell("mpc toggle")
+--         theme.mpd.update()
+--     end),
+--     awful.button({ }, 3, function ()
+--         awful.spawn.with_shell("mpc next")
+--         theme.mpd.update()
+--     end)))
+
 theme.mpd = lain.widget.mpd({
     settings = function()
         if mpd_now.state == "play" then
@@ -347,7 +353,7 @@ local memicon = wibox.widget.imagebox(theme.widget_mem)
 local mem = lain.widget.mem({
     timeout = 5,
     settings = function()
-        local bg_normal_color = textcolor_light
+        local bg_normal_color = theme.fg_normal
         local bg_normal_font = theme.font
 
         if tonumber(mem_now.perc) >= 90 then
@@ -362,20 +368,48 @@ local mem = lain.widget.mem({
         end
 
         widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, mem_now.perc))
+
+        widget.used  = mem_now.used
+        widget.total = mem_now.total
+        widget.free  = mem_now.free
+        widget.buf   = mem_now.buf
+        widget.cache = mem_now.cache
+        widget.swap  = mem_now.swap
+        widget.swapf = mem_now.swapf
+        widget.srec  = mem_now.srec
     end,
 })
 
-mem_widget = wibox.widget {
+local mem_widget = wibox.widget {
     memicon, mem.widget,
     layout = wibox.layout.align.horizontal,
 }
+
+mem_widget:buttons(awful.button({}, 1, function()
+    if mem_widget.notification then
+        naughty.destroy(mem_widget.notification)
+    end
+    mem.update()
+    mem_widget.notification = naughty.notify {
+        title = "Memory",
+        text = string.format("Total:  %.2fGB\n", tonumber(mem.widget.total) / 1024 + 0.5)
+            .. string.format("Used:   %.2fGB\n", tonumber(mem.widget.used ) / 1024 + 0.5)
+            .. string.format("Free:   %.2fGB\n", tonumber(mem.widget.free ) / 1024 + 0.5)
+            .. string.format("Buffer: %.2fGB\n", tonumber(mem.widget.buf  ) / 1024 + 0.5)
+            .. string.format("Cache:  %.2fGB\n", tonumber(mem.widget.cache) / 1024 + 0.5)
+            .. string.format("Swap:   %.2fGB\n", tonumber(mem.widget.swap ) / 1024 + 0.5)
+            .. string.format("Swapf:  %.2fGB\n", tonumber(mem.widget.swapf) / 1024 + 0.5)
+            .. string.format("Srec:   %.2fGB"  , tonumber(mem.widget.srec ) / 1024 + 0.5),
+        timeout = 10,
+    }
+end))
 
 -- CPU
 local cpuicon = wibox.widget.imagebox(theme.widget_cpu)
 local cpu = lain.widget.cpu({
     timeout = 5,
     settings = function()
-        local bg_normal_color = textcolor_light
+        local bg_normal_color = theme.fg_normal
         local bg_normal_font = theme.font
 
         if tonumber(cpu_now.usage) >= 90 then
@@ -390,58 +424,93 @@ local cpu = lain.widget.cpu({
         end
 
         widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, cpu_now.usage))
+
+        widget.core  = cpu_now
     end,
 })
 
-cpu_widget = wibox.widget {
+local cpu_widget = wibox.widget {
     cpuicon, cpu.widget,
     layout = wibox.layout.align.horizontal,
 }
+
+cpu_widget:buttons(awful.button({}, 1, function()
+    if cpu_widget.notification then
+        naughty.destroy(cpu_widget.notification)
+    end
+    cpu.update()
+    cpu_widget.notification = naughty.notify {
+        title = "CPU",
+        text = string.format("Core 1: %d%%\n", cpu.widget.core[0].usage)
+            .. string.format("Core 2: %d%%\n", cpu.widget.core[1].usage)
+            .. string.format("Core 3: %d%%\n", cpu.widget.core[2].usage)
+            .. string.format("Core 4: %d%%"  , cpu.widget.core[3].usage),
+        timeout = 10,
+    }
+end))
 
 -- SYSLOAD
 local sysloadicon = wibox.widget.imagebox(theme.widget_hdd)
 local sysload = lain.widget.sysload({
     timeout = 5,
     settings = function()
-        local bg_normal_color = textcolor_light
+        local bg_normal_color = theme.fg_normal
         local bg_normal_font = theme.font
 
         -- check with: grep 'model name' /proc/cpuinfo | wc -l
         local number_of_cores = 4
 
-        if tonumber(load_1) / number_of_cores >= 1.5 then
+        if tonumber(load_5) / number_of_cores >= 1.5 then
             bg_normal_color = red_light
             bg_normal_font = theme.font_bold
-        elseif tonumber(load_1) / number_of_cores >= 1.0 then
+        elseif tonumber(load_5) / number_of_cores >= 1.0 then
             bg_normal_color = orange_light
             bg_normal_font = theme.font_bold
-        elseif tonumber(load_1) / number_of_cores >= 0.7 then
+        elseif tonumber(load_5) / number_of_cores >= 0.7 then
             bg_normal_color = yellow_light
             bg_normal_font = theme.font_bold
         end
-        widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, load_1))
+        widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, load_5))
+
+        widget.load_1  = load_1
+        widget.load_5  = load_5
+        widget.load_15 = load_15
     end,
 })
 
-sysload_widget = wibox.widget {
+local sysload_widget = wibox.widget {
     sysloadicon, sysload.widget,
     layout = wibox.layout.align.horizontal,
 }
 
+sysload_widget:buttons(awful.button({}, 1, function()
+    if sysload_widget.notification then
+        naughty.destroy(sysload_widget.notification)
+    end
+    sysload.update()
+    sysload_widget.notification = naughty.notify {
+        title = "Load Average",
+        text = string.format(" 1min: %.2f\n", sysload.widget.load_1 )
+            .. string.format(" 5min: %.2f\n", sysload.widget.load_5 )
+            .. string.format("15min: %.2f"  , sysload.widget.load_15),
+        timeout = 10,
+    }
+end))
+
 -- PACMAN
 local pacmanicon = wibox.widget.imagebox(theme.widget_pacman)
-theme.pacman = custom_widget.pacman({
+theme.pacman = widgets.pacman({
     command = "( checkupdates & pacaur -k --color never | sed 's/:: [a-zA-Z0-9]\\+ //' ) | sed 's/->/→/' | sort | column -t",
     notify = "on",
     notification_preset = naughty.config.presets.normal,
     settings = function()
-        local bg_normal_color = textcolor_light
+        local bg_normal_color = theme.fg_normal
         local bg_normal_font = theme.font
         widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, available))
     end,
 })
 
-pacman_widget = wibox.widget {
+local pacman_widget = wibox.widget {
     pacmanicon, theme.pacman.widget,
     layout = wibox.layout.align.horizontal,
 }
@@ -452,9 +521,9 @@ end))
 
 -- USERS
 local usersicon = wibox.widget.imagebox(theme.widget_users)
-local users = custom_widget.users({
+local users = widgets.users({
     settings = function()
-        local bg_normal_color = textcolor_light
+        local bg_normal_color = theme.fg_normal
         local bg_normal_font = theme.font
 
         if tonumber(logged_in) > 1 then
@@ -465,10 +534,24 @@ local users = custom_widget.users({
     end,
 })
 
-users_widget = wibox.widget {
+local users_widget = wibox.widget {
     usersicon, users.widget,
     layout = wibox.layout.align.horizontal,
 }
+
+users_widget:buttons(awful.button({}, 1, function()
+    awful.spawn.easy_async("users", function(stdout, stderr, reason, exit_code)
+        if users_widget.notification then
+            naughty.destroy(users_widget.notification)
+        end
+        users.update()
+        users_widget.notification = naughty.notify {
+            title = "Users",
+            text = string.gsub(string.gsub(stdout, '\n*$', ''), ' ', '\n'),
+            timeout = 10,
+        }
+    end)
+end))
 
 --[[ Coretemp (lm_sensors, per core)
 local tempwidget = awful.widget.watch({awful.util.shell, '-c', 'sensors | grep Core'}, 30,
@@ -486,7 +569,7 @@ end)
 -- local temp = lain.widget.temp({
 --     tempfile = "/sys/class/thermal/thermal_zone7/temp",
 --     settings = function()
---         local bg_normal_color = textcolor_light
+--         local bg_normal_color = theme.fg_normal
 --         local bg_normal_font = theme.font
 --
 --         if tonumber(coretemp_now) >= 90 then
@@ -503,7 +586,7 @@ end)
 --     end,
 -- })
 
--- temp_widget = wibox.widget {
+-- local temp_widget = wibox.widget {
 --     tempicon, temp.widget,
 --     layout = wibox.layout.align.horizontal,
 -- }
@@ -514,11 +597,11 @@ end)
 --     options  = "--exclude-type=tmpfs",
 --     notification_preset = { fg = theme.fg_normal, bg = theme.border_normal, font = "xos4 Terminus 10" },
 --     settings = function()
---         widget:set_markup(markup.fontfg(theme.font, textcolor_light, " " .. fs_now.available_gb .. "GB "))
+--         widget:set_markup(markup.fontfg(theme.font, theme.fg_normal, " " .. fs_now.available_gb .. "GB "))
 --     end,
 -- })
 
--- fs_widget = wibox.widget {
+-- local fs_widget = wibox.widget {
 --     fsicon, theme.fs.widget,
 --     layout = wibox.layout.align.horizontal,
 -- }
@@ -530,13 +613,6 @@ theme.volume = lain.widget.alsa({
     settings = function()
         if volume_now.status == "off" then
             volicon:set_image(theme.widget_vol_mute)
-            if theme.volume.notification then
-                naughty.destroy(theme.volume.notification)
-            end
-            theme.volume.notification = naughty.notify {
-                title = "Audio",
-                text = "Muted"
-            }
         elseif tonumber(volume_now.level) == 0 then
             volicon:set_image(theme.widget_vol_no)
         elseif tonumber(volume_now.level) < 50 then
@@ -545,11 +621,25 @@ theme.volume = lain.widget.alsa({
             volicon:set_image(theme.widget_vol)
         end
 
-        widget:set_markup(markup.fontfg(theme.font, textcolor_light, volume_now.level))
+        if volume_now.status == "off" then
+            if theme.volume.notification then
+                naughty.destroy(theme.volume.notification)
+            end
+            theme.volume.notification = naughty.notify {
+                title = "Audio",
+                text = "Muted"
+            }
+        else
+            if theme.volume.notification then
+                naughty.destroy(theme.volume.notification)
+            end
+        end
+
+        widget:set_markup(markup.fontfg(theme.font, theme.fg_normal, volume_now.level))
     end,
 })
 
-vol_widget = wibox.widget {
+local vol_widget = wibox.widget {
     volicon, theme.volume.widget,
     layout = wibox.layout.align.horizontal,
 }
@@ -565,7 +655,7 @@ local bat = lain.widget.bat({
     batteries = {"BAT0"},
     ac = "AC",
     settings = function()
-        local bg_normal_color = textcolor_light
+        local bg_normal_color = theme.fg_normal
         local bg_normal_font = theme.font
 
         if tonumber(bat_now.perc) <= 10 then
@@ -586,6 +676,19 @@ local bat = lain.widget.bat({
             baticon:set_image(theme.widget_battery)
         end
 
+        if tonumber(bat_now.perc) <= 3 then
+            if bat_now.notification then
+                naughty.destroy(bat_now.notification)
+            end
+            bat_now.notification = naughty.notify {
+                title = "Battery",
+                text = "Your battery is running low.\n"
+                    .. "You should plug in your PC.",
+                preset = naughty.config.presets.critical,
+                timeout = 0,
+            }
+        end
+
         if bat_now.ac_status == 1 then
             baticon:set_image(theme.widget_ac)
             if tonumber(bat_now.perc) >= 95 then
@@ -598,16 +701,17 @@ local bat = lain.widget.bat({
     end,
 })
 
-bat_widget = wibox.widget {
+local bat_widget = wibox.widget {
     baticon, bat.widget,
     layout = wibox.layout.align.horizontal,
 }
 
 bat_widget:buttons(awful.button({}, 1, function()
-    awful.spawn.easy_async(theme.scripts_dir .. "/show-battery-status", function(stdout, stderr, reason, exit_code)
+    awful.spawn.easy_async(awful.util.scripts_dir .. "/show-battery-status", function(stdout, stderr, reason, exit_code)
         if bat_widget.notification then
             naughty.destroy(bat_widget.notification)
         end
+        bat.update()
         bat_widget.notification = naughty.notify {
             title = "Battery",
             text = string.gsub(stdout, '\n*$', ''),
@@ -621,7 +725,7 @@ end))
 --     city_id = 2661604,
 --     settings = function()
 --         units = math.floor(weather_now["main"]["temp"])
---         widget:set_markup(markup.fontfg(theme.font, textcolor_light, " " .. units .. "°C "))
+--         widget:set_markup(markup.fontfg(theme.font, theme.fg_normal, " " .. units .. "°C "))
 --     end,
 -- })
 
@@ -639,7 +743,7 @@ local net = lain.widget.net({
     units = 1048576, -- in MB/s (1024^2)
     -- units = 131072, -- in Mbit/s / Mbps (1024^2/8)
     settings = function()
-        local bg_normal_color = textcolor_light
+        local bg_normal_color = theme.fg_normal
         local bg_normal_font = theme.font
 
         if net_now.state == nil or (net_now.state ~= nil and net_now.state == "down") then
@@ -652,21 +756,34 @@ local net = lain.widget.net({
     end,
 })
 
-net_widget = wibox.widget {
+local net_widget = wibox.widget {
     net.widget,
     layout = wibox.layout.align.horizontal,
 }
 
 net_widget:buttons(awful.button({}, 1, function()
-    awful.spawn.easy_async(theme.scripts_dir .. "/show-ip-address", function(stdout, stderr, reason, exit_code)
+    awful.spawn.easy_async(awful.util.scripts_dir .. "/show-ip-address", function(stdout, stderr, reason, exit_code)
         if net_widget.notification then
             naughty.destroy(net_widget.notification)
         end
+        net.update()
         net_widget.notification = naughty.notify {
             title = "Network",
             text = string.gsub(stdout, '\n*$', ''),
             timeout = 10,
         }
+
+        awful.spawn.easy_async(awful.util.scripts_dir .. "/show-ip-address -f", function(stdout, stderr, reason, exit_code)
+            if net_widget.notification then
+                naughty.destroy(net_widget.notification)
+            end
+            net.update()
+            net_widget.notification = naughty.notify {
+                title = "Network",
+                text = string.gsub(stdout, '\n*$', ''),
+                timeout = 10,
+            }
+        end)
     end)
 end))
 
@@ -693,9 +810,9 @@ function theme.powerline_rl(cr, width, height)
     cr:close_path()
 end
 
-local function pl(widget, bgcolor, padding)
-    return wibox.container.background(wibox.container.margin(widget, 16, 16), bgcolor, theme.powerline_rl)
-end
+-- local function pl(widget, bgcolor, padding)
+--     return wibox.container.background(wibox.container.margin(widget, dpi(16), dpi(16)), bgcolor, theme.powerline_rl)
+-- end
 
 -- Show only tags of current row (taggrid feature)
 local function rowfilter(t)
@@ -742,18 +859,20 @@ function theme.at_screen_connect(s)
     awful.widget.tasklist.filter.currenttags,
     awful.util.tasklist_buttons, {
         bg_focus = theme.tasklist_bg_focus,
-        shape = function(cr, width, height) gears.shape.rounded_rect(cr, width, height, 5) end,
-        shape_border_width = 0,
+        shape = function(cr, width, height)
+                    gears.shape.rounded_rect(cr, width, height, theme.border_radius or 0)
+                end,
+        shape_border_width = dpi(0),
         shape_border_color = theme.tasklist_bg_normal,
         align = "center" })
 
     -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s, height = 21, bg = theme.bg_normal, fg = theme.fg_normal })
+    s.mywibox = awful.wibar({ position = "top", screen = s, height = dpi(21), bg = theme.bg_normal, fg = theme.fg_normal })
 
     local systray_widget = wibox.container.margin(wibox.widget {
         wibox.widget.systray(),
         layout = wibox.layout.align.horizontal,
-    }, 8, 0, 3, 3)
+    }, dpi(8), dpi(0), dpi(3), dpi(3))
     systray_widget:set_visible(false)
 
     local systray_widget_timer = gears.timer {
@@ -782,44 +901,44 @@ function theme.at_screen_connect(s)
             wibox.container.background(wibox.container.margin(wibox.widget {
                 s.mylayoutbox,
                 layout = wibox.layout.align.horizontal,
-            }, 8, 3, 4, 4), clock_bg_normal),
+            }, dpi(8), dpi(3), dpi(4), dpi(4)), clock_bg_normal),
             wibox.container.background(wibox.container.margin(wibox.widget {
                 s.mytaglist,
                 layout = wibox.layout.align.horizontal,
-            }, 3, 8), theme.taglist_bg_normal),
+            }, dpi(3), dpi(8)), theme.taglist_bg_normal),
             arrow_r(theme.taglist_bg_normal, theme.prompt_bg),
 
             wibox.container.background(wibox.container.margin(wibox.widget {
                 s.mypromptbox,
                 layout = wibox.layout.align.horizontal,
-            }, 8, 4), theme.prompt_bg),
+            }, dpi(8), dpi(4)), theme.prompt_bg),
             arrow_r(theme.prompt_bg, theme.tasklist_bg_normal),
         },
 
         -- s.mytasklist, -- Middle widget
-        wibox.container.background(wibox.container.margin(s.mytasklist, 8, 0), theme.tasklist_bg_normal),
+        wibox.container.background(wibox.container.margin(s.mytasklist, dpi(8), dpi(0)), theme.tasklist_bg_normal),
 
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
 
-            wibox.container.background(wibox.container.margin(systray_widget, 0, 8), theme.tasklist_bg_normal),
+            wibox.container.background(wibox.container.margin(systray_widget, dpi(0), dpi(8)), theme.tasklist_bg_normal),
 
             arrow_l(theme.tasklist_bg_normal, pacman_bg_normal),
-            -- wibox.container.background(wibox.container.margin(fs_widget,      2, 6), fs_bg_normal),
-            -- wibox.container.background(wibox.container.margin(temp_widget,    2, 6), temp_bg_normal),
-            wibox.container.background(wibox.container.margin(pacman_widget,  2, 6), pacman_bg_normal),
-            wibox.container.background(wibox.container.margin(users_widget,   2, 6), users_bg_normal),
-            wibox.container.background(wibox.container.margin(sysload_widget, 2, 6), sysload_bg_normal),
-            wibox.container.background(wibox.container.margin(cpu_widget,     2, 6), cpu_bg_normal),
-            wibox.container.background(wibox.container.margin(mem_widget,     2, 6), mem_bg_normal),
-            wibox.container.background(wibox.container.margin(vol_widget,     2, 6), vol_bg_normal),
-            wibox.container.background(wibox.container.margin(bat_widget,     2, 10), bat_bg_normal),
+            -- wibox.container.background(wibox.container.margin(fs_widget,      dpi(2), dpi(6)), fs_bg_normal),
+            -- wibox.container.background(wibox.container.margin(temp_widget,    dpi(2), dpi(6)), temp_bg_normal),
+            wibox.container.background(wibox.container.margin(pacman_widget,  dpi(2), dpi(6)), pacman_bg_normal),
+            wibox.container.background(wibox.container.margin(users_widget,   dpi(2), dpi(6)), users_bg_normal),
+            wibox.container.background(wibox.container.margin(sysload_widget, dpi(2), dpi(6)), sysload_bg_normal),
+            wibox.container.background(wibox.container.margin(cpu_widget,     dpi(2), dpi(6)), cpu_bg_normal),
+            wibox.container.background(wibox.container.margin(mem_widget,     dpi(2), dpi(6)), mem_bg_normal),
+            wibox.container.background(wibox.container.margin(vol_widget,     dpi(2), dpi(6)), vol_bg_normal),
+            wibox.container.background(wibox.container.margin(bat_widget,     dpi(2), dpi(10)), bat_bg_normal),
 
             arrow_l(bat_bg_normal, net_bg_normal),
-            wibox.container.background(wibox.container.margin(net_widget,     8, 10), net_bg_normal),
+            wibox.container.background(wibox.container.margin(net_widget,     dpi(8), dpi(10)), net_bg_normal),
 
             arrow_l(net_bg_normal, clock_bg_normal),
-            wibox.container.background(wibox.container.margin(clock_widget,   8, 8), clock_bg_normal),
+            wibox.container.background(wibox.container.margin(clock_widget,   dpi(8), dpi(8)), clock_bg_normal),
         },
     }
 end

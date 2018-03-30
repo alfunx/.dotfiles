@@ -107,6 +107,7 @@ local browser      = "chromium"
 local filemanager  = terminal .. " ranger"
 
 awful.util.terminal = terminal
+awful.util.scripts_dir = os.getenv("HOME") .. "/.bin"
 awful.util.tagcolumns = 9
 awful.util.tagnames = { "1", "2", "3", "4", "5", "6", "7", "8", "9" }
 -- awful.util.tagnames = { "α", "β", "γ", "δ", "ϵ", "λ", "μ", "σ", "ω" }
@@ -359,14 +360,26 @@ globalkeys = awful.util.table.join(
     awful.key({ mod_4                     }, "w", function () awful.spawn("Whatsapp") end,
               {description = "open whatsapp", group = "launcher"}),
 
-    awful.key({                           }, "Print", function() os.execute("maim ~/pictures/screenshots/$(date +%Y-%m-%d_%T).png") end,
+    awful.key({                           }, "Print", function()
+        awful.spawn(awful.util.scripts_dir .. "/make-screenshot")
+    end,
               {description = "take screenshot", group = "launcher"}),
-    awful.key({ shiftkey                  }, "Print", function() os.execute("maim -s -b 3 -c 0.98431372549019607843,0.28627450980392156862,0.20392156862745098039,1 ~/pictures/screenshots/$(date +%Y-%m-%d_%T).png") end,
+    awful.key({ shiftkey                  }, "Print", function()
+        awful.spawn(awful.util.scripts_dir .. "/make-screenshot -s")
+    end,
               {description = "take screenshot, select area", group = "launcher"}),
-    awful.key({ ctrlkey                   }, "Print", function() os.execute("maim -u ~/pictures/screenshots/$(date +%Y-%m-%d_%T).png") end,
+    awful.key({ ctrlkey                   }, "Print", function()
+        awful.spawn(awful.util.scripts_dir .. "/make-screenshot -h")
+    end,
               {description = "take screenshot, hide mouse", group = "launcher"}),
-    awful.key({ ctrlkey, shiftkey         }, "Print", function() os.execute("maim -u -s -b 3 -c 0.98431372549019607843,0.28627450980392156862,0.20392156862745098039,1 ~/pictures/screenshots/$(date +%Y-%m-%d_%T).png") end,
+    awful.key({ ctrlkey, shiftkey         }, "Print", function()
+        awful.spawn(awful.util.scripts_dir .. "/make-screenshot -h -s")
+    end,
               {description = "take screenshot, hide mouse, select area", group = "launcher"}),
+    awful.key({ altkey,                   }, "Print", function()
+        awful.spawn(awful.util.scripts_dir .. "/upload-to-imgur")
+    end,
+              {description = "upload last screenshot to Imgur", group = "launcher"}),
 
     -- -- Copy primary to clipboard (terminals to gtk)
     -- awful.key({ mod_4             }, "c", function () awful.spawn("xsel | xsel -i -b") end),
@@ -540,57 +553,92 @@ globalkeys = awful.util.table.join(
     -- ALSA volume control
     awful.key({   }, "XF86AudioRaiseVolume",
         function ()
-            os.execute(string.format("amixer -q set %s 1%%+", beautiful.volume.channel))
-            beautiful.volume.update()
+            awful.spawn.easy_async(string.format("amixer -q set %s 1%%+", beautiful.volume.channel),
+            function(stdout, stderr, reason, exit_code)
+                beautiful.volume.update()
+            end)
         end),
     awful.key({   }, "XF86AudioLowerVolume",
         function ()
-            os.execute(string.format("amixer -q set %s 1%%-", beautiful.volume.channel))
-            beautiful.volume.update()
+            awful.spawn.easy_async(string.format("amixer -q set %s 1%%-", beautiful.volume.channel),
+            function(stdout, stderr, reason, exit_code)
+                beautiful.volume.update()
+            end)
         end),
     awful.key({   }, "XF86AudioMute",
         function ()
-            os.execute(string.format("amixer -q set %s toggle", beautiful.volume.togglechannel or beautiful.volume.channel))
-            beautiful.volume.update()
+            awful.spawn.easy_async(string.format("amixer -q set %s toggle", beautiful.volume.togglechannel or beautiful.volume.channel),
+            function(stdout, stderr, reason, exit_code)
+                beautiful.volume.update()
+            end)
         end),
     awful.key({ ctrlkey }, "XF86AudioRaiseVolume",
         function ()
-            os.execute(string.format("amixer -q set %s 100%%", beautiful.volume.channel))
-            beautiful.volume.update()
+            awful.spawn.easy_async(string.format("amixer -q set %s 100%%", beautiful.volume.channel),
+            function(stdout, stderr, reason, exit_code)
+                beautiful.volume.update()
+            end)
         end),
     awful.key({ ctrlkey }, "XF86AudioLowerVolume",
         function ()
-            os.execute(string.format("amixer -q set %s 0%%", beautiful.volume.channel))
-            beautiful.volume.update()
+            awful.spawn.easy_async(string.format("amixer -q set %s 0%%", beautiful.volume.channel),
+            function(stdout, stderr, reason, exit_code)
+                beautiful.volume.update()
+            end)
         end),
     awful.key({ ctrlkey }, "XF86AudioMute",
         function ()
-            os.execute(string.format("amixer -q set %s mute", beautiful.volume.togglechannel or beautiful.volume.channel))
-            beautiful.volume.update()
+            awful.spawn.easy_async(string.format("amixer -q set %s mute", beautiful.volume.togglechannel or beautiful.volume.channel),
+            function(stdout, stderr, reason, exit_code)
+                beautiful.volume.update()
+            end)
         end),
 
     -- Backlight / Brightness
     awful.key({   }, "XF86MonBrightnessUp",
         function()
-            os.execute("xbacklight -inc 2 -time 1 -steps 1")
+            awful.spawn("light -A 2")
         end),
     awful.key({   }, "XF86MonBrightnessDown",
         function()
-            local handle = io.popen("xbacklight -get")
-            local current = handle:read("*n")
-            handle:close()
-            if current > 2 then
-                os.execute("xbacklight -dec 2 -time 1 -steps 1")
-            end
+            awful.spawn.easy_async_with_shell("light -G",
+            function(stdout, stderr, reason, exit_code)
+                if tonumber(stdout) > 2 then
+                    awful.spawn("light -U 2")
+                end
+            end)
         end),
     awful.key({ ctrlkey }, "XF86MonBrightnessUp",
         function()
-            os.execute("xbacklight -set 100 -time 1 -steps 1")
+            awful.spawn("light -S 100")
         end),
     awful.key({ ctrlkey }, "XF86MonBrightnessDown",
         function()
-            os.execute("xbacklight -set 1 -time 1 -steps 1")
+            awful.spawn("light -S 1")
         end),
+
+    -- -- Backlight / Brightness
+    -- awful.key({   }, "XF86MonBrightnessUp",
+    --     function()
+    --         awful.spawn("xbacklight -inc 2 -time 1 -steps 1")
+    --     end),
+    -- awful.key({   }, "XF86MonBrightnessDown",
+    --     function()
+    --         awful.spawn.easy_async_with_shell("xbacklight -get | sed 's/\\..*//'",
+    --         function(stdout, stderr, reason, exit_code)
+    --             if tonumber(stdout) > 2 then
+    --                 awful.spawn("xbacklight -dec 2 -time 1 -steps 1")
+    --             end
+    --         end)
+    --     end),
+    -- awful.key({ ctrlkey }, "XF86MonBrightnessUp",
+    --     function()
+    --         awful.spawn("xbacklight -set 100 -time 1 -steps 1")
+    --     end),
+    -- awful.key({ ctrlkey }, "XF86MonBrightnessDown",
+    --     function()
+    --         awful.spawn("xbacklight -set 1 -time 1 -steps 1")
+    --     end),
 
     -- MPD control
     awful.key({   }, "XF86AudioPlay",
@@ -673,7 +721,7 @@ clientkeys = awful.util.table.join(
         end,
         {description = "maximize", group = "client"}),
     awful.key({ mod_4             }, "v", function (c)
-        awful.spawn(terminal .. " zsh -lic '" .. beautiful.scripts_dir .. "/edit-in-vim'", {
+        awful.spawn(terminal .. " zsh -lic '" .. awful.util.scripts_dir .. "/edit-in-vim'", {
             floating = true,
             ontop = true,
             placement = awful.placement.centered,
@@ -774,8 +822,9 @@ awful.rules.rules = {
       properties = { floating = true } },
 
     { rule_any = { class = {
-        "Git-gui", "feh", "Lxappearance", "Oomox", "Gpick",
-        "System-config-printer.py", "Pinentry", "Event Tester", "alsamixer"
+        "Git-gui", "feh", "Lxappearance", "Lxsession-edit",
+        "Lxsession-default-apps", "Oomox", "Gpick", "System-config-printer.py",
+        "Pinentry", "Event Tester", "alsamixer"
     } },
       properties = { floating = true, placement = awful.placement.centered } },
 
