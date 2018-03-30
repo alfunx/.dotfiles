@@ -62,8 +62,20 @@
 [url "git@github.com:"]
 	insteadOf = @gh:
 
+[url "git@gitlab.com:"]
+	insteadOf = @gl:
+
+[url "git@bitbucket.org:"]
+	insteadOf = @bb:
+
 [url "https://github.com/"]
 	insteadOf = gh://
+
+[url "https://gitlab.com/"]
+	insteadOf = gl://
+
+[url "https://bitbucket.org/"]
+	insteadOf = bb://
 
 [url "https://aur.archlinux.org/"]
 	insteadOf = aur://
@@ -71,23 +83,21 @@
 [alias]
 	ec = config --global --edit
 
-	l = log --format=oneline --all --color
-	ls = log --format=short --all --color
-	lss = log --format=short --all --color --stat --summary
-	lm = log --format=medium --all --color
-	lmm = log --format=medium --all --color --stat --summary
-	lf = log --format=fuller --all --color
-	lff = log --format=fuller --all --color --stat --summary
-	gl = log --format=oneline --all --color --graph
-	gls = log --format=short --all --color --graph
-	glss = log --format=short --all --color --graph --stat --summary
-	glm = log --format=medium --all --color --graph
-	glmm = log --format=medium --all --color --graph --stat --summary
-	glf = log --format=fuller --all --color --graph
-	glff = log --format=fuller --all --color --graph --stat --summary
+	l = log --format='%C(auto)%h%C(reset)%C(auto)%d%C(reset) %s %C(bold blue)<%an>%C(reset) %C(white)<%ad>%C(reset)' --all --color --graph --date=short
+	lo = log --format=oneline --all --color --graph
+	ll = log --format=medium --all --color --graph
+	lll = log --format=medium --all --color --graph --stat --summary
+	lf = log --format=fuller --all --color --graph
+	lff = log --format=fuller --all --color --graph --stat --summary
+	nl = log --format='%C(auto)%h%C(reset)%C(auto)%d%C(reset) %s %C(bold blue)<%an>%C(reset) %C(white)<%ad>%C(reset)' --all --color --date=short
+	nlo = log --format=oneline --all --color
+	nll = log --format=medium --all --color
+	nlll = log --format=medium --all --color --stat --summary
+	nlf = log --format=fuller --all --color
+	nlff = log --format=fuller --all --color --stat --summary
 
 	lnc = log --format=oneline --all --no-color
-	lr = "!f() { git lff \"${1-HEAD}\"~..\"${1-HEAD}\"; }; f"
+	lr = "!f() { git lff \"${1:-HEAD}\"~..\"${1:-HEAD}\"; }; f"
 	lp = log --patch --all --color
 	glp = log --patch --all --color --graph
 
@@ -95,7 +105,7 @@
 	ds = diff --stat
 	dc = diff --cached
 	dl = diff --cached HEAD~
-	dr = "!f() { git diff \"${1-HEAD}\"~..\"${1-HEAD}\"; }; f"
+	dr = "!f() { git diff \"${1:-HEAD}\"~..\"${1:-HEAD}\"; }; f"
 	dt = difftool
 	grep = grep -Ii
 
@@ -114,8 +124,8 @@
 	b = branch
 	bd = branch --delete
 	bdf = branch --delete --force
-	bdr = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git push --delete \"${1-origin}\" \"$CURRENT\"; }; f"
-	bt = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git branch --set-upstream-to=\"${1-origin/$CURRENT}\"; }; f"
+	bdr = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git push --delete \"${1:-origin}\" \"$CURRENT\"; }; f"
+	bt = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git branch --set-upstream-to=\"${1:-origin/$CURRENT}\"; }; f"
 
 	cl = clone
 	p = pull --prune
@@ -124,7 +134,7 @@
 	up = "!f() { git p \"$@\" && git su; }; f"
 
 	pu = push
-	pusu = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git push --set-upstream \"${1-origin}\" \"$CURRENT\"; }; f"
+	pusu = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git push --set-upstream \"${1:-origin}\" \"$CURRENT\"; }; f"
 
 	m = merge
 	ma = merge --abort
@@ -140,7 +150,7 @@
 	rim = rebase --interactive master
 
 	# rewrite history, default on origin
-	rwh = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git rebase --interactive $(git merge-base HEAD \"${1-origin/$CURRENT}\"); }; f"
+	rwh = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git rebase --interactive $(git merge-base HEAD \"${1:-origin/$CURRENT}\"); }; f"
 
 	# list branches sorted by last modified
 	lb = "!git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'"
@@ -152,14 +162,17 @@
 	this = "!git init && git commit --message='Initialize' --allow-empty"
 
 	# open github repository in browser
-	open = "!f() { URL=$(git config remote.\"${1-origin}\".url); xdg-open \"${URL%%.git}\"; }; f"
+	open = "!f() { URL=$(git config remote.\"${1:-origin}\".url); xdg-open \"${URL%%.git}\"; }; f"
 
 	# hard reset with commit before (use reflog to restore)
-	wipe = "!f() { git add --all && git commit --quiet --message='WIPE-SAVEPOINT' && git reset \"${1-HEAD~}\" --hard; }; f"
+	wipe = "!f() { git add --all && git commit --quiet --message='WIPE-SAVEPOINT' && git reset \"${1:-HEAD~}\" --hard; }; f"
 
 	# migrate commits to new branch
 	# migrate <new branch> [onto=master] [range=origin]
-	migrate = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git checkout -b \"$1\" && git branch --force \"$CURRENT\" \"${3-\\\"$CURRENT\\\"@\\{u\\}}\" && git rebase --onto \"${2-master}\" \"$CURRENT\"; }; f"
+	migrate = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git checkout -b \"$1\" && git branch --force \"$CURRENT\" \"${3:-\\\"$CURRENT\\\"@\\{u\\}}\" && git rebase --onto \"${2:-master}\" \"$CURRENT\"; }; f"
+
+	# set up remotes for fork
+	fork = "!f() { URL=$(git config remote.\"${1:-origin}\".url); git remote set-url \"${1:-origin}\" \"$(echo \"$URL\" | perl -pe 's/(?<=[:\\/])[^:\\/]+(?=\\/[^\\/]+$)/alfunx/')\"; git remote add \"${2:-upstream}\" \"$URL\"; }; f"
 
 	ctags = "!.git/hooks/ctags"
 
