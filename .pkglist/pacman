@@ -67,6 +67,7 @@ htop
 i3-wm
 imagemagick
 inetutils
+intel-gpu-tools
 intel-ucode
 iproute2
 iputils
@@ -148,6 +149,7 @@ psmisc
 pygmentize
 python
 python-jedi
+python-neovim
 python-pip
 python2-jedi
 qt5ct
