@@ -69,6 +69,11 @@ Plug 'kana/vim-textobj-user'
 Plug 'kana/vim-textobj-entire'
 Plug 'Julian/vim-textobj-variable-segment'
 
+" Completion
+Plug 'Shougo/deoplete.nvim'
+Plug 'roxma/nvim-yarp'
+Plug 'roxma/vim-hug-neovim-rpc'
+
 " Tmux
 Plug 'benmills/vimux'
 Plug 'christoomey/vim-tmux-navigator'
@@ -87,6 +92,7 @@ Plug 'honza/vim-snippets'
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 Plug 'lervag/vimtex', { 'for': ['latex', 'tex'] }
 Plug 'racer-rust/vim-racer', { 'for': 'rust' }
+Plug 'zchee/deoplete-clang'
 
 " Themes
 "Plug 'morhetz/gruvbox'
@@ -130,10 +136,18 @@ nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
 nnoremap <silent> <C-BS> :TmuxNavigatePrevious<cr>
 
 "" Split resize
-nnoremap <silent> <C-w>h :vertical resize -5<CR>
-nnoremap <silent> <C-w>j :resize -5<CR>
-nnoremap <silent> <C-w>k :resize +5<CR>
-nnoremap <silent> <C-w>l :vertical resize +5<CR>
+nnoremap <silent> <C-w>h 5<C-w><
+nnoremap <silent> <C-w>j 5<C-w>-
+nnoremap <silent> <C-w>k 5<C-w>+
+nnoremap <silent> <C-w>l 5<C-w>>
+
+"" Fullscreen
+nnoremap <silent> <C-w>F <C-w>_<C-w><Bar>
+
+" nnoremap <silent> <Home> <C-w><
+" nnoremap <silent> <PageDown> <C-w>-
+" nnoremap <silent> <PageUp> <C-w>+
+" nnoremap <silent> <End> <C-w>>
 
 "augroup Quickfix
 "  autocmd!
@@ -174,8 +188,10 @@ xnoremap <CR> }
 nnoremap Y y$
 
 " Copy to system clipboard
-noremap gy "+y
-noremap gp "+p
+nnoremap gy "+y
+nnoremap gp "+p
+xnoremap gy "+y
+xnoremap gp "+p
 
 " Keep selection after indenting
 xnoremap < <gv
@@ -236,8 +252,8 @@ xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
 nnoremap Q @@
 
 " No highlight
-execute "set <M-t>=\<Esc>t"
-nnoremap <M-t> :nohlsearch<CR>
+execute "set <M-b>=\<Esc>b"
+nnoremap <silent> <M-b> :nohlsearch<CR>
 
 function! ChangeReg() abort
     let x = nr2char(getchar())
@@ -338,7 +354,7 @@ let g:grepper.rg = {
             \ 'grepformat': '%f:%l:%c:%m',
             \ 'escape':         '\^$.*+?()[]{}|'
             \ }
-let g:grepper.next_tool='<leader>g'
+let g:grepper.next_tool='<C-g>'
 let g:grepper.jump=0
 let g:grepper.quickfix=1
 let g:grepper.dir='repo,cwd'
@@ -445,9 +461,9 @@ map # <Plug>(incsearch-nohl-#)
 map g* <Plug>(incsearch-nohl-g*)
 map g# <Plug>(incsearch-nohl-g#)
 
-let g:incsearch#auto_nohlsearch=1
-let g:incsearch#no_inc_hlsearch = 1
-let g:incsearch#highlight = {
+let g:incsearch#auto_nohlsearch=0
+let g:incsearch#no_inc_hlsearch=1
+let g:incsearch#highlight={
             \       'match' : {
             \           'priority' : '10'
             \       },
@@ -470,9 +486,9 @@ let g:netrw_liststyle=0
 let g:netrw_preview=1
 
 "" Unimpaired
-let g:nremap = {"[": "ü", "]": "¨"}
-let g:xremap = {"[": "ü", "]": "¨"}
-let g:oremap = {"[": "ü", "]": "¨"}
+let g:nremap={"[": "ü", "]": "¨"}
+let g:xremap={"[": "ü", "]": "¨"}
+let g:oremap={"[": "ü", "]": "¨"}
 
 nnoremap ü [
 xnoremap ü [
@@ -500,7 +516,7 @@ nnoremap <F4> :UndotreeToggle<CR>
 "" After text object
 augroup AfterTextObject
     autocmd!
-    autocmd VimEnter * call after_object#enable(['m', 'mm'], '=', ':', '+', '-', '*', '/', '#', ' ')
+    autocmd VimEnter * call after_object#enable(['n', 'nn'], '=', ':', '+', '-', '*', '/', '#', ' ')
 augroup End
 
 "" Vimtex
@@ -604,20 +620,26 @@ augroup END
 "" AutoPairs
 execute "set <M-p>=\<Esc>p"
 execute "set <M-b>=\<Esc>b"
-let g:AutoPairsMapSpace=0
+"let g:AutoPairsMapSpace=0
 
 "" RustRacer
 let g:racer_cmd="/usr/bin/racer"
 let g:racer_experimental_completer=1
 
-"" LanguageClient
-let g:LanguageClient_serverCommands = {
-    \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
-    \ 'javascript': ['/opt/javascript-typescript-langserver/lib/language-server-stdio.js'],
-    \ }
+"" Deoplete
+let g:deoplete#enable_at_startup=1
 
-" Automatically start language servers.
-let g:LanguageClient_autoStart=1
+let g:deoplete#sources#clang#libclang_path='/usr/lib/rstudio/bin/rsclang/libclang.so'
+let g:deoplete#sources#clang#clang_header='/usr/lib/rstudio/resources/libclang'
+
+" "" LanguageClient
+" let g:LanguageClient_serverCommands = {
+"     \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
+"     \ 'javascript': ['/opt/javascript-typescript-langserver/lib/language-server-stdio.js'],
+"     \ }
+"
+" " Automatically start language servers.
+" let g:LanguageClient_autoStart=1
 
 "nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
 "nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
@@ -648,6 +670,11 @@ set nowrap  " line wrapping off
 set showmatch  " show matching brackets
 set mat=5  " bracket blinking
 set list
+
+" augroup TransparentBackground
+"     autocmd!
+"     autocmd ColorScheme * highlight Normal guibg=NONE ctermbg=NONE
+" augroup END
 
 augroup LighterCursorLine
     autocmd!
@@ -738,16 +765,16 @@ set softtabstop=4
 set shiftwidth=4
 set expandtab
 
-function! ExpandSpaces()
-    set tabstop=2
-    set noexpandtab
-    '<,'>retab!
-    set tabstop=4
-    set expandtab
-    '<,'>retab
-endfunction
-
-nnoremap <silent> <leader>i :call ExpandSpaces()<CR>
+" function! ExpandSpaces()
+"     set tabstop=2
+"     set noexpandtab
+"     '<,'>retab!
+"     set tabstop=4
+"     set expandtab
+"     '<,'>retab
+" endfunction
+"
+" nnoremap <leader>i :call ExpandSpaces()<CR>
 
 "" Spaces, indents
 set encoding=utf-8
@@ -841,6 +868,29 @@ let &t_EI="\<Esc>[2 q"
 
 """ TODO Disable highlighting on re-source (bug)
 nohlsearch
+
+
+""""""""""""""
+"  FILETYPE  "
+""""""""""""""
+
+augroup QFAdjustWindowHeight
+    autocmd FileType qf call AdjustWindowHeight(3, 10)
+augroup END
+
+function! AdjustWindowHeight(minheight, maxheight)
+    let l = 1
+    let n_lines = 0
+    let w_width = winwidth(0)
+    while l <= line('$')
+        " number to float for division
+        let l_len = strlen(getline(l)) + 0.0
+        let line_width = l_len/w_width
+        let n_lines += float2nr(ceil(line_width))
+        let l += 1
+    endw
+    exe max([min([n_lines, a:maxheight]), a:minheight]) . "wincmd _"
+endfunction
 
 
 """"""""""""""""""""""""""
