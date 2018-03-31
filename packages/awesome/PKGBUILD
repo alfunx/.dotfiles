@@ -1,8 +1,8 @@
 # Maintainer: alfunx <alphonse.mariya@hotmail.com>
 
 _pkgname=awesome
-pkgname=${_pkgname}-git
-pkgver=4.2.291.gc0c48218
+pkgname=$_pkgname-git
+pkgver=4.2.290.g5e6f5343
 pkgrel=1
 pkgdesc='Highly configurable framework window manager'
 arch=('i686' 'x86_64')
@@ -16,19 +16,19 @@ makedepends=('asciidoc' 'cmake' 'docbook-xsl' 'git' 'imagemagick' 'ldoc'
 optdepends=('rlwrap: readline support for awesome-client'
             'dex: autostart your desktop files'
             'vicious: widgets for the Awesome window manager')
-provides=('notification-daemon' "${_pkgname}")
-conflicts=("${_pkgname}")
+provides=('notification-daemon' 'awesome')
+conflicts=('awesome')
 backup=('etc/xdg/awesome/rc.lua')
 
 _patches=()
 
-source=("$pkgname::git+file:///home/amariya/projects/awesome/awesome"
+source=("$_pkgname::git+file:///home/amariya/projects/awesome"
         "${_patches[@]}")
 
 sha512sums=('SKIP')
 
 pkgver() {
-    cd "$pkgname"
+    cd "$_pkgname"
     git describe | sed 's/^v//;s/-/./g'
 }
 
@@ -36,7 +36,7 @@ prepare() {
     mkdir -p build
 
     local file
-    cd "$pkgname"
+    cd "$_pkgname"
 
     for file in "${_patches[@]}"; do
         if [[ "$file" == *.h ]]; then
@@ -50,7 +50,7 @@ prepare() {
 
 build() {
     cd build
-    cmake ../"$pkgname" \
+    cmake ../"$_pkgname" \
         -DCMAKE_BUILD_TYPE=RELEASE \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DSYSCONFDIR=/etc \
@@ -62,6 +62,6 @@ package() {
     cd build
     make DESTDIR="$pkgdir" install
 
-    install -Dm644 "$srcdir"/"$pkgname"/awesome.desktop \
+    install -Dm644 "$srcdir"/"$_pkgname"/awesome.desktop \
         "$pkgdir/usr/share/xsessions/awesome.desktop"
 }

@@ -1,8 +1,8 @@
 # Maintainer: alfunx <alphonse.mariya@hotmail.com>
 
 _pkgname=monetdb
-pkgname=${_pkgname}-git
-pkgver=r3.a3ea842
+pkgname=$_pkgname-git
+pkgver=r4.c4ae67e
 pkgrel=1
 pkgdesc="MonetDB: an open source database system"
 arch=('i686' 'x86_64')
@@ -10,21 +10,23 @@ url="http://www.monetdb.org/Home"
 license=('custom')
 makedepends=('git' 'r' 'python' 'python2' 'libxml2' 'libatomic_ops' 'snappy' 'unixodbc')
 depends=('r' 'python' 'python2' 'libxml2' 'libatomic_ops' 'snappy' 'unixodbc')
+provides=('monetdb' 'monetdbd' 'mclient')
+conflicts=('monetdb')
 install=monetdb.install
-source=("$pkgname::git+file:///home/amariya/projects/monetdb/monetdb")
+source=("$_pkgname::git+file:///home/amariya/projects/monetdb")
 sha256sums=('SKIP')
 
 pkgver() {
-  cd "$pkgname"
+  cd "$_pkgname"
   echo "r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
 }
 
 prepare() {
-  cd "$pkgname"
+  cd "$_pkgname"
 }
 
 build() {
-  cd "$pkgname"
+  cd "$_pkgname"
   ./bootstrap
   ./configure --libdir=/usr/lib --prefix=/usr --sysconfdir=/etc --localstatedir=/var \
     --disable-assert --disable-testing --enable-optimize --enable-rintegration
@@ -32,8 +34,8 @@ build() {
 }
 
 package() {
-  cd "$pkgname"
+  cd "$_pkgname"
   make "DESTDIR=$pkgdir" install
-  install -Dm644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+  install -Dm644 COPYING "$pkgdir/usr/share/licenses/$_pkgname/COPYING"
   mkdir -p "$pkgdir/var/log/monetdb"
 }

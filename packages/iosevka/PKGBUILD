@@ -1,7 +1,7 @@
 # Maintainer: alfunx <alphonse.mariya@hotmail.com>
 
 _pkgname=ttf-iosevka-custom
-pkgname=${_pkgname}-git
+pkgname=$_pkgname-git
 pkgver=r1102.189531f
 pkgrel=1
 pkgdesc='A slender monospace typeface. (Customized)'
@@ -10,8 +10,8 @@ url='https://be5invis.github.io/Iosevka/'
 license=('custom:OFL')
 makedepends=('git' 'nodejs' 'npm' 'ttfautohint' 'otfcc')
 depends=('fontconfig' 'xorg-font-utils')
-provides=("${_pkgname}")
-conflicts=("${_pkgname}")
+provides=('ttf-iosevka-custom')
+conflicts=('ttf-iosevka-custom')
 source=("git+https://github.com/be5invis/Iosevka")
 md5sums=('SKIP')
 

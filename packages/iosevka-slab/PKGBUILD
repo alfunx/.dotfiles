@@ -1,7 +1,7 @@
 # Maintainer: alfunx <alphonse.mariya@hotmail.com>
 
 _pkgname=ttf-iosevka-slab-custom
-pkgname=${_pkgname}-git
+pkgname=$_pkgname-git
 pkgver=r1101.8a860c1
 pkgrel=1
 pkgdesc='A slender monospace typeface. (Customized, slab)'
@@ -10,8 +10,8 @@ url='https://be5invis.github.io/Iosevka/'
 license=('custom:OFL')
 makedepends=('git' 'nodejs' 'npm' 'ttfautohint' 'otfcc')
 depends=('fontconfig' 'xorg-font-utils')
-provides=("${_pkgname}")
-conflicts=("${_pkgname}")
+provides=('ttf-iosevka-slab-custom')
+conflicts=('ttf-iosevka-slab-custom')
 source=("git+https://github.com/be5invis/Iosevka")
 md5sums=('SKIP')
 

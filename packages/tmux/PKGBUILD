@@ -1,7 +1,7 @@
 # Maintainer: alfunx <alphonse.mariya@hotmail.com>
 
 _pkgname=tmux
-pkgname=${_pkgname}-git
+pkgname=$_pkgname-git
 pkgver=2.7.r10.gb5c0b2ca
 pkgrel=1
 pkgdesc="A terminal multiplexer"
@@ -14,29 +14,29 @@ optdepends=('libutempter: Record user sessions to utmp and wtmp files (add to de
 #depends+=('libutempter')
 provides=('tmux')
 conflicts=('tmux')
-source=("$pkgname::git+file:///home/amariya/projects/tmux/tmux"
+source=("$_pkgname::git+file:///home/amariya/projects/tmux"
         'LICENSE')
 sha512sums=('SKIP'
             'b03188cd81ffe7443905bb2cd2bb9330a00ddad258eb0f1ad64add09c2c305f1ad6686855986ce6f828a3884bfbaebbd9896e2307e65a47797a628d81c4e3677')
 
 pkgver() {
-  cd "$pkgname"
+  cd "$_pkgname"
   git describe --long | sed -e 's:\([^-]*-g\):r\1:' -e 's:-:.:g'
 }
 
 prepare() {
-  cd "$pkgname"
+  cd "$_pkgname"
   ./autogen.sh
 }
 
 build() {
-  cd "$pkgname"
+  cd "$_pkgname"
   ./configure --prefix=/usr
   make
 }
 
 package() {
-  cd "$pkgname"
+  cd "$_pkgname"
 
   make DESTDIR="$pkgdir" install
   install -Dm644 "$srcdir/LICENSE" "$pkgdir/usr/share/licenses/tmux/LICENSE"

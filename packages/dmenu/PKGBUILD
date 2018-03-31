@@ -1,7 +1,7 @@
 # Maintainer: alfunx <alphonse.mariya@hotmail.com>
 
 _pkgname=dmenu
-pkgname=${_pkgname}-git
+pkgname=$_pkgname-git
 pkgver=4.8.r1.g2f39898
 pkgrel=1
 pkgdesc='A generic menu for X. (Including patches and colorschemes)'
@@ -11,14 +11,14 @@ license=('MIT')
 options=('zipman')
 depends=('sh' 'libxinerama' 'libxft')
 makedepends=('git')
-provides=("${_pkgname}")
-conflicts=("${_pkgname}")
+provides=('dmenu')
+conflicts=('dmenu')
 
 _patches=('https://tools.suckless.org/dmenu/patches/dmenu-lineheight-4.7.diff'
           'dmenu-fuzzymatch-20180302-8895128.diff'
           'dmenu-config-20180215-8895128.diff')
 
-source=("$pkgname::git+file:///home/amariya/projects/dmenu/dmenu"
+source=("$_pkgname::git+file:///home/amariya/projects/dmenu"
         "${_patches[@]}")
 
 sha512sums=('SKIP'
@@ -27,13 +27,13 @@ sha512sums=('SKIP'
             'ece754e4de001f2a698cd2ceb00bbc0ae9f035f6f6abccfa7e4b7c8418a95cc79843334139a38f42da0c23681c8566f0e12d3027ba12475c6bc4b50d770b6961')
 
 pkgver() {
-    cd "$pkgname"
+    cd "$_pkgname"
     git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 prepare() {
     local file
-    cd "$pkgname"
+    cd "$_pkgname"
 
     for file in "${_patches[@]}"; do
         if [[ "$file" == *.h ]]; then
@@ -46,13 +46,13 @@ prepare() {
 }
 
 build() {
-    cd "$pkgname"
+    cd "$_pkgname"
     make X11INC=/usr/include/X11 X11LIB=/usr/lib/X11
 }
 
 package() {
-    cd "$pkgname"
+    cd "$_pkgname"
     make PREFIX=/usr DESTDIR="$pkgdir" install
-    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-    install -Dm644 README "$pkgdir/usr/share/doc/$pkgname/README"
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$_pkgname/LICENSE"
+    install -Dm644 README "$pkgdir/usr/share/doc/$_pkgname/README"
 }

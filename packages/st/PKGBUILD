@@ -1,7 +1,7 @@
 # Maintainer: alfunx <alphonse.mariya@hotmail.com>
 
 _pkgname=st
-pkgname=${_pkgname}-git
+pkgname=$_pkgname-git
 pkgver=0.8.1.r3.g041912a
 pkgrel=1
 pkgdesc='A simple virtual terminal emulator for X. (Including patches and colorschemes)'
@@ -11,8 +11,8 @@ license=('MIT')
 options=('zipman')
 depends=('libxft')
 makedepends=('ncurses' 'libxext' 'git')
-provides=("${_pkgname}")
-conflicts=("${_pkgname}")
+provides=('st')
+conflicts=('st')
 
 _patches=('https://st.suckless.org/patches/hidecursor/st-hidecursor-20170404-745c40f.diff'
           'https://st.suckless.org/patches/scrollback/st-scrollback-20180311-c5ba9c0.diff'
@@ -23,7 +23,7 @@ _patches=('https://st.suckless.org/patches/hidecursor/st-hidecursor-20170404-745
           'st-font-iosevka-custom-20180314-8ab6290.diff'
           'st-worddelimiters-20180314-8ab6290.diff')
 
-source=("$pkgname::git+file:///home/amariya/projects/st/st"
+source=("$_pkgname::git+file:///home/amariya/projects/st"
         "${_patches[@]}"
         "simple-terminal.desktop")
 
@@ -39,13 +39,13 @@ sha512sums=('SKIP'
             '717dd4134ca8c39b8f950fe3c88e728656f2d08c537b8df0aeaae98023861ccf3802fe6c9ebc92cb79b2182fd528a3c0c7278fc6f31a7c3b05d07f2842ee0cd1')
 
 pkgver() {
-    cd "$pkgname"
+    cd "$_pkgname"
     git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 prepare() {
     local file
-    cd "$pkgname"
+    cd "$_pkgname"
 
     # skip terminfo which conflicts with nsurses
     # sed -i '/tic /,+1d' Makefile
@@ -62,14 +62,14 @@ prepare() {
 }
 
 build() {
-    cd "$pkgname"
+    cd "$_pkgname"
     make X11INC=/usr/include/X11 X11LIB=/usr/lib/X11
 }
 
 package() {
-    cd "$pkgname"
+    cd "$_pkgname"
     make PREFIX=/usr DESTDIR="$pkgdir" TERMINFO="$pkgdir/usr/share/terminfo" install
     install -Dm644 "$srcdir/simple-terminal.desktop" "$pkgdir/usr/share/applications/simple-terminal.desktop"
-    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-    install -Dm644 README "$pkgdir/usr/share/doc/$pkgname/README"
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$_pkgname/LICENSE"
+    install -Dm644 README "$pkgdir/usr/share/doc/$_pkgname/README"
 }
