@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+choice_by_rofi() {
+    choice=$(echo -e "0: Lock\\n1: Hibernate\\n2: Suspend\\n3: Logout\\n4: Reboot\\n5: Poweroff" \
+        | rofi -i -lines 6 -dmenu -p 'session' \
+        | cut -d ':' -f 1)
+}
+
+[[ -z "$DISPLAY" ]] && exit 1
+
+choice_by_rofi
+sleep 0.5
+
+[[ -z "$choice" ]] && exit 1
+
+case "$choice" in
+    0) xautolock -locknow & ;;
+    1) systemctl hibernate & ;;
+    2) systemctl suspend & ;;
+    3) systemctl kill "$(pgrep X)" & ;;
+    4) systemctl reboot & ;;
+    5) systemctl poweroff & ;;
+esac

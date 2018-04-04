@@ -5,21 +5,59 @@ shift
 
 case $cmd in
     vim)
-        vim ~/.vimrc "$@" ;;
+        vim \
+            ~/.vimrc \
+            "$@"
+        ;;
     tmux)
-        vim ~/.tmux.conf "$@" ;;
+        vim \
+            ~/.tmux.conf \
+            ~/.tmux.minimal.conf \
+            "$@"
+        ;;
     git)
-        vim ~/.gitconfig ~/.gitignore ~/.gitmodules "$@" ;;
+        vim \
+            ~/.gitconfig \
+            ~/.gitignore \
+            ~/.gitmodules \
+            "$@"
+        ;;
     zsh)
-        vim ~/.zshrc ~/.zsh_aliases ~/.oh-my-zsh/themes/agnoster-custom.zsh-theme "$@" ;;
+        vim \
+            ~/.zshrc \
+            ~/.alias.zsh \
+            ~/.completion.zsh \
+            ~/.highlight.zsh \
+            ~/.zprofile \
+            ~/.profile \
+            ~/.oh-my-zsh/themes/agnoster-custom.zsh-theme \
+            "$@"
+        ;;
     bash)
-        vim ~/.bashrc ~/.bash_profile "$@" ;;
+        vim \
+            ~/.bashrc \
+            ~/.bash_profile \
+            ~/.profile \
+            "$@"
+        ;;
     aw)
-        vim ~/.config/awesome/rc.lua ~/.config/awesome/themes/powerarrow-gruvbox/theme.lua "$@" ;;
+        vim \
+            ~/.config/awesome/rc.lua \
+            ~/.config/awesome/themes/powerarrow-gruvbox/theme.lua \
+            "$@"
+        ;;
     xorg)
-        vim ~/.xinitrc "$@" ;;
-    script)
-        vim ~/scripts/* "$@" ;;
+        vim \
+            ~/.xinitrc \
+            "$@"
+        ;;
+    bin)
+        vim \
+            ~/.bin/* \
+            "$@"
+        ;;
     *)
-        vim ~/.zsh_aliases "$@" ;;
+        vim \
+            "$0"
+        ;;
 esac

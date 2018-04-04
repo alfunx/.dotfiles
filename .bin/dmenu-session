@@ -17,14 +17,15 @@ choice_by_dmenu() {
 [[ -z "$DISPLAY" ]] && exit 1
 
 choice_by_dmenu
+sleep 0.1
 
 [[ -z "$choice" ]] && exit 1
 
 case "$choice" in
     0) xautolock -locknow & ;;
-    1) sudo systemctl hibernate & ;;
-    2) sudo systemctl suspend & ;;
-    3) sudo systemctl kill "$(pgrep X)" & ;;
-    4) sudo systemctl reboot & ;;
-    5) sudo systemctl poweroff & ;;
+    1) systemctl hibernate & ;;
+    2) systemctl suspend & ;;
+    3) systemctl kill "$(pgrep X)" & ;;
+    4) systemctl reboot & ;;
+    5) systemctl poweroff & ;;
 esac
