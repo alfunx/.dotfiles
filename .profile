@@ -12,6 +12,9 @@ export PATH="$JAVA_HOME/bin:$PATH"
 # user scripts
 export PATH="$HOME/.bin:$PATH"
 
+# terminal emulator
+export TERMINAL='kitty'
+
 # editor
 export VISUAL='vim'
 export EDITOR='vim'

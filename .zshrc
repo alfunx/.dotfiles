@@ -28,7 +28,7 @@ fi
 # DISABLE_AUTO_UPDATE="true"
 
 # Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
+export UPDATE_ZSH_DAYS=7
 
 # Uncomment the following line to disable colors in ls.
 # DISABLE_LS_COLORS="true"
@@ -87,7 +87,7 @@ bgnotify_formatted() {
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(zsh-syntax-highlighting zsh-completions command-not-found custom-common-aliases colorize bgnotify)
+plugins=(zsh-syntax-highlighting zsh-completions zsh-autosuggestions command-not-found custom-common-aliases colorize bgnotify)
 
 # Completions
 source "$HOME/.completion.zsh"
