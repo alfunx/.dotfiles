@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+echo "[1mtemplates:[0m $HOME/.git_template"
+echo "[1mgit root:[0m  $(git rev-parse --show-toplevel)"
+
+find "$HOME/.git_template" -type f \
+    | sed "s@.*/@$(git rev-parse --show-toplevel)/.git/hooks/@" \
+    | xargs rm -rf
+
+mkdir -p "$(git rev-parse --show-toplevel)/.git/hooks"
+git init "$(git rev-parse --show-toplevel)"

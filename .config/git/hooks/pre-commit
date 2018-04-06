@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# Pre-commit script to prevent merge markers from being committed.
+# This simply searches the files that you are about to commit.
+# It only checks the working directory, not the index! (i.e. don't forget to stage)
+
+changed=$(git diff --cached --name-only)
+
+if [ -z "$changed" ]; then
+    exit 0
+fi
+
+echo "$changed" \
+    | xargs perl -ne 'exit 1 if /^<{7}/ ... /^>{7}/ or /^<{7}/ or /^>{7}/ or /^={7}\n/ or /^\|{7}\n/'
+
+if [ "$?" -ne 0 ]; then
+    echo "[1;33mwarning:[0m There are conflict markers. Use [1m--no-verify[0m to bypass this."
+    exit 1
+fi

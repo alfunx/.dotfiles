@@ -1,0 +1,4 @@
+#!/bin/sh
+
+DIR=$(dirname "$0")
+"$DIR/ctags" > /dev/null 2>&1 &

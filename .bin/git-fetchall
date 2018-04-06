@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+for directory in *; do
+    cd "$directory" || exit 1
+    if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+        echo "[1m$(pwd)[0m"
+        git fetch --prune --all --tags
+        cd ..
+    fi
+done

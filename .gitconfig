@@ -1,6 +1,3 @@
-[init]
-	templatedir = ~/.git_template
-
 [user]
 	email = alphonse.mariya@hotmail.com
 	name = Alphonse Mariya
@@ -11,30 +8,43 @@
 
 [core]
 	editor = vim
+	pager = less -S
 	whitespace = fix,trailing-space,cr-at-eol
+	hooksPath = ~/.config/git/hooks
 	excludesfile = ~/.ignore
 
 [credential]
 	helper = cache
 
 [color]
+	branch = true
+	diff = true
+	grep = true
+	interactive = true
+	pager = true
+	showBranch = true
+	status = true
 	ui = true
 
 [color "diff"]
-	meta = blue bold
+	meta = blue bold reverse
 	frag = yellow bold reverse
 	commit = yellow bold
-	old = red
-	new = green
+	old = 9
+	new = 10
+	oldMoved = 8
+	newMoved = 14
 	whitespace = red reverse
 
 [diff]
 	tool = vimdiff
+	colorMoved = default
 
 [difftool]
 	prompt = false
 
 [merge]
+	ff = false
 	tool = diffconflicts
 
 [mergetool "diffconflicts"]
@@ -42,11 +52,18 @@
 	trustExitCode = true
 	keepBackup = false
 
+[fetch]
+	prune = true
+
 [pull]
 	rebase = interactive
 
 [push]
+	default = simple
 	gpgSign = if-asked
+
+[interactive]
+	singlekey = true
 
 [status]
 	short = true
@@ -57,7 +74,11 @@
 [log]
 	abbrevCommit = true
 	decorate = short
-	date = format:%a  %Y-%m-%d  %R  %z
+	date = format:%a, %Y-%m-%d %R (%z)
+	graphColors = 1,2,3,4,5,6,8,9,10,11,12,13,14,15
+
+[rerere]
+	enabled = true
 
 [url "git@github.com:"]
 	insteadOf = @gh:
@@ -83,26 +104,27 @@
 [alias]
 	ec = config --global --edit
 
-	l = log --format='%C(auto)%h%C(reset)%C(auto)%d%C(reset) %s %C(bold blue)<%an>%C(reset) %C(white)<%ad>%C(reset)' --all --color --graph --date=short
-	lo = log --format=oneline --all --color --graph
-	ll = log --format=medium --all --color --graph
-	lll = log --format=medium --all --color --graph --stat --summary
-	lf = log --format=fuller --all --color --graph
-	lff = log --format=fuller --all --color --graph --stat --summary
-	nl = log --format='%C(auto)%h%C(reset)%C(auto)%d%C(reset) %s %C(bold blue)<%an>%C(reset) %C(white)<%ad>%C(reset)' --all --color --date=short
-	nlo = log --format=oneline --all --color
-	nll = log --format=medium --all --color
-	nlll = log --format=medium --all --color --stat --summary
-	nlf = log --format=fuller --all --color
-	nlff = log --format=fuller --all --color --stat --summary
+	l = log --graph --format=format:'%C(auto)%h%C(reset) - %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n''%C(black)%h%C(reset)   %C(auto)%s%C(reset) %C(241)- %an%C(reset)%n' --all --graph
+	lo = log --format='%C(auto)%h%C(reset)%C(auto)%d%C(reset) %C(auto)%s%C(reset) %C(italic blue)%ad%C(reset) %C(241)%an%C(reset)' --all --graph --date=short
+	lm = log --format=medium --all --graph
+	lmm = log --format=medium --all --graph --stat --summary
+	lf = log --format=fuller --all --graph
+	lff = log --format=fuller --all --graph --stat --summary
 
-	lnc = log --format=oneline --all --no-color
-	lr = "!f() { git lff \"${1:-HEAD}\"~..\"${1:-HEAD}\"; }; f"
-	lp = log --patch --all --color
-	glp = log --patch --all --color --graph
+	ls = log --graph --format=format:'%C(auto)%h%C(reset) - %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n''%C(black)%h%C(reset)   %C(auto)%s%C(reset) %C(241)- %an%C(reset)%n' --graph
+	lso = log --format='%C(auto)%h%C(reset)%C(auto)%d%C(reset) %C(auto)%s%C(reset) %C(italic blue)%ad%C(reset) %C(241)%an%C(reset)' --graph --date=short
+	lsm = log --format=medium --graph
+	lsmm = log --format=medium --graph --stat --summary
+	lsf = log --format=fuller --graph
+	lsff = log --format=fuller --graph --stat --summary
+
+	lr = "!f() { git log --format=fuller --stat --summary \"${1:-HEAD}\"~..\"${1:-HEAD}\"; }; f"
+	ld = log --format=medium --stat --summary --left-right
+	lp = log --patch --graph
+	lw = "!f() { watch -cn 2 git \"${@:-l}\"; }; f"
 
 	d = diff
-	ds = diff --stat
+	ds = diff --find-renames --stat
 	dc = diff --cached
 	dl = diff --cached HEAD~
 	dr = "!f() { git diff \"${1:-HEAD}\"~..\"${1:-HEAD}\"; }; f"
@@ -110,21 +132,24 @@
 	grep = grep -Ii
 
 	s = status
+	si = status --ignored
 	a = add
 	au = add --update
 	ai = add --interactive
 	ap = add --patch
 	c = commit --verbose
 	ca = commit --verbose --amend
+	can = commit --verbose --amend --no-edit
 
 	co = checkout
 	com = checkout master
-	col = checkout -
 	cob = checkout -b
-	b = branch
+	b = branch --verbose
+	bl = branch --all --verbose
 	bd = branch --delete
 	bdf = branch --delete --force
-	bdr = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git push --delete \"${1:-origin}\" \"$CURRENT\"; }; f"
+	bdr = "!f() { [ \"$#\" -gt \"1\" ] && REMOTE=$1 && shift; git branch --delete \"$1\" && git push \"${REMOTE:-origin}\" --delete \"$1\"; }; f"
+	bdrf = "!f() { [ \"$#\" -gt \"1\" ] && REMOTE=$1 && shift; git branch --delete --force \"$1\" && git push \"${REMOTE:-origin}\" --delete \"$1\"; }; f"
 	bt = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git branch --set-upstream-to=\"${1:-origin/$CURRENT}\"; }; f"
 
 	cl = clone
@@ -140,23 +165,34 @@
 	ma = merge --abort
 	mc = merge --continue
 	mff = merge --ff-only
-	mnff = merge --no-ff
 	mt = mergetool
-	cp = cherry-pick
 	r = rebase
 	ra = rebase --abort
-	rc = rebase --interactive --continue
+	rc = rebase --continue
+	rq = rebase --quit
+	rs = rebase --skip
 	ri = rebase --interactive
 	rim = rebase --interactive master
+	cp = cherry-pick
+	cpa = cherry-pick --abort
+	cpc = cherry-pick --continue
+	cpq = cherry-pick --quit
+
+	re = reset
+	rv = revert
+
+	which = branch --contains
+	who = shortlog --summary --numbered --no-merges
+	whoami = !"git config --get user.name && git config --get user.email"
 
 	# rewrite history, default on origin
 	rwh = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git rebase --interactive $(git merge-base HEAD \"${1:-origin/$CURRENT}\"); }; f"
 
 	# list branches sorted by last modified
-	lb = "!git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'"
+	bls = "!git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'"
 
 	# list aliases
-	la = "!git config --list | grep alias | cut -c 7- | sed -e 's/=/\\t/' | column -s $'\\t' | less"
+	alias = "!git config --get-regexp alias | cut -c 7- | sed -e \"s/^/[1m/\" -e \"s/ /[0m$(echo 2B | xxd -r -p)/\" | column -t -s \"$(echo 2B | xxd -r -p)\" | less -SR "
 
 	# initialize repository in current directory
 	this = "!git init && git commit --message='Initialize' --allow-empty"
@@ -167,6 +203,9 @@
 	# hard reset with commit before (use reflog to restore)
 	wipe = "!f() { git add --all && git commit --quiet --message='WIPE-SAVEPOINT' && git reset \"${1:-HEAD~}\" --hard; }; f"
 
+	# hard reset and clean
+	nuke = !"git reset --hard HEAD && git clean -fd"
+
 	# migrate commits to new branch
 	# migrate <new branch> [onto=master] [range=origin]
 	migrate = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git checkout -b \"$1\" && git branch --force \"$CURRENT\" \"${3:-\\\"$CURRENT\\\"@\\{u\\}}\" && git rebase --onto \"${2:-master}\" \"$CURRENT\"; }; f"
@@ -174,7 +213,8 @@
 	# set up remotes for fork
 	fork = "!f() { URL=$(git config remote.\"${1:-origin}\".url); git remote set-url \"${1:-origin}\" \"$(echo \"$URL\" | perl -pe 's/(?<=[:\\/])[^:\\/]+(?=\\/[^\\/]+$)/alfunx/')\"; git remote add \"${2:-upstream}\" \"$URL\"; }; f"
 
-	ctags = "!.git/hooks/ctags"
+	# generate tags file
+	ctags = "!$HOME/.config/git/hooks/ctags"
 
 	# fzf commands (custom)
 	fbr = fzf-branch
@@ -183,3 +223,6 @@
 	fsha = fzf-print-sha
 	fshow = fzf-show-commit
 	fstash = fzf-show-stash
+
+[svn]
+	rmdir = true
