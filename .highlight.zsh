@@ -33,8 +33,6 @@ ZSH_HIGHLIGHT_STYLES[arg0]='fg=108,bold'
 
 typeset -A ZSH_HIGHLIGHT_PATTERNS
 ZSH_HIGHLIGHT_PATTERNS+=('rm -rf' 'fg=208,bold')
-ZSH_HIGHLIGHT_PATTERNS+=('reset --hard' 'fg=208,bold')
-ZSH_HIGHLIGHT_PATTERNS+=('--force' 'fg=208,bold')
 
 
 #####################

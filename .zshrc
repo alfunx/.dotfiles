@@ -89,6 +89,11 @@ bgnotify_formatted() {
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(zsh-syntax-highlighting zsh-completions zsh-autosuggestions command-not-found custom-common-aliases colorize bgnotify)
 
+# Remove plugins if in tty
+if [ "$TERM" = 'linux' ]; then
+    plugins=("${(@)plugins:#zsh-autosuggestions}")
+fi
+
 # Completions
 source "$HOME/.completion.zsh"
 
