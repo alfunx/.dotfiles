@@ -2,7 +2,7 @@
 
 _pkgname=ttf-iosevka-slab-custom
 pkgname=$_pkgname-git
-pkgver=r1101.8a860c1
+pkgver=r1107.364c8ae
 pkgrel=1
 pkgdesc='A slender monospace typeface. (Customized, slab)'
 arch=('any')
@@ -21,7 +21,7 @@ pkgver() {
 }
 
 build() {
-    design='slab v-l-italic v-i-italic v-q-straight v-eszet-traditional v-tilde-low v-asterisk-low v-underscore-low v-at-short expanded term'
+    design='slab v-l-italic v-i-italic v-q-taily v-eszet-traditional v-tilde-low v-asterisk-low v-at-short expanded term'
     upright='v-g-opendoublestorey'
     italic='v-g-singlestorey'
     oblique='v-g-opendoublestorey'

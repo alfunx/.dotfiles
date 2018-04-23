@@ -21,6 +21,7 @@ chrony
 clisp
 cmake
 cmatrix
+compton
 coreutils
 crda
 cronie
@@ -35,6 +36,7 @@ diffutils
 dmidecode
 docker
 e2fsprogs
+editorconfig-core-c
 efibootmgr
 emacs
 expac

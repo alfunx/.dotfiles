@@ -7,7 +7,6 @@ cower
 dropbox
 grabc
 kakoune-git
-kitty-git
 light-git
 luacheck
 modprobed-db
@@ -19,7 +18,6 @@ pacaur
 powerline-fonts-git
 python-proselint
 quicklisp
-rstudio-desktop-bin
 ruby-haste
 ruby-json
 toilet
