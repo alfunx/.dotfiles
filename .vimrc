@@ -46,10 +46,11 @@ Plug 'junegunn/vim-peekaboo'
 Plug 'easymotion/vim-easymotion'
 Plug 'haya14busa/incsearch.vim'
 Plug 'haya14busa/incsearch-easymotion.vim'
-Plug 'mhinz/vim-grepper', { 'on': ['Grepper', '<plug>(GrepperOperator)'] }
+Plug 'mhinz/vim-grepper'
 Plug 'terryma/vim-multiple-cursors'
 "Plug 'terryma/vim-expand-region'
 Plug 'jiangmiao/auto-pairs'
+"Plug 'Raimondi/delimitMate'
 Plug 'mbbill/undotree'
 "Plug 'christoomey/vim-titlecase'
 Plug 'tomtom/tcomment_vim'
@@ -57,8 +58,9 @@ Plug 'ap/vim-css-color'
 "Plug 'jceb/vim-orgmode'
 Plug 'xtal8/traces.vim'
 Plug 'chrisbra/NrrwRgn'
-Plug 'kopischke/vim-fetch'
+"Plug 'kopischke/vim-fetch'
 Plug 'w0rp/ale'
+"Plug 'ludovicchabant/vim-gutentags'
 
 " Text objects
 Plug 'wellle/targets.vim'
@@ -66,7 +68,7 @@ Plug 'junegunn/vim-after-object'
 "Plug 'michaeljsmith/vim-indent-object'
 Plug 'alfunx/vim-indent-object'  " fork
 Plug 'kana/vim-textobj-user'
-Plug 'kana/vim-textobj-entire'
+"Plug 'kana/vim-textobj-entire'
 Plug 'Julian/vim-textobj-variable-segment'
 
 " Completion
@@ -84,11 +86,12 @@ Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 
 " " Language server
-" Plug 'roxma/vim-hug-neovim-rpc'
-" Plug 'roxma/nvim-yarp'
-" Plug 'autozimu/LanguageClient-neovim'
+"Plug 'roxma/vim-hug-neovim-rpc'
+"Plug 'roxma/nvim-yarp'
+"Plug 'autozimu/LanguageClient-neovim'
 
 " Language specific
+Plug 'editorconfig/editorconfig-vim'
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 Plug 'lervag/vimtex', { 'for': ['latex', 'tex'] }
 Plug 'racer-rust/vim-racer', { 'for': 'rust' }
@@ -119,7 +122,7 @@ runtime macros/matchit.vim
 nnoremap <Space> <Nop>
 nnoremap ü <Nop>
 let mapleader=' '
-let maplocalleader='ü'
+let maplocalleader=''
 
 "" Split navigation
 "nnoremap <C-h> <C-w><C-h>
@@ -140,6 +143,10 @@ nnoremap <silent> <C-w>h 5<C-w><
 nnoremap <silent> <C-w>j 5<C-w>-
 nnoremap <silent> <C-w>k 5<C-w>+
 nnoremap <silent> <C-w>l 5<C-w>>
+
+"" New tab
+nnoremap <silent> <C-w>t :tabe<CR>
+nnoremap <silent> <C-w><C-t> :tabe<CR>
 
 "" Fullscreen
 nnoremap <silent> <C-w>F <C-w>_<C-w><Bar>
@@ -174,15 +181,15 @@ nnoremap <M-k> {
 xnoremap <M-k> {
 onoremap <M-k> {
 
-" Previous paragraph
-nnoremap <BS> {
-onoremap <BS> {
-xnoremap <BS> {
-
-" Next paragraph
-nnoremap <expr> <CR> empty(&buftype) ? '}' : '<CR>'
-onoremap <expr> <CR> empty(&buftype) ? '}' : '<CR>'
-xnoremap <CR> }
+" " Previous paragraph
+" nnoremap <BS> {
+" onoremap <BS> {
+" xnoremap <BS> {
+"
+" " Next paragraph
+" nnoremap <expr> <CR> empty(&buftype) ? '}' : '<CR>'
+" onoremap <expr> <CR> empty(&buftype) ? '}' : '<CR>'
+" xnoremap <CR> }
 
 " Make Y behave like other commands
 nnoremap Y y$
@@ -229,10 +236,10 @@ cnoremap <expr> <Tab> getcmdtype() =~ '[?/]' ? '<C-g>' : '<Tab>'
 cnoremap <expr> <S-Tab> getcmdtype() =~ '[?/]' ? '<C-t>' : feedkeys('<S-Tab>', 'int')[1]
 
 " Remove trailing whitespaces
-noremap <silent> <F3> :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
+nnoremap <silent> <F3> mz:keepp %s/\\\@1<!\s\+$//e<cr>`z
 
 " Make
-noremap <F5> :make!<CR>
+nnoremap <F5> :make!<CR>
 
 " Allow saving of files as sudo
 command! W execute 'silent! w !sudo /usr/bin/tee % >/dev/null' <bar> edit!
@@ -253,8 +260,9 @@ nnoremap Q @@
 
 " No highlight
 execute "set <M-b>=\<Esc>b"
-nnoremap <silent> <M-b> :nohlsearch<CR>
+nnoremap <silent> <M-b> :<C-u>nohlsearch<CR>
 
+" Change register
 function! ChangeReg() abort
     let x = nr2char(getchar())
     call feedkeys("q:ilet @" . x . " = \<c-r>\<c-r>=string(@" . x . ")\<cr>\<esc>$", 'n')
@@ -412,6 +420,7 @@ let g:airline#extensions#tabline#show_tab_nr=0
 let g:airline#extensions#tabline#show_close_button=0
 let g:airline#extensions#tabline#buffers_label='buffers'
 let g:airline#extensions#tabline#tabs_label='tabs'
+" let g:airline_section_z='%3p%% %3l:%v'
 
 " let g:airline_mode_map = {
 "             \ '__' : ' - ',
@@ -437,7 +446,7 @@ let g:gitgutter_sign_added='┃'
 let g:gitgutter_sign_modified='┃'
 let g:gitgutter_sign_removed='◢'
 let g:gitgutter_sign_removed_first_line='◥'
-let g:gitgutter_sign_modified_removed='┃'
+let g:gitgutter_sign_modified_removed='◢'
 
 "" EasyMotion
 "let g:EasyMotion_do_mapping=0  " Disable default mappings
@@ -461,6 +470,9 @@ map # <Plug>(incsearch-nohl-#)
 map g* <Plug>(incsearch-nohl-g*)
 map g# <Plug>(incsearch-nohl-g#)
 
+let g:incsearch#magic='\v'
+let g:incsearch#smart_backward_word=1
+let g:incsearch#consistent_n_direction=1
 let g:incsearch#auto_nohlsearch=0
 let g:incsearch#no_inc_hlsearch=1
 let g:incsearch#highlight={
@@ -538,12 +550,14 @@ let g:multi_cursor_exit_from_visual_mode=0
 let g:multi_cursor_exit_from_insert_mode=0
 
 "" Goyo + Limelight
+let g:goyo_width=83
+
 function! s:goyo_enter()
     set nolist
     set noshowmode
     set noshowcmd
     set scrolloff=999
-    set sidescrolloff=20
+    set sidescrolloff=0
     Limelight
 endfunction
 
@@ -592,9 +606,6 @@ endfunction
 
 nnoremap <silent> _ mv:set opfunc=SendToTmuxSplit<CR>g@
 vnoremap <silent> _ mv:<C-U>call SendToTmuxSplit(visualmode(), 1)<CR>
-
-" xnoremap _ "vy:call VimuxSlime()<CR>
-" nnoremap _ vap"vy:call VimuxSlime()<CR>
 
 "" Ale
 " Using special space: U+2000 (EN QUAD)
@@ -821,6 +832,7 @@ set autowrite
 set ruler
 set nostartofline
 set nohidden
+set nojoinspaces
 set sessionoptions-=options
 
 function! NeatFoldText()
@@ -852,7 +864,13 @@ let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
 "set t_Co=256
 let g:gruvbox_italic=1
-silent! colorscheme gruvbox
+
+"" Use environment variable
+if !empty($VIM_COLOR)
+    silent! colorscheme $VIM_COLOR
+else
+    silent! colorscheme gruvbox
+endif
 
 "" GUI options
 set guifont=Iosevka\ Custom
@@ -862,9 +880,11 @@ set guioptions-=r  "remove right-hand scroll bar
 set guioptions-=L  "remove left-hand scroll bar
 
 "" Switch cursor according to mode
-let &t_SI="\<Esc>[6 q"
-let &t_SR="\<Esc>[4 q"
-let &t_EI="\<Esc>[2 q"
+if &term !=? 'linux' || has('gui_running')
+    let &t_SI="\<Esc>[6 q"
+    let &t_SR="\<Esc>[4 q"
+    let &t_EI="\<Esc>[2 q"
+endif
 
 """ TODO Disable highlighting on re-source (bug)
 nohlsearch
