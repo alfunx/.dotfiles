@@ -3,7 +3,7 @@ allow_bold = true
 audible_bell = false
 clickable_url = true
 dynamic_title = true
-font = Meslo LG S for Powerline 11
+font = Iosevka Custom 12
 fullscreen = true
 
 icon_name = terminal
