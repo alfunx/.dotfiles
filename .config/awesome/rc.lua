@@ -26,10 +26,12 @@ local hotkeys_popup = require("awful.hotkeys_popup").widget
 
 -- {{{ Error handling
 if awesome.startup_errors then
-    naughty.notify({ preset = naughty.config.presets.critical,
-                     title = "Oops, there were errors during startup!",
-                     text = awesome.startup_errors })
-end
+    naughty.notify {
+        preset = naughty.config.presets.critical,
+        title = "Oops, there were errors during startup!",
+        text = awesome.startup_errors,
+    }
+    end
 
 do
     local in_error = false
@@ -37,9 +39,11 @@ do
         if in_error then return end
         in_error = true
 
-        naughty.notify({ preset = naughty.config.presets.critical,
-                         title = "Oops, an error happened!",
-                         text = tostring(err) })
+        naughty.notify {
+            preset = naughty.config.presets.critical,
+            title = "Oops, an error happened!",
+            text = tostring(err),
+        }
         in_error = false
     end)
 end
@@ -84,7 +88,9 @@ local function run_once(cmd_arr)
     end
 end
 
-run_once({ "redshift -c .config/redshift.conf &" })
+run_once {
+    "redshift -c .config/redshift.conf &",
+}
 -- }}}
 
 -- {{{ Variable definitions
@@ -150,53 +156,56 @@ awful.util.layouts = {
 }
 
 awful.util.taglist_buttons = awful.util.table.join(
-                    awful.button({ }, 1, function(t) t:view_only() end),
-                    awful.button({ mod_4 }, 1, function(t)
-                                              if client.focus then
-                                                  client.focus:move_to_tag(t)
-                                              end
-                                          end),
-                    awful.button({ }, 3, awful.tag.viewtoggle),
-                    awful.button({ mod_4 }, 3, function(t)
-                                              if client.focus then
-                                                  client.focus:toggle_tag(t)
-                                              end
-                                          end),
-                    awful.button({ }, 4, function(t) awful.tag.viewnext(t.screen) end),
-                    awful.button({ }, 5, function(t) awful.tag.viewprev(t.screen) end)
-                )
+    awful.button({ }, 1, function(t) t:view_only() end),
+    awful.button({ mod_4 }, 1, function(t)
+        if client.focus then
+            client.focus:move_to_tag(t)
+        end
+    end),
+    awful.button({ }, 3, awful.tag.viewtoggle),
+    awful.button({ mod_4 }, 3, function(t)
+        if client.focus then
+            client.focus:toggle_tag(t)
+        end
+    end),
+    awful.button({ }, 4, function(t) awful.tag.viewnext(t.screen) end),
+    awful.button({ }, 5, function(t) awful.tag.viewprev(t.screen) end)
+)
 
 awful.util.tasklist_buttons = awful.util.table.join(
-                     awful.button({ }, 1, function (c)
-                                              if c == client.focus then
-                                                  c.minimized = true
-                                              else
-                                                  -- Without this, the following
-                                                  -- :isvisible() makes no sense
-                                                  c.minimized = false
-                                                  if not c:isvisible() and c.first_tag then
-                                                      c.first_tag:view_only()
-                                                  end
-                                                  -- This will also un-minimize
-                                                  -- the client, if needed
-                                                  client.focus = c
-                                                  c:raise()
-                                              end
-                                          end),
-                     awful.button({ }, 3, function()
-                                              if instance and instance.wibox.visible then
-                                                  instance:hide()
-                                                  instance = nil
-                                              else
-                                                  instance = awful.menu.clients({ theme = { width = 250 } })
-                                              end
-                                          end),
-                     awful.button({ }, 4, function ()
-                                              awful.client.focus.byidx(1)
-                                          end),
-                     awful.button({ }, 5, function ()
-                                              awful.client.focus.byidx(-1)
-                                          end))
+    awful.button({ }, 1, function (c)
+        if c == client.focus then
+            c.minimized = true
+        else
+            -- Without this, the following
+            -- :isvisible() makes no sense
+            c.minimized = false
+            if not c:isvisible() and c.first_tag then
+                c.first_tag:view_only()
+            end
+            -- This will also un-minimize
+            -- the client, if needed
+            client.focus = c
+            c:raise()
+        end
+    end),
+    awful.button({ }, 3, function()
+        if instance and instance.wibox.visible then
+            instance:hide()
+            instance = nil
+        else
+            instance = awful.menu.clients({ theme = { width = 250 } }, {}, function(c)
+                return c.minimized
+            end)
+        end
+    end),
+    awful.button({ }, 4, function ()
+        awful.client.focus.byidx(1)
+    end),
+    awful.button({ }, 5, function ()
+        awful.client.focus.byidx(-1)
+    end)
+)
 
 lain.layout.termfair.nmaster           = 3
 lain.layout.termfair.ncol              = 1
@@ -218,10 +227,10 @@ local myawesomemenu = {
     { "manual", terminal .. " man awesome" },
     { "edit config", string.format("%s %s %s", terminal, editor, awesome.conffile) },
     { "restart", awesome.restart },
-    { "quit", function() awesome.quit() end }
+    { "quit", function() awesome.quit() end },
 }
 
-awful.util.mymainmenu = freedesktop.menu.build({
+awful.util.mymainmenu = freedesktop.menu.build {
     icon_size = beautiful.menu_height or 16,
     before = {
         { "Awesome", myawesomemenu, beautiful.awesome_icon },
@@ -230,8 +239,8 @@ awful.util.mymainmenu = freedesktop.menu.build({
     after = {
         { "Open terminal", terminal },
         -- other triads can be put here
-    }
-})
+    },
+}
 
 menubar.utils.terminal = terminal -- Set the Menubar terminal for applications that require it
 -- }}}
@@ -387,17 +396,25 @@ globalkeys = awful.util.table.join(
     -- awful.key({ mod_4             }, "v", function () awful.spawn("xsel -b | xsel") end),
 
     -- Prompt
-    awful.key({ mod_4                     }, "$", function () awful.screen.focused().mypromptbox:run() end),
     awful.key({ mod_4                     }, "r", function () awful.screen.focused().mypromptbox:run() end,
               {description = "run prompt", group = "launcher"}),
     awful.key({ mod_4                     }, "p", function() menubar.show() end,
               {description = "show the menubar", group = "launcher"}),
-    awful.key({ mod_4                     }, ".", function ()
+    awful.key({ mod_4                     }, "-", function ()
         awful.spawn("rofi -show drun")
         -- awful.spawn("dmenu_run")
         -- awful.spawn(string.format("dmenu_run -i -t -dim 0.5 -p 'Run: ' -h 21 -fn 'Meslo LG S for Powerline-10' -nb '%s' -nf '%s' -sb '%s' -sf '%s'",
         -- beautiful.tasklist_bg_normal, beautiful.fg_normal, beautiful.tasklist_bg_urgent, beautiful.tasklist_fg_urgent))
-    end),
+    end,
+              {description = "show session menu (rofi)", group = "launcher"}),
+    awful.key({ mod_4                     }, ".", function ()
+        awful.spawn("rofi -show run")
+    end,
+              {description = "show commands menu (rofi)", group = "launcher"}),
+    awful.key({ mod_4                     }, "$", function ()
+        awful.spawn(awful.util.scripts_dir .. "/rofi-session")
+    end,
+              {description = "show application menu (rofi)", group = "launcher"}),
     -- awful.key({ altkey            }, "space", function ()
     --     -- awful.spawn(string.format("dmenu_run -i -fn 'Meslo LG S for Powerline' -nb '%s' -nf '%s' -sb '%s' -sf '%s'",
     --     awful.spawn(string.format("rofi -show run -width 100 -location 1 -lines 5 -bw 2 -yoffset -2",
@@ -555,6 +572,7 @@ globalkeys = awful.util.table.join(
         function ()
             awful.spawn.easy_async(string.format("amixer -q set %s 1%%+", beautiful.volume.channel),
             function(stdout, stderr, reason, exit_code)
+                beautiful.volume.manual = true
                 beautiful.volume.update()
             end)
         end),
@@ -562,6 +580,7 @@ globalkeys = awful.util.table.join(
         function ()
             awful.spawn.easy_async(string.format("amixer -q set %s 1%%-", beautiful.volume.channel),
             function(stdout, stderr, reason, exit_code)
+                beautiful.volume.manual = true
                 beautiful.volume.update()
             end)
         end),
@@ -569,6 +588,7 @@ globalkeys = awful.util.table.join(
         function ()
             awful.spawn.easy_async(string.format("amixer -q set %s toggle", beautiful.volume.togglechannel or beautiful.volume.channel),
             function(stdout, stderr, reason, exit_code)
+                beautiful.volume.manual = true
                 beautiful.volume.update()
             end)
         end),
@@ -576,6 +596,7 @@ globalkeys = awful.util.table.join(
         function ()
             awful.spawn.easy_async(string.format("amixer -q set %s 100%%", beautiful.volume.channel),
             function(stdout, stderr, reason, exit_code)
+                beautiful.volume.manual = true
                 beautiful.volume.update()
             end)
         end),
@@ -583,6 +604,7 @@ globalkeys = awful.util.table.join(
         function ()
             awful.spawn.easy_async(string.format("amixer -q set %s 0%%", beautiful.volume.channel),
             function(stdout, stderr, reason, exit_code)
+                beautiful.volume.manual = true
                 beautiful.volume.update()
             end)
         end),
@@ -590,6 +612,7 @@ globalkeys = awful.util.table.join(
         function ()
             awful.spawn.easy_async(string.format("amixer -q set %s mute", beautiful.volume.togglechannel or beautiful.volume.channel),
             function(stdout, stderr, reason, exit_code)
+                beautiful.volume.manual = true
                 beautiful.volume.update()
             end)
         end),
@@ -692,9 +715,8 @@ clientkeys = awful.util.table.join(
         end,
         {description = "toggle fullscreen", group = "client"}),
 
-    awful.key({ mod_4             }, "-", function (c) c:kill() end,
+    awful.key({ mod_4             }, "z", function (c) c:kill() end,
               {description = "close", group = "client"}),
-    awful.key({ mod_4             }, "z", function (c) c:kill() end),
     awful.key({ mod_4, ctrlkey    }, "space", awful.client.floating.toggle,
               {description = "toggle floating", group = "client"}),
     awful.key({ mod_4             }, "o", function (c) c:move_to_screen() end,
@@ -736,53 +758,54 @@ for i = 1, 10 do
     globalkeys = awful.util.table.join(globalkeys,
         -- View tag only.
         awful.key({ mod_4 }, "#" .. i + 9,
-                  function ()
-                        local screen = awful.screen.focused()
-                        local tag = screen.tags[i]
-                        if tag then
-                           tag:view_only()
-                        end
-                  end,
-                  {description = "view tag #"..i, group = "tag-direct"}),
+        function ()
+            local screen = awful.screen.focused()
+            local tag = screen.tags[i]
+            if tag then
+                tag:view_only()
+            end
+        end,
+        {description = "view tag #"..i, group = "tag-direct"}),
         -- Toggle tag display.
         awful.key({ mod_4, ctrlkey }, "#" .. i + 9,
-                  function ()
-                      local screen = awful.screen.focused()
-                      local tag = screen.tags[i]
-                      if tag then
-                         awful.tag.viewtoggle(tag)
-                      end
-                  end,
-                  {description = "toggle tag #" .. i, group = "tag-direct"}),
+        function ()
+            local screen = awful.screen.focused()
+            local tag = screen.tags[i]
+            if tag then
+                awful.tag.viewtoggle(tag)
+            end
+        end,
+        {description = "toggle tag #" .. i, group = "tag-direct"}),
         -- Move client to tag.
         awful.key({ mod_4, shiftkey }, "#" .. i + 9,
-                  function ()
-                      if client.focus then
-                          local tag = client.focus.screen.tags[i]
-                          if tag then
-                              client.focus:move_to_tag(tag)
-                          end
-                     end
-                  end,
-                  {description = "move focused client to tag #"..i, group = "tag-direct"}),
+        function ()
+            if client.focus then
+                local tag = client.focus.screen.tags[i]
+                if tag then
+                    client.focus:move_to_tag(tag)
+                end
+            end
+        end,
+        {description = "move focused client to tag #"..i, group = "tag-direct"}),
         -- Toggle tag on focused client.
         awful.key({ mod_4, altkey }, "#" .. i + 9,
-                  function ()
-                      if client.focus then
-                          local tag = client.focus.screen.tags[i]
-                          if tag then
-                              client.focus:toggle_tag(tag)
-                          end
-                      end
-                  end,
-                  {description = "toggle focused client on tag #" .. i, group = "tag-direct"})
+        function ()
+            if client.focus then
+                local tag = client.focus.screen.tags[i]
+                if tag then
+                    client.focus:toggle_tag(tag)
+                end
+            end
+        end,
+        {description = "toggle focused client on tag #" .. i, group = "tag-direct"})
     )
 end
 
 clientbuttons = awful.util.table.join(
     awful.button({                 }, 1, function (c) client.focus = c; c:raise() end),
     awful.button({ mod_4           }, 1, awful.mouse.client.move),
-    awful.button({ mod_4, shiftkey }, 1, awful.mouse.client.resize))
+    awful.button({ mod_4, shiftkey }, 1, awful.mouse.client.resize)
+)
 
 -- Set keys
 root.keys(globalkeys)
@@ -869,30 +892,29 @@ client.connect_signal("request::titlebars", function(c)
         end)
     )
 
-    awful.titlebar(c, {size = 20}) : setup {
+    awful.titlebar(c, {size = 20}):setup {
         { -- Left
             wibox.container.margin(awful.titlebar.widget.iconwidget(c), 0, 5),
             buttons = buttons,
-            layout  = wibox.layout.fixed.horizontal
+            layout  = wibox.layout.fixed.horizontal,
         },
         { -- Middle
             { -- Title
                 align  = "left",
-                widget = awful.titlebar.widget.titlewidget(c)
+                widget = awful.titlebar.widget.titlewidget(c),
             },
             buttons = buttons,
-            layout  = wibox.layout.flex.horizontal
+            layout  = wibox.layout.flex.horizontal,
         },
         { -- Right
-            -- awful.titlebar.widget.floatingbutton(c),
             awful.titlebar.widget.stickybutton(c),
             awful.titlebar.widget.ontopbutton(c),
             awful.titlebar.widget.minimizebutton(c),
             awful.titlebar.widget.maximizedbutton(c),
             awful.titlebar.widget.closebutton(c),
-            layout = wibox.layout.fixed.horizontal
+            layout = wibox.layout.fixed.horizontal,
         },
-        layout = wibox.layout.align.horizontal
+        layout = wibox.layout.align.horizontal,
     }
 
     -- Hide the titlebar if we are not floating
