@@ -21,7 +21,7 @@ pkgver() {
 }
 
 build() {
-    design='slab v-l-italic v-i-italic v-q-taily v-eszet-traditional v-tilde-low v-asterisk-low v-at-short expanded term'
+    design='v-l-italic v-i-italic v-q-taily v-eszet-traditional v-tilde-low v-asterisk-low v-at-short v-three-flattop expanded term'
     upright='v-g-opendoublestorey'
     italic='v-g-singlestorey'
     oblique='v-g-opendoublestorey'

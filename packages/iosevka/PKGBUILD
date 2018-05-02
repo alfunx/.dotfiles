@@ -2,7 +2,7 @@
 
 _pkgname=ttf-iosevka-custom
 pkgname=$_pkgname-git
-pkgver=r1107.364c8ae
+pkgver=r1115.0d6e7af
 pkgrel=1
 pkgdesc='A slender monospace typeface. (Customized)'
 arch=('any')
@@ -21,7 +21,7 @@ pkgver() {
 }
 
 build() {
-    design='v-l-italic v-i-italic v-q-taily v-eszet-traditional v-tilde-low v-asterisk-low v-at-short expanded term'
+    design='v-l-italic v-i-italic v-q-taily v-eszet-traditional v-tilde-low v-asterisk-low v-caret-low v-underscore-low v-at-short v-three-flattop expanded term'
     upright='v-g-opendoublestorey'
     italic='v-g-singlestorey'
     oblique='v-g-opendoublestorey'

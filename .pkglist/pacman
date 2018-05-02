@@ -49,6 +49,7 @@ findutils
 firefox
 firewalld
 flex
+fontconfig
 fzf
 gawk
 gcc
@@ -80,6 +81,7 @@ jfsutils
 jre8-openjdk
 jshon
 keepassxc
+ldoc
 less
 lesspipe
 libimobiledevice

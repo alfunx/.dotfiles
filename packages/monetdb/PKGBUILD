@@ -2,7 +2,7 @@
 
 _pkgname=monetdb
 pkgname=$_pkgname-git
-pkgver=r9.a21b369
+pkgver=r9.cc01d7a
 pkgrel=1
 pkgdesc="MonetDB: an open source database system"
 arch=('i686' 'x86_64')
