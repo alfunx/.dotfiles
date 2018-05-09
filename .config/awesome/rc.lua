@@ -938,15 +938,26 @@ client.connect_signal("property::size",
 --     end
 -- end)
 
+local last_focus
+
 client.connect_signal("focus",
     function(c)
         c.border_color = beautiful.border_focus
+        last_focus = nil
     end)
 
 client.connect_signal("unfocus",
     function(c)
         c.border_color = beautiful.border_normal
+        last_focus = c
     end)
+
+client.connect_signal("unmanage", function(c)
+    if last_focus == c and c.transient_for then
+        client.focus = c.transient_for
+        c.transient_for:raise()
+    end
+end)
 
 client.connect_signal("property::fullscreen",
     function(c)

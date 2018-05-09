@@ -914,21 +914,43 @@ function theme.at_screen_connect(s)
             id     = 'background_role',
             widget = wibox.container.background,
         },
+        -- layout = {
+        --     spacing = 10,
+        --     spacing_widget = {
+        --         {
+        --             shape        = gears.shape.rectangle,
+        --             widget       = wibox.widget.separator,
+        --         },
+        --         valign = 'center',
+        --         halign = 'center',
+        --         widget = wibox.container.place,
+        --     },
+        --     layout = wibox.layout.flex.horizontal,
+        -- },
     }
 
     -- Create the wibox
     s.mywibox = awful.wibar {
         position = "top",
         screen = s,
+        -- height = dpi(21) + theme.border_width,
         height = dpi(21),
         bg = theme.bg_normal,
         fg = theme.fg_normal,
     }
 
-    local systray_widget = wibox.container.margin(wibox.widget {
-        wibox.widget.systray(),
-        layout = wibox.layout.align.horizontal,
-    }, dpi(12), dpi(0), dpi(3), dpi(3))
+    local systray_widget = wibox.widget {
+        {
+            layout = wibox.layout.align.horizontal,
+            wibox.widget.systray(),
+        },
+        left = dpi(12),
+        right = dpi(0),
+        top = dpi(3),
+        bottom = dpi(3),
+        widget = wibox.container.margin,
+    }
+
     systray_widget:set_visible(false)
 
     local systray_widget_timer = gears.timer {
@@ -949,53 +971,58 @@ function theme.at_screen_connect(s)
 
     -- Add widgets to the wibox
     s.mywibox:setup {
-        layout = wibox.layout.align.horizontal,
+        {
+            layout = wibox.layout.align.horizontal,
 
-        { -- Left widgets
-            layout = wibox.layout.fixed.horizontal,
+            { -- Left widgets
+                layout = wibox.layout.fixed.horizontal,
 
-            wibox.container.background(wibox.container.margin(wibox.widget {
-                s.mylayoutbox,
-                layout = wibox.layout.align.horizontal,
-            }, dpi(8), dpi(3), dpi(4), dpi(4)), clock_bg_normal),
-            wibox.container.background(wibox.container.margin(wibox.widget {
-                s.mytaglist,
-                layout = wibox.layout.align.horizontal,
-            }, dpi(3), dpi(8)), theme.taglist_bg_normal),
-            arrow_r(theme.taglist_bg_normal, theme.prompt_bg),
+                wibox.container.background(wibox.container.margin(wibox.widget {
+                    s.mylayoutbox,
+                    layout = wibox.layout.align.horizontal,
+                }, dpi(8), dpi(3), dpi(4), dpi(4)), clock_bg_normal),
+                wibox.container.background(wibox.container.margin(wibox.widget {
+                    s.mytaglist,
+                    layout = wibox.layout.align.horizontal,
+                }, dpi(3), dpi(8)), theme.taglist_bg_normal),
+                arrow_r(theme.taglist_bg_normal, theme.prompt_bg),
 
-            wibox.container.background(wibox.container.margin(wibox.widget {
-                s.mypromptbox,
-                layout = wibox.layout.align.horizontal,
-            }, dpi(8), dpi(4)), theme.prompt_bg),
-            arrow_r(theme.prompt_bg, theme.tasklist_bg_normal),
+                wibox.container.background(wibox.container.margin(wibox.widget {
+                    s.mypromptbox,
+                    layout = wibox.layout.align.horizontal,
+                }, dpi(8), dpi(4)), theme.prompt_bg),
+                arrow_r(theme.prompt_bg, theme.tasklist_bg_normal),
+            },
+
+            -- s.mytasklist, -- Middle widget
+            wibox.container.background(wibox.container.margin(s.mytasklist, dpi(8), dpi(0)), theme.tasklist_bg_normal),
+
+            { -- Right widgets
+                layout = wibox.layout.fixed.horizontal,
+
+                wibox.container.background(wibox.container.margin(systray_widget, dpi(0), dpi(8)), theme.tasklist_bg_normal),
+
+                arrow_l(theme.tasklist_bg_normal, pacman_bg_normal),
+                -- wibox.container.background(wibox.container.margin(fs_widget,      dpi(2), dpi(6)), fs_bg_normal),
+                -- wibox.container.background(wibox.container.margin(temp_widget,    dpi(2), dpi(6)), temp_bg_normal),
+                wibox.container.background(wibox.container.margin(pacman_widget,  dpi(2), dpi(6)),  pacman_bg_normal),
+                wibox.container.background(wibox.container.margin(users_widget,   dpi(2), dpi(6)),  users_bg_normal),
+                wibox.container.background(wibox.container.margin(sysload_widget, dpi(2), dpi(6)),  sysload_bg_normal),
+                wibox.container.background(wibox.container.margin(cpu_widget,     dpi(2), dpi(6)),  cpu_bg_normal),
+                wibox.container.background(wibox.container.margin(mem_widget,     dpi(2), dpi(6)),  mem_bg_normal),
+                wibox.container.background(wibox.container.margin(vol_widget,     dpi(2), dpi(6)),  vol_bg_normal),
+                wibox.container.background(wibox.container.margin(bat_widget,     dpi(2), dpi(10)), bat_bg_normal),
+
+                arrow_l(bat_bg_normal, net_bg_normal),
+                wibox.container.background(wibox.container.margin(net_widget,     dpi(8), dpi(10)), net_bg_normal),
+
+                arrow_l(net_bg_normal, clock_bg_normal),
+                wibox.container.background(wibox.container.margin(clock_widget,   dpi(8), dpi(8)),  clock_bg_normal),
+            },
         },
-
-        -- s.mytasklist, -- Middle widget
-        wibox.container.background(wibox.container.margin(s.mytasklist, dpi(8), dpi(0)), theme.tasklist_bg_normal),
-
-        { -- Right widgets
-            layout = wibox.layout.fixed.horizontal,
-
-            wibox.container.background(wibox.container.margin(systray_widget, dpi(0), dpi(8)), theme.tasklist_bg_normal),
-
-            arrow_l(theme.tasklist_bg_normal, pacman_bg_normal),
-            -- wibox.container.background(wibox.container.margin(fs_widget,      dpi(2), dpi(6)), fs_bg_normal),
-            -- wibox.container.background(wibox.container.margin(temp_widget,    dpi(2), dpi(6)), temp_bg_normal),
-            wibox.container.background(wibox.container.margin(pacman_widget,  dpi(2), dpi(6)), pacman_bg_normal),
-            wibox.container.background(wibox.container.margin(users_widget,   dpi(2), dpi(6)), users_bg_normal),
-            wibox.container.background(wibox.container.margin(sysload_widget, dpi(2), dpi(6)), sysload_bg_normal),
-            wibox.container.background(wibox.container.margin(cpu_widget,     dpi(2), dpi(6)), cpu_bg_normal),
-            wibox.container.background(wibox.container.margin(mem_widget,     dpi(2), dpi(6)), mem_bg_normal),
-            wibox.container.background(wibox.container.margin(vol_widget,     dpi(2), dpi(6)), vol_bg_normal),
-            wibox.container.background(wibox.container.margin(bat_widget,     dpi(2), dpi(10)), bat_bg_normal),
-
-            arrow_l(bat_bg_normal, net_bg_normal),
-            wibox.container.background(wibox.container.margin(net_widget,     dpi(8), dpi(10)), net_bg_normal),
-
-            arrow_l(net_bg_normal, clock_bg_normal),
-            wibox.container.background(wibox.container.margin(clock_widget,   dpi(8), dpi(8)), clock_bg_normal),
-        },
+        -- bottom = theme.border_width,
+        color = theme.border_normal,
+        widget = wibox.container.margin,
     }
 end
 
