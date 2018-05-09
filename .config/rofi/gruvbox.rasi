@@ -30,6 +30,7 @@
 #window {
     background-color: @backgroundcolor;
     border-color: @separatorcolor;
+    border-color: #928374;
     border: 4;
     border-radius: 0;
     width: 600;
