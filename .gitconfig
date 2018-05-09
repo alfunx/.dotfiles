@@ -27,14 +27,39 @@
 	ui = true
 
 [color "diff"]
-	meta = blue bold reverse
-	frag = yellow bold reverse
-	commit = yellow bold
+	context = 15
+	meta = 4 bold reverse
+	frag = 3 bold reverse
+	commit = 3 bold
 	old = 9
 	new = 10
 	oldMoved = 8
 	newMoved = 14
-	whitespace = red reverse
+	whitespace = 1 reverse
+
+[color "decorate"]
+	branch = 2 bold
+	remoteBranch = 1 bold
+	tag = 3 bold
+	stash = 5 bold
+	HEAD = 6 bold
+
+[color "interactive"]
+	prompt = 4 bold
+	header = 15 bold
+	help = 15
+	error = 1
+
+[color "status"]
+	header = 15 bold
+	added = 14 bold
+	changed = 11 bold
+	untracked = 9 bold
+	branch = 15 bold
+	nobranch = 9 bold reverse
+	localBranch = 2 bold
+	remoteBranch = 1 bold
+	unmerged = 1 bold reverse
 
 [diff]
 	tool = vimdiff
@@ -49,6 +74,11 @@
 
 [mergetool "diffconflicts"]
 	cmd = diffconflicts vim "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
+	trustExitCode = true
+	keepBackup = false
+
+[mergetool "fugitive"]
+	cmd = vim -f -c "Gvdiff" "$MERGED"
 	trustExitCode = true
 	keepBackup = false
 
@@ -104,29 +134,30 @@
 [alias]
 	ec = config --global --edit
 
-	l = log --graph --format=format:'%C(auto)%h%C(reset) - %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n''%C(black)%h%C(reset)   %C(auto)%s%C(reset) %C(241)- %an%C(reset)%n' --all --graph
-	lo = log --format='%C(auto)%h%C(reset)%C(auto)%d%C(reset) %C(auto)%s%C(reset) %C(italic blue)%ad%C(reset) %C(241)%an%C(reset)' --all --graph --date=short
-	lm = log --format=medium --all --graph
-	lmm = log --format=medium --all --graph --stat --summary
-	lf = log --format=fuller --all --graph
-	lff = log --format=fuller --all --graph --stat --summary
+	lg = log --graph --format=format:'%C(auto)%h%C(reset) - %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n''%C(black)%h%C(reset)   %C(auto)%s%C(reset) %C(241)- %an%C(reset)%n' --graph
+	lgo = log --format='%C(auto)%h%C(reset)%C(auto)%d%C(reset) %C(auto)%s%C(reset) %C(italic blue)%ad%C(reset) %C(241)%an%C(reset)' --graph --date=short
+	lgm = log --format=medium --graph
+	lgmm = log --format=medium --graph --stat --summary
+	lgf = log --format=fuller --graph
+	lgff = log --format=fuller --graph --stat --summary
 
-	ls = log --graph --format=format:'%C(auto)%h%C(reset) - %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n''%C(black)%h%C(reset)   %C(auto)%s%C(reset) %C(241)- %an%C(reset)%n' --graph
-	lso = log --format='%C(auto)%h%C(reset)%C(auto)%d%C(reset) %C(auto)%s%C(reset) %C(italic blue)%ad%C(reset) %C(241)%an%C(reset)' --graph --date=short
-	lsm = log --format=medium --graph
-	lsmm = log --format=medium --graph --stat --summary
-	lsf = log --format=fuller --graph
-	lsff = log --format=fuller --graph --stat --summary
+	l = "!git lg --all"
+	lo = "!git lgo --all"
+	lm = "!git lgm --all"
+	lmm = "!git lgmm --all"
+	lf = "!git lgf --all"
+	lff = "!git lgff --all"
 
 	lr = "!f() { git log --format=fuller --stat --summary \"${1:-HEAD}\"~..\"${1:-HEAD}\"; }; f"
 	ld = log --format=medium --stat --summary --left-right
-	lp = log --patch --graph
-	lw = "!f() { watch -cn 2 git \"${@:-l}\"; }; f"
+	lp = log --patch --graph -c
+	lw = "!f() { watch -cn 2 git \"${@:-l --color}\"; }; f"
+	rl = reflog
 
-	d = diff
-	ds = diff --find-renames --stat
-	dc = diff --cached
-	dl = diff --cached HEAD~
+	d = diff -c
+	ds = diff --find-renames --stat -c
+	dc = diff --cached -c
+	dl = diff --cached -c HEAD~
 	dr = "!f() { git diff \"${1:-HEAD}\"~..\"${1:-HEAD}\"; }; f"
 	dt = difftool
 	grep = grep -Ii
@@ -154,9 +185,9 @@
 
 	cl = clone
 	p = pull --prune
-	f = fetch --prune --all --tags
+	f = fetch --prune --tags
+	fa = fetch --prune --all --tags
 	su = submodule update --init --recursive
-	up = "!f() { git p \"$@\" && git su; }; f"
 
 	pu = push
 	pusu = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git push --set-upstream \"${1:-origin}\" \"$CURRENT\"; }; f"
@@ -192,7 +223,7 @@
 	bls = "!git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'"
 
 	# list aliases
-	alias = "!git config --get-regexp alias | cut -c 7- | sed -e \"s/^/[1m/\" -e \"s/ /[0m$(echo 2B | xxd -r -p)/\" | column -t -s \"$(echo 2B | xxd -r -p)\" | less -SR "
+	alias = "!git config --get-regexp alias | cut -c 7- | sed -e \"s/^/[1m/\" -e \"s/ /[0m$(echo 2B | xxd -r -p)/\" | column -t -s \"$(echo 2B | xxd -r -p)\" | sort | less -SR "
 
 	# initialize repository in current directory
 	this = "!git init && git commit --message='Initialize' --allow-empty"
