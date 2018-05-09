@@ -86,9 +86,10 @@ Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 
 " " Language server
-"Plug 'roxma/vim-hug-neovim-rpc'
-"Plug 'roxma/nvim-yarp'
-"Plug 'autozimu/LanguageClient-neovim'
+" Plug 'autozimu/LanguageClient-neovim', {
+"             \ 'branch': 'next',
+"             \ 'do': 'bash install.sh',
+"             \ }
 
 " Language specific
 Plug 'editorconfig/editorconfig-vim'
@@ -151,10 +152,10 @@ nnoremap <silent> <C-w><C-t> :tabe<CR>
 "" Fullscreen
 nnoremap <silent> <C-w>F <C-w>_<C-w><Bar>
 
-" nnoremap <silent> <Home> <C-w><
-" nnoremap <silent> <PageDown> <C-w>-
-" nnoremap <silent> <PageUp> <C-w>+
-" nnoremap <silent> <End> <C-w>>
+"nnoremap <silent> <Home> <C-w><
+"nnoremap <silent> <PageDown> <C-w>-
+"nnoremap <silent> <PageUp> <C-w>+
+"nnoremap <silent> <End> <C-w>>
 
 "augroup Quickfix
 "  autocmd!
@@ -296,13 +297,7 @@ omap <leader><tab> <plug>(fzf-maps-o)
 "imap <leader><tab> <plug>(fzf-maps-i)
 
 "" FZF
-if executable('fzf')
-    augroup Fzf
-        autocmd!
-        autocmd VimEnter * nnoremap <Leader>f :FZF<CR>
-    augroup End
-endif
-
+nnoremap <leader>f :Files<CR>
 nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>w :Windows<CR>
 nnoremap <leader>t :Tags<CR>
@@ -411,16 +406,21 @@ let g:airline_symbols.maxlinenr=''
 
 """ Airline settings
 let g:airline_theme='gruvbox'
-let g:airline#extensions#tabline#enabled=1
-let g:airline#extensions#tabline#buffer_idx_mode=1
 let g:airline#extensions#whitespace#mixed_indent_algo=1
 let g:airline_powerline_fonts=1
 let g:airline_skip_empty_sections=0
+let g:airline#extensions#tabline#enabled=1
+let g:airline#extensions#tabline#buffer_idx_mode=1
+let g:airline#extensions#tabline#tab_nr_type=1
 let g:airline#extensions#tabline#show_tab_nr=0
 let g:airline#extensions#tabline#show_close_button=0
+let g:airline#extensions#tabline#exclude_preview=1
+let g:airline#extensions#tabline#fnamecollapse=1
+let g:airline#extensions#tabline#fnamemod=':~:.'
 let g:airline#extensions#tabline#buffers_label='buffers'
 let g:airline#extensions#tabline#tabs_label='tabs'
-" let g:airline_section_z='%3p%% %3l:%v'
+let g:airline#extensions#tabline#overflow_marker='…'
+let g:airline_section_z='%3p%% %3l:%-2v'
 
 " let g:airline_mode_map = {
 "             \ '__' : ' - ',
@@ -435,6 +435,13 @@ let g:airline#extensions#tabline#tabs_label='tabs'
 "             \ 'S'  : ' S ',
 "             \ '' : ' S ',
 "             \ }
+
+""" Airline extensions
+let g:airline#extensions#ale#error_symbol=''
+let g:airline#extensions#ale#warning_symbol=''
+let g:airline#extensions#ale#show_line_numbers=0
+let g:airline#extensions#whitespace#show_message=1
+let g:airline#extensions#hunks#enabled=0
 
 "" GitGutter
 nmap <Leader>ha <Plug>GitGutterStageHunk
@@ -558,7 +565,7 @@ function! s:goyo_enter()
     set noshowcmd
     set scrolloff=999
     set sidescrolloff=0
-    Limelight
+    "Limelight
 endfunction
 
 function! s:goyo_leave()
@@ -567,7 +574,7 @@ function! s:goyo_leave()
     set showcmd
     set scrolloff=3
     set sidescrolloff=5
-    Limelight!
+    "Limelight!
 endfunction
 
 augroup Goyo
@@ -619,8 +626,10 @@ let g:ale_lint_on_filetype_changed=1
 let g:ale_set_highlights=1
 let g:ale_set_signs=1
 
-nmap <silent> <C-w><C-p> <plug>(ale_previous_wrap)
-nmap <silent> <C-w><C-n> <plug>(ale_next_wrap)
+nmap [w <plug>(ale_previous_wrap)
+nmap ]w <plug>(ale_next_wrap)
+nmap üw <plug>(ale_previous_wrap)
+nmap ¨w <plug>(ale_next_wrap)
 nnoremap <leader>a :ALEEnable<CR>
 
 augroup Ale
@@ -645,16 +654,17 @@ let g:deoplete#sources#clang#clang_header='/usr/lib/rstudio/resources/libclang'
 
 " "" LanguageClient
 " let g:LanguageClient_serverCommands = {
-"     \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
-"     \ 'javascript': ['/opt/javascript-typescript-langserver/lib/language-server-stdio.js'],
-"     \ }
+"             \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
+"             \ 'c': ['cquery'],
+"             \ 'javascript': ['/opt/javascript-typescript-langserver/lib/language-server-stdio.js'],
+"             \ }
 "
 " " Automatically start language servers.
 " let g:LanguageClient_autoStart=1
-
+"
 "nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
 "nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
-"nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
+"nnoremap <silent> <F6> :call LanguageClient_textDocument_rename()<CR>
 
 
 """"""""""""""""
@@ -746,12 +756,12 @@ augroup SpellBadUnderline
 augroup END
 
 if &term !=? 'linux' || has('gui_running')
-    set listchars=tab:▸\ ,extends:>,precedes:<,nbsp:·,eol:↵,trail:~
+    set listchars=tab:▸\ ,extends:>,precedes:<,nbsp:·,eol:⤶,trail:~
     set fillchars=vert:│,fold:─,diff:-
     augroup TrailingSpaces
         autocmd!
-        autocmd InsertEnter * set listchars-=eol:↵,trail:~
-        autocmd InsertLeave * set listchars+=eol:↵,trail:~
+        autocmd InsertEnter * set listchars-=eol:⤶,trail:~
+        autocmd InsertLeave * set listchars+=eol:⤶,trail:~
     augroup END
 else
     set listchars=tab:>\ ,extends:>,precedes:<,nbsp:+,eol:$,trail:~
@@ -784,7 +794,6 @@ set expandtab
 "     set expandtab
 "     '<,'>retab
 " endfunction
-"
 " nnoremap <leader>i :call ExpandSpaces()<CR>
 
 "" Spaces, indents
