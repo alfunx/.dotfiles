@@ -10,3 +10,7 @@ paclist aur \
 paclist manual \
     | sed 's/\s.*//' \
     > ~/.pkglist/manual
+sudo pacman -Qkk \
+    |& grep Modification \
+    | sed -e 's/^[^/]*//' -e 's/ (.*)$//' \
+    > ~/.pkglist/modified-files
