@@ -2,7 +2,7 @@
 #  HIGHLIGHTING  #
 ##################
 
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern regexp)
 
 typeset -A ZSH_HIGHLIGHT_STYLES
 ZSH_HIGHLIGHT_STYLES[default]='none'
@@ -33,6 +33,9 @@ ZSH_HIGHLIGHT_STYLES[arg0]='fg=108,bold'
 
 typeset -A ZSH_HIGHLIGHT_PATTERNS
 ZSH_HIGHLIGHT_PATTERNS+=('rm -rf' 'fg=208,bold')
+
+typeset -A ZSH_HIGHLIGHT_REGEXP
+ZSH_HIGHLIGHT_REGEXP+=()
 
 
 #####################

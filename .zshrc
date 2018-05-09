@@ -10,11 +10,11 @@
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
-if [ "$TERM" != "linux" ]; then
+if [ "$TERM" != 'linux' ]; then
     # Set name of the theme to load. Optionally, if you set this to "random"
     # it'll load a random theme each time that oh-my-zsh is loaded.
     # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-    ZSH_THEME="agnoster"
+    ZSH_THEME='agnoster'
 fi
 
 # Uncomment the following line to use case-sensitive completion.
@@ -87,7 +87,7 @@ bgnotify_formatted() {
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(zsh-syntax-highlighting zsh-completions zsh-autosuggestions command-not-found custom-common-aliases colorize bgnotify)
+plugins=(zsh-syntax-highlighting zsh-completions zsh-autosuggestions command-not-found custom-common-aliases colorize bgnotify svn)
 
 # Remove plugins if in tty
 if [ "$TERM" = 'linux' ]; then
@@ -98,7 +98,7 @@ fi
 source "$HOME/.completion.zsh"
 
 # Oh-My-Zsh
-source "$ZSH/oh-my-zsh.sh"
+[[ -f "$ZSH/oh-my-zsh.sh" ]] && source "$ZSH/oh-my-zsh.sh"
 
 
 ########################
@@ -132,6 +132,7 @@ source "$ZSH/oh-my-zsh.sh"
 setopt COMPLETE_ALIASES
 setopt HIST_IGNORE_SPACE
 setopt NO_AUTO_CD
+setopt INTERACTIVE_COMMENTS
 
 # No scrolllock
 stty -ixon
@@ -159,7 +160,7 @@ fi
 
 # Alternative prompt
 if [[ "$TERM" == "linux" ]]; then
-    PROMPT='[%F{red}%B%n%b%f@%m %~]'
+    PROMPT='[%F{red}%B%n%b%f@%M %~]'
     PROMPT+='$(git_prompt_info)'
     PROMPT+=' %(?.%F{cyan}.%F{red})%B%(!.#.$)%b%f '
     ZSH_THEME_GIT_PROMPT_PREFIX=" [%F{yellow}%B"

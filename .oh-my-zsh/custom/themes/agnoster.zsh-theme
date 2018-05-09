@@ -42,7 +42,7 @@ CURRENT_BG='NONE'
 # Special Powerline characters
 
 () {
-    local LC_ALL="" LC_CTYPE="en_US.UTF-8"
+    local LC_ALL='' LC_CTYPE='en_US.UTF-8'
     # NOTE: This segment separator character is correct.  In 2012, Powerline changed
     # the code points they use for their special characters. This is the new code point.
     # If this is not working for you, you probably have an old version of the
@@ -53,8 +53,7 @@ CURRENT_BG='NONE'
     # what font the user is viewing this source code in. Do not replace the
     # escape sequence with a single literal character.
     # Do not change this! Do not make it '\u2b80'; that is the old, wrong code point.
-    # SEGMENT_SEPARATOR=$'\ue0b0'
-    SEGMENT_SEPARATOR=''
+    SEGMENT_SEPARATOR=$'\ue0b0'  # 
 }
 
 # Begin a segment
@@ -62,8 +61,8 @@ CURRENT_BG='NONE'
 # rendering default background/foreground.
 prompt_segment() {
     local bg fg
-    [[ -n $1 ]] && bg="%K{$1}" || bg="%k"
-    [[ -n $2 ]] && fg="%F{$2}" || fg="%f"
+    [[ -n $1 ]] && bg="%K{$1}" || bg='%k'
+    [[ -n $2 ]] && fg="%F{$2}" || fg='%f'
     if [[ $CURRENT_BG != 'NONE' && $1 != $CURRENT_BG ]]; then
         echo -n " %{$bg%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR%{$fg%} "
     else
@@ -78,9 +77,9 @@ prompt_end() {
     if [[ -n $CURRENT_BG ]]; then
         echo -n " %{%k%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR"
     else
-        echo -n "%{%k%}"
+        echo -n '%{%k%}'
     fi
-    echo -n "%{%f%}"
+    echo -n '%{%f%}'
     CURRENT_BG=''
 }
 
@@ -90,7 +89,7 @@ prompt_end() {
 # Context: user@hostname (who am I and where am I)
 prompt_context() {
     if [[ "$USER" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-        prompt_segment white black "%(!.%{%F{214}%}.)$USER@%M"
+        prompt_segment white black '%(!.%{%F{214}%}.)%n@%M'
     fi
 }
 
@@ -99,15 +98,15 @@ prompt_git() {
     (( $+commands[git] )) || return
     local PL_BRANCH_CHAR
     () {
-        local LC_ALL="" LC_CTYPE="en_US.UTF-8"
-        PL_BRANCH_CHAR=$'\ue0a0'                 # 
+        local LC_ALL='' LC_CTYPE='en_US.UTF-8'
+        PL_BRANCH_CHAR=$'\ue0a0'  # 
     }
     local ref dirty mode repo_path
     repo_path=$(git rev-parse --git-dir 2>/dev/null)
 
     if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
         dirty=$(parse_git_dirty)
-        ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="➦ $(git rev-parse --short HEAD 2> /dev/null)"
+        ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="⤷ $(git rev-parse --short HEAD 2> /dev/null)"
         if [[ -e "${repo_path}/BISECT_LOG" || -e "${repo_path}/MERGE_HEAD" || -e "${repo_path}/rebase" || -e "${repo_path}/rebase-apply" || -e "${repo_path}/rebase-merge" || -e "${repo_path}/../.dotest" ]]; then
             prompt_segment "$VCS_ERROR_BG" "$VCS_ERROR_FG"
         elif [[ -n $dirty ]]; then
@@ -117,11 +116,11 @@ prompt_git() {
         fi
 
         if [[ -e "${repo_path}/BISECT_LOG" ]]; then
-            mode=" <B>"
+            mode=' <B>'
         elif [[ -e "${repo_path}/MERGE_HEAD" ]]; then
-            mode=" <M>"
+            mode=' <M>'
         elif [[ -e "${repo_path}/rebase" || -e "${repo_path}/rebase-apply" || -e "${repo_path}/rebase-merge" || -e "${repo_path}/../.dotest" ]]; then
-            mode=" <R>"
+            mode=' <R>'
         fi
 
         setopt promptsubst
@@ -142,7 +141,7 @@ prompt_git() {
 prompt_bzr() {
     (( $+commands[bzr] )) || return
     if (bzr status >/dev/null 2>&1); then
-        status_mod=`bzr status | head -n1 | grep "modified" | wc -m`
+        status_mod=`bzr status | head -n1 | grep 'modified' | wc -m`
         status_all=`bzr status | head -n1 | wc -m`
         revision=`bzr log | head -n2 | tail -n1 | sed 's/^revno: //'`
         if [[ $status_mod -gt 0 ]] ; then
@@ -206,7 +205,7 @@ prompt_svn() {
         if [[ $(svn_dirty_choose_pwd 1 0) -eq 1 ]]; then
             prompt_segment "$VCS_DIRTY_BG" "$VCS_DIRTY_FG"
             echo -n "$PL_BRANCH_CHAR $rev@$branch"
-            echo -n "±"
+            echo -n '±'
         else
             prompt_segment "$VCS_CLEAN_BG" "$VCS_CLEAN_FG"
             echo -n "$PL_BRANCH_CHAR $rev@$branch"
@@ -234,11 +233,11 @@ prompt_virtualenv() {
 prompt_status() {
     local symbols
     symbols=()
-    [[ $RETVAL -ne 0 ]] && symbols+="%{%F{167}%}✘"
-    [[ $UID -eq 0 ]] && symbols+="%{%F{214}%}⚡"
-    [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{108}%}⚙"
+    [[ $RETVAL -ne 0 ]] && symbols+='%{%F{124}%}✘%?'
+    [[ $UID -eq 0 ]] && symbols+='%{%F{172}%}⚡'
+    [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+='%{%F{72}%}⚙%j'
 
-    [[ -n "$symbols" ]] && prompt_segment black default "$symbols"
+    [[ -n "$symbols" ]] && prompt_segment 223 default "$symbols"
 }
 
 ## Main prompt
@@ -251,6 +250,7 @@ build_prompt() {
     prompt_git
     prompt_bzr
     prompt_hg
+    prompt_svn
     prompt_end
 }
 

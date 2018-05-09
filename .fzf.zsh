@@ -6,7 +6,7 @@
 [[ $- == *i* ]] && source '/usr/share/fzf/completion.zsh' 2> /dev/null
 
 # key bindings
-source '/usr/share/fzf/key-bindings.zsh'
+[[ -f '/usr/share/fzf/key-bindings.zsh' ]] && source '/usr/share/fzf/key-bindings.zsh'
 
 # default options
 export FZF_DEFAULT_OPTS='--height 30%
