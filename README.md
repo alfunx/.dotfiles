@@ -1,6 +1,7 @@
 # .dotfiles
 
-![Awesome WM](https://i.imgur.com/JMw6lXr.png)
+![Awesome WM](https://i.redditmedia.com/JBoQsSAkr87SOKudZP0pV0oT1Ff3mJv-8nduZyQxkHM.png?s=671823c8f9558f4e4e4a1ddc8bccba19)
+![Awesome WM](https://i.imgur.com/0X7U647.png)
 
 ## Table of Contents
 
