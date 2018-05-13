@@ -94,7 +94,7 @@ run_once {
 -- }}}
 
 -- {{{ Variable definitions
-local chosen_theme = "powerarrow-gruvbox"
+local chosen_theme = "blackout"
 
 local mod_4        = "Mod4"
 local altkey       = "Mod1"
@@ -341,6 +341,17 @@ local function move_client_in_grid(direction)
     end
 end
 
+local function easy_async_with_unfocus(cmd, callback)
+    callback = callback or function() end
+    local c = client.focus
+    client.focus = nil
+    awful.spawn.easy_async(cmd,
+        function(stdout, stderr, reason, exit_code)
+            callback(stdout, stderr, reason, exit_code)
+            client.focus = c
+        end)
+end
+
 -- {{{ Key bindings
 globalkeys = awful.util.table.join(
     -- Awesome Hotkeys
@@ -401,18 +412,18 @@ globalkeys = awful.util.table.join(
     awful.key({ mod_4                     }, "p", function() menubar.show() end,
               {description = "show the menubar", group = "launcher"}),
     awful.key({ mod_4                     }, "-", function ()
-        awful.spawn("rofi -show drun")
+        easy_async_with_unfocus("rofi -show drun")
         -- awful.spawn("dmenu_run")
         -- awful.spawn(string.format("dmenu_run -i -t -dim 0.5 -p 'Run: ' -h 21 -fn 'Meslo LG S for Powerline-10' -nb '%s' -nf '%s' -sb '%s' -sf '%s'",
         -- beautiful.tasklist_bg_normal, beautiful.fg_normal, beautiful.tasklist_bg_urgent, beautiful.tasklist_fg_urgent))
     end,
               {description = "show session menu (rofi)", group = "launcher"}),
     awful.key({ mod_4                     }, ".", function ()
-        awful.spawn("rofi -show run")
+        easy_async_with_unfocus("rofi -show run")
     end,
               {description = "show commands menu (rofi)", group = "launcher"}),
     awful.key({ mod_4                     }, "$", function ()
-        awful.spawn(awful.util.scripts_dir .. "/rofi-session")
+        easy_async_with_unfocus(awful.util.scripts_dir .. "/rofi-session")
     end,
               {description = "show application menu (rofi)", group = "launcher"}),
     -- awful.key({ altkey            }, "space", function ()
@@ -436,9 +447,9 @@ globalkeys = awful.util.table.join(
               {description = "open quake application", group = "screen"}),
 
     -- Screen browsing
-    awful.key({ mod_4, altkey             }, leftkey, function () awful.screen.focus_relative(-1) end,
+    awful.key({ ctrlkey, altkey           }, leftkey, function () awful.screen.focus_relative(-1) end,
               {description = "focus the previous screen", group = "screen"}),
-    awful.key({ mod_4, altkey             }, rightkey, function () awful.screen.focus_relative(1) end,
+    awful.key({ ctrlkey, altkey           }, rightkey, function () awful.screen.focus_relative(1) end,
               {description = "focus the next screen", group = "screen"}),
 
     -- -- Tag browsing
@@ -523,6 +534,27 @@ globalkeys = awful.util.table.join(
               {description = "select next", group = "layout"}),
     awful.key({ mod_4, shiftkey           }, "space", function () awful.layout.inc(-1) end,
               {description = "select previous", group = "layout"}),
+
+    -- Resize
+    awful.key({ mod_4 }, "Next",  function () awful.client.moveresize(  0,   0, -40, -40) end),
+    awful.key({ mod_4 }, "Prior", function () awful.client.moveresize(  0,   0,  40,  40) end),
+    awful.key({ mod_4, ctrlkey }, "Next",  function () awful.client.moveresize( 0,  0, -1, -1) end),
+    awful.key({ mod_4, ctrlkey }, "Prior", function () awful.client.moveresize( 0,  0,  1,  1) end),
+
+    awful.key({ mod_4 }, "Down",  function () awful.client.moveresize(  0,  20,   0,   0) end),
+    awful.key({ mod_4 }, "Up",    function () awful.client.moveresize(  0, -20,   0,   0) end),
+    awful.key({ mod_4 }, "Left",  function () awful.client.moveresize(-20,   0,   0,   0) end),
+    awful.key({ mod_4 }, "Right", function () awful.client.moveresize( 20,   0,   0,   0) end),
+
+    awful.key({ mod_4, shiftkey }, "Down",  function () awful.client.moveresize( 0, 0,   0,  20) end),
+    awful.key({ mod_4, shiftkey }, "Up",    function () awful.client.moveresize( 0, 0,   0, -20) end),
+    awful.key({ mod_4, shiftkey }, "Left",  function () awful.client.moveresize( 0, 0, -20,   0) end),
+    awful.key({ mod_4, shiftkey }, "Right", function () awful.client.moveresize( 0, 0,  20,   0) end),
+
+    awful.key({ mod_4, ctrlkey }, "Down",  function () awful.client.moveresize( 0,  1,  0,  0) end),
+    awful.key({ mod_4, ctrlkey }, "Up",    function () awful.client.moveresize( 0, -1,  0,  0) end),
+    awful.key({ mod_4, ctrlkey }, "Left",  function () awful.client.moveresize(-1,  0,  0,  0) end),
+    awful.key({ mod_4, ctrlkey }, "Right", function () awful.client.moveresize( 1,  0,  0,  0) end),
 
     awful.key({ mod_4,                    }, "Tab",
         function ()
@@ -844,11 +876,14 @@ awful.rules.rules = {
     { rule = { class = "Firefox", role = "toolbox" },
       properties = { floating = true } },
 
-    { rule_any = { class = {
-        "Git-gui", "feh", "Lxappearance", "Lxsession-edit",
-        "Lxsession-default-apps", "Oomox", "Gpick", "System-config-printer.py",
-        "Pinentry", "Event Tester", "alsamixer"
-    } },
+    { rule_any = {
+        class = {
+            "Git-gui", "feh", "Lxappearance", "Lxsession-edit",
+            "Lxsession-default-apps", "Oomox", "Gpick", "System-config-printer.py",
+            "Pinentry", "Event Tester", "alsamixer", },
+        name = {
+            "Event Tester", },
+    },
       properties = { floating = true, placement = awful.placement.centered } },
 
 }

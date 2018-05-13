@@ -43,7 +43,7 @@ case $cmd in
     aw)
         vim \
             ~/.config/awesome/rc.lua \
-            ~/.config/awesome/themes/powerarrow-gruvbox/theme.lua \
+            ~/.config/awesome/themes/blackout/theme.lua \
             "$@"
         ;;
     xorg)
