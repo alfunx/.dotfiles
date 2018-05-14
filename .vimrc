@@ -121,7 +121,7 @@ runtime macros/matchit.vim
 
 "" Leader key
 nnoremap <Space> <Nop>
-nnoremap ü <Nop>
+nnoremap <CR> <Nop>
 let mapleader=' '
 let maplocalleader=''
 
@@ -133,11 +133,11 @@ let maplocalleader=''
 
 "" Split navigation (vim-tmux-navigator)
 let g:tmux_navigator_no_mappings=1
-nnoremap <silent> <C-h> :TmuxNavigateLeft<cr>
-nnoremap <silent> <C-j> :TmuxNavigateDown<cr>
-nnoremap <silent> <C-k> :TmuxNavigateUp<cr>
-nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
-nnoremap <silent> <C-BS> :TmuxNavigatePrevious<cr>
+nnoremap <silent> <C-h> :TmuxNavigateLeft<CR>
+nnoremap <silent> <C-j> :TmuxNavigateDown<CR>
+nnoremap <silent> <C-k> :TmuxNavigateUp<CR>
+nnoremap <silent> <C-l> :TmuxNavigateRight<CR>
+nnoremap <silent> <C-BS> :TmuxNavigatePrevious<CR>
 
 "" Split resize
 nnoremap <silent> <C-w>h 5<C-w><
@@ -170,6 +170,16 @@ omap ä ^
 nmap ö "
 xmap ö "
 omap ö "
+
+nmap ü [
+xmap ü [
+omap ü [
+nmap ¨ ]
+xmap ¨ ]
+omap ¨ ]
+
+nnoremap è <C-]>
+xnoremap è <C-]>
 
 execute "set <M-h>=\<Esc>h"
 execute "set <M-j>=\<Esc>j"
@@ -237,7 +247,7 @@ cnoremap <expr> <Tab> getcmdtype() =~ '[?/]' ? '<C-g>' : '<Tab>'
 cnoremap <expr> <S-Tab> getcmdtype() =~ '[?/]' ? '<C-t>' : feedkeys('<S-Tab>', 'int')[1]
 
 " Remove trailing whitespaces
-nnoremap <silent> <F3> mz:keepp %s/\\\@1<!\s\+$//e<cr>`z
+nnoremap <silent> <F3> mz:keepp %s/\\\@1<!\s\+$//e<CR>`z
 
 " Make
 nnoremap <F5> :make!<CR>
@@ -266,9 +276,9 @@ nnoremap <silent> <M-b> :<C-u>nohlsearch<CR>
 " Change register
 function! ChangeReg() abort
     let x = nr2char(getchar())
-    call feedkeys("q:ilet @" . x . " = \<c-r>\<c-r>=string(@" . x . ")\<cr>\<esc>$", 'n')
+    call feedkeys("q:ilet @" . x . " = \<c-r>\<c-r>=string(@" . x . ")\<CR>\<esc>$", 'n')
 endfunction
-nnoremap cr :call ChangeReg()<cr>
+nnoremap cr :call ChangeReg()<CR>
 
 
 """""""""""""""""""""
@@ -363,7 +373,7 @@ let g:grepper.quickfix=1
 let g:grepper.dir='repo,cwd'
 let g:grepper.stop=5000
 
-nnoremap <leader>s :Grepper -tool rg<cr>
+nnoremap <leader>s :Grepper -tool rg<CR>
 nmap gs <plug>(GrepperOperator)
 xmap gs <plug>(GrepperOperator)
 
@@ -504,21 +514,6 @@ map z? <Plug>(incsearch-easymotion-?)
 let g:netrw_liststyle=0
 let g:netrw_preview=1
 
-"" Unimpaired
-let g:nremap={"[": "ü", "]": "¨"}
-let g:xremap={"[": "ü", "]": "¨"}
-let g:oremap={"[": "ü", "]": "¨"}
-
-nnoremap ü [
-xnoremap ü [
-onoremap ü [
-nnoremap ¨ ]
-xnoremap ¨ ]
-onoremap ¨ ]
-
-"" Vim RSI
-let g:rsi_no_meta=1
-
 "" EasyAlign
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
@@ -628,8 +623,6 @@ let g:ale_set_signs=1
 
 nmap [w <plug>(ale_previous_wrap)
 nmap ]w <plug>(ale_next_wrap)
-nmap üw <plug>(ale_previous_wrap)
-nmap ¨w <plug>(ale_next_wrap)
 nnoremap <leader>a :ALEEnable<CR>
 
 augroup Ale
@@ -665,6 +658,14 @@ let g:deoplete#sources#clang#clang_header='/usr/lib/rstudio/resources/libclang'
 "nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
 "nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
 "nnoremap <silent> <F6> :call LanguageClient_textDocument_rename()<CR>
+
+"" Unimpaired
+let g:nremap={"[": "ü", "]": "¨"}
+let g:xremap={"[": "ü", "]": "¨"}
+let g:oremap={"[": "ü", "]": "¨"}
+
+"" Vim RSI
+let g:rsi_no_meta=1
 
 
 """"""""""""""""
@@ -893,6 +894,11 @@ if &term !=? 'linux' || has('gui_running')
     let &t_SI="\<Esc>[6 q"
     let &t_SR="\<Esc>[4 q"
     let &t_EI="\<Esc>[2 q"
+
+    " let &t_ue="\<Esc>[4:0m"
+    " let &t_us="\<Esc>[4:1m"
+    " let &t_Ce="\<Esc>[4:0m"
+    " let &t_Cs="\<Esc>[4:3m"
 endif
 
 """ TODO Disable highlighting on re-source (bug)
