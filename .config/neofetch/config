@@ -41,7 +41,6 @@ print_info() {
 
     info line_break
     info cols
-    info line_break
 }
 
 
