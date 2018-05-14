@@ -134,7 +134,7 @@
 [alias]
 	ec = config --global --edit
 
-	lg = log --graph --format=format:'%C(auto)%h%C(reset) - %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n''%C(black)%h%C(reset)   %C(auto)%s%C(reset) %C(241)- %an%C(reset)%n' --graph
+	lg = log --format=format:'%C(auto)%h%C(reset) - %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n''%C(black)%h%C(reset)   %C(auto)%s%C(reset) %C(241)- %an%C(reset)%n' --graph
 	lgo = log --format='%C(auto)%h%C(reset)%C(auto)%d%C(reset) %C(auto)%s%C(reset) %C(italic blue)%ad%C(reset) %C(241)%an%C(reset)' --graph --date=short
 	lgm = log --format=medium --graph
 	lgmm = log --format=medium --graph --stat --summary

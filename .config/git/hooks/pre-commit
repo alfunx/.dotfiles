@@ -11,9 +11,9 @@ if [ -z "$changed" ]; then
 fi
 
 echo "$changed" \
-    | xargs perl -ne 'exit 1 if /^<{7}/ ... /^>{7}/ or /^<{7}/ or /^>{7}/ or /^={7}\n/ or /^\|{7}\n/'
+    | xargs perl -ne 'exit 1 if /^<{7}/ ... /^>{7}/ or (/^<{7}/ ... /^={7}/ and /^={7}/ ... /^>{7}/) or /^\|{7}/ or /^<{7}/ or /^>{7}/'
 
 if [ "$?" -ne 0 ]; then
-    echo "[1;33mwarning:[0m There are conflict markers. Use [1m--no-verify[0m to bypass this."
+    echo "[1;33mwarning:[0m Staged files may contain conflict markers. Use [1m--no-verify[0m to bypass this check." 1>&2
     exit 1
 fi
