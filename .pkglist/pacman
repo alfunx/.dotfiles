@@ -18,6 +18,7 @@ bluez-utils
 bzip2
 chromium
 chrony
+clang
 clisp
 cmake
 cmatrix
@@ -50,6 +51,8 @@ firefox
 firewalld
 flex
 fontconfig
+freetype2
+freetype2-docs
 fzf
 gawk
 gcc

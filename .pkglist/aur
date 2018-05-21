@@ -5,8 +5,6 @@ awmtt
 bash-pipes
 cower
 dropbox
-freetype2-docs-infinality
-freetype2-infinality
 grabc
 kakoune-git
 light-git
@@ -23,6 +21,7 @@ python-proselint
 quicklisp
 ruby-haste
 ruby-json
+sublime-text-dev
 toilet
 toilet-fonts
 treeify

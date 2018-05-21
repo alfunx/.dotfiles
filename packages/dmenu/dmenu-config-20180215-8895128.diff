@@ -25,7 +25,7 @@ index 1edb647..7070844 100644
  /* -l option; if nonzero, dmenu uses vertical list with given number of lines */
  static unsigned int lines      = 0;
 -static unsigned int lineheight = 0;         /* -h option; minimum height of a menu line     */
-+static unsigned int lineheight = 21;        /* -h option; minimum height of a menu line     */
++static unsigned int lineheight = 25;        /* -h option; minimum height of a menu line     */
  
  /*
 @@ -20,4 +20,4 @@ static unsigned int lines      = 0;

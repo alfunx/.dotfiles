@@ -2,7 +2,7 @@
 
 _pkgname=dmenu
 pkgname=$_pkgname-git
-pkgver=4.8.r1.g2f39898
+pkgver=4.8.r6.ge75494b
 pkgrel=1
 pkgdesc='A generic menu for X. (Including patches and colorschemes)'
 arch=('i686' 'x86_64')
@@ -14,17 +14,17 @@ makedepends=('git')
 provides=('dmenu')
 conflicts=('dmenu')
 
-_patches=('https://tools.suckless.org/dmenu/patches/dmenu-lineheight-4.7.diff'
-          'dmenu-fuzzymatch-20180302-8895128.diff'
+_patches=('dmenu-lineheight-20180518-e75494b.diff'
+          'dmenu-fuzzymatch-20180518-e75494b.diff'
           'dmenu-config-20180215-8895128.diff')
 
 source=("$_pkgname::git+file:///home/amariya/projects/dmenu"
         "${_patches[@]}")
 
 sha512sums=('SKIP'
-            '04d3d7c48ca27a3e939136f5c979eebe4c9e7935a63323576e577e1146c6a7e61f969ba43d06ef9e66c6f3c37907da36aa806ee77393f5f5c6907c3e50ebdd34'
-            'a03635159388379319078478abb6ccba1eae0b71d947465d1e1c94c692a11cd3a8b5168ad0f846a0e2987304f3e83fb22e5efa20507f872410ac15eb24f3daf7'
-            'ece754e4de001f2a698cd2ceb00bbc0ae9f035f6f6abccfa7e4b7c8418a95cc79843334139a38f42da0c23681c8566f0e12d3027ba12475c6bc4b50d770b6961')
+            'b7d413b2a9941e92c3fb9223dfb6bf0d8fca84c61a490caf4cf899d327fb8a9c1dc5779b398e0ea33578457c2bd2280df144a051f923975f5096755bd452642f'
+            '9013c525321d54f35aa74b3b8792ae7afe66c4adf0412339122e894dc8e2afc3390c35d9ea0b46a7f2594c12d4fe9879b308b46edc47a714c43ee8c5630d9ce3'
+            'd9d90874e9b7a66f40da01550a625caa3e8bc1a574de3f5661fedd10f5904b19261c53f4dcec653844332ac3f93174fcee04b33197a355a18482ce5d97e7ff2c')
 
 pkgver() {
     cd "$_pkgname"
