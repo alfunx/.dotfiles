@@ -853,12 +853,12 @@ function theme.at_screen_connect(s)
     awful.tag(awful.util.tagnames, s, awful.util.layouts)
 
     -- Create a promptbox for each screen
-    s.mypromptbox = awful.widget.prompt()
+    s._promptbox = awful.widget.prompt()
 
     -- Create an imagebox widget which will contains an icon indicating which layout we're using.
     -- We need one layoutbox per screen.
-    s.mylayoutbox = awful.widget.layoutbox(s)
-    s.mylayoutbox:buttons(awful.util.table.join(
+    s._layoutbox = awful.widget.layoutbox(s)
+    s._layoutbox:buttons(awful.util.table.join(
         awful.button({ }, 1, function () awful.layout.inc( 1) end),
         awful.button({ }, 3, function () awful.layout.inc(-1) end),
         awful.button({ }, 4, function () awful.layout.inc( 1) end),
@@ -866,10 +866,10 @@ function theme.at_screen_connect(s)
     )
 
     -- Create a taglist widget
-    s.mytaglist = awful.widget.taglist(s, rowfilter, awful.util.taglist_buttons)
+    s._taglist = awful.widget.taglist(s, rowfilter, awful.util.taglist_buttons)
 
     -- -- Create a tasklist widget
-    -- s.mytasklist = awful.widget.tasklist(s,
+    -- s._tasklist = awful.widget.tasklist(s,
     -- awful.widget.tasklist.filter.currenttags,
     -- awful.util.tasklist_buttons, {
     --     bg_focus = theme.tasklist_bg_focus,
@@ -881,7 +881,7 @@ function theme.at_screen_connect(s)
     --     align = "center" })
 
     -- Create a tasklist widget
-    s.mytasklist = awful.widget.tasklist {
+    s._tasklist = awful.widget.tasklist {
         screen = s,
         filter = awful.widget.tasklist.filter.currenttags,
         buttons = awful.util.tasklist_buttons,
@@ -930,7 +930,7 @@ function theme.at_screen_connect(s)
     }
 
     -- Create the wibox
-    s.mywibox = awful.wibar {
+    s._wibox = awful.wibar {
         position = "top",
         screen = s,
         -- height = dpi(21) + theme.border_width,
@@ -960,17 +960,17 @@ function theme.at_screen_connect(s)
         end,
     }
 
-    s.mywibox:connect_signal("mouse::enter", function()
+    s._wibox:connect_signal("mouse::enter", function()
         systray_widget:set_visible(true)
         systray_widget_timer:stop()
     end)
 
-    s.mywibox:connect_signal("mouse::leave", function()
+    s._wibox:connect_signal("mouse::leave", function()
         systray_widget_timer:start()
     end)
 
     -- Add widgets to the wibox
-    s.mywibox:setup {
+    s._wibox:setup {
         {
             layout = wibox.layout.align.horizontal,
 
@@ -978,24 +978,24 @@ function theme.at_screen_connect(s)
                 layout = wibox.layout.fixed.horizontal,
 
                 wibox.container.background(wibox.container.margin(wibox.widget {
-                    s.mylayoutbox,
+                    s._layoutbox,
                     layout = wibox.layout.align.horizontal,
                 }, dpi(8), dpi(3), dpi(4), dpi(4)), clock_bg_normal),
                 wibox.container.background(wibox.container.margin(wibox.widget {
-                    s.mytaglist,
+                    s._taglist,
                     layout = wibox.layout.align.horizontal,
                 }, dpi(3), dpi(8)), theme.taglist_bg_normal),
                 arrow_r(theme.taglist_bg_normal, theme.prompt_bg),
 
                 wibox.container.background(wibox.container.margin(wibox.widget {
-                    s.mypromptbox,
+                    s._promptbox,
                     layout = wibox.layout.align.horizontal,
                 }, dpi(8), dpi(4)), theme.prompt_bg),
                 arrow_r(theme.prompt_bg, theme.tasklist_bg_normal),
             },
 
-            -- s.mytasklist, -- Middle widget
-            wibox.container.background(wibox.container.margin(s.mytasklist, dpi(8), dpi(0)), theme.tasklist_bg_normal),
+            -- s._tasklist, -- Middle widget
+            wibox.container.background(wibox.container.margin(s._tasklist, dpi(8), dpi(0)), theme.tasklist_bg_normal),
 
             { -- Right widgets
                 layout = wibox.layout.fixed.horizontal,

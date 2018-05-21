@@ -88,16 +88,16 @@ theme.bg_urgent                                 = red_light
 theme.taglist_font                              = theme.font_bold
 theme.taglist_fg_normal                         = bw5
 theme.taglist_fg_occupied                       = bw5
-theme.taglist_fg_empty                          = bw2
+theme.taglist_fg_empty                          = bw1
 theme.taglist_fg_volatile                       = aqua_light
-theme.taglist_fg_focus                          = bw8
+theme.taglist_fg_focus                          = bw9
 theme.taglist_fg_urgent                         = red_light
 theme.taglist_bg_normal                         = bw0
 theme.taglist_bg_occupied                       = bw0
 theme.taglist_bg_empty                          = bw0
 theme.taglist_bg_volatile                       = bw0
-theme.taglist_bg_focus                          = bw0
-theme.taglist_bg_urgent                         = bw0
+theme.taglist_bg_focus                          = bw2
+theme.taglist_bg_urgent                         = bw1
 
 theme.tasklist_font_normal                      = theme.font
 theme.tasklist_font_focus                       = theme.font_bold
@@ -116,6 +116,10 @@ theme.titlebar_fg_marked                        = bw8
 theme.titlebar_bg_normal                        = theme.border_normal
 theme.titlebar_bg_focus                         = theme.border_focus
 theme.titlebar_bg_marked                        = theme.border_marked
+
+theme.tooltip_fg                                = theme.titlebar_fg_focus
+theme.tooltip_bg                                = theme.titlebar_bg_normal
+theme.tooltip_border_color                      = theme.titlebar_bg_normal
 
 theme.hotkeys_border_width                      = dpi(30)
 theme.hotkeys_border_color                      = bw0
@@ -310,7 +314,7 @@ theme.cal = lain.widget.calendar {
 local mpdicon = wibox.widget.imagebox(theme.widget_music)
 
 -- mpdicon:buttons(awful.util.table.join(
---     awful.button({ awful.util.mod_4 }, 1, function ()
+--     awful.button({ awful.util.modkey }, 1, function ()
 --         awful.spawn.with_shell(musicplr)
 --     end),
 --     awful.button({ }, 1, function ()
@@ -802,29 +806,6 @@ local vert_sep = wibox.widget {
     color = theme.border_normal,
 }
 
-function theme.powerline_rl(cr, width, height)
-    local arrow_depth, offset = height/2, 0
-
-    -- Avoid going out of the (potential) clip area
-    if arrow_depth < 0 then
-        width  =  width + 2*arrow_depth
-        offset = -arrow_depth
-    end
-
-    cr:move_to( offset + arrow_depth         , 0        )
-    cr:line_to( offset + width               , 0        )
-    cr:line_to( offset + width - arrow_depth , height/2 )
-    cr:line_to( offset + width               , height   )
-    cr:line_to( offset + arrow_depth         , height   )
-    cr:line_to( offset                       , height/2 )
-
-    cr:close_path()
-end
-
--- local function pl(widget, bgcolor, padding)
---     return wibox.container.background(wibox.container.margin(widget, dpi(16), dpi(16)), bgcolor, theme.powerline_rl)
--- end
-
 -- Show only tags of current row (taggrid feature)
 local function rowfilter(t)
     local index = t.index
@@ -853,12 +834,12 @@ function theme.at_screen_connect(s)
     awful.tag(awful.util.tagnames, s, awful.util.layouts)
 
     -- Create a promptbox for each screen
-    s.mypromptbox = awful.widget.prompt()
+    s._promptbox = awful.widget.prompt()
 
     -- Create an imagebox widget which will contains an icon indicating which layout we're using.
     -- We need one layoutbox per screen.
-    s.mylayoutbox = awful.widget.layoutbox(s)
-    s.mylayoutbox:buttons(awful.util.table.join(
+    s._layoutbox = awful.widget.layoutbox(s)
+    s._layoutbox:buttons(awful.util.table.join(
         awful.button({ }, 1, function () awful.layout.inc( 1) end),
         awful.button({ }, 3, function () awful.layout.inc(-1) end),
         awful.button({ }, 4, function () awful.layout.inc( 1) end),
@@ -866,10 +847,10 @@ function theme.at_screen_connect(s)
     )
 
     -- Create a taglist widget
-    s.mytaglist = awful.widget.taglist(s, rowfilter, awful.util.taglist_buttons)
+    s._taglist = awful.widget.taglist(s, rowfilter, awful.util.taglist_buttons)
 
     -- -- Create a tasklist widget
-    -- s.mytasklist = awful.widget.tasklist(s,
+    -- s._tasklist = awful.widget.tasklist(s,
     -- awful.widget.tasklist.filter.currenttags,
     -- awful.util.tasklist_buttons, {
     --     bg_focus = theme.tasklist_bg_focus,
@@ -881,7 +862,7 @@ function theme.at_screen_connect(s)
     --     align = "center" })
 
     -- Create a tasklist widget
-    s.mytasklist = awful.widget.tasklist {
+    s._tasklist = awful.widget.tasklist {
         screen = s,
         filter = awful.widget.tasklist.filter.currenttags,
         buttons = awful.util.tasklist_buttons,
@@ -907,11 +888,23 @@ function theme.at_screen_connect(s)
                     valign = 'center',
                     widget = wibox.container.place,
                 },
-                right  = 20,
-                left   = 20,
+                left = 20,
+                right = 20,
                 widget = wibox.container.margin,
             },
-            id     = 'background_role',
+            create_callback = function(self, c, index, objects) --luacheck: no unused args
+                local tooltip = awful.tooltip {
+                    objects = { self },
+                    delay_show = 1,
+                    timer_function = function()
+                        return c.name
+                    end,
+                    align = "bottom",
+                    mode = "outside",
+                    preferred_positions = { "bottom" },
+                }
+            end,
+            id = 'background_role',
             widget = wibox.container.background,
         },
         layout = {
@@ -927,7 +920,7 @@ function theme.at_screen_connect(s)
     }
 
     -- Create the wibox
-    s.mywibox = awful.wibar {
+    s._wibox = awful.wibar {
         position = "top",
         screen = s,
         height = dpi(25) + theme.border_width,
@@ -954,23 +947,23 @@ function theme.at_screen_connect(s)
     systray_widget:set_visible(false)
 
     local systray_widget_timer = gears.timer {
-        timeout   = 5,
-        callback  = function()
+        timeout = 5,
+        callback = function()
             systray_widget:set_visible(false)
         end,
     }
 
-    s.mywibox:connect_signal("mouse::enter", function()
+    s._wibox:connect_signal("mouse::enter", function()
         systray_widget:set_visible(true)
         systray_widget_timer:stop()
     end)
 
-    s.mywibox:connect_signal("mouse::leave", function()
+    s._wibox:connect_signal("mouse::leave", function()
         systray_widget_timer:start()
     end)
 
     -- Add widgets to the wibox
-    s.mywibox:setup {
+    s._wibox:setup {
         {
             layout = wibox.layout.fixed.vertical,
             {
@@ -982,7 +975,7 @@ function theme.at_screen_connect(s)
                         {
                             {
                                 layout = wibox.layout.align.horizontal,
-                                s.mylayoutbox,
+                                s._layoutbox,
                             },
                             left = dpi(8),
                             right = dpi(3),
@@ -998,7 +991,7 @@ function theme.at_screen_connect(s)
                         {
                             {
                                 layout = wibox.layout.align.horizontal,
-                                s.mytaglist,
+                                s._taglist,
                             },
                             left = dpi(3),
                             right = dpi(8),
@@ -1014,10 +1007,10 @@ function theme.at_screen_connect(s)
                         {
                             {
                                 layout = wibox.layout.align.horizontal,
-                                s.mypromptbox,
+                                s._promptbox,
                             },
-                            left = dpi(8),
-                            right = dpi(4),
+                            left = dpi(6),
+                            right = dpi(6),
                             widget = wibox.container.margin,
                         },
                         bg = theme.prompt_bg,
@@ -1032,7 +1025,7 @@ function theme.at_screen_connect(s)
                     {
                         {
                             layout = wibox.layout.flex.horizontal,
-                            s.mytasklist,
+                            s._tasklist,
                         },
                         left = dpi(8),
                         right = dpi(0),
