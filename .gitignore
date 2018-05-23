@@ -3,7 +3,7 @@ desktop/
 documents/
 downloads/
 music/
-pictures/
+#pictures/
 public/
 templates/
 videos/

@@ -64,6 +64,7 @@
 [diff]
 	tool = vimdiff
 	colorMoved = default
+	renames = copy
 
 [difftool]
 	prompt = false
@@ -91,6 +92,13 @@
 [push]
 	default = simple
 	gpgSign = if-asked
+
+[submodule]
+	fetchJobs = 0
+
+[grep]
+	lineNumber = true
+	patternType = perl
 
 [interactive]
 	singlekey = true
@@ -134,6 +142,7 @@
 [alias]
 	ec = config --global --edit
 
+	# log, current branch
 	lg = log --format=format:'%C(auto)%h%C(reset) - %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n''%C(black)%h%C(reset)   %C(auto)%s%C(reset) %C(241)- %an%C(reset)%n' --graph
 	lgo = log --format='%C(auto)%h%C(reset)%C(auto)%d%C(reset) %C(auto)%s%C(reset) %C(italic blue)%ad%C(reset) %C(241)%an%C(reset)' --graph --date=short
 	lgm = log --format=medium --graph
@@ -141,12 +150,21 @@
 	lgf = log --format=fuller --graph
 	lgff = log --format=fuller --graph --stat --summary
 
-	l = "!git lg --all"
-	lo = "!git lgo --all"
-	lm = "!git lgm --all"
-	lmm = "!git lgmm --all"
-	lf = "!git lgf --all"
-	lff = "!git lgff --all"
+	# log, all branches+tags on all remotes
+	la = "!git lg --all"
+	lao = "!git lgo --all"
+	lam = "!git lgm --all"
+	lamm = "!git lgmm --all"
+	laf = "!git lgf --all"
+	laff = "!git lgff --all"
+
+	# log, all branches+tags on remotes 'origin' and 'upstream'
+	l = "!git lg --branches='*' --tags='*' --remotes={origin,upstream}"
+	lo = "!git lgo --branches='*' --tags='*' --remotes={origin,upstream}"
+	lm = "!git lgm --branches='*' --tags='*' --remotes={origin,upstream}"
+	lmm = "!git lgmm --branches='*' --tags='*' --remotes={origin,upstream}"
+	lf = "!git lgf --branches='*' --tags='*' --remotes={origin,upstream}"
+	lff = "!git lgff --branches='*' --tags='*' --remotes={origin,upstream}"
 
 	lr = "!f() { git log --format=fuller --stat --summary \"${1:-HEAD}\"~..\"${1:-HEAD}\"; }; f"
 	ld = log --format=medium --stat --summary --left-right
@@ -175,7 +193,7 @@
 	co = checkout
 	com = checkout master
 	cob = checkout -b
-	b = branch --verbose
+	b = branch
 	bl = branch --all --verbose
 	bd = branch --delete
 	bdf = branch --delete --force
@@ -243,6 +261,9 @@
 
 	# set up remotes for fork
 	fork = "!f() { URL=$(git config remote.\"${1:-origin}\".url); git remote set-url \"${1:-origin}\" \"$(echo \"$URL\" | perl -pe 's/(?<=[:\\/])[^:\\/]+(?=\\/[^\\/]+$)/alfunx/')\"; git remote add \"${2:-upstream}\" \"$URL\"; }; f"
+
+	# get gitignore from github/gitignore.git
+	gitignore = "!f() { [ -f .gitignore ] && echo >> .gitignore; curl -f \"https://raw.githubusercontent.com/github/gitignore/master/${1}.gitignore\" | tee -a .gitignore; }; f"
 
 	# generate tags file
 	ctags = "!$HOME/.config/git/hooks/ctags"

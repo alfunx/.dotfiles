@@ -1,15 +1,32 @@
-# .dotfiles
-
-![Awesome WM](https://i.redditmedia.com/JBoQsSAkr87SOKudZP0pV0oT1Ff3mJv-8nduZyQxkHM.png?s=671823c8f9558f4e4e4a1ddc8bccba19)
-![Awesome WM](https://i.imgur.com/0X7U647.png)
+<h1 align="center">.dotfiles</h1>
+<p align="center">There's no place like <b><code>~</code></b> !</p>
+<p align="center">
+  <!-- <img src="https://img.shields.io/badge/WM-Awesome%20WM-535d6c.svg" /> -->
+  <!-- <img src="https://img.shields.io/badge/Editor-Vim-009930.svg" /> -->
+  <!-- <img src="https://img.shields.io/badge/Terminal-Kitty-784421.svg" /> -->
+  <!-- <img src="https://img.shields.io/badge/Shell-Zsh-red.svg" /> -->
+  <!-- <img src="https://img.shields.io/badge/Font-Iosevka-lightgrey.svg" /> -->
+  <!-- <img src="https://img.shields.io/badge/Distro-Arch%20Linux-0f94d2.svg" /> -->
+  <!-- <img src="https://img.shields.io/badge/IRC-Irssi-blue.svg" /> -->
+  <!-- <br><br> -->
+  <img src="pictures/dotfiles.png">
+  <br><br>
+</p>
 
 ## Table of Contents
 
++ [Screenshots](#screenshots)
 + [Introduction](#introduction)
 + [Setup Repository](#setup-repository)
 + [Track Files](#track-files)
 + [Restore Configurations](#restore-configurations)
 + [Additional Commands](#additional-commands)
+
+## Screenshots
+
+![Awesome WM](pictures/screenshot_1.png)
+![Awesome WM](pictures/screenshot_2.png)
+![Awesome WM](pictures/screenshot_3.png)
 
 ## Introduction
 
