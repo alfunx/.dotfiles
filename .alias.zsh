@@ -23,6 +23,8 @@ alias neofetch='echo "\\n\\n" && neofetch'
 alias grep='grep --color=auto --exclude-dir={.git,.svn}'
 alias egrep='egrep --color=auto --exclude-dir={.git,.svn}'
 
+alias open='xdg-open'
+
 alias -g C='| xclip -selection clipboard -rmlastnl'
 
 foreground-job() {

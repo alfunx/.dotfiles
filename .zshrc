@@ -146,6 +146,9 @@ source "$HOME/.alias.zsh"
 # FZF
 source "$HOME/.fzf.zsh"
 
+# Vim mode
+#source "$HOME/.vim.zsh"
+
 # Gruvbox colors fix
 source "$HOME/.bin/fix-gruvbox-palette"
 

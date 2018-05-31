@@ -3,7 +3,7 @@
 #
 
 # ls, the common ones I use a lot shortened for rapid fire usage
-alias l='ls -F'                    #show type
+alias l='ls -FA'                   #show type,show almost all
 alias ll='ls -lFh'                 #long list,size,show type,human readable
 alias la='LC_COLLATE=C ls -lAFh'   #long list,show almost all,show type,human readable
 alias lr='ls -tRFh'                #sorted by date,recursive,show type,human readable
