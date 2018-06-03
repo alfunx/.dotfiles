@@ -60,11 +60,15 @@ local os, math, string = os, math, string
 local theme                                     = { }
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/blackout"
 
+theme.wallpaper                                 = theme.dir .. "/wallpapers/wall.png"
+
+-- theme.wallpaper                                 = theme.dir .. "/wallpapers/escheresque.png"
+-- theme.wallpaper_offset                          = 5
+
 -- theme.wallpaper_original                        = theme.dir .. "/wallpapers/matterhorn.jpg"
 -- theme.wallpaper                                 = theme.dir .. "/wallpapers/matterhorn_base.jpg"
 -- theme.wallpaper_blur                            = theme.dir .. "/wallpapers/matterhorn_blur.jpg"
-
-theme.wallpaper                                 = theme.dir .. "/wallpapers/wall.png"
+-- theme.wallpaper_offset                          = 0
 
 local font_name                                 = "Iosevka Custom"
 local font_size                                 = "11"
@@ -116,10 +120,6 @@ theme.titlebar_fg_marked                        = bw8
 theme.titlebar_bg_normal                        = theme.border_normal
 theme.titlebar_bg_focus                         = theme.border_focus
 theme.titlebar_bg_marked                        = theme.border_marked
-
-theme.tooltip_fg                                = theme.titlebar_fg_focus
-theme.tooltip_bg                                = theme.titlebar_bg_normal
-theme.tooltip_border_color                      = theme.titlebar_bg_normal
 
 theme.hotkeys_border_width                      = dpi(30)
 theme.hotkeys_border_color                      = bw0
@@ -221,6 +221,11 @@ theme.titlebar_maximized_button_normal_active   = theme.dir .. "/icons/titlebar_
 theme.titlebar_maximized_button_focus_inactive  = theme.dir .. "/icons/titlebar_light/maximized_focus_inactive.png"
 theme.titlebar_maximized_button_normal_inactive = theme.dir .. "/icons/titlebar_light/maximized_normal_inactive.png"
 
+theme.tooltip_fg                                = theme.titlebar_fg_focus
+theme.tooltip_bg                                = theme.titlebar_bg_normal
+theme.tooltip_border_color                      = theme.border_normal
+theme.tooltip_border_width                      = theme.border_width
+
 theme.notification_fg                           = theme.fg_normal
 theme.notification_bg                           = theme.bg_normal
 theme.notification_border_color                 = theme.border_normal
@@ -263,7 +268,7 @@ naughty.config.presets.critical                 = {
                                                   }
 
 local markup = lain.util.markup
-local separators = lain.util.separators
+-- local separators = lain.util.separators
 
 -- Textclock
 -- local clockicon = wibox.widget.imagebox(theme.widget_clock)
@@ -291,7 +296,7 @@ theme.cal = lain.widget.calendar {
 -- -- Mail IMAP check
 -- local mailicon = wibox.widget.imagebox(theme.widget_mail)
 -- --[[ commented because it needs to be set before use
--- mailicon:buttons(awful.util.table.join(awful.button({ }, 1, function () awful.spawn(mail) end)))
+-- mailicon:buttons(awful.util.table.join(awful.button({ }, 1, function() awful.spawn(mail) end)))
 -- local mail = lain.widget.imap({
 --     timeout  = 180,
 --     server   = "server",
@@ -310,22 +315,23 @@ theme.cal = lain.widget.calendar {
 -- --]]
 
 -- MPD
+--luacheck: push ignore widget mpd_now artist title
 -- local musicplr = awful.util.terminal .. " -title Music -g 130x34-320+16 ncmpcpp"
 local mpdicon = wibox.widget.imagebox(theme.widget_music)
 
 -- mpdicon:buttons(awful.util.table.join(
---     awful.button({ awful.util.modkey }, 1, function ()
+--     awful.button({ awful.util.modkey }, 1, function()
 --         awful.spawn.with_shell(musicplr)
 --     end),
---     awful.button({ }, 1, function ()
+--     awful.button({ }, 1, function()
 --         awful.spawn.with_shell("mpc prev")
 --         theme.mpd.update()
 --     end),
---     awful.button({ }, 2, function ()
+--     awful.button({ }, 2, function()
 --         awful.spawn.with_shell("mpc toggle")
 --         theme.mpd.update()
 --     end),
---     awful.button({ }, 3, function ()
+--     awful.button({ }, 3, function()
 --         awful.spawn.with_shell("mpc next")
 --         theme.mpd.update()
 --     end)))
@@ -346,27 +352,29 @@ theme.mpd = lain.widget.mpd {
         end
     end,
 }
+--luacheck: pop
 
 -- MEM
+--luacheck: push ignore widget mem_now
 local memicon = wibox.widget.imagebox(theme.widget_mem)
 local mem = lain.widget.mem {
     timeout = 5,
     settings = function()
-        local bg_normal_color = bar_fg_normal
-        local bg_normal_font = theme.font
+        local _color = bar_fg_normal
+        local _font = theme.font
 
         if tonumber(mem_now.perc) >= 90 then
-            bg_normal_color = red_light
-            bg_normal_font = theme.font
+            _color = red_light
+            _font = theme.font
         elseif tonumber(mem_now.perc) >= 80 then
-            bg_normal_color = orange_light
-            bg_normal_font = theme.font
+            _color = orange_light
+            _font = theme.font
         elseif tonumber(mem_now.perc) >= 70 then
-            bg_normal_color = yellow_light
-            bg_normal_font = theme.font
+            _color = yellow_light
+            _font = theme.font
         end
 
-        widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, mem_now.perc))
+        widget:set_markup(markup.fontfg(_font, _color, mem_now.perc))
 
         widget.used  = mem_now.used
         widget.total = mem_now.total
@@ -402,27 +410,29 @@ mem_widget:buttons(awful.button({ }, 1, function()
         timeout = 10,
     }
 end))
+--luacheck: pop
 
 -- CPU
+--luacheck: push ignore widget cpu_now
 local cpuicon = wibox.widget.imagebox(theme.widget_cpu)
 local cpu = lain.widget.cpu {
     timeout = 5,
     settings = function()
-        local bg_normal_color = bar_fg_normal
-        local bg_normal_font = theme.font
+        local _color = bar_fg_normal
+        local _font = theme.font
 
         if tonumber(cpu_now.usage) >= 90 then
-            bg_normal_color = red_light
-            bg_normal_font = theme.font
+            _color = red_light
+            _font = theme.font
         elseif tonumber(cpu_now.usage) >= 80 then
-            bg_normal_color = orange_light
-            bg_normal_font = theme.font
+            _color = orange_light
+            _font = theme.font
         elseif tonumber(cpu_now.usage) >= 70 then
-            bg_normal_color = yellow_light
-            bg_normal_font = theme.font
+            _color = yellow_light
+            _font = theme.font
         end
 
-        widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, cpu_now.usage))
+        widget:set_markup(markup.fontfg(_font, _color, cpu_now.usage))
 
         widget.core  = cpu_now
     end,
@@ -447,29 +457,31 @@ cpu_widget:buttons(awful.button({ }, 1, function()
         timeout = 10,
     }
 end))
+--luacheck: pop
 
 -- SYSLOAD
+--luacheck: push ignore widget load_1 load_5 load_15
 local sysloadicon = wibox.widget.imagebox(theme.widget_hdd)
 local sysload = lain.widget.sysload {
     timeout = 5,
     settings = function()
-        local bg_normal_color = bar_fg_normal
-        local bg_normal_font = theme.font
+        local _color = bar_fg_normal
+        local _font = theme.font
 
         -- check with: grep 'model name' /proc/cpuinfo | wc -l
         local number_of_cores = 4
 
         if tonumber(load_5) / number_of_cores >= 1.5 then
-            bg_normal_color = red_light
-            bg_normal_font = theme.font
+            _color = red_light
+            _font = theme.font
         elseif tonumber(load_5) / number_of_cores >= 1.0 then
-            bg_normal_color = orange_light
-            bg_normal_font = theme.font
+            _color = orange_light
+            _font = theme.font
         elseif tonumber(load_5) / number_of_cores >= 0.7 then
-            bg_normal_color = yellow_light
-            bg_normal_font = theme.font
+            _color = yellow_light
+            _font = theme.font
         end
-        widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, load_5))
+        widget:set_markup(markup.fontfg(_font, _color, load_5))
 
         widget.load_1  = load_1
         widget.load_5  = load_5
@@ -495,17 +507,19 @@ sysload_widget:buttons(awful.button({ }, 1, function()
         timeout = 10,
     }
 end))
+--luacheck: pop
 
 -- PACMAN
+--luacheck: push ignore widget available
 local pacmanicon = wibox.widget.imagebox(theme.widget_pacman)
 theme.pacman = widgets.pacman {
-    command = "( checkupdates & pacaur -k --color never | sed 's/:: [a-zA-Z0-9]\\+ //' ) | sed 's/->/→/' | sort | column -t",
+    command = "( sudo checkupdates & pacaur -k --color never | sed 's/:: [a-zA-Z0-9]\\+ //' ) | sed 's/->/→/' | sort | column -t",
     notify = "on",
     notification_preset = naughty.config.presets.normal,
     settings = function()
-        local bg_normal_color = bar_fg_normal
-        local bg_normal_font = theme.font
-        widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, available))
+        local _color = bar_fg_normal
+        local _font = theme.font
+        widget:set_markup(markup.fontfg(_font, _color, available))
     end,
 }
 
@@ -517,19 +531,21 @@ local pacman_widget = wibox.widget {
 pacman_widget:buttons(awful.button({ }, 1, function()
     theme.pacman.manual_update()
 end))
+--luacheck: pop
 
 -- USERS
+--luacheck: push ignore widget logged_in
 local usersicon = wibox.widget.imagebox(theme.widget_users)
 local users = widgets.users {
     settings = function()
-        local bg_normal_color = bar_fg_normal
-        local bg_normal_font = theme.font
+        local _color = bar_fg_normal
+        local _font = theme.font
 
         if tonumber(logged_in) > 1 then
-            bg_normal_color = red_light
-            bg_normal_font = theme.font
+            _color = red_light
+            _font = theme.font
         end
-        widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, logged_in))
+        widget:set_markup(markup.fontfg(_font, _color, logged_in))
     end,
 }
 
@@ -551,6 +567,7 @@ users_widget:buttons(awful.button({ }, 1, function()
         }
     end)
 end))
+--luacheck: pop
 
 --[[ Coretemp (lm_sensors, per core)
 local tempwidget = awful.widget.watch({awful.util.shell, '-c', 'sensors | grep Core'}, 30,
@@ -568,20 +585,20 @@ end)
 -- local temp = lain.widget.temp({
 --     tempfile = "/sys/class/thermal/thermal_zone7/temp",
 --     settings = function()
---         local bg_normal_color = bar_fg_normal
---         local bg_normal_font = theme.font
+--         local _color = bar_fg_normal
+--         local _font = theme.font
 --
 --         if tonumber(coretemp_now) >= 90 then
---             bg_normal_color = red_light
---             bg_normal_font = theme.font
+--             _color = red_light
+--             _font = theme.font
 --         elseif tonumber(coretemp_now) >= 80 then
---             bg_normal_color = orange_light
---             bg_normal_font = theme.font
+--             _color = orange_light
+--             _font = theme.font
 --         elseif tonumber(coretemp_now) >= 70 then
---             bg_normal_color = yellow_light
---             bg_normal_font = theme.font
+--             _color = yellow_light
+--             _font = theme.font
 --         end
---         widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, coretemp_now))
+--         widget:set_markup(markup.fontfg(_font, _color, coretemp_now))
 --     end,
 -- })
 
@@ -606,6 +623,7 @@ end)
 -- }
 
 -- ALSA volume
+--luacheck: push ignore widget volume_now vol_text volume_before
 local volicon = wibox.widget.imagebox(theme.widget_vol)
 theme.volume = lain.widget.alsa {
     -- togglechannel = "IEC958,3",
@@ -640,13 +658,16 @@ theme.volume = lain.widget.alsa {
                 vol_text = " " .. volume_now.level .. "%"
             end
 
-            theme.volume.notification = naughty.notify {
-                title = "Audio",
-                text = vol_text,
-            }
+            if client.focus.fullscreen or volume_now.status ~= volume_before then
+                theme.volume.notification = naughty.notify {
+                    title = "Audio",
+                    text = vol_text,
+                }
+            end
 
             theme.volume.manual = false
         end
+        volume_before = volume_now.status
     end,
 }
 
@@ -658,29 +679,55 @@ local vol_widget = wibox.widget {
 vol_widget:buttons(awful.button({ }, 1, function()
     awful.spawn(awful.util.terminal .. " \"alsamixer\"")
 end))
+--luacheck: pop
 
 -- BAT
+--luacheck: push ignore widget bat_now
+
+-- local battery_palette = widgets.widget_palette {
+--     [10] = {
+--         color = red_light,
+--         icon = theme.widget_battery_empty,
+--     },
+--     [20] = {
+--         color = orange_light,
+--         icon = theme.widget_battery_low,
+--     },
+--     [30] = {
+--         color = yellow_light,
+--         icon = theme.widget_battery_low,
+--     },
+--     [50] = {
+--         color = bar_fg_normal,
+--         icon = theme.widget_battery_low,
+--     },
+--     [100] = {
+--         color = bar_fg_normal,
+--         icon = theme.widget_battery,
+--     }
+-- }
+
 local baticon = wibox.widget.imagebox(theme.widget_battery)
 local bat = lain.widget.bat {
     notify = "off",
     batteries = {"BAT0"},
     ac = "AC",
     settings = function()
-        local bg_normal_color = bar_fg_normal
-        local bg_normal_font = theme.font
+        local _color = bar_fg_normal
+        local _font = theme.font
 
         if tonumber(bat_now.perc) <= 10 then
             baticon:set_image(theme.widget_battery_empty)
-            bg_normal_color = red_light
-            bg_normal_font = theme.font
+            _color = red_light
+            _font = theme.font
         elseif tonumber(bat_now.perc) <= 20 then
             baticon:set_image(theme.widget_battery_low)
-            bg_normal_color = orange_light
-            bg_normal_font = theme.font
+            _color = orange_light
+            _font = theme.font
         elseif tonumber(bat_now.perc) <= 30 then
             baticon:set_image(theme.widget_battery_low)
-            bg_normal_color = yellow_light
-            bg_normal_font = theme.font
+            _color = yellow_light
+            _font = theme.font
         elseif tonumber(bat_now.perc) <= 50 then
             baticon:set_image(theme.widget_battery_low)
         else
@@ -688,27 +735,26 @@ local bat = lain.widget.bat {
         end
 
         if tonumber(bat_now.perc) <= 3 and not bat_now.ac_status == 1 then
-            if bat_now.notification then
-                naughty.destroy(bat_now.notification)
+            if not bat_now.notification then
+                bat_now.notification = naughty.notify {
+                    title = "Battery",
+                    text = "Your battery is running low.\n"
+                        .. "You should plug in your PC.",
+                    preset = naughty.config.presets.critical,
+                    timeout = 0,
+                }
             end
-            bat_now.notification = naughty.notify {
-                title = "Battery",
-                text = "Your battery is running low.\n"
-                    .. "You should plug in your PC.",
-                preset = naughty.config.presets.critical,
-                timeout = 0,
-            }
         end
 
         if bat_now.ac_status == 1 then
             baticon:set_image(theme.widget_ac)
             if tonumber(bat_now.perc) >= 95 then
-                bg_normal_color = green_light
-                bg_normal_font = theme.font
+                _color = green_light
+                _font = theme.font
             end
         end
 
-        widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, bat_now.perc))
+        widget:set_markup(markup.fontfg(_font, _color, bat_now.perc))
     end,
 }
 
@@ -730,6 +776,7 @@ bat_widget:buttons(awful.button({ }, 1, function()
         }
     end)
 end))
+--luacheck: pop
 
 -- -- WEATHER
 -- local weather = lain.widget.weather({
@@ -746,6 +793,7 @@ end))
 -- }
 
 -- NET
+--luacheck: push ignore widget net_now
 local neticon = wibox.widget.imagebox(theme.widget_net)
 local net = lain.widget.net {
     wifi_state = "on",
@@ -754,15 +802,15 @@ local net = lain.widget.net {
     units = 1048576, -- in MB/s (1024^2)
     -- units = 131072, -- in Mbit/s / Mbps (1024^2/8)
     settings = function()
-        local bg_normal_color = bar_fg_normal
-        local bg_normal_font = theme.font
+        local _color = bar_fg_normal
+        local _font = theme.font
 
         if not net_now.state or net_now.state == "down" then
-            bg_normal_color = red_light
-            bg_normal_font = theme.font
-            widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, " N/A "))
+            _color = red_light
+            _font = theme.font
+            widget:set_markup(markup.fontfg(_font, _color, " N/A "))
         else
-            widget:set_markup(markup.fontfg(bg_normal_font, bg_normal_color, net_now.received .. " ↓↑ " .. net_now.sent))
+            widget:set_markup(markup.fontfg(_font, _color, net_now.received .. " ↓↑ " .. net_now.sent))
         end
     end,
 }
@@ -797,8 +845,9 @@ net_widget:buttons(awful.button({ }, 1, function()
         end)
     end)
 end))
+--luacheck: pop
 
--- SEPARATORS
+-- Separators
 local vert_sep = wibox.widget {
     widget = wibox.widget.separator,
     orientation = "vertical",
@@ -828,7 +877,8 @@ function theme.at_screen_connect(s)
     if type(wallpaper) == "function" then
         wallpaper = wallpaper(s)
     end
-    gears.wallpaper.maximized(wallpaper, s, true)
+    -- gears.wallpaper.maximized(wallpaper, s, true)
+    gears.wallpaper.tiled(wallpaper, s)
 
     -- Tags
     awful.tag(awful.util.tagnames, s, awful.util.layouts)
@@ -840,84 +890,89 @@ function theme.at_screen_connect(s)
     -- We need one layoutbox per screen.
     s._layoutbox = awful.widget.layoutbox(s)
     s._layoutbox:buttons(awful.util.table.join(
-        awful.button({ }, 1, function () awful.layout.inc( 1) end),
-        awful.button({ }, 3, function () awful.layout.inc(-1) end),
-        awful.button({ }, 4, function () awful.layout.inc( 1) end),
-        awful.button({ }, 5, function () awful.layout.inc(-1) end))
+        awful.button({ }, 1, function() awful.layout.inc( 1) end),
+        awful.button({ }, 3, function() awful.layout.inc(-1) end),
+        awful.button({ }, 4, function() awful.layout.inc( 1) end),
+        awful.button({ }, 5, function() awful.layout.inc(-1) end))
     )
 
     -- Create a taglist widget
     s._taglist = awful.widget.taglist(s, rowfilter, awful.util.taglist_buttons)
 
-    -- -- Create a tasklist widget
-    -- s._tasklist = awful.widget.tasklist(s,
-    -- awful.widget.tasklist.filter.currenttags,
-    -- awful.util.tasklist_buttons, {
-    --     bg_focus = theme.tasklist_bg_focus,
-    --     shape = function(cr, width, height)
-    --                 gears.shape.rounded_rect(cr, width, height, theme.border_radius or 0)
-    --             end,
-    --     shape_border_width = dpi(0),
-    --     shape_border_color = theme.tasklist_bg_normal,
-    --     align = "center" })
-
-    -- Create a tasklist widget
-    s._tasklist = awful.widget.tasklist {
-        screen = s,
-        filter = awful.widget.tasklist.filter.currenttags,
-        buttons = awful.util.tasklist_buttons,
-        bg_focus = theme.tasklist_bg_focus,
-        style = {
-            shape = function(cr, width, height)
-                gears.shape.rounded_rect(cr, width, height, theme.border_radius or 0)
-            end,
-            shape_border_width = dpi(0),
-            shape_border_color = theme.tasklist_bg_normal,
-        },
-        widget_template = {
-            {
+    local gen_tasklist = function()
+        -- Create a tasklist widget
+        s._tasklist = awful.widget.tasklist {
+            screen = s,
+            filter = awful.widget.tasklist.filter.currenttags,
+            buttons = awful.util.tasklist_buttons,
+            bg_focus = theme.tasklist_bg_focus,
+            style = {
+                shape = function(cr, width, height)
+                    gears.shape.rounded_rect(cr, width, height, theme.border_radius or 0)
+                end,
+                shape_border_width = dpi(0),
+                shape_border_color = theme.tasklist_bg_normal,
+            },
+            widget_template = {
                 {
                     {
-                        layout = wibox.layout.fixed.horizontal,
                         {
-                            id     = 'text_role',
-                            widget = wibox.widget.textbox,
+                            layout = wibox.layout.fixed.horizontal,
+                            {
+                                id     = 'text_role',
+                                widget = wibox.widget.textbox,
+                            },
                         },
+                        halign = 'center',
+                        valign = 'center',
+                        widget = wibox.container.place,
                     },
-                    halign = 'center',
+                    left = 20,
+                    right = 20,
+                    widget = wibox.container.margin,
+                },
+                create_callback = function(self, c, index, objects) --luacheck: no unused args
+                    local tooltip = awful.tooltip {
+                        objects = { self },
+                        delay_show = 1,
+                        timer_function = function()
+                            return c.name
+                        end,
+                        align = "bottom",
+                        mode = "outside",
+                        preferred_positions = { "bottom" },
+                    }
+                end,
+                id = 'background_role',
+                widget = wibox.container.background,
+            },
+            layout = {
+                layout = wibox.layout.flex.horizontal,
+                spacing = 10,
+                spacing_widget = {
+                    vert_sep,
                     valign = 'center',
+                    halign = 'center',
                     widget = wibox.container.place,
                 },
-                left = 20,
-                right = 20,
-                widget = wibox.container.margin,
             },
-            create_callback = function(self, c, index, objects) --luacheck: no unused args
-                local tooltip = awful.tooltip {
-                    objects = { self },
-                    delay_show = 1,
-                    timer_function = function()
-                        return c.name
+        }
+    end
+
+    -- For old version (Awesome v4.2)
+    if not pcall(gen_tasklist) then
+        -- Create a tasklist widget
+        s._tasklist = awful.widget.tasklist(s,
+        awful.widget.tasklist.filter.currenttags,
+        awful.util.tasklist_buttons, {
+            bg_focus = theme.tasklist_bg_focus,
+            shape = function(cr, width, height)
+                        gears.shape.rounded_rect(cr, width, height, theme.border_radius or 0)
                     end,
-                    align = "bottom",
-                    mode = "outside",
-                    preferred_positions = { "bottom" },
-                }
-            end,
-            id = 'background_role',
-            widget = wibox.container.background,
-        },
-        layout = {
-            layout = wibox.layout.flex.horizontal,
-            spacing = 10,
-            spacing_widget = {
-                vert_sep,
-                valign = 'center',
-                halign = 'center',
-                widget = wibox.container.place,
-            },
-        },
-    }
+            shape_border_width = dpi(0),
+            shape_border_color = theme.tasklist_bg_normal,
+            align = "center" })
+    end
 
     -- Create the wibox
     s._wibox = awful.wibar {
