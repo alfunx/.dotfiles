@@ -34,11 +34,11 @@ function config.init(context)
         local callback
         callback = function(c)
             if c.class == class then
-                awful.client.movetotag(tag, c)
-                client.remove_signal("manage", callback)
+                c:move_to_tag(tag)
+                client.disconnect_signal("manage", callback)
             end
         end
-        client.add_signal("manage", callback)
+        client.connect_signal("manage", callback)
 
         -- now check if not already running!
         local findme = command
@@ -47,7 +47,7 @@ function config.init(context)
             findme = findme:sub(0, firstspace-1)
         end
 
-        awful.util.spawn_with_shell(string.format("pgrep -u $USER -x %s > /dev/null || (%s)", findme, command))
+        awful.spawn.with_shell(string.format("pgrep -u $USER -x %s > /dev/null || (%s)", findme, command))
     end
 
     -- Spawn process and unfocus current client until process exits (useful for
