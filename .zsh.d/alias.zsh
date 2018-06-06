@@ -2,7 +2,8 @@
 #  ALIASES  #
 #############
 
-compdef dotfiles=git
+# will be integrated to 'dotfiles.sh'
+#compdef dotfiles=git
 
 alias ..='cd ..'
 alias ...='cd ../..'
@@ -13,18 +14,13 @@ alias .......='cd ../../../../../..'
 alias ........='cd ../../../../.././...'
 
 alias :q='exit'
-
 alias pg='ping -c 1 www.google.ch'
-
 alias bcl='bc -l'
-
 alias neofetch='echo "\\n\\n" && neofetch'
-
+alias si='sudo -i'
+alias open='xdg-open'
 alias grep='grep --color=auto --exclude-dir={.git,.svn}'
 alias egrep='egrep --color=auto --exclude-dir={.git,.svn}'
-
-alias open='xdg-open'
-
 alias -g C='| xclip -selection clipboard -rmlastnl'
 
 foreground-job() {

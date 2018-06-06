@@ -2,6 +2,7 @@
 #  ZSHRC  #
 ###########
 
+export ZSH_CONFIG="$HOME/.zsh.d"
 # fpath=("$HOME/.zsh" $fpath)
 
 # If you come from bash you might have to change your $PATH.
@@ -68,7 +69,8 @@ export UPDATE_ZSH_DAYS=7
 ###############
 
 # eval dircolors
-eval "$(dircolors "$HOME/.dircolors")"
+[[ -f "$HOME/.dircolors" ]] \
+    && eval "$(dircolors "$HOME/.dircolors")"
 
 
 #####################
@@ -90,15 +92,16 @@ bgnotify_formatted() {
 plugins=(zsh-syntax-highlighting zsh-completions zsh-autosuggestions command-not-found custom-common-aliases colorize bgnotify svn)
 
 # Remove plugins if in tty
-if [ "$TERM" = 'linux' ]; then
-    plugins=("${(@)plugins:#zsh-autosuggestions}")
-fi
+[[ "$TERM" = 'linux' ]] \
+    && plugins=("${(@)plugins:#zsh-autosuggestions}")
 
 # Completions
-source "$HOME/.completion.zsh"
+[[ -f "$ZSH_CONFIG/completion.zsh" ]] \
+    && source "$ZSH_CONFIG/completion.zsh"
 
 # Oh-My-Zsh
-[[ -f "$ZSH/oh-my-zsh.sh" ]] && source "$ZSH/oh-my-zsh.sh"
+[[ -f "$ZSH/oh-my-zsh.sh" ]] \
+    && source "$ZSH/oh-my-zsh.sh"
 
 
 ########################
@@ -138,19 +141,24 @@ setopt INTERACTIVE_COMMENTS
 stty -ixon
 
 # Highlighting
-source "$HOME/.highlight.zsh"
+[[ -f "$ZSH_CONFIG/highlight.zsh" ]] \
+    && source "$ZSH_CONFIG/highlight.zsh"
 
 # Aliases
-source "$HOME/.alias.zsh"
+[[ -f "$ZSH_CONFIG/alias.zsh" ]] \
+    && source "$ZSH_CONFIG/alias.zsh"
 
 # FZF
-source "$HOME/.fzf.zsh"
+[[ -f "$ZSH_CONFIG/fzf.zsh" ]] \
+    && source "$ZSH_CONFIG/fzf.zsh"
 
 # Vim mode
-#source "$HOME/.vim.zsh"
+#[[ -f "$ZSH_CONFIG/vim.zsh" ]] \
+#    && source "$ZSH_CONFIG/vim.zsh"
 
 # Gruvbox colors fix
-source "$HOME/.bin/fix-gruvbox-palette"
+[[ -f "$HOME/.bin/fix-gruvbox-palette" ]] \
+    && source "$HOME/.bin/fix-gruvbox-palette"
 
 # TMUX
 main_attached="$(tmux list-sessions -F '#S #{session_attached}' \

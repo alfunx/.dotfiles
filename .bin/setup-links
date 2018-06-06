@@ -1,12 +1,10 @@
 #!/bin/bash
 
-ln -fs "$HOME/.config/awesome/themes/powerarrow-gruvbox/wallpapers/wall.png" "$HOME/pictures/wall.png"
-ln -fs "$HOME/.config/awesome/themes/powerarrow-gruvbox/wallpapers/lock.png" "$HOME/pictures/lock.png"
-ln -fs "$HOME/projects/dotfiles.sh/dotfiles" "$HOME/.bin/dotfiles"
+ln -fs "$HOME/.config/awesome/themes/blackout/wallpapers/wall.png" "$HOME/pictures/wall.png"
+ln -fs "$HOME/.config/awesome/themes/blackout/wallpapers/lock.png" "$HOME/pictures/lock.png"
 
-sudo ln -fs "$HOME/.bin/lock" '/usr/local/bin/custom-lockscreen'
-sudo ln -fs "$HOME/.bin/hibernate" '/usr/local/bin/hibernate'
-sudo ln -fs "$HOME/.bin/update-pkglist" '/usr/local/bin/update-pkglist'
-sudo ln -fs "$HOME/.bin/aurremove" '/usr/local/bin/aurremove'
-sudo ln -fs "$HOME/.bin/aurupdate" '/usr/local/bin/aurupdate'
-sudo ln -fs "$HOME/.bin/edit-in-vim" '/usr/local/bin/edit-in-vim'
+sudo cp -f "$HOME/.bin/lock" '/usr/local/bin/custom-lockscreen'
+sudo cp -f "$HOME/.bin/update-pkglist" '/usr/local/bin/update-pkglist'
+sudo cp -f "$HOME/.bin/aurremove" '/usr/local/bin/aurremove'
+sudo cp -f "$HOME/.bin/aurupdate" '/usr/local/bin/aurupdate'
+sudo cp -f "$HOME/.bin/edit-in-vim" '/usr/local/bin/edit-in-vim'

@@ -257,5 +257,12 @@ build_prompt() {
     prompt_end
 }
 
+## Secondary prompt
+build_prompt2() {
+    prompt_segment 239 248 '%(1_.%_ .)…'
+    prompt_end
+}
+
 PROMPT='%{%f%b%k%}$(build_prompt) '
+PROMPT2='$(build_prompt2) '
 MODE_INDICATOR="%{$fg[red]%}██%{$reset_color%}"

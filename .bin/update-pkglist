@@ -4,6 +4,8 @@ pacman -Qeq \
     | grep -v "$(paclist aur | sed 's/\s.*//')" \
     | grep -v "$(paclist manual | sed 's/\s.*//')" \
     > ~/.pkglist/pacman
+pacman -Qeq \
+    > ~/.pkglist/pacman-all
 paclist aur \
     | sed 's/\s.*//' \
     > ~/.pkglist/aur
