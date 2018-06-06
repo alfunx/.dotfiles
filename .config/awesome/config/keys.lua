@@ -13,10 +13,10 @@ function config.init(context)
     local altkey      = context.keys.altkey
     local ctrlkey     = context.keys.ctrlkey
     local shiftkey    = context.keys.shiftkey
-    local leftkey     = context.keys.leftkey
-    local rightkey    = context.keys.rightkey
-    local upkey       = context.keys.upkey
-    local downkey     = context.keys.downkey
+    local l_key       = context.keys.l_key
+    local r_key       = context.keys.r_key
+    local u_key       = context.keys.u_key
+    local d_key       = context.keys.d_key
 
     local terminal    = context.terminal
     local browser     = context.browser
@@ -134,23 +134,23 @@ function config.init(context)
                   {description = "open quake application", group = "screen"}),
 
         -- Screen browsing
-        awful.key({ ctrlkey, altkey           }, leftkey, function() awful.screen.focus_relative(-1) end,
+        awful.key({ ctrlkey, altkey           }, l_key, function() awful.screen.focus_relative(-1) end,
                   {description = "focus the previous screen", group = "screen"}),
-        awful.key({ ctrlkey, altkey           }, rightkey, function() awful.screen.focus_relative(1) end,
+        awful.key({ ctrlkey, altkey           }, r_key, function() awful.screen.focus_relative(1) end,
                   {description = "focus the next screen", group = "screen"}),
 
         -- -- Tag browsing
-        -- awful.key({ ctrlkey, altkey           }, leftkey, awful.tag.viewprev,
+        -- awful.key({ ctrlkey, altkey           }, l_key, awful.tag.viewprev,
         --           {description = "view previous", group = "tag"}),
-        -- awful.key({ ctrlkey, altkey           }, rightkey, awful.tag.viewnext,
+        -- awful.key({ ctrlkey, altkey           }, r_key, awful.tag.viewnext,
         --           {description = "view next", group = "tag"}),
         -- awful.key({ ctrlkey, altkey           }, "Escape", awful.tag.history.restore,
         --           {description = "go back", group = "tag"}),
 
         -- Dynamic tagging
-        awful.key({ modkey, altkey, shiftkey  }, leftkey, function() lain.util.move_tag(-1) end,
+        awful.key({ modkey, altkey, shiftkey  }, l_key, function() lain.util.move_tag(-1) end,
                   {description = "move tag backward", group = "tag"}),
-        awful.key({ modkey, altkey, shiftkey  }, rightkey, function() lain.util.move_tag(1) end,
+        awful.key({ modkey, altkey, shiftkey  }, r_key, function() lain.util.move_tag(1) end,
                   {description = "move tag forward", group = "tag"}),
         awful.key({ modkey, altkey            }, "n", function() lain.util.add_tag() end,
                   {description = "new tag", group = "tag"}),
@@ -171,39 +171,39 @@ function config.init(context)
                   {description = "go back", group = "tag"}),
 
         -- Non-empty tag browsing
-        awful.key({ modkey, ctrlkey           }, leftkey, function() lain.util.tag_view_nonempty(-1) end,
+        awful.key({ modkey, ctrlkey           }, l_key, function() lain.util.tag_view_nonempty(-1) end,
                   {description = "view previous nonempty", group = "tag"}),
-        awful.key({ modkey, ctrlkey           }, rightkey, function() lain.util.tag_view_nonempty(1) end,
+        awful.key({ modkey, ctrlkey           }, r_key, function() lain.util.tag_view_nonempty(1) end,
                   {description = "view next nonempty", group = "tag"}),
 
         -- Select tag in grid
-        awful.key({ modkey                    }, leftkey, function() context.select_tag_in_grid("l") end,
+        awful.key({ modkey                    }, l_key, function() context.select_tag_in_grid("l") end,
                   {description = "view previous", group = "tag"}),
-        awful.key({ modkey                    }, rightkey, function() context.select_tag_in_grid("r") end,
+        awful.key({ modkey                    }, r_key, function() context.select_tag_in_grid("r") end,
                   {description = "view next", group = "tag"}),
-        awful.key({ modkey, ctrlkey           }, upkey, function() context.select_tag_in_grid("u") end,
+        awful.key({ modkey, ctrlkey           }, u_key, function() context.select_tag_in_grid("u") end,
                   {description = "view above", group = "tag"}),
-        awful.key({ modkey, ctrlkey           }, downkey, function() context.select_tag_in_grid("d") end,
+        awful.key({ modkey, ctrlkey           }, d_key, function() context.select_tag_in_grid("d") end,
                   {description = "view below", group = "tag"}),
 
         -- Move client to tag in grid
-        awful.key({ modkey, ctrlkey, shiftkey }, leftkey, function() context.move_client_in_grid("l") end,
+        awful.key({ modkey, ctrlkey, shiftkey }, l_key, function() context.move_client_in_grid("l") end,
                   {description = "move to previous tag", group = "client"}),
-        awful.key({ modkey, ctrlkey, shiftkey }, rightkey, function() context.move_client_in_grid("r") end,
+        awful.key({ modkey, ctrlkey, shiftkey }, r_key, function() context.move_client_in_grid("r") end,
                   {description = "move to next tag", group = "client"}),
-        awful.key({ modkey, ctrlkey, shiftkey }, upkey, function() context.move_client_in_grid("u") end,
+        awful.key({ modkey, ctrlkey, shiftkey }, u_key, function() context.move_client_in_grid("u") end,
                   {description = "move to tag above", group = "client"}),
-        awful.key({ modkey, ctrlkey, shiftkey }, downkey, function() context.move_client_in_grid("d") end,
+        awful.key({ modkey, ctrlkey, shiftkey }, d_key, function() context.move_client_in_grid("d") end,
                   {description = "move to tag below", group = "client"}),
 
         -- Client manipulation
-        awful.key({ modkey                    }, upkey, function() awful.client.focus.byidx(-1) end,
+        awful.key({ modkey                    }, u_key, function() awful.client.focus.byidx(-1) end,
                   {description = "focus previous client by index", group = "client"}),
-        awful.key({ modkey                    }, downkey, function() awful.client.focus.byidx(1) end,
+        awful.key({ modkey                    }, d_key, function() awful.client.focus.byidx(1) end,
                   {description = "focus next client by index", group = "client"}),
-        awful.key({ modkey, shiftkey          }, upkey, function() awful.client.swap.byidx(-1) end,
+        awful.key({ modkey, shiftkey          }, u_key, function() awful.client.swap.byidx(-1) end,
                   {description = "swap with previous client by index", group = "client"}),
-        awful.key({ modkey, shiftkey          }, downkey, function() awful.client.swap.byidx(1) end,
+        awful.key({ modkey, shiftkey          }, d_key, function() awful.client.swap.byidx(1) end,
                   {description = "swap with next client by index", group = "client"}),
         awful.key({ modkey                    }, "u", awful.client.urgent.jumpto,
                   {description = "jump to urgent client", group = "client"}),
@@ -226,17 +226,17 @@ function config.init(context)
                   {description = "restore minimized", group = "client"}),
 
         -- Layout manipulation
-        awful.key({ modkey, shiftkey          }, rightkey, function() awful.tag.incmwfact(0.01) end,
+        awful.key({ modkey, shiftkey          }, r_key, function() awful.tag.incmwfact(0.01) end,
                   {description = "increase master width factor", group = "layout"}),
-        awful.key({ modkey, shiftkey          }, leftkey, function() awful.tag.incmwfact(-0.01) end,
+        awful.key({ modkey, shiftkey          }, l_key, function() awful.tag.incmwfact(-0.01) end,
                   {description = "decrease master width factor", group = "layout"}),
-        awful.key({ modkey, altkey            }, rightkey, function() awful.tag.incnmaster(1, nil, true) end,
+        awful.key({ modkey, altkey            }, r_key, function() awful.tag.incnmaster(1, nil, true) end,
                   {description = "increase the number of master clients", group = "layout"}),
-        awful.key({ modkey, altkey            }, leftkey, function() awful.tag.incnmaster(-1, nil, true) end,
+        awful.key({ modkey, altkey            }, l_key, function() awful.tag.incnmaster(-1, nil, true) end,
                   {description = "decrease the number of master clients", group = "layout"}),
-        awful.key({ modkey, altkey            }, upkey, function() awful.tag.incncol(1, nil, true) end,
+        awful.key({ modkey, altkey            }, u_key, function() awful.tag.incncol(1, nil, true) end,
                   {description = "increase the number of slave columns", group = "layout"}),
-        awful.key({ modkey, altkey            }, downkey, function() awful.tag.incncol(-1, nil, true) end,
+        awful.key({ modkey, altkey            }, d_key, function() awful.tag.incncol(-1, nil, true) end,
                   {description = "decrease the number of slave columns", group = "layout"}),
         awful.key({ modkey,                   }, "space", function() awful.layout.inc(1) end,
                   {description = "select next", group = "layout"}),
@@ -254,12 +254,12 @@ function config.init(context)
         end),
 
         -- On the fly useless gaps change
-        awful.key({ modkey, altkey, shiftkey  }, downkey, function() lain.util.useless_gaps_resize(beautiful.useless_gap/2) end,
+        awful.key({ modkey, altkey, shiftkey  }, d_key, function() lain.util.useless_gaps_resize(beautiful.useless_gap/2) end,
                   {description = "increase useless gap", group = "layout"}),
-        awful.key({ modkey, altkey, shiftkey  }, upkey, function() lain.util.useless_gaps_resize(-beautiful.useless_gap/2) end,
+        awful.key({ modkey, altkey, shiftkey  }, u_key, function() lain.util.useless_gaps_resize(-beautiful.useless_gap/2) end,
                   {description = "decrease useless gap", group = "layout"}),
-        awful.key({ modkey, altkey, shiftkey, ctrlkey }, downkey, function() lain.util.useless_gaps_resize(1) end),
-        awful.key({ modkey, altkey, shiftkey, ctrlkey }, upkey, function() lain.util.useless_gaps_resize(-1) end),
+        awful.key({ modkey, altkey, shiftkey, ctrlkey }, d_key, function() lain.util.useless_gaps_resize(1) end),
+        awful.key({ modkey, altkey, shiftkey, ctrlkey }, u_key, function() lain.util.useless_gaps_resize(-1) end),
 
         -- ALSA volume control
         awful.key({                           }, "XF86AudioRaiseVolume", function()
@@ -391,6 +391,7 @@ function config.init(context)
                 end
             end,
             {description = "view tag #"..i, group = "tag-direct"}),
+
             -- Toggle tag display.
             awful.key({ modkey, ctrlkey }, "#" .. i + 9, function()
                 local _screen = awful.screen.focused()
@@ -400,6 +401,7 @@ function config.init(context)
                 end
             end,
             {description = "toggle tag #" .. i, group = "tag-direct"}),
+
             -- Move client to tag.
             awful.key({ modkey, shiftkey }, "#" .. i + 9, function()
                 if client.focus then
@@ -410,6 +412,19 @@ function config.init(context)
                 end
             end,
             {description = "move focused client to tag #"..i, group = "tag-direct"}),
+
+            -- Move client to tag and view it.
+            awful.key({ modkey, ctrlkey, shiftkey }, "#" .. i + 9, function()
+                if client.focus then
+                    local _tag = client.focus.screen.tags[i]
+                    if _tag then
+                        client.focus:move_to_tag(_tag)
+                        _tag:view_only()
+                    end
+                end
+            end,
+            {description = "move focused client to tag # and view it"..i, group = "tag-direct"}),
+
             -- Toggle tag on focused client.
             awful.key({ modkey, altkey }, "#" .. i + 9, function()
                 if client.focus then

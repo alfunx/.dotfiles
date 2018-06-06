@@ -96,6 +96,30 @@ function config.init(context)
         end
     end
 
+    -- Set titlebar visibility
+    local set_titlebar = function(c, f)
+        if beautiful.titlebar_positions then
+            for _, v in pairs(beautiful.titlebar_positions) do
+                f(c, v)
+                require("naughty").notify { text = v }
+            end
+        else
+            f(c)
+        end
+    end
+
+    context.hide_titlebar = function(c)
+        set_titlebar(c, awful.titlebar.hide)
+    end
+
+    context.show_titlebar = function(c)
+        set_titlebar(c, awful.titlebar.show)
+    end
+
+    context.toggle_titlebar = function(c)
+        set_titlebar(c, awful.titlebar.toggle)
+    end
+
     -- Toggle client property
     local toggle_client_property
     toggle_client_property = function(c, toggle, check)
@@ -103,9 +127,9 @@ function config.init(context)
             toggle_client_property(c, check, toggle)
         end
         if not c[toggle] then
-            awful.titlebar.hide(c)
+            context.hide_titlebar(c)
         elseif c[toggle] and c.floating then
-            awful.titlebar.show(c)
+            context.show_titlebar(c)
         end
         c[toggle] = not c[toggle]
         c:raise()

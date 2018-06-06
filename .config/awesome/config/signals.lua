@@ -23,66 +23,65 @@ function config.init(context)
 
     -- Add a titlebar if titlebars_enabled is set to true in the rules.
     client.connect_signal("request::titlebars", function(c)
-        -- Custom
+        -- Set custom titlebar or fallback
         if beautiful.titlebar_fun then
-            beautiful.titlebar_fun(c, true)
-            return
-        end
+            beautiful.titlebar_fun(c)
+        else
+            -- Default
+            -- buttons for the titlebar
+            local buttons = awful.util.table.join(
+                awful.button({ }, 1, function()
+                    client.focus = c
+                    c:raise()
+                    awful.mouse.client.move(c)
+                end),
+                awful.button({ }, 3, function()
+                    client.focus = c
+                    c:raise()
+                    awful.mouse.client.resize(c)
+                end)
+            )
 
-        -- Default
-        -- buttons for the titlebar
-        local buttons = awful.util.table.join(
-            awful.button({ }, 1, function()
-                client.focus = c
-                c:raise()
-                awful.mouse.client.move(c)
-            end),
-            awful.button({ }, 3, function()
-                client.focus = c
-                c:raise()
-                awful.mouse.client.resize(c)
-            end)
-        )
-
-        awful.titlebar(c, {size = 20}):setup {
-            layout = wibox.layout.align.horizontal,
-            { -- Left
-                layout = wibox.layout.fixed.horizontal,
-                wibox.container.margin(awful.titlebar.widget.iconwidget(c), 0, 5),
-                buttons = buttons,
-            },
-            { -- Middle
-                layout = wibox.layout.flex.horizontal,
-                { -- Title
-                    align = "left",
-                    widget = awful.titlebar.widget.titlewidget(c),
+            awful.titlebar(c, {size = 20}):setup {
+                layout = wibox.layout.align.horizontal,
+                { -- Left
+                    layout = wibox.layout.fixed.horizontal,
+                    wibox.container.margin(awful.titlebar.widget.iconwidget(c), 0, 5),
+                    buttons = buttons,
                 },
-                buttons = buttons,
-            },
-            { -- Right
-                layout = wibox.layout.fixed.horizontal,
-                awful.titlebar.widget.stickybutton(c),
-                awful.titlebar.widget.ontopbutton(c),
-                awful.titlebar.widget.minimizebutton(c),
-                awful.titlebar.widget.maximizedbutton(c),
-                awful.titlebar.widget.closebutton(c),
-            },
-        }
+                { -- Middle
+                    layout = wibox.layout.flex.horizontal,
+                    { -- Title
+                        align = "left",
+                        widget = awful.titlebar.widget.titlewidget(c),
+                    },
+                    buttons = buttons,
+                },
+                { -- Right
+                    layout = wibox.layout.fixed.horizontal,
+                    awful.titlebar.widget.stickybutton(c),
+                    awful.titlebar.widget.ontopbutton(c),
+                    awful.titlebar.widget.minimizebutton(c),
+                    awful.titlebar.widget.maximizedbutton(c),
+                    awful.titlebar.widget.closebutton(c),
+                },
+            }
+        end
 
         -- Hide the titlebar if floating
         if not context.client_floats(c) then
-            awful.titlebar.hide(c)
+            context.hide_titlebar(c)
         end
 
         -- Hide the titlebar if maximized
         if c.maximized or c.fullscreen then
-            awful.titlebar.hide(c)
+            context.hide_titlebar(c)
         end
     end)
 
     client.connect_signal("property::size", function(c)
-        if beautiful.titlebar_fun then
-            beautiful.titlebar_fun(c, false)
+        if beautiful.titlebar_fun_after then
+            beautiful.titlebar_fun_after(c)
         end
     end)
 
@@ -116,7 +115,7 @@ function config.init(context)
     client.connect_signal("property::fullscreen", function(c)
         if c.fullscreen then
             c.border_width = 0
-            awful.titlebar.hide(c)
+            context.hide_titlebar(c)
             c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 0) end
         else
             c.border_width = beautiful.border_width
@@ -127,7 +126,7 @@ function config.init(context)
     client.connect_signal("property::maximized", function(c)
         if c.maximized then
             c.border_width = 0
-            awful.titlebar.hide(c)
+            context.hide_titlebar(c)
             c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 0) end
         else
             c.border_width = beautiful.border_width
@@ -137,9 +136,9 @@ function config.init(context)
 
     client.connect_signal("property::floating", function(c)
         if c.floating and not c.maximized and not c.fullscreen then
-            awful.titlebar.show(c)
+            context.show_titlebar(c)
         else
-            awful.titlebar.hide(c)
+            context.hide_titlebar(c)
         end
     end)
 

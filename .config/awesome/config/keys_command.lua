@@ -1,4 +1,6 @@
 local awful = require("awful")
+local beautiful = require("beautiful")
+local lain = require("lain")
 local xresources = require("beautiful.xresources")
 local dpi = xresources.apply_dpi
 
@@ -10,10 +12,10 @@ function config.init(context)
     local altkey      = context.keys.altkey
     local ctrlkey     = context.keys.ctrlkey
     local shiftkey    = context.keys.shiftkey
-    local leftkey     = context.keys.leftkey
-    local rightkey    = context.keys.rightkey
-    local upkey       = context.keys.upkey
-    local downkey     = context.keys.downkey
+    local l_key       = context.keys.l_key
+    local r_key       = context.keys.r_key
+    local u_key       = context.keys.u_key
+    local d_key       = context.keys.d_key
 
     local terminal    = context.terminal
     local browser     = context.browser
@@ -29,28 +31,34 @@ function config.init(context)
         context.keys.global,
 
         -- move
-        awful.key({                           }, "h", context.get_move_function("l")),
-        awful.key({                           }, "j", context.get_move_function("d")),
-        awful.key({                           }, "k", context.get_move_function("u")),
-        awful.key({                           }, "l", context.get_move_function("r")),
+        awful.key({                           }, l_key, context.get_move_function("l")),
+        awful.key({                           }, d_key, context.get_move_function("d")),
+        awful.key({                           }, u_key, context.get_move_function("u")),
+        awful.key({                           }, r_key, context.get_move_function("r")),
 
         -- move (precise)
-        awful.key({ ctrlkey                   }, "h", context.get_move_function("l", dpi(5))),
-        awful.key({ ctrlkey                   }, "j", context.get_move_function("d", dpi(5))),
-        awful.key({ ctrlkey                   }, "k", context.get_move_function("u", dpi(5))),
-        awful.key({ ctrlkey                   }, "l", context.get_move_function("r", dpi(5))),
+        awful.key({ ctrlkey                   }, l_key, context.get_move_function("l", dpi(5))),
+        awful.key({ ctrlkey                   }, d_key, context.get_move_function("d", dpi(5))),
+        awful.key({ ctrlkey                   }, u_key, context.get_move_function("u", dpi(5))),
+        awful.key({ ctrlkey                   }, r_key, context.get_move_function("r", dpi(5))),
 
         -- resize
-        awful.key({ shiftkey                  }, "h", context.get_resize_function("l")),
-        awful.key({ shiftkey                  }, "j", context.get_resize_function("d")),
-        awful.key({ shiftkey                  }, "k", context.get_resize_function("u")),
-        awful.key({ shiftkey                  }, "l", context.get_resize_function("r")),
+        awful.key({ shiftkey                  }, l_key, context.get_resize_function("l")),
+        awful.key({ shiftkey                  }, d_key, context.get_resize_function("d")),
+        awful.key({ shiftkey                  }, u_key, context.get_resize_function("u")),
+        awful.key({ shiftkey                  }, r_key, context.get_resize_function("r")),
 
         -- resize (precise)
-        awful.key({ shiftkey, ctrlkey         }, "h", context.get_resize_function("l", dpi(5), 0.005)),
-        awful.key({ shiftkey, ctrlkey         }, "j", context.get_resize_function("d", dpi(5), 0.005)),
-        awful.key({ shiftkey, ctrlkey         }, "k", context.get_resize_function("u", dpi(5), 0.005)),
-        awful.key({ shiftkey, ctrlkey         }, "l", context.get_resize_function("r", dpi(5), 0.005)),
+        awful.key({ shiftkey, ctrlkey         }, l_key, context.get_resize_function("l", dpi(5), 0.005)),
+        awful.key({ shiftkey, ctrlkey         }, d_key, context.get_resize_function("d", dpi(5), 0.005)),
+        awful.key({ shiftkey, ctrlkey         }, u_key, context.get_resize_function("u", dpi(5), 0.005)),
+        awful.key({ shiftkey, ctrlkey         }, r_key, context.get_resize_function("r", dpi(5), 0.005)),
+
+        -- gaps
+        awful.key({ altkey                    }, d_key, function() lain.util.useless_gaps_resize(beautiful.useless_gap/2) end),
+        awful.key({ altkey                    }, u_key, function() lain.util.useless_gaps_resize(-beautiful.useless_gap/2) end),
+        awful.key({ altkey, ctrlkey           }, d_key, function() lain.util.useless_gaps_resize(1) end),
+        awful.key({ altkey, ctrlkey           }, u_key, function() lain.util.useless_gaps_resize(-1) end),
 
         -- client manipulation
         awful.key({                           }, "z", function()

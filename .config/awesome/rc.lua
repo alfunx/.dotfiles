@@ -41,10 +41,10 @@ context.keys.modkey      = "Mod4"
 context.keys.altkey      = "Mod1"
 context.keys.ctrlkey     = "Control"
 context.keys.shiftkey    = "Shift"
-context.keys.leftkey     = "h"
-context.keys.rightkey    = "l"
-context.keys.upkey       = "k"
-context.keys.downkey     = "j"
+context.keys.l_key       = "h"
+context.keys.r_key       = "l"
+context.keys.u_key       = "k"
+context.keys.d_key       = "j"
 
 context.terminal    = "kitty"
 context.browser     = "chromium"
@@ -98,7 +98,7 @@ context.run_once {
     "redshift -c .config/redshift.conf &",
 }
 
-context.spawn_once("kitty", "kitty", awful.screen.focused().tags[2])
+-- context.spawn_once("kitty", "kitty", awful.screen.focused().tags[2])
 -- context.spawn_once("subl", "Sublime_text", tags[1][2])
 -- context.spawn_once("chromium", "Chromium", tags[1][3])
 -- context.spawn_once("thunar", "Thunar", tags[1][4])

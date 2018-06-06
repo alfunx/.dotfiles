@@ -9,10 +9,10 @@ function config.init(context)
     local altkey      = context.keys.altkey
     local ctrlkey     = context.keys.ctrlkey
     local shiftkey    = context.keys.shiftkey
-    local leftkey     = context.keys.leftkey
-    local rightkey    = context.keys.rightkey
-    local upkey       = context.keys.upkey
-    local downkey     = context.keys.downkey
+    local l_key       = context.keys.l_key
+    local r_key       = context.keys.r_key
+    local u_key       = context.keys.u_key
+    local d_key       = context.keys.d_key
 
     local terminal    = context.terminal
     local browser     = context.browser
@@ -33,7 +33,7 @@ function config.init(context)
                   {description = "toggle keep on top", group = "client"}),
         awful.key({ modkey                    }, "s", function(c) c.sticky = not c.sticky end,
                   {description = "toggle sticky", group = "client"}),
-        awful.key({ modkey                    }, "i", function(c) awful.titlebar.toggle(c) end,
+        awful.key({ modkey                    }, "i", context.toggle_titlebar,
                   {description = "toggle titlebar", group = "client"}),
         awful.key({ modkey                    }, "n", function(c) c.minimized = true end,
                   {description = "minimize", group = "client"}),
