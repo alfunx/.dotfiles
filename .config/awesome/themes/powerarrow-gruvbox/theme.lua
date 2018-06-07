@@ -11,24 +11,24 @@
 
 -- Gruvbox colors
 
-local black_dark       = "#282828"
-local black_light      = "#928374"
-local red_dark         = "#cc241d"
-local red_light        = "#fb4934"
-local green_dark       = "#98971a"
-local green_light      = "#b8bb26"
-local yellow_dark      = "#d79921"
-local yellow_light     = "#fabd2f"
-local blue_dark        = "#458588"
-local blue_light       = "#83a598"
-local purple_dark      = "#b16286"
-local purple_light     = "#d3869b"
-local aqua_dark        = "#689d6a"
-local aqua_light       = "#8ec07c"
-local white_dark       = "#a89984"
-local white_light      = "#ebdbb2"
-local orange_dark      = "#d65d0e"
-local orange_light     = "#fe8019"
+local black_1          = "#282828"
+local black_2          = "#928374"
+local red_1            = "#cc241d"
+local red_2            = "#fb4934"
+local green_1          = "#98971a"
+local green_2          = "#b8bb26"
+local yellow_1         = "#d79921"
+local yellow_2         = "#fabd2f"
+local blue_1           = "#458588"
+local blue_2           = "#83a598"
+local purple_1         = "#b16286"
+local purple_2         = "#d3869b"
+local aqua_1           = "#689d6a"
+local aqua_2           = "#8ec07c"
+local white_1          = "#a89984"
+local white_2          = "#ebdbb2"
+local orange_1         = "#d65d0e"
+local orange_2         = "#fe8019"
 
 local bw0_h            = "#1d2021"
 local bw0              = "#282828"
@@ -89,11 +89,11 @@ theme.border_focus                              = bw5
 theme.border_marked                             = bw5
 
 theme.fg_normal                                 = bw9
-theme.fg_focus                                  = red_light
+theme.fg_focus                                  = red_2
 theme.fg_urgent                                 = bw0
 theme.bg_normal                                 = bw0
 theme.bg_focus                                  = bw2
-theme.bg_urgent                                 = red_light
+theme.bg_urgent                                 = red_2
 
 theme.taglist_font                              = theme.font_bold
 theme.taglist_fg_normal                         = theme.fg_normal
@@ -104,7 +104,7 @@ theme.taglist_bg_occupied                       = bw0
 theme.taglist_bg_empty                          = bw0
 theme.taglist_bg_volatile                       = bw0
 theme.taglist_bg_focus                          = bw0
-theme.taglist_bg_urgent                         = red_light
+theme.taglist_bg_urgent                         = red_2
 
 theme.tasklist_font_normal                      = theme.font
 theme.tasklist_font_focus                       = theme.font_bold
@@ -112,7 +112,7 @@ theme.tasklist_font_urgent                      = theme.font_bold
 theme.tasklist_fg_normal                        = bw7
 theme.tasklist_fg_focus                         = bw9
 theme.tasklist_fg_minimize                      = bw5
-theme.tasklist_fg_urgent                        = red_light
+theme.tasklist_fg_urgent                        = red_2
 theme.tasklist_bg_normal                        = bw3
 theme.tasklist_bg_focus                         = bw4
 theme.tasklist_bg_urgent                        = bw2
@@ -257,7 +257,7 @@ naughty.config.presets.warn                     = naughty.config.presets.normal
 naughty.config.presets.critical                 = {
                                                       font         = theme.font,
                                                       fg           = bw9,
-                                                      bg           = red_dark,
+                                                      bg           = red_1,
                                                       border_width = theme.notification_border_width,
                                                       margin       = theme.notification_margin,
                                                       timeout      = 0,
@@ -360,13 +360,13 @@ local mem = lain.widget.mem {
         local _font = theme.font
 
         if tonumber(mem_now.perc) >= 90 then
-            _color = red_light
+            _color = red_2
             _font = theme.font_bold
         elseif tonumber(mem_now.perc) >= 80 then
-            _color = orange_light
+            _color = orange_2
             _font = theme.font_bold
         elseif tonumber(mem_now.perc) >= 70 then
-            _color = yellow_light
+            _color = yellow_2
             _font = theme.font_bold
         end
 
@@ -418,13 +418,13 @@ local cpu = lain.widget.cpu {
         local _font = theme.font
 
         if tonumber(cpu_now.usage) >= 90 then
-            _color = red_light
+            _color = red_2
             _font = theme.font_bold
         elseif tonumber(cpu_now.usage) >= 80 then
-            _color = orange_light
+            _color = orange_2
             _font = theme.font_bold
         elseif tonumber(cpu_now.usage) >= 70 then
-            _color = yellow_light
+            _color = yellow_2
             _font = theme.font_bold
         end
 
@@ -468,13 +468,13 @@ local sysload = lain.widget.sysload {
         local number_of_cores = 4
 
         if tonumber(load_5) / number_of_cores >= 1.5 then
-            _color = red_light
+            _color = red_2
             _font = theme.font_bold
         elseif tonumber(load_5) / number_of_cores >= 1.0 then
-            _color = orange_light
+            _color = orange_2
             _font = theme.font_bold
         elseif tonumber(load_5) / number_of_cores >= 0.7 then
-            _color = yellow_light
+            _color = yellow_2
             _font = theme.font_bold
         end
         widget:set_markup(markup.fontfg(_font, _color, load_5))
@@ -538,7 +538,7 @@ local users = widgets.users {
         local _font = theme.font
 
         if tonumber(logged_in) > 1 then
-            _color = red_light
+            _color = red_2
             _font = theme.font_bold
         end
         widget:set_markup(markup.fontfg(_font, _color, logged_in))
@@ -585,13 +585,13 @@ end)
 --         local _font = theme.font
 --
 --         if tonumber(coretemp_now) >= 90 then
---             _color = red_light
+--             _color = red_2
 --             _font = theme.font_bold
 --         elseif tonumber(coretemp_now) >= 80 then
---             _color = orange_light
+--             _color = orange_2
 --             _font = theme.font_bold
 --         elseif tonumber(coretemp_now) >= 70 then
---             _color = yellow_light
+--             _color = yellow_2
 --             _font = theme.font_bold
 --         end
 --         widget:set_markup(markup.fontfg(_font, _color, coretemp_now))
@@ -690,15 +690,15 @@ local bat = lain.widget.bat {
 
         if tonumber(bat_now.perc) <= 10 then
             baticon:set_image(theme.widget_battery_empty)
-            _color = red_light
+            _color = red_2
             _font = theme.font_bold
         elseif tonumber(bat_now.perc) <= 20 then
             baticon:set_image(theme.widget_battery_low)
-            _color = orange_light
+            _color = orange_2
             _font = theme.font_bold
         elseif tonumber(bat_now.perc) <= 30 then
             baticon:set_image(theme.widget_battery_low)
-            _color = yellow_light
+            _color = yellow_2
             _font = theme.font_bold
         elseif tonumber(bat_now.perc) <= 50 then
             baticon:set_image(theme.widget_battery_low)
@@ -722,7 +722,7 @@ local bat = lain.widget.bat {
         if bat_now.ac_status == 1 then
             baticon:set_image(theme.widget_ac)
             if tonumber(bat_now.perc) >= 95 then
-                _color = green_light
+                _color = green_2
                 _font = theme.font_bold
             end
         end
@@ -779,7 +779,7 @@ local net = lain.widget.net {
         local _font = theme.font
 
         if not net_now.state or net_now.state == "down" then
-            _color = red_light
+            _color = red_2
             _font = theme.font_bold
             widget:set_markup(markup.fontfg(_font, _color, " N/A "))
         else
