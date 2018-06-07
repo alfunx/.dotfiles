@@ -27,12 +27,12 @@
 
 ### Variables
 # VCS segment colors
-local VCS_CLEAN_FG=10
-local VCS_CLEAN_BG=237
-local VCS_DIRTY_FG=11
-local VCS_DIRTY_BG=237
-local VCS_ERROR_FG=9
-local VCS_ERROR_BG=237
+local VCS_CLEAN_FG=2
+local VCS_CLEAN_BG=223
+local VCS_DIRTY_FG=3
+local VCS_DIRTY_BG=223
+local VCS_ERROR_FG=1
+local VCS_ERROR_BG=223
 
 ### Segment drawing
 # A few utility functions to make it easy and re-usable to draw segmented prompts
@@ -92,7 +92,7 @@ prompt_end() {
 # Context: user@hostname (who am I and where am I)
 prompt_context() {
     if [[ "$USER" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-        prompt_segment white black '%(!.%{%F{214}%}.)%n@%M'
+        prompt_segment 243 229 '%(!.%{%F{11}%}.)%n@%M'
     fi
 }
 
@@ -218,14 +218,14 @@ prompt_svn() {
 
 # Dir: current working directory
 prompt_dir() {
-    prompt_segment 239 248 '%(5~|%-1~/…/%3~|%4~)'
+    prompt_segment 250 241 '%(5~|%-1~/…/%3~|%4~)'
 }
 
 # Virtualenv: current working virtualenv
 prompt_virtualenv() {
     local virtualenv_path="$VIRTUAL_ENV"
     if [[ -n $virtualenv_path && -n $VIRTUAL_ENV_DISABLE_PROMPT ]]; then
-        prompt_segment 239 248 "(`basename $virtualenv_path`)"
+        prompt_segment 250 241 "(`basename $virtualenv_path`)"
     fi
 }
 
@@ -240,7 +240,7 @@ prompt_status() {
     [[ $UID -eq 0 ]] && symbols+='%{%F{172}%}⚡'
     [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+='%{%F{72}%}⚙%j'
 
-    [[ -n "$symbols" ]] && prompt_segment 250 default "$symbols"
+    [[ -n "$symbols" ]] && prompt_segment 239 default "$symbols"
 }
 
 ## Main prompt
@@ -259,7 +259,7 @@ build_prompt() {
 
 ## Secondary prompt
 build_prompt2() {
-    prompt_segment 239 248 '%(1_.%_ .)…'
+    prompt_segment 250 241 '%(1_.%_ .)…'
     prompt_end
 }
 
