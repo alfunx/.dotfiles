@@ -2,7 +2,7 @@
 
 _pkgname=monetdb
 pkgname=$_pkgname-git
-pkgver=r10.0b23bd8
+pkgver=r12.777b48d
 pkgrel=1
 pkgdesc="MonetDB: an open source database system"
 arch=('i686' 'x86_64')
@@ -29,7 +29,7 @@ build() {
   cd "$_pkgname"
   ./bootstrap
   ./configure --libdir=/usr/lib --prefix=/usr --sysconfdir=/etc --localstatedir=/var \
-    --disable-assert --disable-testing --enable-optimize --enable-rintegration
+    --disable-strict --disable-assert --disable-debug --enable-optimize
   make
 }
 

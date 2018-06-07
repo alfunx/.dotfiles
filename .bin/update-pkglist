@@ -15,4 +15,5 @@ paclist manual \
 sudo pacman -Qkk \
     |& grep Modification \
     | sed -e 's/^[^/]*//' -e 's/ (.*)$//' \
+    | sort \
     > ~/.pkglist/modified-files
