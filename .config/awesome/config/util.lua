@@ -96,6 +96,17 @@ function config.init(context)
         end
     end
 
+    -- Show only tags of current row (taggrid feature)
+    context.rowfilter = function(t)
+        local index = t.index
+        local selected = awful.screen.focused().selected_tag.index
+        if not index or not selected then
+            return false
+        end
+        local columns = awful.util.tagcolumns or #awful.util.tagnames
+        return math.floor((index - 1) / columns) == math.floor((selected - 1) / columns)
+    end
+
     -- Set titlebar visibility
     local set_titlebar = function(c, f)
         if beautiful.titlebar_positions then
@@ -262,6 +273,40 @@ function config.init(context)
         client.connect_signal("property::minimized", function(c)
             context.set_wallpaper(#c.screen.clients)
         end)
+    end
+
+    -- Show widget on mouse::enter on parent, hide after mouse::leave + timeout
+    context.show_on_mouse = function(parent, widget, timeout)
+        local timer = gears.timer {
+            timeout = timeout or 5,
+            callback = function()
+                widget:set_visible(false)
+            end,
+        }
+        timer:start()
+
+        parent:connect_signal("mouse::enter", function()
+            widget:set_visible(true)
+            timer:stop()
+        end)
+
+        parent:connect_signal("mouse::leave", function()
+            timer:start()
+        end)
+    end
+
+    -- Swap widget of two parent tables
+    context.swap_widget_on_mouse = function(primary, secondary)
+        local w = primary.widget
+
+        local swap_widget = function()
+            primary.widget = secondary.widget
+            secondary.widget = w
+            w = primary.widget
+        end
+
+        primary:connect_signal("mouse::enter", swap_widget)
+        primary:connect_signal("mouse::leave", swap_widget)
     end
 
 end

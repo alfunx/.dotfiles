@@ -67,6 +67,7 @@ local dpi              = xresources.apply_dpi
 local os, math, string = os, math, string
 
 local theme                                     = { }
+theme.context                                   = { }
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-gruvbox"
 
 -- theme.wallpaper                                 = theme.dir .. "/wallpapers/wall.png"
@@ -846,17 +847,6 @@ end
 --     return wibox.container.background(wibox.container.margin(widget, dpi(16), dpi(16)), bgcolor, theme.powerline_rl)
 -- end
 
--- Show only tags of current row (taggrid feature)
-local function rowfilter(t)
-    local index = t.index
-    local selected = awful.screen.focused().selected_tag.index
-    if not index or not selected then
-        return false
-    end
-    local columns = awful.util.tagcolumns or #awful.util.tagnames
-    return math.floor((index - 1) / columns) == math.floor((selected - 1) / columns)
-end
-
 function theme.at_screen_connect(s)
     -- Quake application
     s.quake = lain.util.quake {
@@ -887,7 +877,7 @@ function theme.at_screen_connect(s)
     )
 
     -- Create a taglist widget
-    s._taglist = awful.widget.taglist(s, rowfilter, awful.util.taglist_buttons)
+    s._taglist = awful.widget.taglist(s, theme.context.rowfilter, awful.util.taglist_buttons)
 
     local gen_tasklist = function()
         -- Create a tasklist widget
@@ -975,25 +965,9 @@ function theme.at_screen_connect(s)
         top = dpi(3),
         bottom = dpi(3),
         widget = wibox.container.margin,
+        visible = false,
     }
-
-    systray_widget:set_visible(false)
-
-    local systray_widget_timer = gears.timer {
-        timeout   = 5,
-        callback  = function()
-            systray_widget:set_visible(false)
-        end,
-    }
-
-    s._wibox:connect_signal("mouse::enter", function()
-        systray_widget:set_visible(true)
-        systray_widget_timer:stop()
-    end)
-
-    s._wibox:connect_signal("mouse::leave", function()
-        systray_widget_timer:start()
-    end)
+    theme.context.show_on_mouse(s._wibox, systray_widget)
 
     -- Add widgets to the wibox
     s._wibox:setup {

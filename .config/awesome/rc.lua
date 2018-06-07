@@ -79,6 +79,7 @@ end
 -- {{{ Theme
 local theme_path = string.format("%s/.config/awesome/themes/%s/theme.lua", os.getenv("HOME"), context.theme)
 beautiful.init(theme_path)
+beautiful.context = context
 -- }}}
 
 -- {{{ Config
