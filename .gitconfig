@@ -92,6 +92,7 @@
 [push]
 	default = simple
 	gpgSign = if-asked
+	followTags = true
 
 [submodule]
 	fetchJobs = 0
@@ -182,6 +183,7 @@
 
 	s = status
 	si = status --ignored
+	siu = status --ignored --untracked-files
 	a = add
 	au = add --update
 	ai = add --interactive
@@ -214,6 +216,7 @@
 	ma = merge --abort
 	mc = merge --continue
 	mff = merge --ff-only
+	mnc = "!f() { git merge --no-commit --no-ff \"$@\"; EC=$?; git merge --abort; exit $EC; }; f"
 	mt = mergetool
 	r = rebase
 	ra = rebase --abort

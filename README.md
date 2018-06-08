@@ -1,6 +1,7 @@
-<h1 align="center">.dotfiles</h1>
-<p align="center">There's no place like <b><code>~</code></b> !</p>
-<p align="center">
+<div align="center">
+  <h1>.dotfiles</h1>
+  <p>There's no place like <b><code>~</code></b> !</p>
+  <p>
   <!-- <img src="https://img.shields.io/badge/WM-Awesome%20WM-535d6c.svg" /> -->
   <!-- <img src="https://img.shields.io/badge/Editor-Vim-009930.svg" /> -->
   <!-- <img src="https://img.shields.io/badge/Terminal-Kitty-784421.svg" /> -->
@@ -11,7 +12,8 @@
   <!-- <br><br> -->
   <img src="pictures/dotfiles.png">
   <br><br>
-</p>
+  </p>
+</div>
 
 ## Table of Contents
 
