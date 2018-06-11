@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-dotfiles submodule update --recursive --remote

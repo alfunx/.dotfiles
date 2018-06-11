@@ -3,11 +3,11 @@
 current_branch="$(git rev-parse --abbrev-ref HEAD)"
 stash_name="$(git stash list | grep "$current_branch:" | head -n1 | cut -d':' -f1)"
 if [ -n "$stash_name" ]; then
-  echo 'Last stash on this branch:'
-  git --no-pager stash show "$stash_name" --color=always --stat | sed 's/^/ /'
-  echo 'To keep your stash list clean, consider using one of the followings:'
-  echo "  git stash pop \"$stash_name\""
-  echo "  git stash drop \"$stash_name\""
+    echo 'Last stash on this branch:'
+    git --no-pager stash show "$stash_name" --color=always --stat | sed 's/^/ /'
+    echo 'To keep your stash list clean, consider using one of the followings:'
+    echo "  git stash pop \"$stash_name\""
+    echo "  git stash drop \"$stash_name\""
 fi
 
 DIR=$(dirname "$0")

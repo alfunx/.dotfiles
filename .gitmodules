@@ -13,3 +13,6 @@
 [submodule ".oh-my-zsh/custom/plugins/zsh-autosuggestions"]
 	path = .oh-my-zsh/custom/plugins/zsh-autosuggestions
 	url = https://github.com/zsh-users/zsh-autosuggestions
+[submodule "projects/gdb-dashboard"]
+	path = projects/gdb-dashboard
+	url = https://github.com/alfunx/gdb-dashboard
