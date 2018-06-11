@@ -13,6 +13,44 @@ alias ......='cd ../../../../..'
 alias .......='cd ../../../../../..'
 alias ........='cd ../../../../.././...'
 
+# show type,show almost all
+alias l='ls -FA'
+# long list,size,show type,human readable
+alias ll='ls -lFh'
+# long list,show almost all,show type,human readable
+alias la='LC_COLLATE=C ls -lAFh'
+# sorted by date,recursive,show type,human readable
+alias lr='ls -tRFh'
+# long list,sorted by date,show type,human readable
+alias lt='ls -ltFh'
+
+alias ldot='ls -ld .*'
+alias lS='ls -1FSsh'
+alias lart='ls -1Fcart'
+alias lrt='ls -1Fcrt'
+alias t='tail -f'
+
+# Suffix commands
+alias -g H='| head'
+alias -g T='| tail'
+alias -g G='| grep'
+alias -g L="| less"
+alias -g M="| most"
+alias -g LL="2>&1 | less"
+alias -g CA="2>&1 | cat -A"
+alias -g NE="2> /dev/null"
+alias -g NUL="> /dev/null 2>&1"
+alias -g P="2>&1| pygmentize -l pytb"
+
+alias dud='du -d 1 -h'
+alias duf='du -sh *'
+alias fnd='find . -type d -name'
+alias fnf='find . -type f -name'
+
+alias rm='rm -i'
+alias cp='cp -i --reflink=auto'
+alias mv='mv -i'
+
 alias :q='exit'
 alias pg='ping -c 1 www.google.ch'
 alias bcl='bc -l'

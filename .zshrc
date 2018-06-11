@@ -89,7 +89,7 @@ bgnotify_formatted() {
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(zsh-syntax-highlighting zsh-completions zsh-autosuggestions command-not-found custom-common-aliases colorize bgnotify svn)
+plugins=(zsh-syntax-highlighting zsh-completions zsh-autosuggestions command-not-found colorize bgnotify svn)
 
 # Remove plugins if in tty
 [[ "$TERM" = 'linux' ]] \
