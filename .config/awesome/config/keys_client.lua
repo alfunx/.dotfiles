@@ -6,6 +6,9 @@ local config = {}
 
 function config.init(context)
 
+    context.keys = context.keys or {}
+    context.mouse = context.mouse or {}
+
     local modkey      = context.keys.modkey
     local altkey      = context.keys.altkey
     local ctrlkey     = context.keys.ctrlkey
@@ -34,13 +37,13 @@ function config.init(context)
                   {description = "toggle keep on top", group = "client"}),
         awful.key({ modkey                    }, "s", function(c) c.sticky = not c.sticky end,
                   {description = "toggle sticky", group = "client"}),
-        awful.key({ modkey                    }, "i", context.toggle_titlebar,
+        awful.key({ modkey                    }, "i", context.util.toggle_titlebar,
                   {description = "toggle titlebar", group = "client"}),
         awful.key({ modkey                    }, "n", function(c) c.minimized = true end,
                   {description = "minimize", group = "client"}),
-        awful.key({ modkey                    }, "m", context.toggle_maximized,
+        awful.key({ modkey                    }, "m", context.util.toggle_maximized,
                   {description = "maximize", group = "client"}),
-        awful.key({ modkey                    }, "f", context.toggle_fullscreen,
+        awful.key({ modkey                    }, "f", context.util.toggle_fullscreen,
                   {description = "fullscreen", group = "client"}),
 
         awful.key({ modkey                    }, "v", function(c) --luacheck: no unused args
@@ -52,15 +55,15 @@ function config.init(context)
         end)
     )
 
-    if context.set_wallpaper then
+    if context.util.set_wallpaper then
         context.keys.client = gears.table.join(
             context.keys.client,
-            awful.key({ modkey, ctrlkey           }, "i", function() context.set_wallpaper(0) end,
+            awful.key({ modkey, ctrlkey           }, "i", function() context.util.set_wallpaper(0) end,
                       {description = "unblur wallpaper", group = "client"})
         )
     end
 
-    context.clientbuttons = gears.table.join(
+    context.mouse.client = gears.table.join(
         awful.button({                  }, 1, function(c) client.focus = c; c:raise() end),
         awful.button({ modkey           }, 1, awful.mouse.client.move),
         awful.button({ modkey, shiftkey }, 1, awful.mouse.client.resize)

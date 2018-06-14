@@ -10,6 +10,8 @@ local config = {}
 
 function config.init(context)
 
+    context.keys = context.keys or {}
+
     local modkey      = context.keys.modkey
     local altkey      = context.keys.altkey
     local ctrlkey     = context.keys.ctrlkey
@@ -31,7 +33,7 @@ function config.init(context)
 
     -- Exit mode
     context.keys.escape =
-        awful.key({                           }, "Escape", context.exit_keys_mode,
+        awful.key({                           }, "Escape", context.util.exit_keys_mode,
                   {description = "exit mode", group = "awesome"})
 
     -- Key bindings
@@ -101,18 +103,18 @@ function config.init(context)
         awful.key({ modkey                    }, "p", function() menubar.show() end,
                   {description = "show the menubar", group = "launcher"}),
         awful.key({ modkey                    }, "-", function()
-            context.easy_async_with_unfocus("rofi -show drun")
+            context.util.easy_async_with_unfocus("rofi -show drun")
             -- awful.spawn("dmenu_run")
             -- awful.spawn(string.format("dmenu_run -i -t -dim 0.5 -p 'Run: ' -h 21 -fn 'Meslo LG S for Powerline-10' -nb '%s' -nf '%s' -sb '%s' -sf '%s'",
             -- beautiful.tasklist_bg_normal, beautiful.fg_normal, beautiful.tasklist_bg_urgent, beautiful.tasklist_fg_urgent))
         end,
                   {description = "show application menu (rofi)", group = "launcher"}),
         awful.key({ modkey                    }, ".", function()
-            context.easy_async_with_unfocus("rofi -show run")
+            context.util.easy_async_with_unfocus("rofi -show run")
         end,
                   {description = "show commands menu (rofi)", group = "launcher"}),
         awful.key({ modkey                    }, "$", function()
-            context.easy_async_with_unfocus(context.vars.scripts_dir .. "/rofi-session")
+            context.util.easy_async_with_unfocus(context.vars.scripts_dir .. "/rofi-session")
         end,
                   {description = "show session menu (rofi)", group = "launcher"}),
         -- awful.key({ altkey            }, "space", function()
@@ -178,23 +180,23 @@ function config.init(context)
                   {description = "view next nonempty", group = "tag"}),
 
         -- Select tag in grid
-        awful.key({ modkey                    }, l_key, function() context.select_tag_in_grid("l") end,
+        awful.key({ modkey                    }, l_key, function() context.util.select_tag_in_grid("l") end,
                   {description = "view previous", group = "tag"}),
-        awful.key({ modkey                    }, r_key, function() context.select_tag_in_grid("r") end,
+        awful.key({ modkey                    }, r_key, function() context.util.select_tag_in_grid("r") end,
                   {description = "view next", group = "tag"}),
-        awful.key({ modkey, ctrlkey           }, u_key, function() context.select_tag_in_grid("u") end,
+        awful.key({ modkey, ctrlkey           }, u_key, function() context.util.select_tag_in_grid("u") end,
                   {description = "view above", group = "tag"}),
-        awful.key({ modkey, ctrlkey           }, d_key, function() context.select_tag_in_grid("d") end,
+        awful.key({ modkey, ctrlkey           }, d_key, function() context.util.select_tag_in_grid("d") end,
                   {description = "view below", group = "tag"}),
 
         -- Move client to tag in grid
-        awful.key({ modkey, ctrlkey, shiftkey }, l_key, function() context.move_client_in_grid("l") end,
+        awful.key({ modkey, ctrlkey, shiftkey }, l_key, function() context.util.move_client_in_grid("l") end,
                   {description = "move to previous tag", group = "client"}),
-        awful.key({ modkey, ctrlkey, shiftkey }, r_key, function() context.move_client_in_grid("r") end,
+        awful.key({ modkey, ctrlkey, shiftkey }, r_key, function() context.util.move_client_in_grid("r") end,
                   {description = "move to next tag", group = "client"}),
-        awful.key({ modkey, ctrlkey, shiftkey }, u_key, function() context.move_client_in_grid("u") end,
+        awful.key({ modkey, ctrlkey, shiftkey }, u_key, function() context.util.move_client_in_grid("u") end,
                   {description = "move to tag above", group = "client"}),
-        awful.key({ modkey, ctrlkey, shiftkey }, d_key, function() context.move_client_in_grid("d") end,
+        awful.key({ modkey, ctrlkey, shiftkey }, d_key, function() context.util.move_client_in_grid("d") end,
                   {description = "move to tag below", group = "client"}),
 
         -- Client manipulation

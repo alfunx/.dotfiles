@@ -902,7 +902,7 @@ function theme.at_screen_connect(s)
     )
 
     -- Create a taglist widget
-    s._taglist = awful.widget.taglist(s, context.rowfilter, awful.util.taglist_buttons)
+    s._taglist = awful.widget.taglist(s, context.util.rowfilter, awful.util.taglist_buttons)
 
     local gen_tasklist = function()
         -- Create a tasklist widget
@@ -1004,7 +1004,7 @@ function theme.at_screen_connect(s)
         },
         visible = false,
     }
-    context.show_on_mouse(s._wibox, systray_widget)
+    context.util.show_on_mouse(s._wibox, systray_widget)
 
     -- Add widgets to the wibox
     s._wibox:setup {

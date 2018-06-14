@@ -93,13 +93,13 @@ function config.init(context)
         end
 
         -- Hide the titlebar if floating
-        if not context.client_floats(c) then
-            context.hide_titlebar(c)
+        if not context.util.client_floats(c) then
+            context.util.hide_titlebar(c)
         end
 
         -- Hide the titlebar if maximized
         if c.maximized or c.fullscreen then
-            context.hide_titlebar(c)
+            context.util.hide_titlebar(c)
         end
     end)
 
@@ -120,7 +120,7 @@ function config.init(context)
     client.connect_signal("property::fullscreen", function(c)
         if c.fullscreen then
             c.border_width = 0
-            context.hide_titlebar(c)
+            context.util.hide_titlebar(c)
             c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 0) end
         else
             c.border_width = beautiful.border_width
@@ -131,7 +131,7 @@ function config.init(context)
     client.connect_signal("property::maximized", function(c)
         if c.maximized then
             c.border_width = 0
-            context.hide_titlebar(c)
+            context.util.hide_titlebar(c)
             c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 0) end
         else
             c.border_width = beautiful.border_width
@@ -141,9 +141,9 @@ function config.init(context)
 
     client.connect_signal("property::floating", function(c)
         if c.floating and not c.maximized and not c.fullscreen then
-            context.show_titlebar(c)
+            context.util.show_titlebar(c)
         else
-            context.hide_titlebar(c)
+            context.util.hide_titlebar(c)
         end
     end)
 

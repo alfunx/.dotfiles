@@ -49,13 +49,13 @@ function config.init(context)
 
     awful.util.taglist_buttons = gears.table.join(
         awful.button({ }, 1, function(t) t:view_only() end),
-        awful.button({ context.modkey }, 1, function(t)
+        awful.button({ context.keys.modkey }, 1, function(t)
             if client.focus then
                 client.focus:move_to_tag(t)
             end
         end),
         awful.button({ }, 3, awful.tag.viewtoggle),
-        awful.button({ context.modkey }, 3, function(t)
+        awful.button({ context.keys.modkey }, 3, function(t)
             if client.focus then
                 client.focus:toggle_tag(t)
             end

@@ -9,6 +9,8 @@ local config = {}
 
 function config.init(context)
 
+    context.keys = context.keys or {}
+
     local modkey      = context.keys.modkey
     local altkey      = context.keys.altkey
     local ctrlkey     = context.keys.ctrlkey
@@ -24,7 +26,7 @@ function config.init(context)
     context.keys.global = gears.table.join(
         context.keys.global,
         awful.key({ modkey                    }, "g", function()
-            context.switch_keys_mode("command", "Command Mode")
+            context.util.switch_keys_mode("command", "Command Mode")
         end, {description = "<b><span color=\"#ff0000\">command mode</span></b>", group = "awesome"})
     )
 
@@ -32,36 +34,36 @@ function config.init(context)
         context.keys.global,
 
         -- Move
-        awful.key({                           }, l_key, context.get_move_function("l"),
+        awful.key({                           }, l_key, context.util.get_move_function("l"),
                   {description = "move window left", group = "command mode"}),
-        awful.key({                           }, d_key, context.get_move_function("d"),
+        awful.key({                           }, d_key, context.util.get_move_function("d"),
                   {description = "move window down", group = "command mode"}),
-        awful.key({                           }, u_key, context.get_move_function("u"),
+        awful.key({                           }, u_key, context.util.get_move_function("u"),
                   {description = "move window up", group = "command mode"}),
-        awful.key({                           }, r_key, context.get_move_function("r"),
+        awful.key({                           }, r_key, context.util.get_move_function("r"),
                   {description = "move window right", group = "command mode"}),
 
         -- Move (precise)
-        awful.key({ ctrlkey                   }, l_key, context.get_move_function("l", dpi(5))),
-        awful.key({ ctrlkey                   }, d_key, context.get_move_function("d", dpi(5))),
-        awful.key({ ctrlkey                   }, u_key, context.get_move_function("u", dpi(5))),
-        awful.key({ ctrlkey                   }, r_key, context.get_move_function("r", dpi(5))),
+        awful.key({ ctrlkey                   }, l_key, context.util.get_move_function("l", dpi(5))),
+        awful.key({ ctrlkey                   }, d_key, context.util.get_move_function("d", dpi(5))),
+        awful.key({ ctrlkey                   }, u_key, context.util.get_move_function("u", dpi(5))),
+        awful.key({ ctrlkey                   }, r_key, context.util.get_move_function("r", dpi(5))),
 
         -- Resize
-        awful.key({ shiftkey                  }, l_key, context.get_resize_function("l"),
+        awful.key({ shiftkey                  }, l_key, context.util.get_resize_function("l"),
                   {description = "resize window left/right", group = "command mode"}),
-        awful.key({ shiftkey                  }, d_key, context.get_resize_function("d"),
+        awful.key({ shiftkey                  }, d_key, context.util.get_resize_function("d"),
                   {description = "resize window up/down", group = "command mode"}),
-        awful.key({ shiftkey                  }, u_key, context.get_resize_function("u"),
+        awful.key({ shiftkey                  }, u_key, context.util.get_resize_function("u"),
                   {description = "resize window up/down", group = "command mode"}),
-        awful.key({ shiftkey                  }, r_key, context.get_resize_function("r"),
+        awful.key({ shiftkey                  }, r_key, context.util.get_resize_function("r"),
                   {description = "resize window left/right", group = "command mode"}),
 
         -- Resize (precise)
-        awful.key({ shiftkey, ctrlkey         }, l_key, context.get_resize_function("l", dpi(5), 0.005)),
-        awful.key({ shiftkey, ctrlkey         }, d_key, context.get_resize_function("d", dpi(5), 0.005)),
-        awful.key({ shiftkey, ctrlkey         }, u_key, context.get_resize_function("u", dpi(5), 0.005)),
-        awful.key({ shiftkey, ctrlkey         }, r_key, context.get_resize_function("r", dpi(5), 0.005)),
+        awful.key({ shiftkey, ctrlkey         }, l_key, context.util.get_resize_function("l", dpi(5), 0.005)),
+        awful.key({ shiftkey, ctrlkey         }, d_key, context.util.get_resize_function("d", dpi(5), 0.005)),
+        awful.key({ shiftkey, ctrlkey         }, u_key, context.util.get_resize_function("u", dpi(5), 0.005)),
+        awful.key({ shiftkey, ctrlkey         }, r_key, context.util.get_resize_function("r", dpi(5), 0.005)),
 
         -- Gaps
         awful.key({ altkey                    }, d_key, function() lain.util.useless_gaps_resize(beautiful.useless_gap/2) end,
@@ -98,10 +100,10 @@ function config.init(context)
             end
         end),
         awful.key({                           }, "m", function()
-            if client.focus then context.toggle_maximized(client.focus) end
+            if client.focus then context.util.toggle_maximized(client.focus) end
         end),
         awful.key({                           }, "f", function()
-            if client.focus then context.toggle_fullscreen(client.focus) end
+            if client.focus then context.util.toggle_fullscreen(client.focus) end
         end),
 
         context.keys.escape

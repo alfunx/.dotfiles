@@ -17,7 +17,7 @@ function config.init(context)
                 focus = awful.client.focus.filter,
                 raise = true,
                 keys = context.keys.client,
-                buttons = context.clientbuttons,
+                buttons = context.mouse.client,
                 screen = awful.screen.preferred,
                 placement = awful.placement.no_offscreen+awful.placement.no_overlap,
                 size_hints_honor = false,

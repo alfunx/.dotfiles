@@ -8,8 +8,10 @@ local config = {}
 
 function config.init(context)
 
+    context.util = context.util or {}
+
     -- Check if client floats
-    context.client_floats = function(c)
+    context.util.client_floats = function(c)
         if awful.layout.get(c.screen) == awful.layout.suit.floating or c.floating then
             return true
         end
@@ -17,7 +19,7 @@ function config.init(context)
     end
 
     -- Spawn a process
-    context.run_once = function(cmd_arr)
+    context.util.run_once = function(cmd_arr)
         for _, cmd in ipairs(cmd_arr) do
             local findme = cmd
             local firstspace = cmd:find(" ")
@@ -29,7 +31,7 @@ function config.init(context)
     end
 
     -- Spawn a window
-    context.spawn_once = function(args)
+    context.util.spawn_once = function(args)
         if not args and args.command then return end
         args.callback = args.callback or function() end
 
@@ -56,7 +58,7 @@ function config.init(context)
 
     -- Spawn process and adjust border color current client until process exits
     -- (useful for e.g. rofi or dmenu)
-    context.easy_async_with_unfocus = function(cmd, callback)
+    context.util.easy_async_with_unfocus = function(cmd, callback)
         local c = client.focus
         callback = callback or function() end
         if c then c.border_color = beautiful.border_normal end
@@ -67,7 +69,7 @@ function config.init(context)
     end
 
     -- Select tag by direction in a grid (taggrid feature)
-    context.select_tag_in_grid = nil
+    context.util.select_tag_in_grid = nil
     do
         local columns = awful.util.tagcolumns or #awful.util.tagnames
         local index_by_direction = {
@@ -76,7 +78,7 @@ function config.init(context)
             u = function(i, rows) return (i - 1 - columns) % (rows * columns) + 1 end,
             d = function(i, rows) return (i - 1 + columns) % (rows * columns) + 1 end
         }
-        context.select_tag_in_grid = function(direction, current_index)
+        context.util.select_tag_in_grid = function(direction, current_index)
             local rows = math.ceil(#awful.screen.focused().tags / columns)
             local index = current_index or awful.screen.focused().selected_tag.index
             local new_index = index_by_direction[direction](index, rows)
@@ -86,22 +88,22 @@ function config.init(context)
                 new_tag:view_only()
                 return new_tag
             end
-            context.select_tag_in_grid(direction, new_index)
+            context.util.select_tag_in_grid(direction, new_index)
         end
     end
 
     -- Move client to tag by direction in a grid (taggrid feature)
-    context.move_client_in_grid = function(direction)
+    context.util.move_client_in_grid = function(direction)
         if client.focus then
             local current_client = client.focus
-            local new_tag = context.select_tag_in_grid(direction)
+            local new_tag = context.util.select_tag_in_grid(direction)
             current_client:move_to_tag(new_tag)
             current_client:raise()
         end
     end
 
     -- Show only tags of current row (taggrid feature)
-    context.rowfilter = function(t)
+    context.util.rowfilter = function(t)
         local index = t.index
         local selected = awful.screen.focused().selected_tag.index
         if not index or not selected then
@@ -123,15 +125,15 @@ function config.init(context)
         end
     end
 
-    context.hide_titlebar = function(c)
+    context.util.hide_titlebar = function(c)
         set_titlebar(c, awful.titlebar.hide)
     end
 
-    context.show_titlebar = function(c)
+    context.util.show_titlebar = function(c)
         set_titlebar(c, awful.titlebar.show)
     end
 
-    context.toggle_titlebar = function(c)
+    context.util.toggle_titlebar = function(c)
         set_titlebar(c, awful.titlebar.toggle)
     end
 
@@ -142,21 +144,21 @@ function config.init(context)
             toggle_client_property(c, check, toggle)
         end
         if not c[toggle] then
-            context.hide_titlebar(c)
+            context.util.hide_titlebar(c)
         elseif c[toggle] and c.floating then
-            context.show_titlebar(c)
+            context.util.show_titlebar(c)
         end
         c[toggle] = not c[toggle]
         c:raise()
     end
 
     -- Toggle fullscreen (check maximized)
-    context.toggle_fullscreen = function(c)
+    context.util.toggle_fullscreen = function(c)
         toggle_client_property(c, "fullscreen", "maximized")
     end
 
     -- Toggle maximized (check fullscreen)
-    context.toggle_maximized = function(c)
+    context.util.toggle_maximized = function(c)
         toggle_client_property(c, "maximized", "fullscreen")
     end
 
@@ -172,7 +174,7 @@ function config.init(context)
     }
 
     -- Get move function
-    context.get_move_function = nil
+    context.util.get_move_function = nil
     do
         local move_by_direction = {
             l = function(r, c) return c:relative_move(-r, 0, 0, 0) end,
@@ -180,12 +182,12 @@ function config.init(context)
             u = function(r, c) return c:relative_move(0, -r, 0, 0) end,
             r = function(r, c) return c:relative_move(r, 0, 0, 0) end,
         }
-        context.get_move_function = function(direction, resize_step)
+        context.util.get_move_function = function(direction, resize_step)
             resize_step = resize_step or RESIZE_STEP
             return function()
                 if not client.focus then return end
                 local c = client.focus
-                if context.client_floats(c) then
+                if context.util.client_floats(c) then
                     move_by_direction[direction](resize_step, c)
                 else
                     awful.client.swap.global_bydirection(expand_direction[direction])
@@ -196,7 +198,7 @@ function config.init(context)
     end
 
     -- Get resize function
-    context.get_resize_function = nil
+    context.util.get_resize_function = nil
     do
         local resize_floating_by_direction = {
             l = function(r, c) return c:relative_move(0, 0, -r, 0) end,
@@ -210,13 +212,13 @@ function config.init(context)
             u = function(r) return awful.client.incwfact(r) end,
             r = function(r) return awful.tag.incmwfact(r) end,
         }
-        context.get_resize_function = function(direction, resize_step, resize_factor)
+        context.util.get_resize_function = function(direction, resize_step, resize_factor)
             resize_step = resize_step or RESIZE_STEP
             resize_factor = resize_factor or RESIZE_FACTOR
             return function()
                 if not client.focus then return end
                 local c = client.focus
-                if context.client_floats(c) then
+                if context.util.client_floats(c) then
                     resize_floating_by_direction[direction](resize_step, c)
                 else
                     resize_tiled_by_direction[direction](resize_factor)
@@ -226,7 +228,7 @@ function config.init(context)
     end
 
     -- Switch mode
-    context.switch_keys_mode = function(mode, text)
+    context.util.switch_keys_mode = function(mode, text)
         local _textbox = awful.screen.focused()._promptbox
         if not _textbox then return end
         _textbox.fg = beautiful.fg_focus
@@ -235,7 +237,7 @@ function config.init(context)
     end
 
     -- Exit mode
-    context.exit_keys_mode = function()
+    context.util.exit_keys_mode = function()
         local _textbox = awful.screen.focused()._promptbox
         if not _textbox then return end
         _textbox.fg = beautiful.prompt_fg
@@ -245,7 +247,7 @@ function config.init(context)
 
     -- Blur Wallpaper (only set if theme has blurred wallpaper)
     if beautiful.wallpaper_blur or beautiful.wallpaper_offset then
-        context.set_wallpaper = function(clients)
+        context.util.set_wallpaper = function(clients)
             local w
             if clients > 0 and beautiful.wallpaper_blur then
                 w = beautiful.wallpaper_blur
@@ -263,24 +265,24 @@ function config.init(context)
         end
 
         screen.connect_signal("tag::history::update", function(s)
-            context.set_wallpaper(#s.clients)
+            context.util.set_wallpaper(#s.clients)
         end)
 
         client.connect_signal("tagged", function(c)
-            context.set_wallpaper(#c.screen.clients)
+            context.util.set_wallpaper(#c.screen.clients)
         end)
 
         client.connect_signal("untagged", function(c)
-            context.set_wallpaper(#c.screen.clients)
+            context.util.set_wallpaper(#c.screen.clients)
         end)
 
         client.connect_signal("property::minimized", function(c)
-            context.set_wallpaper(#c.screen.clients)
+            context.util.set_wallpaper(#c.screen.clients)
         end)
     end
 
     -- Show widget on mouse::enter on parent, hide after mouse::leave + timeout
-    context.show_on_mouse = function(parent, widget, timeout)
+    context.util.show_on_mouse = function(parent, widget, timeout)
         local timer = gears.timer {
             timeout = timeout or 5,
             callback = function()
@@ -300,7 +302,7 @@ function config.init(context)
     end
 
     -- Swap widget of two parent tables
-    context.swap_widget_on_mouse = function(primary, secondary)
+    context.util.swap_widget_on_mouse = function(primary, secondary)
         local w = primary.widget
 
         local swap_widget = function()

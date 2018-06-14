@@ -7,7 +7,7 @@ function config.init(context)
 
     -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
     screen.connect_signal("property::geometry", function(s)
-        context.set_wallpaper(#s.clients)
+        context.util.set_wallpaper(#s.clients)
     end)
 
     -- Create a wibox for each screen and add it

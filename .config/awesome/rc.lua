@@ -103,11 +103,11 @@ config.screen.init(context)
 -- }}}
 
 -- {{{ Spawn
-context.run_once {
+context.util.run_once {
     -- "redshift -c .config/redshift.conf &",
 }
 
--- context.spawn_once {
+-- context.util.spawn_once {
 --     command = "kitty --class='kitty-main'",
 --     class = "kitty-main",
 --     tag = awful.screen.focused().tags[2],
@@ -116,11 +116,11 @@ context.run_once {
 --     end,
 -- }
 
--- context.spawn_once("subl", "Sublime_text", tags[1][2])
--- context.spawn_once("chromium", "Chromium", tags[1][3])
--- context.spawn_once("thunar", "Thunar", tags[1][4])
--- context.spawn_once("xchat", "Xchat", tags[1][5])
--- context.spawn_once("kitty", "kitty", awful.tag.find_by_name(awful.screen.focused(), "2"))
+-- context.util.spawn_once("subl", "Sublime_text", tags[1][2])
+-- context.util.spawn_once("chromium", "Chromium", tags[1][3])
+-- context.util.spawn_once("thunar", "Thunar", tags[1][4])
+-- context.util.spawn_once("xchat", "Xchat", tags[1][5])
+-- context.util.spawn_once("kitty", "kitty", awful.tag.find_by_name(awful.screen.focused(), "2"))
 -- }}}
 
 -- naughty.dbus.config.mapping = {
