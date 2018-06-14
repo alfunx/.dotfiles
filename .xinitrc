@@ -34,7 +34,7 @@ fi
 xautolock -detectsleep \
     -time 9 -notify 20 \
     -notifier "notify-send -t 18000 -u critical 'Lock' 'Locking screen in 20 seconds.'" \
-    -locker /usr/local/bin/custom-lockscreen &
+    -locker /usr/local/bin/lock &
 dropbox &
 amixer -c PCH set "Master" mute &
 amixer -c PCH cset 'name=Headphone Mic Boost Volume' 1 &
