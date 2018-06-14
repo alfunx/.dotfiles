@@ -192,16 +192,6 @@ nnoremap <M-k> {
 xnoremap <M-k> {
 onoremap <M-k> {
 
-" " Previous paragraph
-" nnoremap <BS> {
-" onoremap <BS> {
-" xnoremap <BS> {
-"
-" " Next paragraph
-" nnoremap <expr> <CR> empty(&buftype) ? '}' : '<CR>'
-" onoremap <expr> <CR> empty(&buftype) ? '}' : '<CR>'
-" xnoremap <CR> }
-
 " Make Y behave like other commands
 nnoremap Y y$
 
@@ -237,6 +227,44 @@ inoremap éé <C-o>o
 
 " Select last inserted text
 nnoremap gV `[v`]
+
+" Move cursor by dipslay lines when wrapping
+nnoremap <expr> j v:count ? 'j' : 'gj'
+nnoremap <expr> k v:count ? 'k' : 'gk'
+nnoremap <expr> 0 v:count ? 'k' : 'g0'
+nnoremap <expr> $ v:count ? 'k' : 'g$'
+xnoremap <expr> j v:count ? 'j' : 'gj'
+xnoremap <expr> k v:count ? 'k' : 'gk'
+xnoremap <expr> 0 v:count ? 'k' : 'g0'
+xnoremap <expr> $ v:count ? 'k' : 'g$'
+
+" Go to tab
+execute "set <M-1>=\<Esc>1"
+execute "set <M-2>=\<Esc>2"
+execute "set <M-3>=\<Esc>3"
+execute "set <M-4>=\<Esc>4"
+execute "set <M-5>=\<Esc>5"
+execute "set <M-6>=\<Esc>6"
+execute "set <M-7>=\<Esc>7"
+execute "set <M-8>=\<Esc>8"
+execute "set <M-9>=\<Esc>9"
+nnoremap <M-1> 1gt
+nnoremap <M-2> 2gt
+nnoremap <M-3> 3gt
+nnoremap <M-4> 4gt
+nnoremap <M-5> 5gt
+nnoremap <M-6> 6gt
+nnoremap <M-7> 7gt
+nnoremap <M-8> 8gt
+nnoremap <M-9> :tablast<CR>
+
+" Tab key 
+nnoremap <Tab> >>
+nnoremap <S-Tab> <<
+xnoremap <Tab> >gv
+xnoremap <S-Tab> <gv
+inoremap <expr><Tab> Tab("forward")
+inoremap <expr><S-Tab> Tab("backward")
 
 " Magic regex search
 noremap <leader>/ /\v
@@ -765,7 +793,7 @@ augroup SpellBadUnderline
 augroup END
 
 if &term !=? 'linux' || has('gui_running')
-    set listchars=tab:▸\ ,extends:>,precedes:<,nbsp:·,eol:⤶,trail:~
+    set listchars=tab:▸\ ,extends:>,precedes:<,nbsp:˷,eol:⤶,trail:~
     set fillchars=vert:│,fold:─,diff:-
     augroup TrailingSpaces
         autocmd!
@@ -881,7 +909,10 @@ set background=dark
 let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
 "set t_Co=256
+let g:gruvbox_bold=1
 let g:gruvbox_italic=1
+let g:gruvbox_underline=1
+let g:gruvbox_undercurl=1
 
 "" Use environment variable
 if !empty($VIM_COLOR)
