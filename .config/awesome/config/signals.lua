@@ -53,7 +53,7 @@ function config.init(context)
         else
             -- Default
             -- buttons for the titlebar
-            local buttons = awful.util.table.join(
+            local buttons = gears.table.join(
                 awful.button({ }, 1, function()
                     client.focus = c
                     c:raise()

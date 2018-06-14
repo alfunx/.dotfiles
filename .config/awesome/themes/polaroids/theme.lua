@@ -352,7 +352,7 @@ end))
 
 theme.titlebar_fun = function(c)
     -- buttons for the titlebar
-    local buttons = awful.util.table.join(
+    local buttons = gears.table.join(
         awful.button({ }, 1, function()
             client.focus = c
             c:raise()
@@ -440,7 +440,7 @@ function theme.at_screen_connect(s)
     -- Create an imagebox widget which will contains an icon indicating which layout we're using.
     -- We need one layoutbox per screen.
     s._layoutbox = awful.widget.layoutbox(s)
-    s._layoutbox:buttons(awful.util.table.join(
+    s._layoutbox:buttons(gears.table.join(
         awful.button({ }, 1, function() awful.layout.inc( 1) end),
         awful.button({ }, 3, function() awful.layout.inc(-1) end),
         awful.button({ }, 4, function() awful.layout.inc( 1) end),

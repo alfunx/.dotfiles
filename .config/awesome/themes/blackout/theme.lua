@@ -297,7 +297,7 @@ theme.cal = lain.widget.calendar {
 -- -- Mail IMAP check
 -- local mailicon = wibox.widget.imagebox(theme.widget_mail)
 -- --[[ commented because it needs to be set before use
--- mailicon:buttons(awful.util.table.join(awful.button({ }, 1, function() awful.spawn(mail) end)))
+-- mailicon:buttons(gears.table.join(awful.button({ }, 1, function() awful.spawn(mail) end)))
 -- local mail = lain.widget.imap({
 --     timeout  = 180,
 --     server   = "server",
@@ -320,8 +320,8 @@ theme.cal = lain.widget.calendar {
 -- local musicplr = context.vars.terminal .. " -title Music -g 130x34-320+16 ncmpcpp"
 local mpdicon = wibox.widget.imagebox(theme.widget_music)
 
--- mpdicon:buttons(awful.util.table.join(
---     awful.button({ awful.util.modkey }, 1, function()
+-- mpdicon:buttons(gears.table.join(
+--     awful.button({ context.keys.modkey }, 1, function()
 --         awful.spawn.with_shell(musicplr)
 --     end),
 --     awful.button({ }, 1, function()
@@ -652,7 +652,7 @@ theme.volume = lain.widget.alsa {
                 vol_text = " " .. volume_now.level .. "%"
             end
 
-            if client.focus.fullscreen or volume_now.status ~= volume_before then
+            if client.focus and client.focus.fullscreen or volume_now.status ~= volume_before then
                 theme.volume.notification = naughty.notify {
                     title = "Audio",
                     text = vol_text,
@@ -674,7 +674,7 @@ local vol_widget = wibox.widget {
     layout = wibox.layout.align.horizontal,
 }
 
-vol_widget:buttons(awful.util.table.join(
+vol_widget:buttons(gears.table.join(
     awful.button({ }, 1, function()
         awful.spawn.easy_async(string.format("amixer -q set %s toggle", theme.volume.channel),
         function(stdout, stderr, reason, exit_code) --luacheck: no unused args
@@ -894,7 +894,7 @@ function theme.at_screen_connect(s)
     -- Create an imagebox widget which will contains an icon indicating which layout we're using.
     -- We need one layoutbox per screen.
     s._layoutbox = awful.widget.layoutbox(s)
-    s._layoutbox:buttons(awful.util.table.join(
+    s._layoutbox:buttons(gears.table.join(
         awful.button({ }, 1, function() awful.layout.inc( 1) end),
         awful.button({ }, 3, function() awful.layout.inc(-1) end),
         awful.button({ }, 4, function() awful.layout.inc( 1) end),

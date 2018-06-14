@@ -1,3 +1,4 @@
+local gears = require("gears")
 local awful = require("awful")
 local beautiful = require("beautiful")
 local lain = require("lain")
@@ -20,14 +21,14 @@ function config.init(context)
     local terminal    = context.vars.terminal
     local browser     = context.vars.browser
 
-    context.keys.global = awful.util.table.join(
+    context.keys.global = gears.table.join(
         context.keys.global,
         awful.key({ modkey                    }, "g", function()
             context.switch_keys_mode("command", "Command Mode")
         end, {description = "<b><span color=\"#ff0000\">command mode</span></b>", group = "awesome"})
     )
 
-    context.keys.command = awful.util.table.join(
+    context.keys.command = gears.table.join(
         context.keys.global,
 
         -- Move
@@ -107,7 +108,7 @@ function config.init(context)
     )
 
     for i = 1, 9 do
-        context.keys.command = awful.util.table.join(
+        context.keys.command = gears.table.join(
             context.keys.command,
             awful.key({}, "#" .. i + 9, function()
                 awful.screen.focused().selected_tag.master_width_factor = (i / 2 + 2.5) / 10

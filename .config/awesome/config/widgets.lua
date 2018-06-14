@@ -1,3 +1,4 @@
+local gears = require("gears")
 local awful = require("awful")
 local lain = require("lain")
 
@@ -46,7 +47,7 @@ function config.init(context)
         awful.layout.suit.floating,
     }
 
-    awful.util.taglist_buttons = awful.util.table.join(
+    awful.util.taglist_buttons = gears.table.join(
         awful.button({ }, 1, function(t) t:view_only() end),
         awful.button({ context.modkey }, 1, function(t)
             if client.focus then
@@ -64,7 +65,7 @@ function config.init(context)
     )
 
     local _tasklist_menu
-    awful.util.tasklist_buttons = awful.util.table.join(
+    awful.util.tasklist_buttons = gears.table.join(
         awful.button({ }, 1, function(c)
             if c == client.focus then
                 c.minimized = true

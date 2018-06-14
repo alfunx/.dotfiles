@@ -1,3 +1,4 @@
+local gears = require("gears")
 local awful = require("awful")
 local lain = require("lain")
 
@@ -17,7 +18,7 @@ function config.init(context)
     local terminal    = context.vars.terminal
     local browser     = context.vars.browser
 
-    context.keys.client = awful.util.table.join(
+    context.keys.client = gears.table.join(
         awful.key({ modkey, altkey            }, "Return", function(c) c:swap(awful.client.getmaster()) end,
                   {description = "swap with master", group = "client"}),
         awful.key({ modkey, ctrlkey           }, "m", lain.util.magnify_client,
@@ -52,14 +53,14 @@ function config.init(context)
     )
 
     if context.set_wallpaper then
-        context.keys.client = awful.util.table.join(
+        context.keys.client = gears.table.join(
             context.keys.client,
             awful.key({ modkey, ctrlkey           }, "i", function() context.set_wallpaper(0) end,
                       {description = "unblur wallpaper", group = "client"})
         )
     end
 
-    context.clientbuttons = awful.util.table.join(
+    context.clientbuttons = gears.table.join(
         awful.button({                  }, 1, function(c) client.focus = c; c:raise() end),
         awful.button({ modkey           }, 1, awful.mouse.client.move),
         awful.button({ modkey, shiftkey }, 1, awful.mouse.client.resize)

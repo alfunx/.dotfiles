@@ -1,3 +1,4 @@
+local gears = require("gears")
 local awful = require("awful")
 local beautiful = require("beautiful")
 local naughty = require("naughty")
@@ -22,7 +23,7 @@ function config.init(context)
     local browser     = context.vars.browser
 
     -- Mouse bindings
-    root.buttons(awful.util.table.join(
+    root.buttons(gears.table.join(
         awful.button({ }, 3, function() awful.util._mainmenu:toggle() end)
         -- awful.button({ }, 4, awful.tag.viewnext),
         -- awful.button({ }, 5, awful.tag.viewprev)
@@ -34,7 +35,7 @@ function config.init(context)
                   {description = "exit mode", group = "awesome"})
 
     -- Key bindings
-    context.keys.global = awful.util.table.join(
+    context.keys.global = gears.table.join(
         -- Awesome Hotkeys
         awful.key({ modkey, ctrlkey           }, "s", hotkeys_popup.show_help,
                   {description = "show help", group = "awesome"}),
@@ -124,7 +125,7 @@ function config.init(context)
                           prompt       = "Run Lua code: ",
                           textbox      = awful.screen.focused()._promptbox.widget,
                           exe_callback = awful.util.eval,
-                          history_path = awful.util.get_cache_dir() .. "/history_eval",
+                          history_path = gears.filesystem.get_cache_dir() .. "/history_eval",
                       }
                   end,
                   {description = "lua execute prompt", group = "awesome"}),
@@ -384,7 +385,7 @@ function config.init(context)
     -- Be careful: we use keycodes to make it works on any keyboard layout.
     -- This should map on the top row of your keyboard, usually 1 to 9.
     for i = 1, 10 do
-        context.keys.global = awful.util.table.join(context.keys.global,
+        context.keys.global = gears.table.join(context.keys.global,
             -- View tag only.
             awful.key({ modkey }, "#" .. i + 9, function()
                 local _screen = awful.screen.focused()
