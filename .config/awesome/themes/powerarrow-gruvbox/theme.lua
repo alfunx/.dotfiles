@@ -63,11 +63,11 @@ local awful            = require("awful")
 local wibox            = require("wibox")
 local naughty          = require("naughty")
 local xresources       = require("beautiful.xresources")
+local context          = require("config").context
 local dpi              = xresources.apply_dpi
 local os, math, string = os, math, string
 
 local theme                                     = { }
-theme.context                                   = { }
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-gruvbox"
 
 -- theme.wallpaper                                 = theme.dir .. "/wallpapers/wall.png"
@@ -312,7 +312,7 @@ theme.cal = lain.widget.calendar {
 
 -- MPD
 --luacheck: push ignore widget mpd_now artist title
--- local musicplr = awful.util.terminal .. " -title Music -g 130x34-320+16 ncmpcpp"
+-- local musicplr = context.vars.terminal .. " -title Music -g 130x34-320+16 ncmpcpp"
 local mpdicon = wibox.widget.imagebox(theme.widget_music)
 
 -- mpdicon:buttons(awful.util.table.join(
@@ -509,7 +509,7 @@ end))
 --luacheck: push ignore widget available
 local pacmanicon = wibox.widget.imagebox(theme.widget_pacman)
 theme.pacman = widgets.pacman {
-    command = "( sudo checkupdates & pacaur -k --color never | sed 's/:: [a-zA-Z0-9]\\+ //' ) | sed 's/->/→/' | sort | column -t",
+    command = context.vars.checkupdate,
     notify = "on",
     notification_preset = naughty.config.presets.normal,
     settings = function()
@@ -626,13 +626,6 @@ theme.volume = lain.widget.alsa {
     settings = function()
         if volume_now.status == "off" then
             volicon:set_image(theme.widget_vol_mute)
-            if theme.volume.notification then
-                naughty.destroy(theme.volume.notification)
-            end
-            theme.volume.notification = naughty.notify {
-                title = "Audio",
-                text = "Muted",
-            }
         elseif tonumber(volume_now.level) == 0 then
             volicon:set_image(theme.widget_vol_no)
         elseif tonumber(volume_now.level) < 50 then
@@ -667,14 +660,36 @@ theme.volume = lain.widget.alsa {
     end,
 }
 
+-- Initial notification
+theme.volume.manual = true
+theme.volume.update()
+
 local vol_widget = wibox.widget {
     volicon, theme.volume.widget,
     layout = wibox.layout.align.horizontal,
 }
 
-vol_widget:buttons(awful.button({ }, 1, function()
-    awful.spawn(awful.util.terminal .. " \"alsamixer\"")
-end))
+vol_widget:buttons(awful.util.table.join(
+    awful.button({ }, 1, function()
+        awful.spawn.easy_async(string.format("amixer -q set %s toggle", theme.volume.channel),
+        function(stdout, stderr, reason, exit_code) --luacheck: no unused args
+            theme.volume.manual = true
+            theme.volume.update()
+        end)
+    end),
+    awful.button({ }, 4, function()
+        awful.spawn.easy_async(string.format("amixer -q set %s 1%%-", theme.volume.channel),
+        function(stdout, stderr, reason, exit_code) --luacheck: no unused args
+            theme.volume.update()
+        end)
+    end),
+    awful.button({ }, 5, function()
+        awful.spawn.easy_async(string.format("amixer -q set %s 1%%+", theme.volume.channel),
+        function(stdout, stderr, reason, exit_code) --luacheck: no unused args
+            theme.volume.update()
+        end)
+    end)
+))
 --luacheck: pop
 
 -- BAT
@@ -682,8 +697,8 @@ end))
 local baticon = wibox.widget.imagebox(theme.widget_battery)
 local bat = lain.widget.bat {
     notify = "off",
-    batteries = {"BAT0"},
-    ac = "AC",
+    batteries = context.vars.batteries,
+    ac = context.vars.ac,
     settings = function()
         local _color = theme.fg_normal
         local _font = theme.font
@@ -737,7 +752,7 @@ local bat_widget = wibox.widget {
 }
 
 bat_widget:buttons(awful.button({ }, 1, function()
-    awful.spawn.easy_async(awful.util.scripts_dir .. "/show-battery-status", function(stdout, stderr, reason, exit_code)
+    awful.spawn.easy_async(context.vars.scripts_dir .. "/show-battery-status", function(stdout, stderr, reason, exit_code)
         if bat_widget.notification then
             naughty.destroy(bat_widget.notification)
         end
@@ -770,7 +785,7 @@ end))
 local neticon = wibox.widget.imagebox(theme.widget_net)
 local net = lain.widget.net {
     wifi_state = "on",
-    iface = "wlp58s0",
+    iface = context.vars.net_iface,
     notify = "off",
     units = 1048576, -- in MB/s (1024^2)
     -- units = 131072, -- in Mbit/s / Mbps (1024^2/8)
@@ -794,7 +809,7 @@ local net_widget = wibox.widget {
 }
 
 net_widget:buttons(awful.button({ }, 1, function()
-    awful.spawn.easy_async(awful.util.scripts_dir .. "/show-ip-address", function(stdout, stderr, reason, exit_code)
+    awful.spawn.easy_async(context.vars.scripts_dir .. "/show-ip-address", function(stdout, stderr, reason, exit_code)
         if net_widget.notification then
             naughty.destroy(net_widget.notification)
         end
@@ -805,7 +820,7 @@ net_widget:buttons(awful.button({ }, 1, function()
             timeout = 10,
         }
 
-        awful.spawn.easy_async(awful.util.scripts_dir .. "/show-ip-address -f", function(stdout, stderr, reason, exit_code)
+        awful.spawn.easy_async(context.vars.scripts_dir .. "/show-ip-address -f", function(stdout, stderr, reason, exit_code)
             if net_widget.notification then
                 naughty.destroy(net_widget.notification)
             end
@@ -850,7 +865,7 @@ end
 function theme.at_screen_connect(s)
     -- Quake application
     s.quake = lain.util.quake {
-        app = awful.util.terminal,
+        app = context.vars.terminal,
     }
 
     -- If wallpaper is a function, call it with the screen
@@ -877,7 +892,7 @@ function theme.at_screen_connect(s)
     )
 
     -- Create a taglist widget
-    s._taglist = awful.widget.taglist(s, theme.context.rowfilter, awful.util.taglist_buttons)
+    s._taglist = awful.widget.taglist(s, context.rowfilter, awful.util.taglist_buttons)
 
     local gen_tasklist = function()
         -- Create a tasklist widget
@@ -967,7 +982,7 @@ function theme.at_screen_connect(s)
         widget = wibox.container.margin,
         visible = false,
     }
-    theme.context.show_on_mouse(s._wibox, systray_widget)
+    context.show_on_mouse(s._wibox, systray_widget)
 
     -- Add widgets to the wibox
     s._wibox:setup {

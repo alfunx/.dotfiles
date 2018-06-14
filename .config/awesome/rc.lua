@@ -31,26 +31,35 @@ require("awful.remote")
 -- Localization
 os.setlocale(os.getenv("LANG"))
 
+-- Define context
+config.context = { }
+local context = config.context
+
 -- {{{ Variable definitions
-local context = {}
+context.theme                 = "blackout"
 
-context.theme            = "blackout"
+context.keys = { }
+context.keys.modkey           = "Mod4"
+context.keys.altkey           = "Mod1"
+context.keys.ctrlkey          = "Control"
+context.keys.shiftkey         = "Shift"
+context.keys.l_key            = "h"
+context.keys.r_key            = "l"
+context.keys.u_key            = "k"
+context.keys.d_key            = "j"
 
-context.keys = {}
-context.keys.modkey      = "Mod4"
-context.keys.altkey      = "Mod1"
-context.keys.ctrlkey     = "Control"
-context.keys.shiftkey    = "Shift"
-context.keys.l_key       = "h"
-context.keys.r_key       = "l"
-context.keys.u_key       = "k"
-context.keys.d_key       = "j"
+context.vars = { }
+context.vars.terminal         = "kitty"
+context.vars.browser          = "chromium"
+context.vars.net_iface        = "wlp58s0"
+context.vars.batteries        = { "BAT0" }
+context.vars.ac               = "AC"
+context.vars.checkupdate      = "( sudo checkupdates & pacaur -k --color never | sed 's/:: [a-zA-Z0-9]\\+ //' ) | sed 's/->/→/' | sort | column -t"
+context.vars.checkupdate      = "sudo checkupdates | sed 's/->/→/' | sort | column -t"
+context.vars.scripts_dir      = os.getenv("HOME") .. "/.bin"
 
-context.terminal    = "kitty"
-context.browser     = "chromium"
-
-awful.util.terminal = context.terminal
-awful.util.scripts_dir = os.getenv("HOME") .. "/.bin"
+-- For compatibility with copycat-themes
+awful.util.terminal           = context.vars.terminal
 -- }}}
 
 -- {{{ Error handling
@@ -79,7 +88,6 @@ end
 -- {{{ Theme
 local theme_path = string.format("%s/.config/awesome/themes/%s/theme.lua", os.getenv("HOME"), context.theme)
 beautiful.init(theme_path)
-beautiful.context = context
 -- }}}
 
 -- {{{ Config
@@ -96,10 +104,18 @@ config.screen.init(context)
 
 -- {{{ Spawn
 context.run_once {
-    "redshift -c .config/redshift.conf &",
+    -- "redshift -c .config/redshift.conf &",
 }
 
--- context.spawn_once("kitty", "kitty", awful.screen.focused().tags[2])
+-- context.spawn_once {
+--     command = "kitty --class='kitty-main'",
+--     class = "kitty-main",
+--     tag = awful.screen.focused().tags[2],
+--     callback = function(c)
+--         c.maximized = true
+--     end,
+-- }
+
 -- context.spawn_once("subl", "Sublime_text", tags[1][2])
 -- context.spawn_once("chromium", "Chromium", tags[1][3])
 -- context.spawn_once("thunar", "Thunar", tags[1][4])
@@ -112,3 +128,7 @@ context.run_once {
 --     {{urgency = "\2"}, naughty.config.presets.normal},
 --     {{urgency = "\3"}, naughty.config.presets.critical}
 -- }
+
+-- {{{ Debug
+awful.context = context
+-- }}}

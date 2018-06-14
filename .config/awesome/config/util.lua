@@ -29,41 +29,45 @@ function config.init(context)
     end
 
     -- Spawn a window
-    context.spawn_once = function(command, class, tag)
-        -- create move callback
-        local callback
-        callback = function(c)
-            if c.class == class then
+    context.spawn_once = function(args)
+        if not args and args.command then return end
+        args.callback = args.callback or function() end
+
+        -- Create move callback
+        local f
+        f = function(c)
+            if c.class == args.class then
                 c:move_to_tag(tag)
-                client.disconnect_signal("manage", callback)
+                client.disconnect_signal("manage", f)
+                args.callback(c)
             end
         end
-        client.connect_signal("manage", callback)
+        client.connect_signal("manage", f)
 
-        -- now check if not already running!
-        local findme = command
+        -- Now check if not already running
+        local findme = args.command
         local firstspace = findme:find(" ")
         if firstspace then
             findme = findme:sub(0, firstspace-1)
         end
 
-        awful.spawn.with_shell(string.format("pgrep -u $USER -x %s > /dev/null || (%s)", findme, command))
+        awful.spawn.with_shell(string.format("pgrep -u $USER -x %s > /dev/null || (%s)", findme, args.command))
     end
 
-    -- Spawn process and unfocus current client until process exits (useful for
-    -- e.g. rofi or dmenu)
+    -- Spawn process and adjust border color current client until process exits
+    -- (useful for e.g. rofi or dmenu)
     context.easy_async_with_unfocus = function(cmd, callback)
-        callback = callback or function() end
         local c = client.focus
-        client.focus = nil
+        callback = callback or function() end
+        if c then c.border_color = beautiful.border_normal end
         awful.spawn.easy_async(cmd, function(stdout, stderr, reason, exit_code)
             callback(stdout, stderr, reason, exit_code)
-            client.focus = c
+            if c then client.focus.border_color = beautiful.border_focus end
         end)
     end
 
     -- Select tag by direction in a grid (taggrid feature)
-    context.select_tag_in_grid = function() end
+    context.select_tag_in_grid = nil
     do
         local columns = awful.util.tagcolumns or #awful.util.tagnames
         local index_by_direction = {
@@ -168,7 +172,7 @@ function config.init(context)
     }
 
     -- Get move function
-    context.get_move_function = function() end
+    context.get_move_function = nil
     do
         local move_by_direction = {
             l = function(r, c) return c:relative_move(-r, 0, 0, 0) end,
@@ -177,7 +181,7 @@ function config.init(context)
             r = function(r, c) return c:relative_move(r, 0, 0, 0) end,
         }
         context.get_move_function = function(direction, resize_step)
-            if not resize_step then resize_step = RESIZE_STEP end
+            resize_step = resize_step or RESIZE_STEP
             return function()
                 if not client.focus then return end
                 local c = client.focus
@@ -192,7 +196,7 @@ function config.init(context)
     end
 
     -- Get resize function
-    context.get_resize_function = function() end
+    context.get_resize_function = nil
     do
         local resize_floating_by_direction = {
             l = function(r, c) return c:relative_move(0, 0, -r, 0) end,
@@ -207,8 +211,8 @@ function config.init(context)
             r = function(r) return awful.tag.incmwfact(r) end,
         }
         context.get_resize_function = function(direction, resize_step, resize_factor)
-            if not resize_step then resize_step = RESIZE_STEP end
-            if not resize_factor then resize_factor = RESIZE_FACTOR end
+            resize_step = resize_step or RESIZE_STEP
+            resize_factor = resize_factor or RESIZE_FACTOR
             return function()
                 if not client.focus then return end
                 local c = client.focus

@@ -18,8 +18,8 @@ function config.init(context)
     local u_key       = context.keys.u_key
     local d_key       = context.keys.d_key
 
-    local terminal    = context.terminal
-    local browser     = context.browser
+    local terminal    = context.vars.terminal
+    local browser     = context.vars.browser
 
     -- Mouse bindings
     root.buttons(awful.util.table.join(
@@ -61,31 +61,31 @@ function config.init(context)
 
         -- Scteenshot
         awful.key({                           }, "Print", function()
-            awful.spawn(awful.util.scripts_dir .. "/make-screenshot")
+            awful.spawn(context.vars.scripts_dir .. "/make-screenshot")
         end,
                   {description = "take screenshot", group = "screenshot"}),
         awful.key({ shiftkey                  }, "Print", function()
-            awful.spawn(awful.util.scripts_dir .. "/make-screenshot -s")
+            awful.spawn(context.vars.scripts_dir .. "/make-screenshot -s")
         end,
                   {description = "take screenshot, select area", group = "screenshot"}),
         awful.key({ ctrlkey                   }, "Print", function()
-            awful.spawn(awful.util.scripts_dir .. "/make-screenshot -h")
+            awful.spawn(context.vars.scripts_dir .. "/make-screenshot -h")
         end,
                   {description = "take screenshot, hide mouse", group = "screenshot"}),
         awful.key({ ctrlkey, shiftkey         }, "Print", function()
-            awful.spawn(awful.util.scripts_dir .. "/make-screenshot -h -s")
+            awful.spawn(context.vars.scripts_dir .. "/make-screenshot -h -s")
         end,
                   {description = "take screenshot, hide mouse, select area", group = "screenshot"}),
         awful.key({ modkey                    }, "Print", function()
-            awful.spawn(awful.util.scripts_dir .. "/make-screenshot -w")
+            awful.spawn(context.vars.scripts_dir .. "/make-screenshot -w")
         end,
                   {description = "wait 5s, take screenshot", group = "screenshot"}),
         awful.key({ modkey, ctrlkey           }, "Print", function()
-            awful.spawn(awful.util.scripts_dir .. "/make-screenshot -w -h")
+            awful.spawn(context.vars.scripts_dir .. "/make-screenshot -w -h")
         end,
                   {description = "wait 5s, take screenshot, hide mouse", group = "screenshot"}),
         awful.key({ altkey                    }, "Print", function()
-            awful.spawn(awful.util.scripts_dir .. "/upload-to-imgur")
+            awful.spawn(context.vars.scripts_dir .. "/upload-to-imgur")
         end,
                   {description = "upload last screenshot to Imgur", group = "screenshot"}),
 
@@ -111,7 +111,7 @@ function config.init(context)
         end,
                   {description = "show commands menu (rofi)", group = "launcher"}),
         awful.key({ modkey                    }, "$", function()
-            context.easy_async_with_unfocus(awful.util.scripts_dir .. "/rofi-session")
+            context.easy_async_with_unfocus(context.vars.scripts_dir .. "/rofi-session")
         end,
                   {description = "show session menu (rofi)", group = "launcher"}),
         -- awful.key({ altkey            }, "space", function()
@@ -148,9 +148,9 @@ function config.init(context)
         --           {description = "go back", group = "tag"}),
 
         -- Dynamic tagging
-        awful.key({ modkey, altkey, shiftkey  }, l_key, function() lain.util.move_tag(-1) end,
+        awful.key({ modkey, altkey            }, l_key, function() lain.util.move_tag(-1) end,
                   {description = "move tag backward", group = "tag"}),
-        awful.key({ modkey, altkey, shiftkey  }, r_key, function() lain.util.move_tag(1) end,
+        awful.key({ modkey, altkey            }, r_key, function() lain.util.move_tag(1) end,
                   {description = "move tag forward", group = "tag"}),
         awful.key({ modkey, altkey            }, "n", function() lain.util.add_tag() end,
                   {description = "new tag", group = "tag"}),
@@ -208,6 +208,17 @@ function config.init(context)
         awful.key({ modkey                    }, "u", awful.client.urgent.jumpto,
                   {description = "jump to urgent client", group = "client"}),
 
+        awful.key({ modkey, altkey            }, u_key, function()
+            awful.client.cycle(false)
+            awful.client.focus.byidx(1)
+        end,
+                  {description = "counterclockwise cycle", group = "client"}),
+        awful.key({ modkey, altkey            }, d_key, function()
+            awful.client.cycle(true)
+            awful.client.focus.byidx(-1)
+        end,
+                  {description = "clockwise cycle", group = "client"}),
+
         awful.key({ modkey,                   }, "Tab", function()
             awful.client.focus.history.previous()
             if client.focus then
@@ -230,13 +241,13 @@ function config.init(context)
                   {description = "increase master width factor", group = "layout"}),
         awful.key({ modkey, shiftkey          }, l_key, function() awful.tag.incmwfact(-0.01) end,
                   {description = "decrease master width factor", group = "layout"}),
-        awful.key({ modkey, altkey            }, r_key, function() awful.tag.incnmaster(1, nil, true) end,
+        awful.key({ modkey, altkey, shiftkey  }, u_key, function() awful.tag.incnmaster(1, nil, true) end,
                   {description = "increase the number of master clients", group = "layout"}),
-        awful.key({ modkey, altkey            }, l_key, function() awful.tag.incnmaster(-1, nil, true) end,
+        awful.key({ modkey, altkey, shiftkey  }, d_key, function() awful.tag.incnmaster(-1, nil, true) end,
                   {description = "decrease the number of master clients", group = "layout"}),
-        awful.key({ modkey, altkey            }, u_key, function() awful.tag.incncol(1, nil, true) end,
+        awful.key({ modkey, altkey, shiftkey  }, r_key, function() awful.tag.incncol(1, nil, true) end,
                   {description = "increase the number of slave columns", group = "layout"}),
-        awful.key({ modkey, altkey            }, d_key, function() awful.tag.incncol(-1, nil, true) end,
+        awful.key({ modkey, altkey, shiftkey  }, l_key, function() awful.tag.incncol(-1, nil, true) end,
                   {description = "decrease the number of slave columns", group = "layout"}),
         awful.key({ modkey,                   }, "space", function() awful.layout.inc(1) end,
                   {description = "select next", group = "layout"}),
@@ -252,14 +263,6 @@ function config.init(context)
                 end
             end
         end),
-
-        -- On the fly useless gaps change
-        awful.key({ modkey, altkey, shiftkey  }, d_key, function() lain.util.useless_gaps_resize(beautiful.useless_gap/2) end,
-                  {description = "increase useless gap", group = "layout"}),
-        awful.key({ modkey, altkey, shiftkey  }, u_key, function() lain.util.useless_gaps_resize(-beautiful.useless_gap/2) end,
-                  {description = "decrease useless gap", group = "layout"}),
-        awful.key({ modkey, altkey, shiftkey, ctrlkey }, d_key, function() lain.util.useless_gaps_resize(1) end),
-        awful.key({ modkey, altkey, shiftkey, ctrlkey }, u_key, function() lain.util.useless_gaps_resize(-1) end),
 
         -- ALSA volume control
         awful.key({                           }, "XF86AudioRaiseVolume", function()

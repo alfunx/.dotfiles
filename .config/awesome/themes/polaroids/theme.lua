@@ -54,6 +54,7 @@ local awful            = require("awful")
 local wibox            = require("wibox")
 local naughty          = require("naughty")
 local xresources       = require("beautiful.xresources")
+local context          = require("config").context
 local dpi              = xresources.apply_dpi
 local os, math, string = os, math, string
 
@@ -299,7 +300,7 @@ theme.cal = lain.widget.calendar {
 local neticon = wibox.widget.imagebox(theme.widget_net)
 local net = lain.widget.net {
     wifi_state = "on",
-    iface = "wlp58s0",
+    iface = context.vars.net_iface,
     notify = "off",
     units = 1048576, -- in MB/s (1024^2)
     -- units = 131072, -- in Mbit/s / Mbps (1024^2/8)
@@ -323,7 +324,7 @@ local net_widget = wibox.widget {
 }
 
 net_widget:buttons(awful.button({ }, 1, function()
-    awful.spawn.easy_async(awful.util.scripts_dir .. "/show-ip-address", function(stdout, stderr, reason, exit_code)
+    awful.spawn.easy_async(context.vars.scripts_dir .. "/show-ip-address", function(stdout, stderr, reason, exit_code)
         if net_widget.notification then
             naughty.destroy(net_widget.notification)
         end
@@ -334,7 +335,7 @@ net_widget:buttons(awful.button({ }, 1, function()
             timeout = 10,
         }
 
-        awful.spawn.easy_async(awful.util.scripts_dir .. "/show-ip-address -f", function(stdout, stderr, reason, exit_code)
+        awful.spawn.easy_async(context.vars.scripts_dir .. "/show-ip-address -f", function(stdout, stderr, reason, exit_code)
             if net_widget.notification then
                 naughty.destroy(net_widget.notification)
             end
@@ -419,7 +420,7 @@ end
 function theme.at_screen_connect(s)
     -- Quake application
     s.quake = lain.util.quake {
-        app = awful.util.terminal,
+        app = context.vars.terminal,
     }
 
     -- If wallpaper is a function, call it with the screen

@@ -14,8 +14,8 @@ function config.init(context)
     local u_key       = context.keys.u_key
     local d_key       = context.keys.d_key
 
-    local terminal    = context.terminal
-    local browser     = context.browser
+    local terminal    = context.vars.terminal
+    local browser     = context.vars.browser
 
     context.keys.client = awful.util.table.join(
         awful.key({ modkey, altkey            }, "Return", function(c) c:swap(awful.client.getmaster()) end,
@@ -43,7 +43,7 @@ function config.init(context)
                   {description = "fullscreen", group = "client"}),
 
         awful.key({ modkey                    }, "v", function(c) --luacheck: no unused args
-            awful.spawn(terminal .. " zsh -lic '" .. awful.util.scripts_dir .. "/edit-in-vim'", {
+            awful.spawn(terminal .. " zsh -lic '" .. context.vars.scripts_dir .. "/edit-in-vim'", {
                 floating = true,
                 ontop = true,
                 placement = awful.placement.centered,

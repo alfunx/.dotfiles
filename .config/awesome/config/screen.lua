@@ -11,7 +11,11 @@ function config.init(context)
     end)
 
     -- Create a wibox for each screen and add it
-    awful.screen.connect_for_each_screen(function(s) beautiful.at_screen_connect(s) end)
+    awful.screen.connect_for_each_screen(function(s)
+        beautiful.at_screen_connect(s)
+        awesome.register_xproperty("_NET_WM_NAME", "string")
+        s._wibox:set_xproperty("_NET_WM_NAME", "Wibar")
+    end)
 
 end
 

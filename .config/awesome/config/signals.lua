@@ -7,6 +7,8 @@ local config = {}
 
 function config.init(context)
 
+    local last_focus
+
     -- Signal function to execute when a new client appears.
     client.connect_signal("manage", function(c)
         -- Set the windows at the slave,
@@ -19,6 +21,28 @@ function config.init(context)
             -- Prevent clients from being unreachable after screen count changes.
             awful.placement.no_offscreen(c)
         end
+
+        -- Rounded corners
+        c.shape = function(cr, w, h)
+            gears.shape.rounded_rect(cr, w, h, beautiful.border_radius or 0)
+        end
+    end)
+
+    client.connect_signal("unmanage", function(c)
+        if last_focus == c and c.transient_for then
+            client.focus = c.transient_for
+            c.transient_for:raise()
+        end
+    end)
+
+    client.connect_signal("focus", function(c)
+        c.border_color = beautiful.border_focus
+        last_focus = nil
+    end)
+
+    client.connect_signal("unfocus", function(c)
+        c.border_color = beautiful.border_normal
+        last_focus = c
     end)
 
     -- Add a titlebar if titlebars_enabled is set to true in the rules.
@@ -93,25 +117,6 @@ function config.init(context)
     --     end
     -- end)
 
-    local last_focus
-
-    client.connect_signal("focus", function(c)
-        c.border_color = beautiful.border_focus
-        last_focus = nil
-    end)
-
-    client.connect_signal("unfocus", function(c)
-        c.border_color = beautiful.border_normal
-        last_focus = c
-    end)
-
-    client.connect_signal("unmanage", function(c)
-        if last_focus == c and c.transient_for then
-            client.focus = c.transient_for
-            c.transient_for:raise()
-        end
-    end)
-
     client.connect_signal("property::fullscreen", function(c)
         if c.fullscreen then
             c.border_width = 0
@@ -148,11 +153,24 @@ function config.init(context)
         end
     end)
 
-    -- Rounded corners
-    client.connect_signal("manage", function(c)
-        c.shape = function(cr, w, h)
-            gears.shape.rounded_rect(cr, w, h, beautiful.border_radius or 0)
+    tag.connect_signal("request::screen", function(t)
+        local fallback_tag
+
+        -- Find tag with same name on any other screen
+        for s in screen do
+            if s ~= t.screen then
+                fallback_tag = awful.tag.find_by_name(s, t.name)
+                if fallback_tag then break end
+            end
         end
+
+        -- No tag with same name exists, chose random one
+        if not fallback_tag then
+            fallback_tag = awful.tag.find_fallback()
+        end
+
+        -- Delete the tag and move it to other screen
+        t:delete(fallback_tag, true)
     end)
 
 end

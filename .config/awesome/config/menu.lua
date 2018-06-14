@@ -10,7 +10,7 @@ function config.init(context)
 
     local _awesomemenu = {
         { "hotkeys", function() return false, hotkeys_popup.show_help end },
-        { "manual", context.terminal .. " man awesome" },
+        { "manual", context.vars.terminal .. " man awesome" },
         { "restart", awesome.restart },
         { "quit", function() awesome.quit() end },
     }
@@ -22,12 +22,12 @@ function config.init(context)
             -- other triads can be put here
         },
         after = {
-            { "Open terminal", context.terminal },
+            { "Open terminal", context.vars.terminal },
             -- other triads can be put here
         },
     }
 
-    menubar.utils.terminal = context.terminal -- Set the Menubar terminal for applications that require it
+    menubar.utils.terminal = context.vars.terminal -- Set the Menubar terminal for applications that require it
 
 end
 
