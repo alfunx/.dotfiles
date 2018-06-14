@@ -99,6 +99,7 @@ linux-lts
 linux-lts-headers
 logrotate
 lolcat
+lostfiles
 lshw
 lvm2
 lxappearance-gtk3

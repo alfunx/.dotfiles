@@ -8,7 +8,7 @@ alsa-utils
 arch-wiki-lite
 asciinema
 asp
-aurutils
+aurutils-git
 autoconf
 automake
 avahi
@@ -161,7 +161,6 @@ os-prober
 otf-blackjack
 overdue
 p7zip
-pacaur
 pacman
 pacman-contrib
 parallel
@@ -266,6 +265,7 @@ vulkan-intel
 w3m
 wget
 whatsapp-desktop
+whatsapp-web-desktop
 which
 wmctrl
 words-insane
