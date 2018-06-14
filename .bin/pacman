@@ -11,6 +11,14 @@ pacman-date-log() {
         }' | sort
 }
 
+update-widget() {
+    dbus-send --dest=org.awesomewm.awful --type=method_call \
+        / org.awesomewm.awful.Remote.Eval \
+        string:'pacman = require("beautiful").pacman; if pacman then pacman.update() end'
+}
+
+update-widget
+
 pattern="^-S[cuy]|^-S$|^-R[sn]|^-R$|^-U$|^-F[y]"
 if [[ $1 =~ $pattern ]]; then
     sudo /usr/bin/pacman "$@"
@@ -21,7 +29,4 @@ else
     /usr/bin/pacman "$@"
 fi
 
-# Update pacman widget
-dbus-send --dest=org.awesomewm.awful --type=method_call \
-    / org.awesomewm.awful.Remote.Eval \
-    string:'pacman = require("beautiful").pacman; if pacman then pacman.update() end'
+update-widget

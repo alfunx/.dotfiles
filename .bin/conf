@@ -25,9 +25,7 @@ case $cmd in
     zsh)
         vim \
             ~/.zshrc \
-            ~/.alias.zsh \
-            ~/.completion.zsh \
-            ~/.highlight.zsh \
+            ~/.zsh.d/*.zsh \
             ~/.zprofile \
             ~/.profile \
             ~/.oh-my-zsh/themes/agnoster-custom.zsh-theme \

@@ -6,8 +6,8 @@ image=$(mktemp --suffix=.png)
 trap 'rm -f "$image"' SIGINT SIGTERM EXIT
 
 maim -u \
-    | convert png:- -scale 10% -scale 1000% png:- \
-    | convert png:- "$lock" -gravity center -composite -matte "$image"
+    | convert png:- -scale 10% -scale 1000% \
+    "$lock" -gravity center -composite -matte "$image"
 
 i3lock \
     --image="$image" \

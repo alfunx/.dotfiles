@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
-sudo cp -f "$HOME/.bin/lock" '/usr/local/bin/custom-lockscreen'
+sudo cp -f "$HOME/.bin/lock" '/usr/local/bin/lock'
 sudo cp -f "$HOME/.bin/update-pkglist" '/usr/local/bin/update-pkglist'
-sudo cp -f "$HOME/.bin/aurremove" '/usr/local/bin/aurremove'
-sudo cp -f "$HOME/.bin/aurupdate" '/usr/local/bin/aurupdate'
+sudo cp -f "$HOME/.bin/aur-remove" '/usr/local/bin/aur-remove'
+sudo cp -f "$HOME/.bin/aur-tmpfs" '/usr/local/bin/aur-tmpfs'
+sudo cp -f "$HOME/.bin/aur-update" '/usr/local/bin/aur-update'
+sudo cp -f "$HOME/projects/aurutils/contrib/vercmp-devel" '/usr/local/bin/aur-vercmp-devel'
+sudo cp -fs "/usr/share/aurutils/contrib/vercmp-devel" '/usr/local/bin/aur-vercmp-devel'
 sudo cp -f "$HOME/.bin/edit-in-vim" '/usr/local/bin/edit-in-vim'

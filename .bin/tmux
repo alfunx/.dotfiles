@@ -2,7 +2,7 @@
 
 if [[ $1 = '.' ]]; then
     if [[ -f './.tmux' ]]; then
-        read -r -p "[1;97mSource [1;31m$(pwd)/.tmux[1;97m? [yN] [0m" reply
+        read -r -p "[1;97mSource [1;91m$(pwd)/.tmux[1;97m? [yN] [0m" reply
         echo
 
         if [[ ! $reply =~ ^[Yy]$ ]]; then
