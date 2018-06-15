@@ -41,34 +41,34 @@ colors.white_2          = "#ebdbb2"
 colors.orange_1         = "#d65d0e"
 colors.orange_2         = "#fe8019"
 
-colors.bw0_h            = "#1d2021"
-colors.bw0              = "#282828"
-colors.bw0_s            = "#32302f"
-colors.bw1              = "#3c3836"
-colors.bw2              = "#504945"
-colors.bw3              = "#665c54"
-colors.bw4              = "#7c6f64"
-colors.bw5              = "#928374"
-colors.bw6              = "#a89984"
-colors.bw7              = "#bdae93"
-colors.bw8              = "#d5c4a1"
-colors.bw9              = "#ebdbb2"
-colors.bw10             = "#fbf1c7"
+colors.bw_0_h           = "#1d2021"
+colors.bw_0             = "#282828"
+colors.bw_0_s           = "#32302f"
+colors.bw_1             = "#3c3836"
+colors.bw_2             = "#504945"
+colors.bw_3             = "#665c54"
+colors.bw_4             = "#7c6f64"
+colors.bw_5             = "#928374"
+colors.bw_6             = "#a89984"
+colors.bw_7             = "#bdae93"
+colors.bw_8             = "#d5c4a1"
+colors.bw_9             = "#ebdbb2"
+colors.bw_10            = "#fbf1c7"
 
 context.colors = gears.table.join(colors, context.colors)
 colors = context.colors
 
-local fs_bg             = colors.bw2
-local temp_bg           = colors.bw2
-local pacman_bg         = colors.bw2
-local users_bg          = colors.bw2
-local sysload_bg        = colors.bw2
-local cpu_bg            = colors.bw2
-local mem_bg            = colors.bw2
-local vol_bg            = colors.bw2
-local bat_bg            = colors.bw2
-local net_bg            = colors.bw1
-local clock_bg          = colors.bw0
+local fs_bg             = colors.bw_2
+local temp_bg           = colors.bw_2
+local pacman_bg         = colors.bw_2
+local users_bg          = colors.bw_2
+local sysload_bg        = colors.bw_2
+local cpu_bg            = colors.bw_2
+local mem_bg            = colors.bw_2
+local vol_bg            = colors.bw_2
+local bat_bg            = colors.bw_2
+local net_bg            = colors.bw_1
+local clock_bg          = colors.bw_0
 
 local theme                                     = { }
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-gruvbox"
@@ -87,54 +87,54 @@ theme.font_italic                               = font_name .. " " .. "Italic"  
 theme.font_bold_italic                          = font_name .. " " .. "Bold Italic" .. " " .. font_size
 theme.font_big                                  = font_name .. " " .. "Bold"        .. " 16"
 
-theme.border_normal                             = colors.bw2
-theme.border_focus                              = colors.bw5
-theme.border_marked                             = colors.bw5
+theme.border_normal                             = colors.bw_2
+theme.border_focus                              = colors.bw_5
+theme.border_marked                             = colors.bw_5
 
-theme.fg_normal                                 = colors.bw9
+theme.fg_normal                                 = colors.bw_9
 theme.fg_focus                                  = colors.red_2
-theme.fg_urgent                                 = colors.bw0
-theme.bg_normal                                 = colors.bw0
-theme.bg_focus                                  = colors.bw2
+theme.fg_urgent                                 = colors.bw_0
+theme.bg_normal                                 = colors.bw_0
+theme.bg_focus                                  = colors.bw_2
 theme.bg_urgent                                 = colors.red_2
 
 theme.taglist_font                              = theme.font_bold
 theme.taglist_fg_normal                         = theme.fg_normal
 theme.taglist_fg_focus                          = theme.fg_focus
-theme.taglist_fg_urgent                         = colors.bw0
-theme.taglist_bg_normal                         = colors.bw0
-theme.taglist_bg_occupied                       = colors.bw0
-theme.taglist_bg_empty                          = colors.bw0
-theme.taglist_bg_volatile                       = colors.bw0
-theme.taglist_bg_focus                          = colors.bw0
+theme.taglist_fg_urgent                         = colors.bw_0
+theme.taglist_bg_normal                         = colors.bw_0
+theme.taglist_bg_occupied                       = colors.bw_0
+theme.taglist_bg_empty                          = colors.bw_0
+theme.taglist_bg_volatile                       = colors.bw_0
+theme.taglist_bg_focus                          = colors.bw_0
 theme.taglist_bg_urgent                         = colors.red_2
 
 theme.tasklist_font_normal                      = theme.font
 theme.tasklist_font_focus                       = theme.font_bold
 theme.tasklist_font_urgent                      = theme.font_bold
-theme.tasklist_fg_normal                        = colors.bw7
-theme.tasklist_fg_focus                         = colors.bw9
-theme.tasklist_fg_minimize                      = colors.bw5
+theme.tasklist_fg_normal                        = colors.bw_7
+theme.tasklist_fg_focus                         = colors.bw_9
+theme.tasklist_fg_minimize                      = colors.bw_5
 theme.tasklist_fg_urgent                        = colors.red_2
-theme.tasklist_bg_normal                        = colors.bw3
-theme.tasklist_bg_focus                         = colors.bw4
-theme.tasklist_bg_urgent                        = colors.bw2
+theme.tasklist_bg_normal                        = colors.bw_3
+theme.tasklist_bg_focus                         = colors.bw_4
+theme.tasklist_bg_urgent                        = colors.bw_2
 
-theme.titlebar_fg_normal                        = colors.bw5
-theme.titlebar_fg_focus                         = colors.bw8
-theme.titlebar_fg_marked                        = colors.bw8
+theme.titlebar_fg_normal                        = colors.bw_5
+theme.titlebar_fg_focus                         = colors.bw_8
+theme.titlebar_fg_marked                        = colors.bw_8
 theme.titlebar_bg_normal                        = theme.border_normal
 theme.titlebar_bg_focus                         = theme.border_focus
 theme.titlebar_bg_marked                        = theme.border_marked
 
 theme.hotkeys_border_width                      = dpi(30)
-theme.hotkeys_border_color                      = colors.bw0
+theme.hotkeys_border_color                      = colors.bw_0
 theme.hotkeys_group_margin                      = dpi(30)
 theme.hotkeys_shape                             = function(cr, width, height)
                                                       gears.shape.rounded_rect(cr, width, height, dpi(20))
                                                   end
 
-theme.prompt_bg                                 = colors.bw2
+theme.prompt_bg                                 = colors.bw_2
 theme.prompt_fg                                 = theme.fg_normal
 theme.bg_systray                                = theme.tasklist_bg_normal
 
