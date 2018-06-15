@@ -49,11 +49,14 @@ colors.bw_8             = "#504945"
 colors.bw_9             = "#3c3836"
 colors.bw_10            = "#282828"
 
-context.colors = gears.table.join(colors, context.colors)
+context.util.set_colors(colors)
+colors = context.colors
 
-local theme = require("themes.blackout.theme")
 -- Use _dir to preserve parent theme.dir
-theme._dir                                      = os.getenv("HOME") .. "/.config/awesome/themes/whiteout"
+local theme = require("themes.blackout.theme")
+theme.name = "whiteout"
+theme.alternative = "blackout"
+theme._dir = string.format("%s/.config/awesome/themes/%s", os.getenv("HOME"), theme.name)
 
 theme.wallpaper                                 = theme._dir .. "/wallpapers/wall.png"
 

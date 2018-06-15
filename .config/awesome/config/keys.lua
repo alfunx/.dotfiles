@@ -44,6 +44,10 @@ function config.init(context)
         awful.key({ modkey, ctrlkey           }, "z", function() awful.spawn("sync"); awful.spawn("xautolock -locknow") end,
                   {description = "lock screen", group = "awesome"}),
 
+        -- Switch to alternative theme
+        awful.key({ modkey, altkey            }, "z", context.util.alternate_theme,
+                  {description = "switch to alternative theme", group = "awesome"}),
+
         -- Hotkeys
         awful.key({ modkey                    }, "Return", function() awful.spawn(terminal) end,
                   {description = "open a terminal", group = "launcher"}),

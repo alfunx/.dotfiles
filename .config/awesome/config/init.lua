@@ -1,5 +1,6 @@
 local config = {
     util = require("config.util"),
+    util_theme = require("config.util_theme"),
     menu = require("config.menu"),
     widgets = require("config.widgets"),
     keys = require("config.keys"),

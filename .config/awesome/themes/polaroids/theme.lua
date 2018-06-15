@@ -60,8 +60,9 @@ colors = context.colors
 local bar_fg    = colors.bw_5
 local bar_bg    = colors.bw_0 .. "00"
 
-local theme                                     = { }
-theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/polaroids"
+local theme = {}
+theme.name = "polaroids"
+theme.dir = string.format("%s/.config/awesome/themes/%s", os.getenv("HOME"), theme.name)
 
 theme.wallpaper                                 = theme.dir .. "/wallpapers/wall.png"
 

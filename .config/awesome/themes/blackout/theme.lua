@@ -55,14 +55,16 @@ colors.bw_8             = "#d5c4a1"
 colors.bw_9             = "#ebdbb2"
 colors.bw_10            = "#fbf1c7"
 
-context.colors = gears.table.join(colors, context.colors)
+context.util.set_colors(colors)
 colors = context.colors
 
 local bar_fg            = colors.bw_5
 local bar_bg            = colors.bw_0
 
-local theme                                     = { }
-theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/blackout"
+local theme = {}
+theme.name = "blackout"
+theme.alternative = "whiteout"
+theme.dir = string.format("%s/.config/awesome/themes/%s", os.getenv("HOME"), theme.name)
 
 theme.wallpaper                                 = theme.dir .. "/wallpapers/wall.png"
 
@@ -890,8 +892,10 @@ function theme.at_screen_connect(s)
     -- gears.wallpaper.maximized(wallpaper, s, true)
     gears.wallpaper.tiled(wallpaper, s)
 
-    -- Tags
-    awful.tag(awful.util.tagnames, s, awful.util.layouts)
+    -- Add tags if there are none
+    if #s.tags == 0 then
+        awful.tag(awful.util.tagnames, s, awful.util.layouts)
+    end
 
     -- Create a promptbox for each screen
     s._promptbox = awful.widget.prompt()

@@ -70,8 +70,9 @@ local bat_bg            = colors.bw_2
 local net_bg            = colors.bw_1
 local clock_bg          = colors.bw_0
 
-local theme                                     = { }
-theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-gruvbox"
+local theme = {}
+theme.name = "powerarrow-gruvbox"
+theme.dir = string.format("%s/.config/awesome/themes/%s", os.getenv("HOME"), theme.name)
 
 -- theme.wallpaper                                 = theme.dir .. "/wallpapers/wall.png"
 
