@@ -9,44 +9,6 @@
 
 --]]
 
--- Gruvbox colors
-
-local black_1          = "#282828"
-local black_2          = "#928374"
-local red_1            = "#cc241d"
-local red_2            = "#fb4934"
-local green_1          = "#98971a"
-local green_2          = "#b8bb26"
-local yellow_1         = "#d79921"
-local yellow_2         = "#fabd2f"
-local blue_1           = "#458588"
-local blue_2           = "#83a598"
-local purple_1         = "#b16286"
-local purple_2         = "#d3869b"
-local aqua_1           = "#689d6a"
-local aqua_2           = "#8ec07c"
-local white_1          = "#a89984"
-local white_2          = "#ebdbb2"
-local orange_1         = "#d65d0e"
-local orange_2         = "#fe8019"
-
-local bw0_h            = "#1d2021"
-local bw0              = "#282828"
-local bw0_s            = "#32302f"
-local bw1              = "#3c3836"
-local bw2              = "#504945"
-local bw3              = "#665c54"
-local bw4              = "#7c6f64"
-local bw5              = "#928374"
-local bw6              = "#a89984"
-local bw7              = "#bdae93"
-local bw8              = "#d5c4a1"
-local bw9              = "#ebdbb2"
-local bw10             = "#fbf1c7"
-
-local bar_fg_normal    = bw5
-local bar_bg_normal    = bw0
-
 local gears            = require("gears")
 local lain             = require("lain")
 local widgets          = require("widgets")
@@ -57,6 +19,47 @@ local xresources       = require("beautiful.xresources")
 local context          = require("config").context
 local dpi              = xresources.apply_dpi
 local os, math, string = os, math, string
+
+local colors = {}
+
+colors.black_1          = "#282828"
+colors.black_2          = "#928374"
+colors.red_1            = "#cc241d"
+colors.red_2            = "#fb4934"
+colors.green_1          = "#98971a"
+colors.green_2          = "#b8bb26"
+colors.yellow_1         = "#d79921"
+colors.yellow_2         = "#fabd2f"
+colors.blue_1           = "#458588"
+colors.blue_2           = "#83a598"
+colors.purple_1         = "#b16286"
+colors.purple_2         = "#d3869b"
+colors.aqua_1           = "#689d6a"
+colors.aqua_2           = "#8ec07c"
+colors.white_1          = "#a89984"
+colors.white_2          = "#ebdbb2"
+colors.orange_1         = "#d65d0e"
+colors.orange_2         = "#fe8019"
+
+colors.bw0_h            = "#1d2021"
+colors.bw0              = "#282828"
+colors.bw0_s            = "#32302f"
+colors.bw1              = "#3c3836"
+colors.bw2              = "#504945"
+colors.bw3              = "#665c54"
+colors.bw4              = "#7c6f64"
+colors.bw5              = "#928374"
+colors.bw6              = "#a89984"
+colors.bw7              = "#bdae93"
+colors.bw8              = "#d5c4a1"
+colors.bw9              = "#ebdbb2"
+colors.bw10             = "#fbf1c7"
+
+context.colors = gears.table.join(colors, context.colors)
+colors = context.colors
+
+local bar_fg            = colors.bw5
+local bar_bg            = colors.bw0
 
 local theme                                     = { }
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/blackout"
@@ -79,57 +82,57 @@ theme.font_italic                               = font_name .. " " .. "Italic"  
 theme.font_bold_italic                          = font_name .. " " .. "Bold Italic" .. " " .. font_size
 theme.font_big                                  = font_name .. " " .. "Bold"        .. " 16"
 
-theme.border_normal                             = bw2
-theme.border_focus                              = bw5
-theme.border_marked                             = bw5
+theme.border_normal                             = colors.bw2
+theme.border_focus                              = colors.bw5
+theme.border_marked                             = colors.bw5
 
-theme.fg_normal                                 = bw9
-theme.fg_focus                                  = red_2
-theme.fg_urgent                                 = bw0
-theme.bg_normal                                 = bw0
-theme.bg_focus                                  = bw2
-theme.bg_urgent                                 = red_2
+theme.fg_normal                                 = colors.bw9
+theme.fg_focus                                  = colors.red_2
+theme.fg_urgent                                 = colors.bw0
+theme.bg_normal                                 = colors.bw0
+theme.bg_focus                                  = colors.bw2
+theme.bg_urgent                                 = colors.red_2
 
 theme.taglist_font                              = theme.font_bold
-theme.taglist_fg_normal                         = bw5
-theme.taglist_fg_occupied                       = bw5
-theme.taglist_fg_empty                          = bw1
-theme.taglist_fg_volatile                       = aqua_2
-theme.taglist_fg_focus                          = bw9
-theme.taglist_fg_urgent                         = red_2
-theme.taglist_bg_normal                         = bw0
-theme.taglist_bg_occupied                       = bw0
-theme.taglist_bg_empty                          = bw0
-theme.taglist_bg_volatile                       = bw0
-theme.taglist_bg_focus                          = bw2
-theme.taglist_bg_urgent                         = bw1
+theme.taglist_fg_normal                         = colors.bw5
+theme.taglist_fg_occupied                       = colors.bw5
+theme.taglist_fg_empty                          = colors.bw1
+theme.taglist_fg_volatile                       = colors.aqua_2
+theme.taglist_fg_focus                          = colors.bw9
+theme.taglist_fg_urgent                         = colors.red_2
+theme.taglist_bg_normal                         = colors.bw0
+theme.taglist_bg_occupied                       = colors.bw0
+theme.taglist_bg_empty                          = colors.bw0
+theme.taglist_bg_volatile                       = colors.bw0
+theme.taglist_bg_focus                          = colors.bw2
+theme.taglist_bg_urgent                         = colors.bw1
 
 theme.tasklist_font_normal                      = theme.font
 theme.tasklist_font_focus                       = theme.font_bold
 theme.tasklist_font_urgent                      = theme.font_bold
-theme.tasklist_fg_normal                        = bw5
-theme.tasklist_fg_focus                         = bw8
-theme.tasklist_fg_minimize                      = bw2
-theme.tasklist_fg_urgent                        = red_2
-theme.tasklist_bg_normal                        = bw0
-theme.tasklist_bg_focus                         = bw0
-theme.tasklist_bg_urgent                        = bw0
+theme.tasklist_fg_normal                        = colors.bw5
+theme.tasklist_fg_focus                         = colors.bw8
+theme.tasklist_fg_minimize                      = colors.bw2
+theme.tasklist_fg_urgent                        = colors.red_2
+theme.tasklist_bg_normal                        = colors.bw0
+theme.tasklist_bg_focus                         = colors.bw0
+theme.tasklist_bg_urgent                        = colors.bw0
 
-theme.titlebar_fg_normal                        = bw5
-theme.titlebar_fg_focus                         = bw8
-theme.titlebar_fg_marked                        = bw8
+theme.titlebar_fg_normal                        = colors.bw5
+theme.titlebar_fg_focus                         = colors.bw8
+theme.titlebar_fg_marked                        = colors.bw8
 theme.titlebar_bg_normal                        = theme.border_normal
 theme.titlebar_bg_focus                         = theme.border_focus
 theme.titlebar_bg_marked                        = theme.border_marked
 
 theme.hotkeys_border_width                      = dpi(30)
-theme.hotkeys_border_color                      = bw0
+theme.hotkeys_border_color                      = colors.bw0
 theme.hotkeys_group_margin                      = dpi(30)
 theme.hotkeys_shape                             = function(cr, width, height)
                                                       gears.shape.rounded_rect(cr, width, height, dpi(20))
                                                   end
 
-theme.prompt_bg                                 = bw0
+theme.prompt_bg                                 = colors.bw0
 theme.prompt_fg                                 = theme.fg_normal
 theme.bg_systray                                = theme.tasklist_bg_normal
 
@@ -261,7 +264,7 @@ naughty.config.presets.warn                     = naughty.config.presets.normal
 
 naughty.config.presets.critical                 = {
                                                       font         = theme.font,
-                                                      fg           = red_2,
+                                                      fg           = colors.red_2,
                                                       bg           = theme.notification_bg,
                                                       border_width = theme.notification_border_width,
                                                       margin       = theme.notification_margin,
@@ -277,7 +280,7 @@ local clock = awful.widget.watch(
     -- "date +'%a %d %b %R'", 60,
     "date +'%R'", 5,
     function(widget, stdout)
-        widget:set_markup(markup.fontfg(theme.font_bold, bw8, stdout))
+        widget:set_markup(markup.fontfg(theme.font_bold, colors.bw8, stdout))
     end
 )
 
@@ -361,17 +364,17 @@ local memicon = wibox.widget.imagebox(theme.widget_mem)
 local mem = lain.widget.mem {
     timeout = 5,
     settings = function()
-        local _color = bar_fg_normal
+        local _color = bar_fg
         local _font = theme.font
 
         if tonumber(mem_now.perc) >= 90 then
-            _color = red_2
+            _color = colors.red_2
             _font = theme.font
         elseif tonumber(mem_now.perc) >= 80 then
-            _color = orange_2
+            _color = colors.orange_2
             _font = theme.font
         elseif tonumber(mem_now.perc) >= 70 then
-            _color = yellow_2
+            _color = colors.yellow_2
             _font = theme.font
         end
 
@@ -419,17 +422,17 @@ local cpuicon = wibox.widget.imagebox(theme.widget_cpu)
 local cpu = lain.widget.cpu {
     timeout = 5,
     settings = function()
-        local _color = bar_fg_normal
+        local _color = bar_fg
         local _font = theme.font
 
         if tonumber(cpu_now.usage) >= 90 then
-            _color = red_2
+            _color = colors.red_2
             _font = theme.font
         elseif tonumber(cpu_now.usage) >= 80 then
-            _color = orange_2
+            _color = colors.orange_2
             _font = theme.font
         elseif tonumber(cpu_now.usage) >= 70 then
-            _color = yellow_2
+            _color = colors.yellow_2
             _font = theme.font
         end
 
@@ -466,20 +469,20 @@ local sysloadicon = wibox.widget.imagebox(theme.widget_hdd)
 local sysload = lain.widget.sysload {
     timeout = 5,
     settings = function()
-        local _color = bar_fg_normal
+        local _color = bar_fg
         local _font = theme.font
 
         -- check with: grep 'model name' /proc/cpuinfo | wc -l
         local number_of_cores = 4
 
         if tonumber(load_5) / number_of_cores >= 1.5 then
-            _color = red_2
+            _color = colors.red_2
             _font = theme.font
         elseif tonumber(load_5) / number_of_cores >= 1.0 then
-            _color = orange_2
+            _color = colors.orange_2
             _font = theme.font
         elseif tonumber(load_5) / number_of_cores >= 0.7 then
-            _color = yellow_2
+            _color = colors.yellow_2
             _font = theme.font
         end
         widget:set_markup(markup.fontfg(_font, _color, load_5))
@@ -518,7 +521,7 @@ theme.pacman = widgets.pacman {
     notify = "on",
     notification_preset = naughty.config.presets.normal,
     settings = function()
-        local _color = bar_fg_normal
+        local _color = bar_fg
         local _font = theme.font
         widget:set_markup(markup.fontfg(_font, _color, available))
     end,
@@ -539,11 +542,11 @@ end))
 local usersicon = wibox.widget.imagebox(theme.widget_users)
 local users = widgets.users {
     settings = function()
-        local _color = bar_fg_normal
+        local _color = bar_fg
         local _font = theme.font
 
         if tonumber(logged_in) > 1 then
-            _color = red_2
+            _color = colors.red_2
             _font = theme.font
         end
         widget:set_markup(markup.fontfg(_font, _color, logged_in))
@@ -586,17 +589,17 @@ end)
 -- local temp = lain.widget.temp({
 --     tempfile = "/sys/class/thermal/thermal_zone7/temp",
 --     settings = function()
---         local _color = bar_fg_normal
+--         local _color = bar_fg
 --         local _font = theme.font
 --
 --         if tonumber(coretemp_now) >= 90 then
---             _color = red_2
+--             _color = colors.red_2
 --             _font = theme.font
 --         elseif tonumber(coretemp_now) >= 80 then
---             _color = orange_2
+--             _color = colors.orange_2
 --             _font = theme.font
 --         elseif tonumber(coretemp_now) >= 70 then
---             _color = yellow_2
+--             _color = colors.yellow_2
 --             _font = theme.font
 --         end
 --         widget:set_markup(markup.fontfg(_font, _color, coretemp_now))
@@ -612,9 +615,9 @@ end)
 -- local fsicon = wibox.widget.imagebox(theme.widget_hdd)
 -- theme.fs = lain.widget.fs({
 --     options  = "--exclude-type=tmpfs",
---     notification_preset = { fg = bar_fg_normal, bg = theme.border_normal, font = "xos4 Terminus 10" },
+--     notification_preset = { fg = bar_fg, bg = theme.border_normal, font = "xos4 Terminus 10" },
 --     settings = function()
---         widget:set_markup(markup.fontfg(theme.font, bar_fg_normal, " " .. fs_now.available_gb .. "GB "))
+--         widget:set_markup(markup.fontfg(theme.font, bar_fg, " " .. fs_now.available_gb .. "GB "))
 --     end,
 -- })
 
@@ -639,7 +642,7 @@ theme.volume = lain.widget.alsa {
             volicon:set_image(theme.widget_vol)
         end
 
-        widget:set_markup(markup.fontfg(theme.font, bar_fg_normal, volume_now.level))
+        widget:set_markup(markup.fontfg(theme.font, bar_fg, volume_now.level))
 
         if theme.volume.manual then
             if theme.volume.notification then
@@ -702,23 +705,23 @@ vol_widget:buttons(gears.table.join(
 
 -- local battery_palette = widgets.widget_palette {
 --     [10] = {
---         color = red_2,
+--         color = colors.red_2,
 --         icon = theme.widget_battery_empty,
 --     },
 --     [20] = {
---         color = orange_2,
+--         color = colors.orange_2,
 --         icon = theme.widget_battery_low,
 --     },
 --     [30] = {
---         color = yellow_2,
+--         color = colors.yellow_2,
 --         icon = theme.widget_battery_low,
 --     },
 --     [50] = {
---         color = bar_fg_normal,
+--         color = bar_fg,
 --         icon = theme.widget_battery_low,
 --     },
 --     [100] = {
---         color = bar_fg_normal,
+--         color = bar_fg,
 --         icon = theme.widget_battery,
 --     }
 -- }
@@ -729,20 +732,20 @@ local bat = lain.widget.bat {
     batteries = context.vars.batteries,
     ac = context.vars.ac,
     settings = function()
-        local _color = bar_fg_normal
+        local _color = bar_fg
         local _font = theme.font
 
         if tonumber(bat_now.perc) <= 10 then
             baticon:set_image(theme.widget_battery_empty)
-            _color = red_2
+            _color = colors.red_2
             _font = theme.font
         elseif tonumber(bat_now.perc) <= 20 then
             baticon:set_image(theme.widget_battery_low)
-            _color = orange_2
+            _color = colors.orange_2
             _font = theme.font
         elseif tonumber(bat_now.perc) <= 30 then
             baticon:set_image(theme.widget_battery_low)
-            _color = yellow_2
+            _color = colors.yellow_2
             _font = theme.font
         elseif tonumber(bat_now.perc) <= 50 then
             baticon:set_image(theme.widget_battery_low)
@@ -765,7 +768,7 @@ local bat = lain.widget.bat {
         if bat_now.ac_status == 1 then
             baticon:set_image(theme.widget_ac)
             if tonumber(bat_now.perc) >= 95 then
-                _color = green_2
+                _color = colors.green_2
                 _font = theme.font
             end
         end
@@ -799,7 +802,7 @@ end))
 --     city_id = 2661604,
 --     settings = function()
 --         units = math.floor(weather_now["main"]["temp"])
---         widget:set_markup(markup.fontfg(theme.font, bar_fg_normal, " " .. units .. "°C "))
+--         widget:set_markup(markup.fontfg(theme.font, bar_fg, " " .. units .. "°C "))
 --     end,
 -- })
 
@@ -818,11 +821,11 @@ local net = lain.widget.net {
     units = 1048576, -- in MB/s (1024^2)
     -- units = 131072, -- in Mbit/s / Mbps (1024^2/8)
     settings = function()
-        local _color = bar_fg_normal
+        local _color = bar_fg
         local _font = theme.font
 
         if not net_now.state or net_now.state == "down" then
-            _color = red_2
+            _color = colors.red_2
             _font = theme.font
             widget:set_markup(markup.fontfg(_font, _color, " N/A "))
         else
@@ -986,8 +989,8 @@ function theme.at_screen_connect(s)
         position = "top",
         screen = s,
         height = dpi(25) + theme.border_width,
-        fg = bar_fg_normal,
-        bg = bar_bg_normal,
+        fg = bar_fg,
+        bg = bar_bg,
     }
 
     local systray_widget = wibox.widget {
@@ -1029,7 +1032,7 @@ function theme.at_screen_connect(s)
                             bottom = dpi(5),
                             widget = wibox.container.margin,
                         },
-                        bg = bar_bg_normal,
+                        bg = bar_bg,
                         widget = wibox.container.background,
                     },
 
@@ -1043,7 +1046,7 @@ function theme.at_screen_connect(s)
                             right = dpi(8),
                             widget = wibox.container.margin,
                         },
-                        bg = bar_bg_normal,
+                        bg = bar_bg,
                         widget = wibox.container.background,
                     },
 
@@ -1077,31 +1080,31 @@ function theme.at_screen_connect(s)
                         right = dpi(0),
                         widget = wibox.container.margin,
                     },
-                    bg = bar_bg_normal,
+                    bg = bar_bg,
                     widget = wibox.container.background,
                 },
 
                 { -- Right widgets
                     layout = wibox.layout.fixed.horizontal,
 
-                    wibox.container.background(wibox.container.margin(systray_widget, dpi(0), dpi(8)), bar_bg_normal),
+                    wibox.container.background(wibox.container.margin(systray_widget, dpi(0), dpi(8)), bar_bg),
 
                     vert_sep,
-                    -- wibox.container.background(wibox.container.margin(fs_widget,      dpi(2), dpi(6)), bar_bg_normal),
-                    -- wibox.container.background(wibox.container.margin(temp_widget,    dpi(2), dpi(6)), bar_bg_normal),
-                    wibox.container.background(wibox.container.margin(pacman_widget,  dpi(2), dpi(6)),  bar_bg_normal),
-                    wibox.container.background(wibox.container.margin(users_widget,   dpi(2), dpi(6)),  bar_bg_normal),
-                    wibox.container.background(wibox.container.margin(sysload_widget, dpi(2), dpi(6)),  bar_bg_normal),
-                    wibox.container.background(wibox.container.margin(cpu_widget,     dpi(2), dpi(6)),  bar_bg_normal),
-                    wibox.container.background(wibox.container.margin(mem_widget,     dpi(2), dpi(6)),  bar_bg_normal),
-                    wibox.container.background(wibox.container.margin(vol_widget,     dpi(2), dpi(6)),  bar_bg_normal),
-                    wibox.container.background(wibox.container.margin(bat_widget,     dpi(2), dpi(10)), bar_bg_normal),
+                    -- wibox.container.background(wibox.container.margin(fs_widget,      dpi(2), dpi(6)), bar_bg),
+                    -- wibox.container.background(wibox.container.margin(temp_widget,    dpi(2), dpi(6)), bar_bg),
+                    wibox.container.background(wibox.container.margin(pacman_widget,  dpi(2), dpi(6)),  bar_bg),
+                    wibox.container.background(wibox.container.margin(users_widget,   dpi(2), dpi(6)),  bar_bg),
+                    wibox.container.background(wibox.container.margin(sysload_widget, dpi(2), dpi(6)),  bar_bg),
+                    wibox.container.background(wibox.container.margin(cpu_widget,     dpi(2), dpi(6)),  bar_bg),
+                    wibox.container.background(wibox.container.margin(mem_widget,     dpi(2), dpi(6)),  bar_bg),
+                    wibox.container.background(wibox.container.margin(vol_widget,     dpi(2), dpi(6)),  bar_bg),
+                    wibox.container.background(wibox.container.margin(bat_widget,     dpi(2), dpi(10)), bar_bg),
 
                     vert_sep,
-                    wibox.container.background(wibox.container.margin(net_widget,     dpi(8), dpi(10)), bar_bg_normal),
+                    wibox.container.background(wibox.container.margin(net_widget,     dpi(8), dpi(10)), bar_bg),
 
                     vert_sep,
-                    wibox.container.background(wibox.container.margin(clock_widget,   dpi(8), dpi(8)),  bar_bg_normal),
+                    wibox.container.background(wibox.container.margin(clock_widget,   dpi(8), dpi(8)),  bar_bg),
                 },
             },
         },

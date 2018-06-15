@@ -118,7 +118,6 @@ function config.init(context)
         if beautiful.titlebar_positions then
             for _, v in pairs(beautiful.titlebar_positions) do
                 f(c, v)
-                require("naughty").notify { text = v }
             end
         else
             f(c)
