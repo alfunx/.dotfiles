@@ -8,7 +8,7 @@ function config.init(context)
     -- Rules to apply to new clients (through the "manage" signal).
     awful.rules.rules = {
 
-        -- all clients will match this rule
+        -- All clients will match this rule
         {
             rule = { },
             properties = {
@@ -25,7 +25,7 @@ function config.init(context)
             },
         },
 
-        -- enable titlebars
+        -- Enable titlebars
         {
             rule_any = {
                 type = {
@@ -38,7 +38,7 @@ function config.init(context)
             },
         },
 
-        -- no borders if maximized
+        -- No borders if maximized
         {
             rule = {
                 maximized = true,
@@ -108,7 +108,7 @@ function config.init(context)
             },
         },
 
-        -- clients that should float
+        -- Clients that should float
         {
             rule_any = {
                 class = {

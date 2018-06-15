@@ -871,6 +871,8 @@ local vert_sep = wibox.widget {
     color = theme.border_normal,
 }
 
+-- NOTE: This will be called after fully initializing the context-object, so
+--       context.util etc. can be used here.
 function theme.at_screen_connect(s)
     -- Quake application
     s.quake = lain.util.quake {

@@ -57,6 +57,7 @@ context.vars.ac               = "AC"
 context.vars.checkupdate      = "( sudo checkupdates & pacaur -k --color never | sed 's/:: [a-zA-Z0-9]\\+ //' ) | sed 's/->/→/' | sort | column -t"
 context.vars.checkupdate      = "sudo checkupdates | sed 's/->/→/' | sort | column -t"
 context.vars.scripts_dir      = os.getenv("HOME") .. "/.bin"
+context.vars.sloppy_focus     = false
 
 -- For compatibility with copycat-themes
 awful.util.terminal           = context.vars.terminal

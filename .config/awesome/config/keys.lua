@@ -11,6 +11,7 @@ local config = {}
 function config.init(context)
 
     context.keys = context.keys or {}
+    context.mouse = context.mouse or {}
 
     local modkey      = context.keys.modkey
     local altkey      = context.keys.altkey
@@ -23,13 +24,6 @@ function config.init(context)
 
     local terminal    = context.vars.terminal
     local browser     = context.vars.browser
-
-    -- Mouse bindings
-    root.buttons(gears.table.join(
-        awful.button({ }, 3, function() awful.util._mainmenu:toggle() end)
-        -- awful.button({ }, 4, awful.tag.viewnext),
-        -- awful.button({ }, 5, awful.tag.viewprev)
-    ))
 
     -- Exit mode
     context.keys.escape =
@@ -446,6 +440,16 @@ function config.init(context)
 
     -- Set keys
     root.keys(context.keys.global)
+
+    -- Mouse bindings
+    context.mouse.global = gears.table.join(
+        awful.button({                  }, 3, function() awful.util._mainmenu:toggle() end)
+        -- awful.button({                  }, 4, awful.tag.viewnext),
+        -- awful.button({                  }, 5, awful.tag.viewprev)
+    )
+
+    -- Set buttons
+    root.buttons(context.mouse.global)
 
 end
 

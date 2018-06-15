@@ -109,14 +109,6 @@ function config.init(context)
         end
     end)
 
-    -- -- Enable sloppy focus, so that focus follows mouse.
-    -- client.connect_signal("mouse::enter", function(c)
-    --     if awful.layout.get(c.screen) ~= awful.layout.suit.magnifier
-    --         and awful.client.focus.filter(c) then
-    --         client.focus = c
-    --     end
-    -- end)
-
     client.connect_signal("property::fullscreen", function(c)
         if c.fullscreen then
             c.border_width = 0
@@ -172,6 +164,16 @@ function config.init(context)
         -- Delete the tag and move it to other screen
         t:delete(fallback_tag, true)
     end)
+
+    -- Enable sloppy focus, so that focus follows mouse.
+    if context.vars.sloppy_focus then
+        client.connect_signal("mouse::enter", function(c)
+            if awful.layout.get(c.screen) ~= awful.layout.suit.magnifier
+                and awful.client.focus.filter(c) then
+                client.focus = c
+            end
+        end)
+    end
 
 end
 return config

@@ -19,15 +19,16 @@ function config.init(context)
         icon_size = beautiful.menu_height or 16,
         before = {
             { "Awesome", _awesomemenu, beautiful.awesome_icon },
-            -- other triads can be put here
+            -- Other triads can be put here
         },
         after = {
             { "Open terminal", context.vars.terminal },
-            -- other triads can be put here
+            -- Other triads can be put here
         },
     }
 
-    menubar.utils.terminal = context.vars.terminal -- Set the Menubar terminal for applications that require it
+    -- Set the Menubar terminal for applications that require it
+    menubar.utils.terminal = context.vars.terminal
 
 end
 

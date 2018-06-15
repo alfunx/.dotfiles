@@ -862,6 +862,8 @@ end
 --     return wibox.container.background(wibox.container.margin(widget, dpi(16), dpi(16)), bgcolor, theme.powerline_rl)
 -- end
 
+-- NOTE: This will be called after fully initializing the context-object, so
+--       context.util etc. can be used here.
 function theme.at_screen_connect(s)
     -- Quake application
     s.quake = lain.util.quake {

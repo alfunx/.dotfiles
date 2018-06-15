@@ -417,6 +417,8 @@ local function rowfilter(t)
     return math.floor((index - 1) / columns) == math.floor((selected - 1) / columns)
 end
 
+-- NOTE: This will be called after fully initializing the context-object, so
+--       context.util etc. can be used here.
 function theme.at_screen_connect(s)
     -- Quake application
     s.quake = lain.util.quake {
