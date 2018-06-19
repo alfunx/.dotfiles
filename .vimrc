@@ -231,12 +231,8 @@ nnoremap gV `[v`]
 " Move cursor by dipslay lines when wrapping
 nnoremap <expr> j v:count ? 'j' : 'gj'
 nnoremap <expr> k v:count ? 'k' : 'gk'
-nnoremap <expr> 0 v:count ? 'k' : 'g0'
-nnoremap <expr> $ v:count ? 'k' : 'g$'
 xnoremap <expr> j v:count ? 'j' : 'gj'
 xnoremap <expr> k v:count ? 'k' : 'gk'
-xnoremap <expr> 0 v:count ? 'k' : 'g0'
-xnoremap <expr> $ v:count ? 'k' : 'g$'
 
 " Go to tab
 execute "set <M-1>=\<Esc>1"
