@@ -1,5 +1,7 @@
 local gears = require("gears")
+local awful = require("awful")
 local beautiful = require("beautiful")
+local naughty = require("naughty")
 
 local config = {}
 
@@ -36,6 +38,15 @@ function config.init(context)
         end
         if client.focus then
             client.focus:emit_signal("focus")
+        end
+
+        if context.vars.update_applications then
+            awful.spawn.easy_async(string.format("%s/alternate %s", beautiful.dir, context.theme), function(stdout, stderr, reason, exit_code)
+                naughty.notify {
+                    title = "Theme",
+                    text = string.format("Switched to \"%s\".", context.theme),
+                }
+            end)
         end
     end
 

@@ -49,15 +49,17 @@ context.keys.u_key            = "k"
 context.keys.d_key            = "j"
 
 context.vars = { }
+context.vars.sloppy_focus     = false
+context.vars.update_apps      = false
 context.vars.terminal         = "kitty"
+-- context.vars.terminal         = "kitty -1 --listen-on unix:/tmp/_kitty_" .. os.getenv("USER")
 context.vars.browser          = "chromium"
 context.vars.net_iface        = "wlp58s0"
 context.vars.batteries        = { "BAT0" }
 context.vars.ac               = "AC"
-context.vars.checkupdate      = "( sudo checkupdates & pacaur -k --color never | sed 's/:: [a-zA-Z0-9]\\+ //' ) | sed 's/->/→/' | sort | column -t"
-context.vars.checkupdate      = "sudo checkupdates | sed 's/->/→/' | sort | column -t"
 context.vars.scripts_dir      = os.getenv("HOME") .. "/.bin"
-context.vars.sloppy_focus     = false
+-- context.vars.checkupdate      = "(sudo checkupdates & aur checkupdates) | sed 's/->/→/' | sort | column -t -c 70 -T 2,4"
+context.vars.checkupdate      = "sudo checkupdates | sed 's/->/→/' | sort | column -t -c 70 -T 2,4"
 
 -- For compatibility with copycat-themes
 awful.util.terminal           = context.vars.terminal
@@ -130,7 +132,3 @@ context.util.run_once {
 --     {{urgency = "\2"}, naughty.config.presets.normal},
 --     {{urgency = "\3"}, naughty.config.presets.critical}
 -- }
-
--- {{{ Debug
-awful.context = context
--- }}}

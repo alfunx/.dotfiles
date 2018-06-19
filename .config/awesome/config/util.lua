@@ -61,10 +61,10 @@ function config.init(context)
     context.util.easy_async_with_unfocus = function(cmd, callback)
         local c = client.focus
         callback = callback or function() end
-        if c then c.border_color = beautiful.border_normal end
+        if c then c:emit_signal("unfocus") end
         awful.spawn.easy_async(cmd, function(stdout, stderr, reason, exit_code)
             callback(stdout, stderr, reason, exit_code)
-            if c then client.focus.border_color = beautiful.border_focus end
+            if c then c:emit_signal("focus") end
         end)
     end
 
@@ -137,90 +137,94 @@ function config.init(context)
     end
 
     -- Toggle client property
-    local toggle_client_property
-    toggle_client_property = function(c, toggle, check)
-        if c[check] then
-            toggle_client_property(c, check, toggle)
+    do
+        local toggle_client_property
+        toggle_client_property = function(c, toggle, check)
+            if c[check] then
+                toggle_client_property(c, check, toggle)
+            end
+            if not c[toggle] then
+                context.util.hide_titlebar(c)
+            elseif c[toggle] and c.floating then
+                context.util.show_titlebar(c)
+            end
+            c[toggle] = not c[toggle]
+            c:raise()
         end
-        if not c[toggle] then
-            context.util.hide_titlebar(c)
-        elseif c[toggle] and c.floating then
-            context.util.show_titlebar(c)
+
+        -- Toggle fullscreen (check maximized)
+        context.util.toggle_fullscreen = function(c)
+            toggle_client_property(c, "fullscreen", "maximized")
         end
-        c[toggle] = not c[toggle]
-        c:raise()
-    end
 
-    -- Toggle fullscreen (check maximized)
-    context.util.toggle_fullscreen = function(c)
-        toggle_client_property(c, "fullscreen", "maximized")
-    end
-
-    -- Toggle maximized (check fullscreen)
-    context.util.toggle_maximized = function(c)
-        toggle_client_property(c, "maximized", "fullscreen")
+        -- Toggle maximized (check fullscreen)
+        context.util.toggle_maximized = function(c)
+            toggle_client_property(c, "maximized", "fullscreen")
+        end
     end
 
     -- Resize/Move constants
-    local RESIZE_STEP = dpi(30)
-    local RESIZE_FACTOR = 0.05
-
-    local expand_direction = {
-        l = "left",
-        d = "down",
-        u = "up",
-        r = "right",
-    }
-
-    -- Get move function
-    context.util.get_move_function = nil
     do
-        local move_by_direction = {
-            l = function(r, c) return c:relative_move(-r, 0, 0, 0) end,
-            d = function(r, c) return c:relative_move(0, r, 0, 0) end,
-            u = function(r, c) return c:relative_move(0, -r, 0, 0) end,
-            r = function(r, c) return c:relative_move(r, 0, 0, 0) end,
+        local RESIZE_STEP = dpi(30)
+        local RESIZE_FACTOR = 0.05
+
+        local expand_direction = {
+            l = "left",
+            d = "down",
+            u = "up",
+            r = "right",
         }
-        context.util.get_move_function = function(direction, resize_step)
-            resize_step = resize_step or RESIZE_STEP
-            return function()
-                if not client.focus then return end
-                local c = client.focus
-                if context.util.client_floats(c) then
-                    move_by_direction[direction](resize_step, c)
-                else
-                    awful.client.swap.global_bydirection(expand_direction[direction])
-                    if client.swap then client.swap:raise() end
+
+        -- Get move function
+        context.util.get_move_function = nil
+        do
+            local move_by_direction = {
+                l = function(r, c) return c:relative_move(-r, 0, 0, 0) end,
+                d = function(r, c) return c:relative_move(0, r, 0, 0) end,
+                u = function(r, c) return c:relative_move(0, -r, 0, 0) end,
+                r = function(r, c) return c:relative_move(r, 0, 0, 0) end,
+            }
+            context.util.get_move_function = function(direction, resize_step)
+                resize_step = resize_step or RESIZE_STEP
+                return function()
+                    if not client.focus then return end
+                    local c = client.focus
+                    if context.util.client_floats(c) then
+                        move_by_direction[direction](resize_step, c)
+                    else
+                        awful.client.swap.global_bydirection(expand_direction[direction])
+                        if client.swap then client.swap:raise() end
+                    end
                 end
             end
         end
-    end
 
-    -- Get resize function
-    context.util.get_resize_function = nil
-    do
-        local resize_floating_by_direction = {
-            l = function(r, c) return c:relative_move(0, 0, -r, 0) end,
-            d = function(r, c) return c:relative_move(0, 0, 0, r) end,
-            u = function(r, c) return c:relative_move(0, 0, 0, -r) end,
-            r = function(r, c) return c:relative_move(0, 0, r, 0) end,
-        }
-        local resize_tiled_by_direction = {
-            l = function(r) return awful.tag.incmwfact(-r) end,
-            d = function(r) return awful.client.incwfact(-r) end,
-            u = function(r) return awful.client.incwfact(r) end,
-            r = function(r) return awful.tag.incmwfact(r) end,
-        }
-        context.util.get_resize_function = function(direction, resize_step, resize_factor)
-            resize_step = resize_step or RESIZE_STEP
-            resize_factor = resize_factor or RESIZE_FACTOR
-            return function()
-                if not client.focus then return end
-                local c = client.focus
-                if context.util.client_floats(c) then
-                    resize_floating_by_direction[direction](resize_step, c)
-                else
-                    resize_tiled_by_direction[direction](resize_factor)
+        -- Get resize function
+        context.util.get_resize_function = nil
+        do
+            local resize_floating_by_direction = {
+                l = function(r, c) return c:relative_move(0, 0, -r, 0) end,
+                d = function(r, c) return c:relative_move(0, 0, 0, r) end,
+                u = function(r, c) return c:relative_move(0, 0, 0, -r) end,
+                r = function(r, c) return c:relative_move(0, 0, r, 0) end,
+            }
+            local resize_tiled_by_direction = {
+                l = function(r) return awful.tag.incmwfact(-r) end,
+                d = function(r) return awful.client.incwfact(-r) end,
+                u = function(r) return awful.client.incwfact(r) end,
+                r = function(r) return awful.tag.incmwfact(r) end,
+            }
+            context.util.get_resize_function = function(direction, resize_step, resize_factor)
+                resize_step = resize_step or RESIZE_STEP
+                resize_factor = resize_factor or RESIZE_FACTOR
+                return function()
+                    if not client.focus then return end
+                    local c = client.focus
+                    if context.util.client_floats(c) then
+                        resize_floating_by_direction[direction](resize_step, c)
+                    else
+                        resize_tiled_by_direction[direction](resize_factor)
+                    end
                 end
             end
         end
