@@ -1,12 +1,13 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 
-cmd=$1
+readonly cmd=$1
 shift
 
 case $cmd in
     vim)
         vim \
             ~/.vimrc \
+            ~/.vim/after/**/* \
             "$@"
         ;;
     tmux)
@@ -20,6 +21,7 @@ case $cmd in
             ~/.gitconfig \
             ~/.gitignore \
             ~/.gitmodules \
+            ~/.config/git/hooks/**/* \
             "$@"
         ;;
     zsh)
@@ -28,7 +30,7 @@ case $cmd in
             ~/.zsh.d/*.zsh \
             ~/.zprofile \
             ~/.profile \
-            ~/.oh-my-zsh/themes/agnoster-custom.zsh-theme \
+            ~/.oh-my-zsh/custom/**/*.zsh-theme \
             "$@"
         ;;
     bash)
@@ -36,12 +38,14 @@ case $cmd in
             ~/.bashrc \
             ~/.bash_profile \
             ~/.profile \
+            ~/.fzf.bash \
             "$@"
         ;;
     aw)
         vim \
             ~/.config/awesome/rc.lua \
             ~/.config/awesome/themes/blackout/theme.lua \
+            ~/.config/awesome/config/* \
             "$@"
         ;;
     xorg)
@@ -55,7 +59,7 @@ case $cmd in
             "$@"
         ;;
     *)
-        vim \
+        vim ~/.bin/conf \
             "$0"
         ;;
 esac

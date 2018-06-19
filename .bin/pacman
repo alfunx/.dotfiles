@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 pacman-date-log() {
-    { pacman "${1:--Qeq}"; cat /var/log/pacman.log; } | awk '
+    { /usr/bin/pacman "${1:--Qeq}"; cat /var/log/pacman.log; } | awk '
         NF == 1 { pkgs[$0] = 1; }
         $4 == "installed" {
             if ($5 in pkgs) { pkgs[$5] = $1 " " $2; }
@@ -12,9 +12,14 @@ pacman-date-log() {
 }
 
 update-widget() {
+    if [[ $UID -eq 0 ]]; then
+        return
+    fi
+
     dbus-send --dest=org.awesomewm.awful --type=method_call \
         / org.awesomewm.awful.Remote.Eval \
-        string:'pacman = require("beautiful").pacman; if pacman then pacman.update() end'
+        string:'pacman = require("beautiful").pacman; if pacman then pacman.update() end' \
+        > /dev/null 2>&1
 }
 
 update-widget
