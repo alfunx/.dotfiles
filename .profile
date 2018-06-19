@@ -22,6 +22,9 @@ export EDITOR='vim'
 # ripgrep
 export RIPGREP_CONFIG_PATH="$HOME/.config/ripgrep/ripgreprc"
 
+# aurutils
+export AUR_REPO='aur'
+
 # man / less colors
 export LESS_TERMCAP_mb=$'\e[1;31m'
 export LESS_TERMCAP_md=$'\e[1;34m'

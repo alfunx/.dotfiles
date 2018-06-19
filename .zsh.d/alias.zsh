@@ -60,6 +60,7 @@ alias open='xdg-open'
 alias grep='grep --color=auto --exclude-dir={.git,.svn}'
 alias egrep='egrep --color=auto --exclude-dir={.git,.svn}'
 alias -g C='| xclip -selection clipboard -rmlastnl'
+alias diff='diff --color=auto'
 
 foreground-job() {
     fg
@@ -149,6 +150,16 @@ pkg() {
         cd "$(pwd | sed 's/projects/packages/')"
     else
         cd "$(pwd | sed 's/packages/projects/')"
+    fi
+}
+
+bak() {
+    if [ -e "$1" ]; then
+        echo "Found: $1"
+        mv "${1%.*}"{,.bak}
+    elif [ -e "$1.bak" ]; then
+        echo "Found: $1.bak"
+        mv "$1"{.bak,}
     fi
 }
 
