@@ -1,50 +1,103 @@
 #!/usr/bin/env bash
 
+set -o errexit -o pipefail
+shopt -s nullglob
+readonly argv0="$0"
+readonly PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+
+# default arguments
+maim_args=()
 pictures_dir="$(xdg-user-dir PICTURES 2> /dev/null)"
 output_dir="${pictures_dir:-$HOME/Pictures}/screenshots"
 output_file="$output_dir/$(date +%Y-%m-%d_%T).png"
 
-readonly argv0="$0"
-declare -i hide_cursor=0 select_area=0 wait_timeout=0
+# default options (enabled)
+cursor=1
+
+# default options (disabled)
+select=0 timeout=0
 
 usage() {
-    echo "usage: $argv0 [-hsw] [-o output-file]"
+    plain "usage: $argv0 [-cCsStT] [-o output-file] [long options]"
     exit 1
 }
 
-while getopts hswo: OPT; do
-    case $OPT in
-        h) hide_cursor=1 ;;
-        s) select_area=1 ;;
-        w) wait_timeout=1 ;;
-        o) output_file=$OPTARG ;;
-        *) usage ;;
+source /usr/share/makepkg/util/util.sh
+source /usr/share/makepkg/util/message.sh
+
+if [[ -t 2 && ! -o xtrace ]]; then
+    colorize
+fi
+
+if getopt -T || (($? != 4)); then
+    error "$argv0: util-linux getopt required"
+    exit 22
+fi
+
+longopts=cursor,no-cursor,select,no-select,timeout,no-timeout,output:,output-file:
+longopts=,help
+shortopts=cCsStTo:h
+
+if optstring=$(getopt -o "$shortopts" -l "$longopts" -n "$argv0" -- "$@"); then
+    eval set -- "$optstring"
+else
+    usage
+fi
+
+unset maim_args
+while true; do
+    case "$1" in
+        -c|--cursor)
+            cursor=1
+            shift ;;
+        -C|--no-cursor)
+            cursor=0
+            shift ;;
+        -s|--select)
+            select=1
+            shift ;;
+        -S|--no-select)
+            select=0
+            shift ;;
+        -t|--timeout)
+            timeout=1
+            shift ;;
+        -T|--no-timeout)
+            timeout=0
+            shift ;;
+        -o|--output|--output-file)
+            output_file=$2
+            shift 2 ;;
+        -h|--help)
+            usage
+            shift ;;
+        *)
+            shift
+            break ;;
     esac
 done
-shift $((OPTIND - 1))
-OPTIND=1
 
-readonly hide_cursor select_area output_file
-
-maim_flags=
-
-if ((hide_cursor)); then
-    maim_flags="$maim_flags -u"
+if ((! cursor)); then
+    maim_args+=(-u)
 fi
 
-if ((select_area)); then
-    maim_flags="$maim_flags -s -b 3 -c 0.98431372549019607843,0.28627450980392156862,0.20392156862745098039,1"
+if ((select)); then
+    maim_args+=(-s)
+    maim_args+=(-b 3)
+    maim_args+=(-c '0.98431372549019607843,0.28627450980392156862,0.20392156862745098039,1')
 fi
 
-if ((wait_timeout)); then
+if ((timeout)); then
     sleep 5
 fi
 
 # We want word splitting here
-if maim $maim_flags "$output_file"; then
+if maim "${maim_args[@]}" "$output_file"; then
     notify-send \
         --expire-time=10000 \
         --icon="$output_file" \
         'Screenshot' \
         "Saved as $(basename "$output_file")\\nunder $("$HOME/.bin/show-short-dir" "$output_dir")"
 fi
+
+# vim: set et sw=4 sts=4 ft=sh:
