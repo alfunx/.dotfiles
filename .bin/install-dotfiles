@@ -1,11 +1,8 @@
 #!/usr/bin/env bash
 
-dir="$(pwd)"
-dir="${1:-$dir}"
-
-read -r -p "[1;97mInstall ditfiles at [1;91m${dir}[1;97m? [yN] [0m" reply
-echo
-
+unset reply
+echo -n "[1;97mInstall ditfiles at [1;91m${HOME}[1;97m? [yN] [0m"
+read -r reply
 if [[ ! $reply =~ ^[Yy]$ ]]; then
     echo 'Aborted.'
     exit
@@ -17,16 +14,20 @@ highlight() {
 }
 
 # Install oh-my-zsh (doing this after cloning dotfiles will result in conflicts)
-highlight 'Clone gh://robbyrussell/oh-my-zsh'
-git clone 'https://github.com/robbyrussell/oh-my-zsh' \
-    "$dir/.oh-my-zsh"
+if [[ -f $HOME/.oh-my-zsh ]]; then
+    highlight 'Use ~/.oh-my-zsh'
+else
+    highlight 'Clone gh://robbyrussell/oh-my-zsh'
+    git clone 'https://github.com/robbyrussell/oh-my-zsh' \
+        "$HOME/.oh-my-zsh"
+fi
 
 # Download and temporarily install dotfiles.sh
 if [[ -f $HOME/projects/dotfiles.sh/dotfiles ]]; then
     highlight 'Use ~/projects/dotfiles.sh/dotfiles'
 else
     highlight 'Clone gh://alfunx/dotfiles.sh'
-    mkdir "$HOME/projects"
+    mkdir -p "$HOME/projects"
     git clone 'https://github.com/alfunx/dotfiles.sh' \
         "$HOME/projects/dotfiles.sh"
 fi
@@ -35,19 +36,39 @@ dotfiles="$HOME/projects/dotfiles.sh/dotfiles"
 # Clone dotfiles repo
 highlight 'Clone gh://alfunx/.dotfiles'
 $dotfiles clone 'https://github.com/alfunx/.dotfiles' \
-    "$dir/.dotfiles"
+    "$HOME/.dotfiles"
 
 # Load submodules
 highlight 'Initialize submodules'
 $dotfiles submodule update --init --recursive
 
+# Install aurutils (to setup sym-link)
+if [[ -d $HOME/projects/aurutils ]]; then
+    highlight 'Use ~/projects/aurutils'
+else
+    highlight 'Clone gh://AladW/aurutils'
+    mkdir -p "$HOME/projects"
+    git clone 'https://github.com/AladW/aurutils' \
+        "$HOME/projects/aurutils"
+fi
+
 # Setup xdg directories
 highlight 'Setup directories'
-$dir/.bin/setup-dirs
+set -a
+source "$HOME/.config/user-dirs.dirs"
+set +a
+make -C "$HOME/.bin" install-dirs
 
 # Setup links
 highlight 'Setup sym-links'
-$dir/.bin/setup-links
+make -C "$HOME/.bin" install-user
 
-# Further informations (instructions for manual steps)
-highlight 'Install root-scripts with: ./.bin/setup-root-scripts'
+# Setup root-scripts
+unset reply
+echo -n "[1;97mInstall [1;91mroot-scripts[1;97m? [yN] [0m"
+read -r reply
+if [[ ! $reply =~ ^[Yy]$ ]]; then
+    echo 'Skipped installing [1;97mroot-scripts[0m.'
+else
+    sudo make -C "$HOME/.bin" install-root
+fi

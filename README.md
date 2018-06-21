@@ -125,7 +125,7 @@ fails if there are too many of them (git cuts the message at some point).
 The short variant, using a script with the commands above:
 
 ```bash
-. <(curl -Ls https://mariya.ch/install-dotfiles)
+. <(curl -Ls https://dotfiles.mariya.ch)
 ```
 
 (Note: This is for my personal use. Instead of directly sourcing the install
