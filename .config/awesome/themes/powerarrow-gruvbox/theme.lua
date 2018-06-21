@@ -2,7 +2,7 @@
 --[[
 
      Powerarrow - Gruvbox
-     by Alphonse Mariyagnanaseelan
+     by alfunx (Alphonse Mariya)
 
      Powerarrow Awesome WM theme: github.com/copycat-killer
      Gruvbox: github.com/morhetz/gruvbox/
@@ -20,7 +20,7 @@ local context          = require("config").context
 local dpi              = xresources.apply_dpi
 local os, math, string = os, math, string
 
-local colors = {}
+local colors = { }
 
 colors.black_1          = "#282828"
 colors.black_2          = "#928374"
@@ -70,7 +70,7 @@ local bat_bg            = colors.bw_2
 local net_bg            = colors.bw_1
 local clock_bg          = colors.bw_0
 
-local theme = {}
+local theme = { }
 theme.name = "powerarrow-gruvbox"
 theme.dir = string.format("%s/.config/awesome/themes/%s", os.getenv("HOME"), theme.name)
 

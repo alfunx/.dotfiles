@@ -1,10 +1,18 @@
+
+--[[
+
+     Awesome WM configuration
+     by alfunx (Alphonse Mariya)
+
+--]]
+
 local awful = require("awful")
 local beautiful = require("beautiful")
 local menubar = require("menubar")
 local freedesktop = require("freedesktop")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
 
-local config = {}
+local config = { }
 
 function config.init(context)
 

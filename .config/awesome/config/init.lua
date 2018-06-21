@@ -1,3 +1,11 @@
+
+--[[
+
+     Awesome WM configuration
+     by alfunx (Alphonse Mariya)
+
+--]]
+
 local config = {
     util = require("config.util"),
     util_theme = require("config.util_theme"),

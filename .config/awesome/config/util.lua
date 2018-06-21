@@ -1,14 +1,22 @@
+
+--[[
+
+     Awesome WM configuration
+     by alfunx (Alphonse Mariya)
+
+--]]
+
 local gears = require("gears")
 local awful = require("awful")
 local beautiful = require("beautiful")
 local xresources = require("beautiful.xresources")
 local dpi = xresources.apply_dpi
 
-local config = {}
+local config = { }
 
 function config.init(context)
 
-    context.util = context.util or {}
+    context.util = context.util or { }
 
     -- Check if client floats
     context.util.client_floats = function(c)

@@ -2,7 +2,7 @@
 --[[
 
      Blackout
-     by Alphonse Mariyagnanaseelan
+     by alfunx (Alphonse Mariya)
 
      Powerarrow Awesome WM theme: github.com/copycat-killer
      Gruvbox: github.com/morhetz/gruvbox/
@@ -20,7 +20,7 @@ local context          = require("config").context
 local dpi              = xresources.apply_dpi
 local os, math, string = os, math, string
 
-local colors = {}
+local colors = { }
 
 colors.black_1          = "#282828"
 colors.black_2          = "#928374"
@@ -61,7 +61,7 @@ colors = context.colors
 local bar_fg            = colors.bw_5
 local bar_bg            = colors.bw_0
 
-local theme = {}
+local theme = { }
 theme.name = "blackout"
 theme.alternative = "whiteout"
 theme.dir = string.format("%s/.config/awesome/themes/%s", os.getenv("HOME"), theme.name)

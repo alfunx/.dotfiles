@@ -2,7 +2,7 @@
 --[[
 
      Awesome WM configuration
-     by Alphonse Mariyagnanaseelan
+     by alfunx (Alphonse Mariya)
 
 --]]
 
@@ -43,10 +43,10 @@ context.keys.modkey           = "Mod4"
 context.keys.altkey           = "Mod1"
 context.keys.ctrlkey          = "Control"
 context.keys.shiftkey         = "Shift"
-context.keys.l_key            = "h"
-context.keys.r_key            = "l"
-context.keys.u_key            = "k"
-context.keys.d_key            = "j"
+context.keys.leftkey          = "h"
+context.keys.rightkey         = "l"
+context.keys.upkey            = "k"
+context.keys.downkey          = "j"
 
 context.vars = { }
 context.vars.sloppy_focus     = false

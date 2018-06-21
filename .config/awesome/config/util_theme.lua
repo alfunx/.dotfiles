@@ -1,13 +1,21 @@
+
+--[[
+
+     Awesome WM configuration
+     by alfunx (Alphonse Mariya)
+
+--]]
+
 local gears = require("gears")
 local awful = require("awful")
 local beautiful = require("beautiful")
 local naughty = require("naughty")
 
-local config = {}
+local config = { }
 
 function config.init(context)
 
-    context.util = context.util or {}
+    context.util = context.util or { }
 
     context.util.set_colors = function(colors)
         -- Override colors with context.colors per default

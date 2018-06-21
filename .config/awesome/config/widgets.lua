@@ -1,8 +1,16 @@
+
+--[[
+
+     Awesome WM configuration
+     by alfunx (Alphonse Mariya)
+
+--]]
+
 local gears = require("gears")
 local awful = require("awful")
 local lain = require("lain")
 
-local config = {}
+local config = { }
 
 function config.init(context)
 
@@ -87,7 +95,7 @@ function config.init(context)
                 _tasklist_menu:hide()
                 _tasklist_menu = nil
             else
-                _tasklist_menu = awful.menu.clients({}, {}, function(c)
+                _tasklist_menu = awful.menu.clients({ }, { }, function(c)
                     return c.minimized
                 end)
             end

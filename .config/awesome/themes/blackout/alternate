@@ -3,19 +3,19 @@
 readonly cmd=$1
 shift
 
-gruvbox-dark() {
+blackout() {
     kitty @ --to "unix:/tmp/_kitty_$USER" set-colors -a -c "$HOME/.config/kitty/gruvbox-dark.conf"
 }
 
-gruvbox-light() {
+whiteout() {
     kitty @ --to "unix:/tmp/_kitty_$USER" set-colors -a -c "$HOME/.config/kitty/gruvbox-light.conf"
 }
 
 case $cmd in
     blackout)
-        gruvbox-dark ;;
+        blackout ;;
     whiteout)
-        gruvbox-light ;;
+        whiteout ;;
     *)
         exit 1 ;;
 esac

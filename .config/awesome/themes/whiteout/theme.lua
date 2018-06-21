@@ -2,7 +2,7 @@
 --[[
 
      Whiteout
-     by Alphonse Mariyagnanaseelan
+     by alfunx (Alphonse Mariya)
      based on Blackout
 
      Powerarrow Awesome WM theme: github.com/copycat-killer
@@ -14,7 +14,7 @@ local gears            = require("gears")
 local context          = require("config").context
 local os, math, string = os, math, string
 
-local colors = {}
+local colors = { }
 
 colors.black_1          = "#fbf1c7"
 colors.black_2          = "#928374"

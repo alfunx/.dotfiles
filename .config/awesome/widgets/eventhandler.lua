@@ -25,14 +25,14 @@ local setmetatable = setmetatable
 
 -- Eventhandler notification
 -- lain.widget.eventhandler
-eventhandler = {}
+eventhandler = { }
 
 function eventhandler.attach_click(widget)
     -- widget:connect_signal("mouse::enter", eventhandler.hover_on)
     -- widget:connect_signal("mouse::leave", eventhandler.hover_off)
     -- widget:buttons(awful.util.table.join(
-                -- awful.button({}, 1, eventhandler.execute)))
-    widget:buttons(awful.button({}, 1, eventhandler.execute))
+                -- awful.button({ }, 1, eventhandler.execute)))
+    widget:buttons(awful.button({ }, 1, eventhandler.execute))
 end
 
 function eventhandler.attach_hover(widget)
@@ -52,8 +52,8 @@ function eventhandler.notify(args)
 end
 
 local function factory(args)
-    local args                = args or {}
-    eventhandler.attach_to    = args.attach_to or {}
+    local args                = args or { }
+    eventhandler.attach_to    = args.attach_to or { }
     eventhandler.execute      = args.execute or function() end
     eventhandler.attach       = args.attach or eventhandler.attach_click
     eventhandler.notification = nil

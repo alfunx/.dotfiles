@@ -20,7 +20,7 @@ local string        = { format = string.format,
 
 local function factory(args)
     local pacman          = { widget = wibox.widget.textbox() }
-    local args            = args or {}
+    local args            = args or { }
     local timeout         = args.timeout or 900
     local settings        = args.settings or function() end
     local command         = args.command or ""
