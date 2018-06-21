@@ -2,20 +2,17 @@
 
 set -o errexit -o pipefail
 shopt -s nullglob
-readonly argv0=update
+readonly argv0=clean
 readonly PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
-
-# default arguments
-build_args=()
 
 # default options (enabled)
 all=1
 
 # default options (disabled)
-normal=0 vcs=0 manual=0
+sync=0 manual=0
 
 usage() {
-    plain "usage: $argv0 [-canvm] [long options]"
+    plain "usage: $argv0 [-asm] [long options]"
     exit 1
 }
 
@@ -31,8 +28,8 @@ if getopt -T || (($? != 4)); then
     exit 22
 fi
 
-longopts=chroot,all,normal,vcs,manual
-shortopts=canvm
+longopts=all,sync,manual
+shortopts=asm
 
 if optstring=$(getopt -o "$shortopts" -l "$longopts" -n "$argv0" -- "$@"); then
     eval set -- "$optstring"
@@ -43,19 +40,12 @@ fi
 unset root repo
 while true; do
     case "$1" in
-        -c|--chroot)
-            build_args+=(-c)
-            shift ;;
         -a|--all)
             all=1
             shift ;;
-        -n|--normal)
+        -s|--sync)
             all=0
-            normal=1
-            shift ;;
-        -v|--vcs)
-            all=0
-            vcs=1
+            sync=1
             shift ;;
         -m|--manual)
             all=0
@@ -68,26 +58,16 @@ while true; do
 done
 
 if ((all)); then
-    normal=1 vcs=1 manual=1
+    sync=1 manual=1
 fi
 
-if ((normal)); then
-    aur sync "${build_args[@]}" -u
-fi
-
-if ((vcs)); then
-    aur vercmp-devel 2> /dev/null \
-        | cut -d: -f1 \
-        | aur sync "${build_args[@]}" --no-ver-shallow -
+if ((sync)); then
+    rm "$AURDEST/*/*.log"
 fi
 
 if ((manual)); then
-    AURDEST_bak=$AURDEST
-    export AURDEST=/home/amariya/packages
-    aur vercmp-devel -d manual 2> /dev/null \
-        | cut -d: -f1 \
-        | aur rebuild -cd manual -
-    export AURDEST=$AURDEST_bak
+    manual_dir=/home/amariya/packages
+    rm "$manual_dir/*/*.log"
 fi
 
 # vim: set et sw=4 sts=4 ft=sh:

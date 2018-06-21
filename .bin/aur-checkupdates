@@ -1,45 +1,116 @@
 #!/usr/bin/env bash
 
-verbose='0'
+set -o errexit -o pipefail
+shopt -s nullglob
+readonly argv0=checkupdates
+readonly PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 
-readonly argv0="$0"
+# default options (enabled)
+all=1 format=1
+
+# default options (disabled)
+official=0 normal=0 vcs=0 manual=0 verbose=0
 
 usage() {
-    echo "usage: $argv0 [-v]"
+    plain "usage: $argv0 [-aonvmfFV] [long options]"
     exit 1
 }
 
-check() {
-    # check official repos
-    sudo checkupdates \
-        | sed -e 's/://' -e 's/^/pacman: /'
+source /usr/share/makepkg/util/util.sh
+source /usr/share/makepkg/util/message.sh
 
-    # check AUR for normal package updates
-    aur vercmp -d aur \
-        | sed -e 's/://' -e 's/^/aur:    /'
+if [[ -t 2 && ! -o xtrace ]]; then
+    colorize
+fi
 
-    # check AUR for VCS-package updates
-    aur vercmp-devel -d aur \
-        | sed -e 's/://' -e 's/^/vcs:    /'
+if getopt -T || (($? != 4)); then
+    error "$argv0: util-linux getopt required"
+    exit 22
+fi
 
-    # check AUR for manual VCS-package updates
-    AURDEST=/home/amariya/packages; aur vercmp-devel -d manual \
-        | sed -e 's/://' -e 's/^/manual: /'
-}
+longopts=all,official,normal,vcs,manual,format,no-format,verbose
+shortopts=aonvmfFV
 
-while getopts v OPT; do
-    case $OPT in
-        v) verbose='1' ;;
-        *) usage ;;
+if optstring=$(getopt -o "$shortopts" -l "$longopts" -n "$argv0" -- "$@"); then
+    eval set -- "$optstring"
+else
+    usage
+fi
+
+while true; do
+    case "$1" in
+        -a|--all)
+            all=1
+            shift ;;
+        -o|--official)
+            all=0
+            official=1
+            shift ;;
+        -n|--normal)
+            all=0
+            normal=1
+            shift ;;
+        -v|--vcs)
+            all=0
+            vcs=1
+            shift ;;
+        -m|--manual)
+            all=0
+            manual=1
+            shift ;;
+        -f|--format)
+            format=1
+            shift ;;
+        -F|--no-format)
+            format=0
+            shift ;;
+        -V|--verbose)
+            verbose=1
+            shift ;;
+        *)
+            shift
+            break ;;
     esac
 done
-shift $((OPTIND - 1))
-OPTIND=1
 
-readonly verbose
-
-if [[ "$verbose" -eq "0" ]]; then
-    check 2> /dev/null | sed 's/->/→/' | column -t
-else
-    check | sed 's/->/→/' | column -t
+if ((all)); then
+    official=1 normal=1 vcs=1 manual=1
 fi
+
+_check() {
+    if ((official)); then
+        sudo checkupdates \
+            | sed -e 's/://' -e 's/^/pacman: /'
+    fi
+
+    if ((normal)); then
+        aur vercmp -d aur \
+            | sed -e 's/://' -e 's/^/aur: /'
+    fi
+
+    if ((vcs)); then
+        aur vercmp-devel -d aur \
+            | sed -e 's/://' -e 's/^/vcs: /'
+    fi
+
+    if ((manual)); then
+        export AURDEST=/home/amariya/packages; aur vercmp-devel -d manual \
+            | sed -e 's/://' -e 's/^/manual: /'
+    fi
+}
+
+check() {
+    if ((verbose)); then
+        _check
+    else
+        _check 2> /dev/null
+    fi
+}
+
+if ((format)); then
+    check | sed 's/->/→/' | column -t
+else
+    check
+fi
+
+# vim: set et sw=4 sts=4 ft=sh:

@@ -1,31 +1,55 @@
 #!/usr/bin/env bash
 
-mount='0'
-
-readonly argv0="$0"
+set -o errexit -o pipefail
+shopt -s nullglob
+readonly argv0=tmpfs
+readonly PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 
 usage() {
-    echo "usage: $argv0 [-u]"
+    plain "usage: $argv0 [-u] [long options]"
     exit 1
 }
 
-while getopts u OPT; do
-    case $OPT in
-        u) mount='1' ;;
-        *) usage ;;
+source /usr/share/makepkg/util/util.sh
+source /usr/share/makepkg/util/message.sh
+
+if [[ -t 2 && ! -o xtrace ]]; then
+    colorize
+fi
+
+if getopt -T || (($? != 4)); then
+    error "$argv0: util-linux getopt required"
+    exit 22
+fi
+
+longopts=unmount
+shortopts=u
+
+if optstring=$(getopt -o "$shortopts" -l "$longopts" -n "$argv0" -- "$@"); then
+    eval set -- "$optstring"
+else
+    usage
+fi
+
+while true; do
+    case "$1" in
+        -u|--unmount)
+            unmount=1
+            shift ;;
+        *)
+            shift
+            break ;;
     esac
 done
-shift $((OPTIND - 1))
-OPTIND=1
 
-readonly mount
-
-if [[ "$mount" -eq "0" ]]; then
+if ((unmount)); then
+    mountpoint -q /var/lib/aurbuild \
+        && sudo umount /var/lib/aurbuild
+else
     mountpoint -q /var/lib/aurbuild \
         && echo 'Already mounted.' \
         && exit 1
     sudo mount /var/lib/aurbuild
-else
-    mountpoint -q /var/lib/aurbuild \
-        && sudo umount /var/lib/aurbuild
 fi
+
+# vim: set et sw=4 sts=4 ft=sh:
