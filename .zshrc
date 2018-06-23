@@ -158,6 +158,8 @@ stty -ixon
 
 # Gruvbox colors fix
 [[ -f "$HOME/.bin/fix-gruvbox-palette" ]] \
+    && [[ "$TERM" != 'xterm-kitty' ]] \
+    && [[ "$TERM" != 'tmux-256color' ]] \
     && source "$HOME/.bin/fix-gruvbox-palette"
 
 # TMUX
