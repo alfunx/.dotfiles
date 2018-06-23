@@ -146,8 +146,12 @@ nnoremap <silent> <C-w>k 5<C-w>+
 nnoremap <silent> <C-w>l 5<C-w>>
 
 "" New tab
-nnoremap <silent> <C-w>t :tabe<CR>
-nnoremap <silent> <C-w><C-t> :tabe<CR>
+nnoremap <silent> <C-w>t :tabedit<CR>
+nnoremap <silent> <C-w><C-t> :tabedit<CR>
+
+"" Tab navigation
+nnoremap <silent> <C-w><C-h> :tabprevious<CR>
+nnoremap <silent> <C-w><C-l> :tabnext<CR>
 
 "" Fullscreen
 nnoremap <silent> <C-w>F <C-w>_<C-w><Bar>
@@ -254,14 +258,6 @@ nnoremap <M-7> 7gt
 nnoremap <M-8> 8gt
 nnoremap <M-9> :tablast<CR>
 
-" Tab key 
-nnoremap <Tab> >>
-nnoremap <S-Tab> <<
-xnoremap <Tab> >gv
-xnoremap <S-Tab> <gv
-inoremap <expr><Tab> Tab("forward")
-inoremap <expr><S-Tab> Tab("backward")
-
 " Magic regex search
 noremap <leader>/ /\v
 noremap <leader>? ?\v
@@ -303,6 +299,9 @@ function! ChangeReg() abort
     call feedkeys("q:ilet @" . x . " = \<c-r>\<c-r>=string(@" . x . ")\<CR>\<esc>$", 'n')
 endfunction
 nnoremap cr :call ChangeReg()<CR>
+
+" Diff update
+nnoremap <silent> du :windo diffupdate<CR>
 
 
 """""""""""""""""""""
