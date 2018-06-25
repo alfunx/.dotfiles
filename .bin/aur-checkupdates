@@ -94,7 +94,8 @@ _check() {
     fi
 
     if ((manual)); then
-        export AURDEST=/home/amariya/packages; aur vercmp-devel -d manual \
+        export AURDEST="$HOME/packages"; \
+            aur vercmp-devel -d manual \
             | sed -e 's/://' -e 's/^/manual: /'
     fi
 }

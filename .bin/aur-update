@@ -83,7 +83,7 @@ fi
 
 if ((manual)); then
     AURDEST_bak=$AURDEST
-    export AURDEST=/home/amariya/packages
+    export AURDEST="$HOME/packages"
     aur vercmp-devel -d manual 2> /dev/null \
         | cut -d: -f1 \
         | aur rebuild -cd manual -

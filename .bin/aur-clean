@@ -66,7 +66,7 @@ if ((sync)); then
 fi
 
 if ((manual)); then
-    manual_dir=/home/amariya/packages
+    manual_dir="$HOME/packages"
     rm "$manual_dir/*/*.log"
 fi
 
