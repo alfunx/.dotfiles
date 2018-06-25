@@ -73,6 +73,10 @@
 	ff = false
 	tool = diffconflicts
 
+[rebase]
+	missingCommitsCheck = warn
+	abbreviateCommands = true
+
 [mergetool "diffconflicts"]
 	cmd = diffconflicts vim "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
 	trustExitCode = true
@@ -237,14 +241,11 @@
 	who = shortlog --summary --numbered --no-merges
 	whoami = !"git config --get user.name && git config --get user.email"
 
-	# rewrite history, default on origin
-	rwh = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git rebase --interactive $(git merge-base HEAD \"${1:-origin/$CURRENT}\"); }; f"
-
-	# list branches sorted by last modified
-	bls = "!git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'"
-
 	# list aliases
 	alias = "!git config --get-regexp alias | cut -c 7- | sed -e \"s/^/[1m/\" -e \"s/ /[0m$(echo 2B | xxd -r -p)/\" | column -t -s \"$(echo 2B | xxd -r -p)\" | sort | less -SR "
+
+	# list branches sorted by last modified
+	bls = "!git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's@refs/heads/@@'"
 
 	# initialize repository in current directory
 	this = "!git init && git commit --message='Initialize' --allow-empty"
@@ -257,10 +258,6 @@
 
 	# hard reset and clean
 	nuke = !"git reset --hard HEAD && git clean -fd"
-
-	# migrate commits to new branch
-	# migrate <new branch> [onto=master] [range=origin]
-	migrate = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git checkout -b \"$1\" && git branch --force \"$CURRENT\" \"${3:-\\\"$CURRENT\\\"@\\{u\\}}\" && git rebase --onto \"${2:-master}\" \"$CURRENT\"; }; f"
 
 	# set up remotes for fork
 	fork = "!f() { URL=$(git config remote.\"${1:-origin}\".url); git remote set-url \"${1:-origin}\" \"$(echo \"$URL\" | perl -pe 's/(?<=[:\\/])[^:\\/]+(?=\\/[^\\/]+$)/alfunx/')\"; git remote add \"${2:-upstream}\" \"$URL\"; }; f"
