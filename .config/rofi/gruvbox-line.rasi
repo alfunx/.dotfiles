@@ -7,6 +7,7 @@
     foregroundcolor: #ebdbb2;
     foregroundcolorinverse: #ebdbb2;
     selectioncolor: #504945;
+    bordercolor: #928374;
 
     font: "Iosevka Custom 11";
     border-color: @separatorcolor;
@@ -32,8 +33,7 @@
     width: 100%;
     height: 29;
     background-color: @backgroundcolor;
-    border-color: @separatorcolor;
-    border-color: #928374;
+    border-color: @bordercolor;
     border: 0 0 4 0;
     border-radius: 0;
     children: [ horibox ];
@@ -52,18 +52,12 @@
 
 #element {
     padding: 3 10 3 10;
-    border: 0 0 1 0;
-    border-color: @separatorcolor;
     background-color: @backgroundcoloralternate;
 }
 
 #element.selected.normal {
     background-color: @selectioncolor;
     text-color: @foregroundcolorinverse;
-    border-radius: 0;
-
-    border: 0 0 1 0;
-    border-color: @separatorcolor;
 }
 
 #element.alternate.normal {
@@ -81,23 +75,18 @@
 #element.selected.active {
     background-color: @selectioncolor;
     text-color: @foregroundcolorinverse;
-    border-radius: 0;
-
-    border: 0 0 1 0;
-    border-color: @separatorcolor;
 }
 
 #inputbar {
-    border: 0 solid 0 solid 1 solid 0 solid;
     margin: 0;
     spacing: 0;
-    border-color: @separatorcolor;
 }
 
 #prompt {
     padding: 3 10 3 10;
     background-color: @backgroundcoloralternate;
     border: 0 2 0 0;
+    border-color: @bordercolor;
     expand: false;
 }
 
