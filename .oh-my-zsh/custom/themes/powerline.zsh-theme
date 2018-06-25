@@ -25,14 +25,19 @@
 # jobs are running in this shell will all be displayed automatically when
 # appropriate.
 
-### Variables
-# VCS segment colors
-local VCS_CLEAN_FG=10
-local VCS_CLEAN_BG=237
-local VCS_DIRTY_FG=11
-local VCS_DIRTY_BG=237
-local VCS_ERROR_FG=9
-local VCS_ERROR_BG=237
+### Variables (default: Gruvbox)
+# Background
+local PROMPT_0_BG=${PROMPT_0_BG:=250}
+local PROMPT_1_BG=${PROMPT_1_BG:=246}
+local PROMPT_2_BG=${PROMPT_2_BG:=239}
+local PROMPT_3_BG=${PROMPT_3_BG:=237}
+# Foreground
+local PROMPT_0_FG=${PROMPT_0_FG:=0}
+local PROMPT_1_FG=${PROMPT_1_FG:=235}
+local PROMPT_2_FG=${PROMPT_2_FG:=248}
+local PROMPT_3_FG_CLEAN=${PROMPT_3_FG_CLEAN:=10}
+local PROMPT_3_FG_DIRTY=${PROMPT_3_FG_DIRTY:=11}
+local PROMPT_3_FG_ERROR=${PROMPT_3_FG_ERROR:=9}
 
 ### Segment drawing
 # A few utility functions to make it easy and re-usable to draw segmented prompts
@@ -92,7 +97,7 @@ prompt_end() {
 # Context: user@hostname (who am I and where am I)
 prompt_context() {
     if [[ "$USER" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-        prompt_segment 246 235 '%(!.%{%F{11}%}.)%n@%M'
+        prompt_segment "${PROMPT_1_BG}" "${PROMPT_1_FG}" '%(!.%{%F{11}%}.)%n@%M'
     fi
 }
 
@@ -111,11 +116,11 @@ prompt_git() {
         dirty=$(parse_git_dirty)
         ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="⤷ $(git rev-parse --short HEAD 2> /dev/null)"
         if [[ -e "${repo_path}/BISECT_LOG" || -e "${repo_path}/MERGE_HEAD" || -e "${repo_path}/rebase" || -e "${repo_path}/rebase-apply" || -e "${repo_path}/rebase-merge" || -e "${repo_path}/../.dotest" ]]; then
-            prompt_segment "$VCS_ERROR_BG" "$VCS_ERROR_FG"
+            prompt_segment "${PROMPT_3_BG}" "${PROMPT_3_FG_ERROR}"
         elif [[ -n $dirty ]]; then
-            prompt_segment "$VCS_DIRTY_BG" "$VCS_DIRTY_FG"
+            prompt_segment "${PROMPT_3_BG}" "${PROMPT_3_FG_DIRTY}"
         else
-            prompt_segment "$VCS_CLEAN_BG" "$VCS_CLEAN_FG"
+            prompt_segment "${PROMPT_3_BG}" "${PROMPT_3_FG_CLEAN}"
         fi
 
         if [[ -e "${repo_path}/BISECT_LOG" ]]; then
@@ -148,15 +153,15 @@ prompt_bzr() {
         status_all=`bzr status | head -n1 | wc -m`
         revision=`bzr log | head -n2 | tail -n1 | sed 's/^revno: //'`
         if [[ $status_mod -gt 0 ]] ; then
-            prompt_segment "$VCS_DIRTY_BG" "$VCS_DIRTY_FG"
+            prompt_segment "${PROMPT_3_BG}" "${PROMPT_3_FG_DIRTY}"
             echo -n "bzr@"$revision "✚ "
         else
             if [[ $status_all -gt 0 ]] ; then
-                prompt_segment "$VCS_DIRTY_BG" "$VCS_DIRTY_FG"
+                prompt_segment "${PROMPT_3_BG}" "${PROMPT_3_FG_DIRTY}"
                 echo -n "bzr@"$revision
 
             else
-                prompt_segment "$VCS_CLEAN_BG" "$VCS_CLEAN_FG"
+                prompt_segment "${PROMPT_3_BG}" "${PROMPT_3_FG_CLEAN}"
                 echo -n "bzr@"$revision
             fi
         fi
@@ -170,15 +175,15 @@ prompt_hg() {
         if $(hg prompt >/dev/null 2>&1); then
             if [[ $(hg prompt "{status|unknown}") = "?" ]]; then
                 # if files are not added
-                prompt_segment "$VCS_ERROR_BG" "$VCS_ERROR_FG"
+                prompt_segment "${PROMPT_3_BG}" "${PROMPT_3_FG_ERROR}"
                 st='±'
             elif [[ -n $(hg prompt "{status|modified}") ]]; then
                 # if any modification
-                prompt_segment "$VCS_DIRTY_BG" "$VCS_DIRTY_FG"
+                prompt_segment "${PROMPT_3_BG}" "${PROMPT_3_FG_DIRTY}"
                 st='±'
             else
                 # if working copy is clean
-                prompt_segment "$VCS_CLEAN_BG" "$VCS_CLEAN_FG"
+                prompt_segment "${PROMPT_3_BG}" "${PROMPT_3_FG_CLEAN}"
             fi
             echo -n $(hg prompt "☿ {rev}@{branch}") $st
         else
@@ -186,13 +191,13 @@ prompt_hg() {
             rev=$(hg id -n 2>/dev/null | sed 's/[^-0-9]//g')
             branch=$(hg id -b 2>/dev/null)
             if `hg st | grep -q "^\?"`; then
-                prompt_segment "$VCS_ERROR_BG" "$VCS_ERROR_FG"
+                prompt_segment "${PROMPT_3_BG}" "${PROMPT_3_FG_ERROR}"
                 st='±'
             elif `hg st | grep -q "^[MA]"`; then
-                prompt_segment "$VCS_DIRTY_BG" "$VCS_DIRTY_FG"
+                prompt_segment "${PROMPT_3_BG}" "${PROMPT_3_FG_DIRTY}"
                 st='±'
             else
-                prompt_segment "$VCS_CLEAN_BG" "$VCS_CLEAN_FG"
+                prompt_segment "${PROMPT_3_BG}" "${PROMPT_3_FG_CLEAN}"
             fi
             echo -n "☿ $rev@$branch" $st
         fi
@@ -206,11 +211,11 @@ prompt_svn() {
         branch=$(svn_get_branch_name)
         PL_BRANCH_CHAR=$'\ue0a0'                 # 
         if [[ $(svn_dirty_choose_pwd 1 0) -eq 1 ]]; then
-            prompt_segment "$VCS_DIRTY_BG" "$VCS_DIRTY_FG"
+            prompt_segment "${PROMPT_3_BG}" "${PROMPT_3_FG_DIRTY}"
             echo -n "$PL_BRANCH_CHAR $rev@$branch"
             echo -n '±'
         else
-            prompt_segment "$VCS_CLEAN_BG" "$VCS_CLEAN_FG"
+            prompt_segment "${PROMPT_3_BG}" "${PROMPT_3_FG_CLEAN}"
             echo -n "$PL_BRANCH_CHAR $rev@$branch"
         fi
     fi
@@ -218,14 +223,14 @@ prompt_svn() {
 
 # Dir: current working directory
 prompt_dir() {
-    prompt_segment 239 248 '%(5~|%-1~/…/%3~|%4~)'
+    prompt_segment "${PROMPT_2_BG}" "${PROMPT_2_FG}" '%(5~|%-1~/…/%3~|%4~)'
 }
 
 # Virtualenv: current working virtualenv
 prompt_virtualenv() {
     local virtualenv_path="$VIRTUAL_ENV"
     if [[ -n $virtualenv_path && -n $VIRTUAL_ENV_DISABLE_PROMPT ]]; then
-        prompt_segment 239 248 "(`basename $virtualenv_path`)"
+        prompt_segment "${PROMPT_2_BG}" "${PROMPT_2_FG}" "(`basename $virtualenv_path`)"
     fi
 }
 
@@ -240,7 +245,7 @@ prompt_status() {
     [[ $UID -eq 0 ]] && symbols+='%{%F{172}%}⚡'
     [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+='%{%F{72}%}⚙%j'
 
-    [[ -n "$symbols" ]] && prompt_segment 250 default "$symbols"
+    [[ -n "$symbols" ]] && prompt_segment "${PROMPT_0_BG}" "${PROMPT_0_FG}" "$symbols"
 }
 
 ## Main prompt
@@ -259,7 +264,7 @@ build_prompt() {
 
 ## Secondary prompt
 build_prompt2() {
-    prompt_segment 239 248 '%(1_.%_ .)…'
+    prompt_segment "${PROMPT_2_BG}" "${PROMPT_2_FG}" '%(1_.%_ .)…'
     prompt_end
 }
 
