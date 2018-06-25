@@ -47,10 +47,10 @@ function config.init(context)
                   { description = "move window right", group = "command mode" }),
 
         -- Move (precise)
-        awful.key({ k.c                }, k.l, context.util.get_move_function("l", dpi(5))),
-        awful.key({ k.c                }, k.d, context.util.get_move_function("d", dpi(5))),
-        awful.key({ k.c                }, k.u, context.util.get_move_function("u", dpi(5))),
-        awful.key({ k.c                }, k.r, context.util.get_move_function("r", dpi(5))),
+        awful.key({ k.c                }, k.l, context.util.get_move_function("l", dpi(1))),
+        awful.key({ k.c                }, k.d, context.util.get_move_function("d", dpi(1))),
+        awful.key({ k.c                }, k.u, context.util.get_move_function("u", dpi(1))),
+        awful.key({ k.c                }, k.r, context.util.get_move_function("r", dpi(1))),
 
         -- Resize
         awful.key({ k.s                }, k.l, context.util.get_resize_function("l"),
@@ -63,10 +63,10 @@ function config.init(context)
                   { description = "resize window left/right", group = "command mode" }),
 
         -- Resize (precise)
-        awful.key({ k.s, k.c           }, k.l, context.util.get_resize_function("l", dpi(5), 0.005)),
-        awful.key({ k.s, k.c           }, k.d, context.util.get_resize_function("d", dpi(5), 0.005)),
-        awful.key({ k.s, k.c           }, k.u, context.util.get_resize_function("u", dpi(5), 0.005)),
-        awful.key({ k.s, k.c           }, k.r, context.util.get_resize_function("r", dpi(5), 0.005)),
+        awful.key({ k.s, k.c           }, k.l, context.util.get_resize_function("l", dpi(1), 0.005)),
+        awful.key({ k.s, k.c           }, k.d, context.util.get_resize_function("d", dpi(1), 0.005)),
+        awful.key({ k.s, k.c           }, k.u, context.util.get_resize_function("u", dpi(1), 0.005)),
+        awful.key({ k.s, k.c           }, k.r, context.util.get_resize_function("r", dpi(1), 0.005)),
 
         -- Gaps
         awful.key({ k.a                }, k.d, function() lain.util.useless_gaps_resize(beautiful.useless_gap/2) end,

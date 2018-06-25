@@ -242,7 +242,7 @@ function config.init(context)
     context.util.switch_keys_mode = function(mode, text)
         local _textbox = awful.screen.focused()._promptbox
         if not _textbox then return end
-        _textbox.fg = beautiful.fg_focus
+        _textbox.fg = beautiful.accent or beautiful.fg_focus
         _textbox.widget.markup = "<b>" .. text .. "</b>"
         root.keys(context.keys[mode])
     end

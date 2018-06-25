@@ -59,6 +59,7 @@ theme.alternative = "blackout"
 theme._dir = string.format("%s/.config/awesome/themes/%s", os.getenv("HOME"), theme.name)
 
 theme.wallpaper                                 = theme._dir .. "/wallpapers/wall.png"
+-- theme.wallpaper                                 = theme._dir .. "/wallpapers/escheresque.png"
 
 theme.titlebar_close_button_focus               = theme._dir .. "/icons/titlebar_dark/close_focus.png"
 theme.titlebar_close_button_normal              = theme._dir .. "/icons/titlebar_dark/close_normal.png"

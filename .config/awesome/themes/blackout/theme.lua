@@ -67,7 +67,6 @@ theme.alternative = "whiteout"
 theme.dir = string.format("%s/.config/awesome/themes/%s", os.getenv("HOME"), theme.name)
 
 theme.wallpaper                                 = theme.dir .. "/wallpapers/wall.png"
-
 -- theme.wallpaper                                 = theme.dir .. "/wallpapers/escheresque.png"
 -- theme.wallpaper_offset                          = 5
 
@@ -84,16 +83,17 @@ theme.font_italic                               = font_name .. " " .. "Italic"  
 theme.font_bold_italic                          = font_name .. " " .. "Bold Italic" .. " " .. font_size
 theme.font_big                                  = font_name .. " " .. "Bold"        .. " 16"
 
+theme.accent                                    = colors.red_2
 theme.border_normal                             = colors.bw_2
 theme.border_focus                              = colors.bw_5
 theme.border_marked                             = colors.bw_5
 
 theme.fg_normal                                 = colors.bw_9
-theme.fg_focus                                  = colors.red_2
-theme.fg_urgent                                 = colors.bw_0
+theme.fg_focus                                  = colors.bw_9
+theme.fg_urgent                                 = theme.accent
 theme.bg_normal                                 = colors.bw_0
-theme.bg_focus                                  = colors.bw_2
-theme.bg_urgent                                 = colors.red_2
+theme.bg_focus                                  = theme.border_normal
+theme.bg_urgent                                 = theme.border_normal
 
 theme.taglist_font                              = theme.font_bold
 theme.taglist_fg_normal                         = colors.bw_5
@@ -101,12 +101,12 @@ theme.taglist_fg_occupied                       = colors.bw_5
 theme.taglist_fg_empty                          = colors.bw_1
 theme.taglist_fg_volatile                       = colors.aqua_2
 theme.taglist_fg_focus                          = colors.bw_9
-theme.taglist_fg_urgent                         = colors.red_2
+theme.taglist_fg_urgent                         = theme.accent
 theme.taglist_bg_normal                         = colors.bw_0
 theme.taglist_bg_occupied                       = colors.bw_0
 theme.taglist_bg_empty                          = colors.bw_0
 theme.taglist_bg_volatile                       = colors.bw_0
-theme.taglist_bg_focus                          = colors.bw_2
+theme.taglist_bg_focus                          = theme.border_normal
 theme.taglist_bg_urgent                         = colors.bw_1
 
 theme.tasklist_font_normal                      = theme.font
@@ -115,7 +115,7 @@ theme.tasklist_font_urgent                      = theme.font_bold
 theme.tasklist_fg_normal                        = colors.bw_5
 theme.tasklist_fg_focus                         = colors.bw_8
 theme.tasklist_fg_minimize                      = colors.bw_2
-theme.tasklist_fg_urgent                        = colors.red_2
+theme.tasklist_fg_urgent                        = theme.accent
 theme.tasklist_bg_normal                        = colors.bw_0
 theme.tasklist_bg_focus                         = colors.bw_0
 theme.tasklist_bg_urgent                        = colors.bw_0
@@ -873,6 +873,7 @@ local vert_sep = wibox.widget {
     widget = wibox.widget.separator,
     orientation = "vertical",
     forced_width = 2,
+    thickness = 2,
     color = theme.border_normal,
 }
 
