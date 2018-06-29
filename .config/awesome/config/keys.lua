@@ -31,9 +31,9 @@ function config.init(context)
     context.keys.short.u = context.keys.upkey
     context.keys.short.d = context.keys.downkey
 
-    local k           = context.keys.short
-    local terminal    = context.vars.terminal
-    local browser     = context.vars.browser
+    local k             = context.keys.short
+    local terminal      = context.vars.terminal
+    local browser       = context.vars.browser
 
     -- Exit mode
     context.keys.escape =
