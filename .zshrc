@@ -11,7 +11,7 @@ export ZSH_CONFIG="$HOME/.zsh.d"
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
-if [ "$TERM" != 'linux' ]; then
+if [[ "$TERM" != 'linux' ]]; then
     # Set name of the theme to load. Optionally, if you set this to "random"
     # it'll load a random theme each time that oh-my-zsh is loaded.
     # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
@@ -61,7 +61,8 @@ export UPDATE_ZSH_DAYS=7
 #  PROFILE  #
 #############
 
-[[ -f ~/.zprofile ]] && source ~/.zprofile
+[[ -f "$HOME/.zprofile" ]] \
+    && source "$HOME/.zprofile"
 
 
 ###############
@@ -81,7 +82,7 @@ export UPDATE_ZSH_DAYS=7
 bgnotify_threshold=1    ## set your own notification threshold
 bgnotify_formatted() {
     ## $1=exit_status, $2=command, $3=elapsed_time
-    [ $1 -eq 0 ] && title="Zsh" || title="Zsh (fail)"
+    [[ $1 -eq 0 ]] && title="Zsh" || title="Zsh (fail)"
     bgnotify "$title (${3}s)" "$2"
 }
 
@@ -124,7 +125,7 @@ plugins=(zsh-syntax-highlighting zsh-completions zsh-autosuggestions command-not
 # export ARCHFLAGS="-arch x86_64"
 
 # ssh
-# export SSH_KEY_PATH="~/.ssh/rsa_id"
+# export SSH_KEY_PATH="$HOME/.ssh/rsa_id"
 
 
 ############
@@ -166,18 +167,18 @@ stty -ixon
 main_attached="$(tmux list-sessions -F '#S #{session_attached}' \
     2>/dev/null \
     | sed -n 's/^main[[:space:]]//p')"
-if [ ! "$main_attached" -gt '0' ] && [ ! "$TERM" = 'linux' ]; then
+if [[ ! "$main_attached" -gt '0' ]] && [[ ! "$TERM" == 'linux' ]]; then
     tmux attach -t main >/dev/null 2>&1 || tmux new -s main >/dev/null 2>&1
     exit
 fi
 
 # Alternative prompt
 if [[ "$TERM" == "linux" ]]; then
-    PROMPT='[%F{red}%B%n%b%f@%M %~]'
+    PROMPT='[%F{167}%B%n%b%f@%M %~]'
     PROMPT+='$(git_prompt_info)'
-    PROMPT+=' %(?.%F{cyan}.%F{red})%B%(!.#.$)%b%f '
-    ZSH_THEME_GIT_PROMPT_PREFIX=" [%F{yellow}%B"
+    PROMPT+=' %(?.%F{108}.%F{167})%B%(!.#.$)%b%f '
+    ZSH_THEME_GIT_PROMPT_PREFIX=" [%F{214}%B"
     ZSH_THEME_GIT_PROMPT_SUFFIX="%b%f]"
-    ZSH_THEME_GIT_PROMPT_DIRTY="%F{red}%B*%b%f"
+    ZSH_THEME_GIT_PROMPT_DIRTY="%F{167}%B*%b%f"
     ZSH_THEME_GIT_PROMPT_CLEAN=""
 fi

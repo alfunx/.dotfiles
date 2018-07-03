@@ -69,8 +69,8 @@ zle     -N   foreground-job
 bindkey '^Z' foreground-job
 
 mkcd() {
-    [ $# -gt 1 ] && exit 1
-    mkdir -p "$1" && cd "$1" || exit 1
+    [[ $# -gt 1 ]] && return 1
+    mkdir -p "$1" && cd "$1" || return 1
 }
 
 toilol() {
@@ -79,10 +79,10 @@ toilol() {
 
 # archive compress
 compress() {
-    if [[ -n $1 ]]; then
+    if [[ -n "$1" ]]; then
         local file=$1
         shift
-        case $file in
+        case "$file" in
             *.tar ) tar cf "$file" "$*" ;;
             *.tar.bz2 ) tar cjf "$file" "$*" ;;
             *.tar.gz ) tar czf "$file" "$*" ;;
@@ -98,21 +98,21 @@ compress() {
 
 # archive extract
 extract() {
-    if [[ -f $1 ]] ; then
+    if [[ -f "$1" ]] ; then
         local filename=$(basename "$1")
         local foldername=${filename%%.*}
         local fullpath=$(perl -e 'use Cwd "abs_path";print abs_path(shift)' "$1")
         local didfolderexist=false
-        if [[ -d $foldername ]]; then
+        if [[ -d "$foldername" ]]; then
             didfolderexist=true
             read -p "$foldername already exists, do you want to overwrite it? (y/n) " -n 1
             echo
-            if [[ $REPLY =~ ^[Nn]$ ]]; then
+            if [[ "$REPLY" =~ ^[Nn]$ ]]; then
                 return
             fi
         fi
         mkdir -p "$foldername" && cd "$foldername"
-        case $1 in
+        case "$1" in
             *.tar.bz2) tar xjf "$fullpath" ;;
             *.tar.gz) tar xzf "$fullpath" ;;
             *.tar.xz) tar Jxvf "$fullpath" ;;
@@ -127,7 +127,7 @@ extract() {
             *.zip) unzip "$fullpath" ;;
             *) echo "'$1' cannot be extracted via extract()" \
                 && cd .. \
-                && ! $didfolderexist \
+                && ! "$didfolderexist" \
                 && rm -r "$foldername" ;;
         esac
     else
@@ -146,7 +146,7 @@ tre() {
 # switch from/to project/package dir
 pkg() {
     current=$(pwd | sed "s@$HOME/@@" | sed 's@/.*@@')
-    if [[ $current == 'projects' ]]; then
+    if [[ "$current" == 'projects' ]]; then
         cd "$(pwd | sed 's/projects/packages/')"
     else
         cd "$(pwd | sed 's/packages/projects/')"
@@ -154,10 +154,10 @@ pkg() {
 }
 
 bak() {
-    if [ -e "$1" ]; then
+    if [[ -e "$1" ]]; then
         echo "Found: $1"
         mv "${1%.*}"{,.bak}
-    elif [ -e "$1.bak" ]; then
+    elif [[ -e "$1.bak" ]]; then
         echo "Found: $1.bak"
         mv "$1"{.bak,}
     fi
@@ -229,7 +229,7 @@ fag() {
 cnh() {
     cd "$(fd --follow --type d '.' "${1:-.}" 2> /dev/null \
         | fzf +m -q "$1" -0)" \
-        || exit 1
+        || return 1
 }
 
 # # cnh, but including hidden directories
@@ -242,7 +242,7 @@ cnh() {
 c() {
     cd "$(fd --hidden --follow --type d '.' "${1:-.}" 2> /dev/null \
         | fzf +m -q "$1" -0)" \
-        || exit 1
+        || return 1
 }
 
 # # cd to selected directory and open ranger
@@ -269,7 +269,7 @@ fo() {
     if [ -n "$file" ]; then
         [ "$key" = ctrl-o ] \
             && mimeopen -n "$file" \
-            || ${EDITOR:-vim} "$file"
+            || "${EDITOR:-vim}" "$file"
     fi
 }
 
@@ -280,7 +280,7 @@ cdf() {
     file=$(fzf +m -q "$1" -0) \
         && dir=$(dirname "$file") \
         && cd "$dir" \
-        || exit 1
+        || return 1
 }
 
 # browse chrome history
@@ -298,10 +298,10 @@ ch() {
     fi
 
     cp -f "$google_history" /tmp/h
-    sqlite3 -separator $sep /tmp/h \
+    sqlite3 -separator "$sep" /tmp/h \
         "select substr(title, 1, $cols), url
     from urls order by last_visit_time desc" \
-        | awk -F $sep '{printf "%-'$cols's  \x1b[36m%s\x1b[m\n", $1, $2}' \
+        | awk -F "$sep" '{printf "%-'$cols's  \x1b[36m%s\x1b[m\n", $1, $2}' \
         | fzf --ansi -m \
         | sed 's#.*\(https*://\)#\1#' \
         | xargs "$open" > /dev/null 2> /dev/null
@@ -325,7 +325,7 @@ fdp() {
     }
 
     cd "$(get_parent_dirs "$(realpath "${1:-$PWD}")" | fzf --tac)" \
-        || exit 1
+        || return 1
 }
 
 # kill process
@@ -362,12 +362,12 @@ fzf-command-widget() {
     if [ -n "$selected" ]; then
         num=$selected[1]
         if [ -n "$num" ]; then
-            zle vi-fetch-history -n $num
+            zle vi-fetch-history -n "$num"
         fi
     fi
     zle redisplay
     typeset -f zle-line-init >/dev/null && zle zle-line-init
-    return $ret
+    return "$ret"
 }
 zle     -N    fzf-command-widget
 bindkey '-' fzf-command-widget
