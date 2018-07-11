@@ -65,6 +65,7 @@
 	tool = vimdiff
 	colorMoved = default
 	renames = copy
+	wsErrorHighlight = all
 
 [difftool]
 	prompt = false
@@ -118,10 +119,13 @@
 	abbrevCommit = true
 	decorate = short
 	date = format:%a, %Y-%m-%d %R (%z)
-	graphColors = 1,2,3,4,5,6,8,9,10,11,12,13,14,15
+	graphColors = 1,2,3,4,5,6,8,166,9,10,11,12,13,14,15,208
 
 [rerere]
 	enabled = true
+
+[protocol]
+	version = 2
 
 [url "git@github.com:"]
 	insteadOf = @gh:
@@ -173,7 +177,9 @@
 
 	lr = "!f() { git log --format=fuller --stat --summary \"${1:-HEAD}\"~..\"${1:-HEAD}\"; }; f"
 	ld = log --format=medium --stat --summary --left-right
+	lad = log --format=medium --stat --summary --left-right --all
 	lp = log --patch --graph -c
+	lap = log --patch --graph -c --all
 	lw = "!f() { watch -cn 2 git \"${@:-l --color}\"; }; f"
 	rl = reflog
 
