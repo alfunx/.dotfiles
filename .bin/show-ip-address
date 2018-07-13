@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 readonly argv0="$0"
+# readonly url='https://api.ipify.org'
+readonly url='https://ip.mariya.ch'
 declare -i full=0
 
 usage() {
@@ -20,7 +22,7 @@ OPTIND=1
 if ((full)); then
     echo "SSID:     $(netctl-auto list | grep -Po '\* wlp58s0-\K.*')"
     echo "Internal: $(ip address show wlp58s0 | grep -Po 'inet \K[\d.]+')"
-    echo "External: $(wget https://api.ipify.org -O - -q)"
+    echo "External: $(curl -s "$url")"
 else
     echo "SSID:     $(netctl-auto list | grep -Po '\* wlp58s0-\K.*')"
     echo "Internal: $(ip address show wlp58s0 | grep -Po 'inet \K[\d.]+')"

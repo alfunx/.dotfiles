@@ -17,6 +17,7 @@ install-root:
 	install -Dm755 aur-remove $(DESTDIR)$(BINDIR)/aur-remove
 	install -Dm755 aur-tmpfs $(DESTDIR)$(BINDIR)/aur-tmpfs
 	install -Dm755 aur-update $(DESTDIR)$(BINDIR)/aur-update
+	install -Dm755 pacman $(DESTDIR)$(BINDIR)/pacman
 	sudo cp -fs /usr/share/aurutils/contrib/vercmp-devel $(DESTDIR)$(BINDIR)/aur-vercmp-devel
 
 uninstall-root:

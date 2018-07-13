@@ -2,6 +2,7 @@
 
 set -o errexit -o pipefail
 shopt -s nullglob
+shopt -s extglob
 readonly argv0="$0"
 readonly PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 
@@ -24,58 +25,37 @@ usage() {
 
 source /usr/share/makepkg/util/util.sh
 source /usr/share/makepkg/util/message.sh
+source /usr/share/makepkg/util/parseopts.sh
 
 if [[ -t 2 && ! -o xtrace ]]; then
     colorize
 fi
 
-if getopt -T || (($? != 4)); then
-    error "$argv0: util-linux getopt required"
-    exit 22
-fi
+opt_short='cCsStTo:h'
+opt_long=('cursor' 'no-cursor' 'select' 'no-select' 'timeout' 'no-timeout'
+          'output:' 'output-file:' 'help')
 
-longopts=cursor,no-cursor,select,no-select,timeout,no-timeout,output:,output-file:
-longopts=,help
-shortopts=cCsStTo:h
-
-if optstring=$(getopt -o "$shortopts" -l "$longopts" -n "$argv0" -- "$@"); then
-    eval set -- "$optstring"
-else
+if ! parseopts "$opt_short" "${opt_long[@]}" -- "$@"; then
     usage
 fi
+set -- "${OPTRET[@]}"
 
 unset maim_args
 while true; do
     case "$1" in
-        -c|--cursor)
-            cursor=1
-            shift ;;
-        -C|--no-cursor)
-            cursor=0
-            shift ;;
-        -s|--select)
-            select=1
-            shift ;;
-        -S|--no-select)
-            select=0
-            shift ;;
-        -t|--timeout)
-            timeout=1
-            shift ;;
-        -T|--no-timeout)
-            timeout=0
-            shift ;;
-        -o|--output|--output-file)
-            output_file=$2
-            shift 2 ;;
-        -h|--help)
-            usage
-            shift ;;
-        *)
-            shift
-            break ;;
+        -c|--cursor)               cursor=1 ;;
+        -C|--no?(-)cursor)         cursor=0 ;;
+        -s|--select)               select=1 ;;
+        -S|--no?(-)select)         select=0 ;;
+        -t|--timeout)              timeout=1 ;;
+        -T|--no?(-)timeout)        timeout=0 ;;
+        -o|--output|--output-file) shift; output_file=$1 ;;
+        -h|--help)                 usage ;;
+        --)                        shift; break ;;
     esac
+    shift
 done
+unset opt_short opt_long OPTRET
 
 if ((! cursor)); then
     maim_args+=(-u)

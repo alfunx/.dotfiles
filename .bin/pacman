@@ -12,22 +12,17 @@ pacman-date-log() {
 }
 
 update-widget() {
-    if [[ $UID -eq 0 ]]; then
-        return
+    if [[ -n "$SUDO_USER" ]]; then
+        runuser -u "$SUDO_USER" -- \
+            update-pacman-widget
+    else
+        update-pacman-widget
     fi
-
-    dbus-send --dest=org.awesomewm.awful --type=method_call \
-        / org.awesomewm.awful.Remote.Eval \
-        string:'pacman = require("beautiful").pacman; if pacman then pacman.update() end' \
-        > /dev/null 2>&1
 }
 
 update-widget
 
-pattern="^-S[cuy]|^-S$|^-R[sn]|^-R$|^-U$|^-F[y]"
-if [[ $1 =~ $pattern ]]; then
-    sudo /usr/bin/pacman "$@"
-elif [[ $1 == '--log' ]]; then
+if [[ $1 == '--log' ]]; then
     shift
     pacman-date-log "$@"
 else

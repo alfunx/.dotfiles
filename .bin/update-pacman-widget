@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+dbus-send --dest=org.awesomewm.awful --type=method_call \
+    / org.awesomewm.awful.Remote.Eval \
+    string:'pacman = require("beautiful").pacman; if pacman then pacman.update() end'

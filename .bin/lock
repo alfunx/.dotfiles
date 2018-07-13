@@ -11,7 +11,7 @@ maim -u \
 
 i3lock \
     --image="$image" \
-    --insidecolor=EBDBB233 \
+    --insidecolor=282828FF \
     --insidevercolor=FABD2FFF \
     --insidewrongcolor=FB4934FF \
     --ringcolor=282828FF \
