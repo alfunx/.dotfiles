@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-
+# aur-checkupdates - check AUR updates / print all updates
 set -o errexit -o pipefail
 shopt -s nullglob
+shopt -s extglob
 readonly argv0=checkupdates
 readonly PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 
@@ -18,60 +19,37 @@ usage() {
 
 source /usr/share/makepkg/util/util.sh
 source /usr/share/makepkg/util/message.sh
+source /usr/share/makepkg/util/parseopts.sh
 
 if [[ -t 2 && ! -o xtrace ]]; then
     colorize
 fi
 
-if getopt -T || (($? != 4)); then
-    error "$argv0: util-linux getopt required"
-    exit 22
-fi
+opt_short='aonvmfFV'
+opt_long=('all' 'official' 'normal' 'vcs' 'manual' 'format' 'no-format'
+          'verbose')
 
-longopts=all,official,normal,vcs,manual,format,no-format,verbose
-shortopts=aonvmfFV
-
-if optstring=$(getopt -o "$shortopts" -l "$longopts" -n "$argv0" -- "$@"); then
-    eval set -- "$optstring"
-else
+if ! parseopts "$opt_short" "${opt_long[@]}" -- "$@"; then
     usage
 fi
+set -- "${OPTRET[@]}"
 
 while true; do
     case "$1" in
-        -a|--all)
-            all=1
-            shift ;;
-        -o|--official)
-            all=0
-            official=1
-            shift ;;
-        -n|--normal)
-            all=0
-            normal=1
-            shift ;;
-        -v|--vcs)
-            all=0
-            vcs=1
-            shift ;;
-        -m|--manual)
-            all=0
-            manual=1
-            shift ;;
-        -f|--format)
-            format=1
-            shift ;;
-        -F|--no-format)
-            format=0
-            shift ;;
-        -V|--verbose)
-            verbose=1
-            shift ;;
-        *)
-            shift
-            break ;;
+        -a|--all)       all=1 ;;
+        -o|--official)  all=0; official=1 ;;
+        -n|--normal)    all=0; normal=1 ;;
+        -v|--vcs)       all=0; vcs=1 ;;
+        -m|--manual)    all=0; manual=1 ;;
+        -f|--format)    format=1 ;;
+        -F|--no-format) format=0 ;;
+        -V|--verbose)   verbose=1 ;;
+        -h|--help)      usage ;;
+        --)             shift; break ;;
     esac
+    shift
 done
+unset opt_short opt_long OPTRET
 
 if ((all)); then
     official=1 normal=1 vcs=1 manual=1
@@ -79,7 +57,7 @@ fi
 
 _check() {
     if ((official)); then
-        sudo checkupdates \
+        checkupdates \
             | sed -e 's/://' -e 's/^/pacman: /'
     fi
 
@@ -94,8 +72,8 @@ _check() {
     fi
 
     if ((manual)); then
-        export AURDEST="$HOME/packages"; \
-            aur vercmp-devel -d manual \
+        export AURDEST="$HOME/packages"
+        aur vercmp-devel -d manual \
             | sed -e 's/://' -e 's/^/manual: /'
     fi
 }

@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-
+# aur-remove - remove packages from repository
 set -o errexit -o pipefail
 shopt -s nullglob
+shopt -s extglob
 readonly argv0=remove
 readonly PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 
@@ -12,39 +13,30 @@ usage() {
 
 source /usr/share/makepkg/util/util.sh
 source /usr/share/makepkg/util/message.sh
+source /usr/share/makepkg/util/parseopts.sh
 
 if [[ -t 2 && ! -o xtrace ]]; then
     colorize
 fi
 
-if getopt -T || (($? != 4)); then
-    error "$argv0: util-linux getopt required"
-    exit 22
-fi
+opt_short='d:'
+opt_long=('repo:' 'database:' 'root:')
 
-longopts=repo:,database:,root:
-shortopts=d:
-
-if optstring=$(getopt -o "$shortopts" -l "$longopts" -n "$argv0" -- "$@"); then
-    eval set -- "$optstring"
-else
+if ! parseopts "$opt_short" "${opt_long[@]}" -- "$@"; then
     usage
 fi
+set -- "${OPTRET[@]}"
 
 unset root repo
 while true; do
     case "$1" in
-        -d|--database|--repo)
-            repo=$2
-            shift 2 ;;
-        --root)
-            root=$2
-            shift 2 ;;
-        *)
-            shift
-            break ;;
+        -d|--database|--repo) repo=$1 ;;
+        --root)               root=$1 ;;
+        --)                   shift; break ;;
     esac
+    shift
 done
+unset opt_short opt_long OPTRET
 
 if [[ ${repo=$AUR_REPO} ]]; then
     server=$(pacconf --single --repo="$repo" Server)

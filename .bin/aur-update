@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-
+# aur-update - update AUR packages
 set -o errexit -o pipefail
 shopt -s nullglob
+shopt -s extglob
 readonly argv0=update
 readonly PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 
@@ -26,46 +27,27 @@ if [[ -t 2 && ! -o xtrace ]]; then
     colorize
 fi
 
-if getopt -T || (($? != 4)); then
-    error "$argv0: util-linux getopt required"
-    exit 22
-fi
+opt_short='canvm'
+opt_long=('chroot' 'all' 'normal' 'vcs' 'manual')
 
-longopts=chroot,all,normal,vcs,manual
-shortopts=canvm
-
-if optstring=$(getopt -o "$shortopts" -l "$longopts" -n "$argv0" -- "$@"); then
-    eval set -- "$optstring"
-else
+if ! parseopts "$opt_short" "${opt_long[@]}" -- "$@"; then
     usage
 fi
+set -- "${OPTRET[@]}"
 
 unset root repo
 while true; do
     case "$1" in
-        -c|--chroot)
-            build_args+=(-c)
-            shift ;;
-        -a|--all)
-            all=1
-            shift ;;
-        -n|--normal)
-            all=0
-            normal=1
-            shift ;;
-        -v|--vcs)
-            all=0
-            vcs=1
-            shift ;;
-        -m|--manual)
-            all=0
-            manual=1
-            shift;;
-        *)
-            shift
-            break ;;
+        -c|--chroot) build_args+=(-c) ;;
+        -a|--all)    all=1 ;;
+        -n|--normal) all=0; normal=1 ;;
+        -v|--vcs)    all=0; vcs=1 ;;
+        -m|--manual) all=0; manual=1 ;;
+        --)          shift; break ;;
     esac
+    shift
 done
+unset opt_short opt_long OPTRET
 
 if ((all)); then
     normal=1 vcs=1 manual=1
