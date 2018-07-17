@@ -3,6 +3,7 @@ dmenu-git
 dotfiles.sh
 i3lock-color-git
 kitty-git
+kitty-terminfo-git
 monetdb-git
 otf-blackjack
 ranger-git

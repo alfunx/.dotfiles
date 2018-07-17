@@ -13,6 +13,7 @@ netctl-dispatcher-chrony
 nvme-cli
 oomox-git
 overdue
+postman-bin
 powerline-fonts-git
 python-proselint
 quicklisp

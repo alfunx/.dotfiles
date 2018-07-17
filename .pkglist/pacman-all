@@ -8,6 +8,7 @@ alsa-utils
 arch-wiki-lite
 asciinema
 asp
+audacity
 aurutils-git
 autoconf
 automake
@@ -175,6 +176,7 @@ pigz
 pkgconf
 pkgfile
 postgresql
+postman-bin
 powerline-fonts-git
 powertop
 procps-ng
