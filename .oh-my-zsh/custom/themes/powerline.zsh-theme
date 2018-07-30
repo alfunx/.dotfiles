@@ -1,29 +1,7 @@
-# vim:ft=zsh ts=2 sw=2 sts=2
+# vim:ft=zsh ts=4 sw=4 sts=4
 #
-# agnoster's Theme - https://gist.github.com/3712874
 # A Powerline-inspired theme for ZSH
-#
-# # README
-#
-# In order for this theme to render correctly, you will need a
-# [Powerline-patched font](https://github.com/Lokaltog/powerline-fonts).
-# Make sure you have a recent version: the code points that Powerline
-# uses changed in 2012, and older versions will display incorrectly,
-# in confusing ways.
-#
-# In addition, I recommend the
-# [Solarized theme](https://github.com/altercation/solarized/) and, if you're
-# using it on Mac OS X, [iTerm 2](http://www.iterm2.com/) over Terminal.app -
-# it has significantly better color fidelity.
-#
-# # Goals
-#
-# The aim of this theme is to only show you *relevant* information. Like most
-# prompts, it will only show git information when in a git working directory.
-# However, it goes a step further: everything from the current user and
-# hostname to whether the last call exited with an error to whether background
-# jobs are running in this shell will all be displayed automatically when
-# appropriate.
+# based on: agnoster's Theme - https://gist.github.com/3712874
 
 ### Variables (default: Gruvbox)
 # Background
@@ -62,6 +40,8 @@ CURRENT_BG='NONE'
 
     SEGMENT_SEPARATOR=$'\ue0b0'  # 
     # SEGMENT_SEPARATOR=$'\u258c'  # ▌
+    SEGMENT_SEPARATOR2=$'\ue0b1'  # 
+    # SEGMENT_SEPARATOR2=$'\u2502'  # │
 }
 
 # Begin a segment
@@ -115,7 +95,7 @@ prompt_git() {
     if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
         dirty=$(parse_git_dirty)
         ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="⤷ $(git rev-parse --short HEAD 2> /dev/null)"
-        if [[ -e "${repo_path}/BISECT_LOG" || -e "${repo_path}/MERGE_HEAD" || -e "${repo_path}/rebase" || -e "${repo_path}/rebase-apply" || -e "${repo_path}/rebase-merge" || -e "${repo_path}/../.dotest" ]]; then
+        if [[ -e "${repo_path}/BISECT_LOG" || -e "${repo_path}/MERGE_HEAD" || -e "${repo_path}/REBASE_HEAD" || -e "${repo_path}/rebase" || -e "${repo_path}/rebase-apply" || -e "${repo_path}/rebase-merge" || -e "${repo_path}/../.dotest" || -e "${repo_path}/CHERRY_PICK_HEAD" ]]; then
             prompt_segment "${PROMPT_3_BG}" "${PROMPT_3_FG_ERROR}"
         elif [[ -n $dirty ]]; then
             prompt_segment "${PROMPT_3_BG}" "${PROMPT_3_FG_DIRTY}"
@@ -123,13 +103,14 @@ prompt_git() {
             prompt_segment "${PROMPT_3_BG}" "${PROMPT_3_FG_CLEAN}"
         fi
 
-        if [[ -e "${repo_path}/BISECT_LOG" ]]; then
-            mode=' <B>'
-        elif [[ -e "${repo_path}/MERGE_HEAD" ]]; then
-            mode=' <M>'
-        elif [[ -e "${repo_path}/rebase" || -e "${repo_path}/rebase-apply" || -e "${repo_path}/rebase-merge" || -e "${repo_path}/../.dotest" ]]; then
-            mode=' <R>'
-        fi
+        [[ -e "${repo_path}/BISECT_LOG" ]] \
+            && mode+=" $SEGMENT_SEPARATOR2 B"
+        [[ -e "${repo_path}/MERGE_HEAD" ]] \
+            && mode+=" $SEGMENT_SEPARATOR2 M"
+        [[ -e "${repo_path}/REBASE_HEAD" || -e "${repo_path}/rebase" || -e "${repo_path}/rebase-apply" || -e "${repo_path}/rebase-merge" || -e "${repo_path}/../.dotest" ]] \
+            && mode+=" $SEGMENT_SEPARATOR2 R"
+        [[ -e "${repo_path}/CHERRY_PICK_HEAD" ]] \
+            && mode+=" $SEGMENT_SEPARATOR2 C"
 
         setopt promptsubst
         autoload -Uz vcs_info
@@ -206,7 +187,7 @@ prompt_hg() {
 
 prompt_svn() {
     local rev branch
-    if in_svn; then
+    if $(in_svn > /dev/null 2>&1); then
         rev=$(svn_get_rev_nr)
         branch=$(svn_get_branch_name)
         PL_BRANCH_CHAR=$'\ue0a0'                 # 

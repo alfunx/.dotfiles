@@ -34,7 +34,8 @@ export LESS_TERMCAP_se=$'\e[39;49m'
 export LESS_TERMCAP_us=$'\e[4;96m'
 export LESS_TERMCAP_ue=$'\e[0m'
 export MANROFFOPT='-c'
-export LESS='-iMRj.3'
+export LESS='-iMRSj.3'
+export SYSTEMD_LESS="$LESS"
 
 # # man / less colors (using tput)
 # export LESS_TERMCAP_mb=$(tput bold; tput setaf 2)

@@ -90,7 +90,25 @@ bgnotify_formatted() {
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(zsh-syntax-highlighting zsh-completions zsh-autosuggestions command-not-found colorize bgnotify svn)
+plugins=(
+    zsh-syntax-highlighting
+    zsh-completions
+    zsh-autosuggestions
+    command-not-found
+    colorize
+    bgnotify
+    svn
+)
+
+# # Native plugins
+# plugins=(
+#     command-not-found
+#     colorize
+#     bgnotify
+#     svn
+# )
+# source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # Remove plugins if in tty
 [[ "$TERM" = 'linux' ]] \
@@ -137,6 +155,7 @@ setopt COMPLETE_ALIASES
 setopt HIST_IGNORE_SPACE
 setopt NO_AUTO_CD
 setopt INTERACTIVE_COMMENTS
+setopt PROMPT_SUBST
 
 # No scrolllock
 stty -ixon
@@ -153,8 +172,8 @@ stty -ixon
 [[ -f "$ZSH_CONFIG/fzf.zsh" ]] \
     && source "$ZSH_CONFIG/fzf.zsh"
 
-# Vim mode
-#[[ -f "$ZSH_CONFIG/vim.zsh" ]] \
+# # Vim mode
+# [[ -f "$ZSH_CONFIG/vim.zsh" ]] \
 #    && source "$ZSH_CONFIG/vim.zsh"
 
 # Gruvbox colors fix
@@ -182,3 +201,6 @@ if [[ "$TERM" == "linux" ]]; then
     ZSH_THEME_GIT_PROMPT_DIRTY="%F{167}%B*%b%f"
     ZSH_THEME_GIT_PROMPT_CLEAN=""
 fi
+
+# # Directly source prompt
+# source "$ZSH/custom/themes/gruvbox-dark.zsh-theme"

@@ -11,7 +11,7 @@ alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
 alias .......='cd ../../../../../..'
-alias ........='cd ../../../../.././...'
+alias ........='cd ../../../../../../..'
 
 # show type,show almost all
 alias l='ls -FA'
@@ -29,6 +29,7 @@ alias lS='ls -1FSsh'
 alias lart='ls -1Fcart'
 alias lrt='ls -1Fcrt'
 alias t='tail -f'
+alias wa='watch -ctn 2'
 
 # Suffix commands
 alias -g H='| head'
@@ -61,6 +62,7 @@ alias grep='grep --color=auto --exclude-dir={.git,.svn}'
 alias egrep='egrep --color=auto --exclude-dir={.git,.svn}'
 alias -g C='| xclip -selection clipboard -rmlastnl'
 alias diff='diff --color=auto'
+alias journalctl='journalctl -r'
 
 foreground-job() {
     fg
@@ -312,12 +314,12 @@ fdp() {
     local dirs=()
 
     get_parent_dirs() {
-        if [[ -d "${1}" ]]; then
+        if [[ -d "$1" ]]; then
             dirs+=("$1"); else return;
         fi
-        if [[ "${1}" == '/' ]]; then
-            for _dir in "${dirs[@]}"; do
-                echo "$_dir";
+        if [[ "$1" == '/' ]]; then
+            for d in "${dirs[@]}"; do
+                echo "$d";
             done
         else
             get_parent_dirs "$(dirname "$1")"
