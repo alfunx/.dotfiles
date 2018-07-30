@@ -22,7 +22,7 @@ update-widget() {
 
 update-widget
 
-if [[ $1 == '--log' ]]; then
+if [[ "$1" == '--log' ]]; then
     shift
     pacman-date-log "$@"
 else

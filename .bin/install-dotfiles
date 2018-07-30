@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 unset reply
-echo -n "[1;97mInstall ditfiles at [1;91m${HOME}[1;97m? [yN] [0m"
+echo -n "[1;97mInstall dotfiles at [1;91m${HOME}[1;97m? [yN] [0m"
 read -r reply
 if [[ ! $reply =~ ^[Yy]$ ]]; then
     echo 'Aborted.'
@@ -40,7 +40,7 @@ $dotfiles clone 'https://github.com/alfunx/.dotfiles' \
 
 # Load submodules
 highlight 'Initialize submodules'
-$dotfiles submodule update --init --recursive
+$dotfiles submodule update --init --recursive --jobs 0
 
 # Install aurutils (to setup sym-link)
 if [[ -d $HOME/projects/aurutils ]]; then
