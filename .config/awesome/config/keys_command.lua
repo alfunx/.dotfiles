@@ -68,13 +68,13 @@ function config.init(context)
         awful.key({ k.s, k.c           }, k.u, context.util.get_resize_function("u", dpi(1), 0.005)),
         awful.key({ k.s, k.c           }, k.r, context.util.get_resize_function("r", dpi(1), 0.005)),
 
-        -- Gaps
-        awful.key({ k.a                }, k.d, function() lain.util.useless_gaps_resize(beautiful.useless_gap/2) end,
+        -- Useless gaps
+        awful.key({ k.a                }, k.d, function() awful.tag.incgap(beautiful.useless_gap/2) end,
                   { description = " increase useless gap", group = "command mode" }),
-        awful.key({ k.a                }, k.u, function() lain.util.useless_gaps_resize(-beautiful.useless_gap/2) end,
+        awful.key({ k.a                }, k.u, function() awful.tag.incgap(-beautiful.useless_gap/2) end,
                   { description = " decrease useless gap", group = "command mode" }),
-        awful.key({ k.a, k.c           }, k.d, function() lain.util.useless_gaps_resize(1) end),
-        awful.key({ k.a, k.c           }, k.u, function() lain.util.useless_gaps_resize(-1) end),
+        awful.key({ k.a, k.c           }, k.d, function() awful.tag.incgap(1) end),
+        awful.key({ k.a, k.c           }, k.u, function() awful.tag.incgap(-1) end),
 
         -- Client manipulation
         awful.key({                    }, "z", function()

@@ -357,12 +357,12 @@ theme.titlebar_fun = function(c)
     -- buttons for the titlebar
     local buttons = gears.table.join(
         awful.button({ }, 1, function()
-            client.focus = c
+            if c.focusable then client.focus = c end
             c:raise()
             awful.mouse.client.move(c)
         end),
         awful.button({ }, 3, function()
-            client.focus = c
+            if c.focusable then client.focus = c end
             c:raise()
             awful.mouse.client.resize(c)
         end)

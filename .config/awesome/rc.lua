@@ -55,11 +55,12 @@ context.vars.terminal         = "kitty"
 -- context.vars.terminal         = "kitty -1 --listen-on unix:/tmp/_kitty_" .. os.getenv("USER")
 context.vars.browser          = "chromium"
 context.vars.net_iface        = "wlp58s0"
+context.vars.cores            = 4
 context.vars.batteries        = { "BAT0" }
 context.vars.ac               = "AC"
 context.vars.scripts_dir      = os.getenv("HOME") .. "/.bin"
--- context.vars.checkupdate      = "(sudo checkupdates & aur checkupdates) | sed 's/->/→/' | sort | column -t -c 70 -T 2,4"
-context.vars.checkupdate      = "sudo checkupdates | sed 's/->/→/' | sort | column -t -c 70 -T 2,4"
+-- context.vars.checkupdate      = "(checkupdates & aur checkupdates) | sed 's/->/→/' | sort | column -t -c 70 -T 2,4"
+context.vars.checkupdate      = "checkupdates | sed 's/->/→/' | sort | column -t -c 70 -T 2,4"
 
 -- For compatibility with copycat-themes
 awful.util.terminal           = context.vars.terminal

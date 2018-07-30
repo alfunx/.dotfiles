@@ -46,16 +46,6 @@ function config.init(context)
             },
         },
 
-        -- No borders if maximized
-        {
-            rule = {
-                maximized = true,
-            },
-            properties = {
-                border_width = 0,
-            },
-        },
-
         {
             rule = {
                 class = "Thunderbird",

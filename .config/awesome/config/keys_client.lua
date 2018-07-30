@@ -64,7 +64,7 @@ function config.init(context)
     end
 
     context.mouse.client = gears.table.join(
-        awful.button({                    }, 1, function(c) client.focus = c; c:raise() end),
+        awful.button({                    }, 1, function(c) if c.focusable then client.focus = c end; c:raise() end),
         awful.button({ k.m                }, 1, awful.mouse.client.move),
         awful.button({ k.m, k.s           }, 1, awful.mouse.client.resize)
     )

@@ -63,12 +63,12 @@ function config.init(context)
             -- buttons for the titlebar
             local buttons = gears.table.join(
                 awful.button({ }, 1, function()
-                    client.focus = c
+                    if c.focusable then client.focus = c end
                     c:raise()
                     awful.mouse.client.move(c)
                 end),
                 awful.button({ }, 3, function()
-                    client.focus = c
+                    if c.focusable then client.focus = c end
                     c:raise()
                     awful.mouse.client.resize(c)
                 end)
@@ -119,7 +119,6 @@ function config.init(context)
 
     client.connect_signal("property::fullscreen", function(c)
         if c.fullscreen then
-            c.border_width = 0
             context.util.hide_titlebar(c)
             c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 0) end
         else
@@ -130,7 +129,6 @@ function config.init(context)
 
     client.connect_signal("property::maximized", function(c)
         if c.maximized then
-            c.border_width = 0
             context.util.hide_titlebar(c)
             c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 0) end
         else
@@ -178,7 +176,7 @@ function config.init(context)
         client.connect_signal("mouse::enter", function(c)
             if awful.layout.get(c.screen) ~= awful.layout.suit.magnifier
                 and awful.client.focus.filter(c) then
-                client.focus = c
+                if c.focusable then client.focus = c end
             end
         end)
     end

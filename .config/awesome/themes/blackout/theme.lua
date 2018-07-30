@@ -141,6 +141,8 @@ theme.bg_systray                                = theme.tasklist_bg_normal
 theme.border_width                              = dpi(4)
 -- theme.border_radius                             = dpi(8)
 theme.border_radius                             = dpi(0)
+theme.fullscreen_hide_border                    = true
+theme.maximized_hide_border                     = true
 theme.menu_height                               = dpi(20)
 theme.menu_width                                = dpi(250)
 theme.tasklist_plain_task_name                  = true
@@ -276,8 +278,26 @@ naughty.config.presets.critical                 = {
 local markup = lain.util.markup
 -- local separators = lain.util.separators
 
+-- Spacing
+local space = wibox.widget {
+    widget = wibox.widget.separator,
+    orientation = "vertical",
+    forced_width = dpi(3),
+    thickness = dpi(3),
+    color = "#00000000",
+}
+
+-- Separator
+local vert_sep = wibox.widget {
+    widget = wibox.widget.separator,
+    orientation = "vertical",
+    forced_width = theme.border_width / 2,
+    thickness = theme.border_width / 2,
+    color = theme.border_normal,
+}
+
 -- Textclock
--- local clockicon = wibox.widget.imagebox(theme.widget_clock)
+-- local clock_icon = wibox.widget.imagebox(theme.widget_clock)
 local clock = awful.widget.watch(
     -- "date +'%a %d %b %R'", 60,
     "date +'%R'", 5,
@@ -287,7 +307,12 @@ local clock = awful.widget.watch(
 )
 
 local clock_widget = wibox.widget {
-    clock,
+    {
+        clock,
+        left = dpi(4),
+        right = dpi(4),
+        widget = wibox.container.margin,
+    },
     layout = wibox.layout.align.horizontal,
 }
 
@@ -300,9 +325,9 @@ theme.cal = lain.widget.calendar {
 }
 
 -- -- Mail IMAP check
--- local mailicon = wibox.widget.imagebox(theme.widget_mail)
+-- local mail_icon = wibox.widget.imagebox(theme.widget_mail)
 -- --[[ commented because it needs to be set before use
--- mailicon:buttons(gears.table.join(awful.button({ }, 1, function() awful.spawn(mail) end)))
+-- mail_icon:buttons(gears.table.join(awful.button({ }, 1, function() awful.spawn(mail) end)))
 -- local mail = lain.widget.imap({
 --     timeout  = 180,
 --     server   = "server",
@@ -311,10 +336,10 @@ theme.cal = lain.widget.calendar {
 --     settings = function()
 --         if mailcount > 0 then
 --             widget:set_text(" " .. mailcount .. " ")
---             mailicon:set_image(theme.widget_mail_on)
+--             mail_icon:set_image(theme.widget_mail_on)
 --         else
 --             widget:set_text("")
---             mailicon:set_image(theme.widget_mail)
+--             mail_icon:set_image(theme.widget_mail)
 --         end
 --     end,
 -- })
@@ -323,9 +348,9 @@ theme.cal = lain.widget.calendar {
 -- MPD
 --luacheck: push ignore widget mpd_now artist title
 -- local musicplr = context.vars.terminal .. " -title Music -g 130x34-320+16 ncmpcpp"
-local mpdicon = wibox.widget.imagebox(theme.widget_music)
+local mpd_icon = wibox.widget.imagebox(theme.widget_music)
 
--- mpdicon:buttons(gears.table.join(
+-- mpd_icon:buttons(gears.table.join(
 --     awful.button({ context.keys.modkey }, 1, function()
 --         awful.spawn.with_shell(musicplr)
 --     end),
@@ -347,14 +372,14 @@ theme.mpd = lain.widget.mpd {
         if mpd_now.state == "play" then
             artist = " " .. mpd_now.artist .. " "
             title  = mpd_now.title  .. " "
-            mpdicon:set_image(theme.widget_music_on)
+            mpd_icon:set_image(theme.widget_music_on)
             widget:set_markup(markup.font(theme.font, markup("#FF8466", artist) .. " " .. title))
         elseif mpd_now.state == "pause" then
             widget:set_markup(markup.font(theme.font, " mpd paused "))
-            mpdicon:set_image(theme.widget_music_pause)
+            mpd_icon:set_image(theme.widget_music_pause)
         else
             widget:set_text("")
-            mpdicon:set_image(theme.widget_music)
+            mpd_icon:set_image(theme.widget_music)
         end
     end,
 }
@@ -362,7 +387,7 @@ theme.mpd = lain.widget.mpd {
 
 -- MEM
 --luacheck: push ignore widget mem_now
-local memicon = wibox.widget.imagebox(theme.widget_mem)
+local mem_icon = wibox.widget.imagebox(theme.widget_mem)
 local mem = lain.widget.mem {
     timeout = 5,
     settings = function()
@@ -394,7 +419,12 @@ local mem = lain.widget.mem {
 }
 
 local mem_widget = wibox.widget {
-    memicon, mem.widget,
+    mem_icon,
+    {
+        mem.widget,
+        right = dpi(4),
+        widget = wibox.container.margin,
+    },
     layout = wibox.layout.align.horizontal,
 }
 
@@ -420,7 +450,7 @@ end))
 
 -- CPU
 --luacheck: push ignore widget cpu_now
-local cpuicon = wibox.widget.imagebox(theme.widget_cpu)
+local cpu_icon = wibox.widget.imagebox(theme.widget_cpu)
 local cpu = lain.widget.cpu {
     timeout = 5,
     settings = function()
@@ -445,7 +475,12 @@ local cpu = lain.widget.cpu {
 }
 
 local cpu_widget = wibox.widget {
-    cpuicon, cpu.widget,
+    cpu_icon,
+    {
+        cpu.widget,
+        right = dpi(4),
+        widget = wibox.container.margin,
+    },
     layout = wibox.layout.align.horizontal,
 }
 
@@ -467,7 +502,7 @@ end))
 
 -- SYSLOAD
 --luacheck: push ignore widget load_1 load_5 load_15
-local sysloadicon = wibox.widget.imagebox(theme.widget_hdd)
+local sysload_icon = wibox.widget.imagebox(theme.widget_hdd)
 local sysload = lain.widget.sysload {
     timeout = 5,
     settings = function()
@@ -475,15 +510,15 @@ local sysload = lain.widget.sysload {
         local _font = theme.font
 
         -- check with: grep 'model name' /proc/cpuinfo | wc -l
-        local number_of_cores = 4
+        local cores = context.vars.cores or 4
 
-        if tonumber(load_5) / number_of_cores >= 1.5 then
+        if tonumber(load_5) / cores >= 1.5 then
             _color = colors.red_2
             _font = theme.font
-        elseif tonumber(load_5) / number_of_cores >= 1.0 then
+        elseif tonumber(load_5) / cores >= 1.0 then
             _color = colors.orange_2
             _font = theme.font
-        elseif tonumber(load_5) / number_of_cores >= 0.7 then
+        elseif tonumber(load_5) / cores >= 0.7 then
             _color = colors.yellow_2
             _font = theme.font
         end
@@ -496,7 +531,12 @@ local sysload = lain.widget.sysload {
 }
 
 local sysload_widget = wibox.widget {
-    sysloadicon, sysload.widget,
+    sysload_icon,
+    {
+        sysload.widget,
+        right = dpi(4),
+        widget = wibox.container.margin,
+    },
     layout = wibox.layout.align.horizontal,
 }
 
@@ -517,7 +557,7 @@ end))
 
 -- PACMAN
 --luacheck: push ignore widget available
-local pacmanicon = wibox.widget.imagebox(theme.widget_pacman)
+local pacman_icon = wibox.widget.imagebox(theme.widget_pacman)
 theme.pacman = widgets.pacman {
     command = context.vars.checkupdate,
     notify = "on",
@@ -530,7 +570,12 @@ theme.pacman = widgets.pacman {
 }
 
 local pacman_widget = wibox.widget {
-    pacmanicon, theme.pacman.widget,
+    pacman_icon,
+    {
+        theme.pacman.widget,
+        right = dpi(4),
+        widget = wibox.container.margin,
+    },
     layout = wibox.layout.align.horizontal,
 }
 
@@ -541,7 +586,7 @@ end))
 
 -- USERS
 --luacheck: push ignore widget logged_in
-local usersicon = wibox.widget.imagebox(theme.widget_users)
+local users_icon = wibox.widget.imagebox(theme.widget_users)
 local users = widgets.users {
     settings = function()
         local _color = bar_fg
@@ -556,7 +601,12 @@ local users = widgets.users {
 }
 
 local users_widget = wibox.widget {
-    usersicon, users.widget,
+    users_icon,
+    {
+        users.widget,
+        right = dpi(4),
+        widget = wibox.container.margin,
+    },
     layout = wibox.layout.align.horizontal,
 }
 
@@ -587,7 +637,7 @@ end)
 --]]
 
 -- -- CORETEMP (lain, average)
--- local tempicon = wibox.widget.imagebox(theme.widget_temp)
+-- local temp_icon = wibox.widget.imagebox(theme.widget_temp)
 -- local temp = lain.widget.temp({
 --     tempfile = "/sys/class/thermal/thermal_zone7/temp",
 --     settings = function()
@@ -609,12 +659,17 @@ end)
 -- })
 
 -- local temp_widget = wibox.widget {
---     tempicon, temp.widget,
+--     temp_icon,
+--     {
+--         temp.widget,
+--         right = dpi(4),
+--         widget = wibox.container.margin,
+--     },
 --     layout = wibox.layout.align.horizontal,
 -- }
 
 -- -- FS
--- local fsicon = wibox.widget.imagebox(theme.widget_hdd)
+-- local fs_icon = wibox.widget.imagebox(theme.widget_hdd)
 -- theme.fs = lain.widget.fs({
 --     options  = "--exclude-type=tmpfs",
 --     notification_preset = { fg = bar_fg, bg = theme.border_normal, font = "xos4 Terminus 10" },
@@ -624,24 +679,29 @@ end)
 -- })
 
 -- local fs_widget = wibox.widget {
---     fsicon, theme.fs.widget,
+--     fs_icon,
+--     {
+--         theme.fs.widget,
+--         right = dpi(4),
+--         widget = wibox.container.margin,
+--     },
 --     layout = wibox.layout.align.horizontal,
 -- }
 
 -- ALSA volume
 --luacheck: push ignore widget volume_now vol_text volume_before
-local volicon = wibox.widget.imagebox(theme.widget_vol)
+local vol_icon = wibox.widget.imagebox(theme.widget_vol)
 theme.volume = lain.widget.alsa {
     -- togglechannel = "IEC958,3",
     settings = function()
         if volume_now.status == "off" then
-            volicon:set_image(theme.widget_vol_mute)
+            vol_icon:set_image(theme.widget_vol_mute)
         elseif tonumber(volume_now.level) == 0 then
-            volicon:set_image(theme.widget_vol_no)
+            vol_icon:set_image(theme.widget_vol_no)
         elseif tonumber(volume_now.level) < 50 then
-            volicon:set_image(theme.widget_vol_low)
+            vol_icon:set_image(theme.widget_vol_low)
         else
-            volicon:set_image(theme.widget_vol)
+            vol_icon:set_image(theme.widget_vol)
         end
 
         widget:set_markup(markup.fontfg(theme.font, bar_fg, volume_now.level))
@@ -675,7 +735,12 @@ theme.volume.manual = true
 theme.volume.update()
 
 local vol_widget = wibox.widget {
-    volicon, theme.volume.widget,
+    vol_icon,
+    {
+        theme.volume.widget,
+        right = dpi(4),
+        widget = wibox.container.margin,
+    },
     layout = wibox.layout.align.horizontal,
 }
 
@@ -704,31 +769,7 @@ vol_widget:buttons(gears.table.join(
 
 -- BAT
 --luacheck: push ignore widget bat_now
-
--- local battery_palette = widgets.widget_palette {
---     [10] = {
---         color = colors.red_2,
---         icon = theme.widget_battery_empty,
---     },
---     [20] = {
---         color = colors.orange_2,
---         icon = theme.widget_battery_low,
---     },
---     [30] = {
---         color = colors.yellow_2,
---         icon = theme.widget_battery_low,
---     },
---     [50] = {
---         color = bar_fg,
---         icon = theme.widget_battery_low,
---     },
---     [100] = {
---         color = bar_fg,
---         icon = theme.widget_battery,
---     }
--- }
-
-local baticon = wibox.widget.imagebox(theme.widget_battery)
+local bat_icon = wibox.widget.imagebox(theme.widget_battery)
 local bat = lain.widget.bat {
     notify = "off",
     batteries = context.vars.batteries,
@@ -738,21 +779,21 @@ local bat = lain.widget.bat {
         local _font = theme.font
 
         if tonumber(bat_now.perc) <= 10 then
-            baticon:set_image(theme.widget_battery_empty)
+            bat_icon:set_image(theme.widget_battery_empty)
             _color = colors.red_2
             _font = theme.font
         elseif tonumber(bat_now.perc) <= 20 then
-            baticon:set_image(theme.widget_battery_low)
+            bat_icon:set_image(theme.widget_battery_low)
             _color = colors.orange_2
             _font = theme.font
         elseif tonumber(bat_now.perc) <= 30 then
-            baticon:set_image(theme.widget_battery_low)
+            bat_icon:set_image(theme.widget_battery_low)
             _color = colors.yellow_2
             _font = theme.font
         elseif tonumber(bat_now.perc) <= 50 then
-            baticon:set_image(theme.widget_battery_low)
+            bat_icon:set_image(theme.widget_battery_low)
         else
-            baticon:set_image(theme.widget_battery)
+            bat_icon:set_image(theme.widget_battery)
         end
 
         if tonumber(bat_now.perc) <= 3 and not bat_now.ac_status == 1 then
@@ -768,7 +809,7 @@ local bat = lain.widget.bat {
         end
 
         if bat_now.ac_status == 1 then
-            baticon:set_image(theme.widget_ac)
+            bat_icon:set_image(theme.widget_ac)
             if tonumber(bat_now.perc) >= 95 then
                 _color = colors.green_2
                 _font = theme.font
@@ -780,7 +821,12 @@ local bat = lain.widget.bat {
 }
 
 local bat_widget = wibox.widget {
-    baticon, bat.widget,
+    bat_icon,
+    {
+        bat.widget,
+        right = dpi(4),
+        widget = wibox.container.margin,
+    },
     layout = wibox.layout.align.horizontal,
 }
 
@@ -809,13 +855,18 @@ end))
 -- })
 
 -- weather_widget = wibox.widget {
---     weather.icon, weather.widget,
+--     weather.icon,
+--     {
+--         weather.widget,
+--         right = dpi(4),
+--         widget = wibox.container.margin,
+--     },
 --     layout = wibox.layout.align.horizontal,
 -- }
 
 -- NET
 --luacheck: push ignore widget net_now
-local neticon = wibox.widget.imagebox(theme.widget_net)
+-- local net_icon = wibox.widget.imagebox(theme.widget_net)
 local net = lain.widget.net {
     wifi_state = "on",
     iface = context.vars.net_iface,
@@ -837,7 +888,12 @@ local net = lain.widget.net {
 }
 
 local net_widget = wibox.widget {
-    net.widget,
+    {
+        net.widget,
+        left = dpi(4),
+        right = dpi(4),
+        widget = wibox.container.margin,
+    },
     layout = wibox.layout.align.horizontal,
 }
 
@@ -867,15 +923,6 @@ net_widget:buttons(awful.button({ }, 1, function()
     end)
 end))
 --luacheck: pop
-
--- Separators
-local vert_sep = wibox.widget {
-    widget = wibox.widget.separator,
-    orientation = "vertical",
-    forced_width = 2,
-    thickness = 2,
-    color = theme.border_normal,
-}
 
 -- NOTE: This will be called after fully initializing the context-object, so
 --       context.util etc. can be used here.
@@ -942,8 +989,8 @@ function theme.at_screen_connect(s)
                         valign = 'center',
                         widget = wibox.container.place,
                     },
-                    left = 5,
-                    right = 5,
+                    left = dpi(5),
+                    right = dpi(5),
                     widget = wibox.container.margin,
                 },
                 create_callback = function(self, c, index, objects) --luacheck: no unused args
@@ -963,7 +1010,7 @@ function theme.at_screen_connect(s)
             },
             layout = {
                 layout = wibox.layout.flex.horizontal,
-                spacing = 10,
+                spacing = dpi(8),
                 spacing_widget = {
                     vert_sep,
                     valign = 'center',
@@ -1007,7 +1054,7 @@ function theme.at_screen_connect(s)
                 wibox.widget.systray(),
             },
             left = dpi(8),
-            right = dpi(0),
+            right = dpi(8),
             top = dpi(4),
             bottom = dpi(4),
             widget = wibox.container.margin,
@@ -1025,14 +1072,15 @@ function theme.at_screen_connect(s)
                 { -- Left widgets
                     layout = wibox.layout.fixed.horizontal,
 
+                    space, space,
+
                     { -- Layout box
                         {
                             {
                                 layout = wibox.layout.align.horizontal,
                                 s._layoutbox,
                             },
-                            left = dpi(8),
-                            right = dpi(3),
+                            left = dpi(4),
                             top = dpi(5),
                             bottom = dpi(5),
                             widget = wibox.container.margin,
@@ -1041,19 +1089,23 @@ function theme.at_screen_connect(s)
                         widget = wibox.container.background,
                     },
 
+                    space,
+
                     { -- Taglist
                         {
                             {
                                 layout = wibox.layout.align.horizontal,
                                 s._taglist,
                             },
-                            left = dpi(3),
-                            right = dpi(8),
+                            left = dpi(2),
+                            right = dpi(2),
                             widget = wibox.container.margin,
                         },
                         bg = bar_bg,
                         widget = wibox.container.background,
                     },
+
+                    space,
 
                     vert_sep,
 
@@ -1081,8 +1133,8 @@ function theme.at_screen_connect(s)
                             layout = wibox.layout.flex.horizontal,
                             s._tasklist,
                         },
-                        left = dpi(8),
-                        right = dpi(0),
+                        left = dpi(2),
+                        right = dpi(2),
                         widget = wibox.container.margin,
                     },
                     bg = bar_bg,
@@ -1092,24 +1144,29 @@ function theme.at_screen_connect(s)
                 { -- Right widgets
                     layout = wibox.layout.fixed.horizontal,
 
-                    wibox.container.background(wibox.container.margin(systray_widget, dpi(0), dpi(8)), bar_bg),
+                    systray_widget,
 
-                    vert_sep,
-                    -- wibox.container.background(wibox.container.margin(fs_widget,      dpi(2), dpi(6)), bar_bg),
-                    -- wibox.container.background(wibox.container.margin(temp_widget,    dpi(2), dpi(6)), bar_bg),
-                    wibox.container.background(wibox.container.margin(pacman_widget,  dpi(2), dpi(6)),  bar_bg),
-                    wibox.container.background(wibox.container.margin(users_widget,   dpi(2), dpi(6)),  bar_bg),
-                    wibox.container.background(wibox.container.margin(sysload_widget, dpi(2), dpi(6)),  bar_bg),
-                    wibox.container.background(wibox.container.margin(cpu_widget,     dpi(2), dpi(6)),  bar_bg),
-                    wibox.container.background(wibox.container.margin(mem_widget,     dpi(2), dpi(6)),  bar_bg),
-                    wibox.container.background(wibox.container.margin(vol_widget,     dpi(2), dpi(6)),  bar_bg),
-                    wibox.container.background(wibox.container.margin(bat_widget,     dpi(2), dpi(10)), bar_bg),
+                    vert_sep, space,
 
-                    vert_sep,
-                    wibox.container.background(wibox.container.margin(net_widget,     dpi(8), dpi(10)), bar_bg),
+                    -- fs_widget, space,
+                    -- temp_widget, space,
+                    pacman_widget, space,
+                    users_widget, space,
+                    sysload_widget, space,
+                    cpu_widget, space,
+                    mem_widget, space,
+                    vol_widget, space,
+                    bat_widget, space,
 
-                    vert_sep,
-                    wibox.container.background(wibox.container.margin(clock_widget,   dpi(8), dpi(8)),  bar_bg),
+                    vert_sep, space,
+
+                    net_widget, space,
+
+                    vert_sep, space,
+
+                    clock_widget,
+
+                    space, space,
                 },
             },
         },

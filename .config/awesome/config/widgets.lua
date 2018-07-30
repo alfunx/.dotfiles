@@ -86,7 +86,7 @@ function config.init(context)
                 end
                 -- This will also un-minimize
                 -- the client, if needed
-                client.focus = c
+                if c.focusable then client.focus = c end
                 c:raise()
             end
         end),

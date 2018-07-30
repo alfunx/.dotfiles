@@ -240,19 +240,19 @@ function config.init(context)
 
     -- Switch mode
     context.util.switch_keys_mode = function(mode, text)
-        local _textbox = awful.screen.focused()._promptbox
-        if not _textbox then return end
-        _textbox.fg = beautiful.accent or beautiful.fg_focus
-        _textbox.widget.markup = "<b>" .. text .. "</b>"
+        local t = awful.screen.focused()._promptbox
+        if not t then return end
+        t.fg = beautiful.accent or beautiful.fg_focus
+        t.widget.markup = "<b>" .. text .. "</b>"
         root.keys(context.keys[mode])
     end
 
     -- Exit mode
     context.util.exit_keys_mode = function()
-        local _textbox = awful.screen.focused()._promptbox
-        if not _textbox then return end
-        _textbox.fg = beautiful.prompt_fg
-        _textbox.widget.markup = ""
+        local t = awful.screen.focused()._promptbox
+        if not t then return end
+        t.fg = beautiful.prompt_fg
+        t.widget.markup = ""
         root.keys(context.keys.global)
     end
 
