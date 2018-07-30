@@ -1,10 +1,7 @@
 [user]
-	email = alphonse.mariya@hotmail.com
 	name = Alphonse Mariya
+	email = alphonse.mariya@hotmail.com
 	signingkey = 24D4C85E7B4585A9
-
-[commit]
-	gpgSign = true
 
 [core]
 	editor = vim
@@ -61,6 +58,9 @@
 	remoteBranch = 1 bold
 	unmerged = 1 bold reverse
 
+[commit]
+	gpgSign = true
+
 [diff]
 	tool = vimdiff
 	colorMoved = default
@@ -76,7 +76,12 @@
 
 [rebase]
 	missingCommitsCheck = warn
-	abbreviateCommands = true
+	abbreviateCommands = false
+
+[mergetool "vim-diffconflicts"]
+	cmd = vim -c DiffConflicts "$MERGED" "$BASE" "$LOCAL" "$REMOTE"
+	trustExitCode = true
+	keepBackup = false
 
 [mergetool "diffconflicts"]
 	cmd = diffconflicts vim "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
@@ -180,7 +185,7 @@
 	lad = log --format=medium --stat --summary --left-right --all
 	lp = log --patch --graph -c
 	lap = log --patch --graph -c --all
-	lw = "!f() { watch -cn 2 git \"${@:-l --color}\"; }; f"
+	lw = "!f() { watch -ctn 2 git \"${@:-l --color}\"; }; f"
 	rl = reflog
 
 	d = diff -c
@@ -188,12 +193,12 @@
 	dc = diff --cached -c
 	dl = diff --cached -c HEAD~
 	dr = "!f() { git diff \"${1:-HEAD}\"~..\"${1:-HEAD}\"; }; f"
-	dt = difftool
 	grep = grep -Ii
 
 	s = status
 	si = status --ignored
 	siu = status --ignored --untracked-files
+
 	a = add
 	au = add --update
 	ai = add --interactive
@@ -206,17 +211,18 @@
 	com = checkout master
 	cob = checkout -b
 	b = branch
-	bl = branch --all --verbose
+	bl = branch --all -vv
+	bc = branch --contains
 	bd = branch --delete
 	bdf = branch --delete --force
-	bdr = "!f() { [ \"$#\" -gt \"1\" ] && REMOTE=$1 && shift; git branch --delete \"$1\" && git push \"${REMOTE:-origin}\" --delete \"$1\"; }; f"
-	bdrf = "!f() { [ \"$#\" -gt \"1\" ] && REMOTE=$1 && shift; git branch --delete --force \"$1\" && git push \"${REMOTE:-origin}\" --delete \"$1\"; }; f"
+	bdr = "!f() { [ \"$#\" -gt 1 ] && REMOTE=\"$1\" && shift; git push \"${REMOTE:-origin}\" --delete \"$1\"; }; f"
 	bt = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git branch --set-upstream-to=\"${1:-origin/$CURRENT}\"; }; f"
 
 	cl = clone
-	p = pull --prune
-	f = fetch --prune --tags
-	fa = fetch --prune --all --tags
+	p = pull
+	f = fetch --tags
+	fa = fetch --all --tags
+	pfa = "!f() { git remote | xargs -I@ -P0 git fetch --tags \"$@\" @; }; f"
 	su = submodule update --init --recursive
 
 	pu = push
@@ -227,7 +233,6 @@
 	mc = merge --continue
 	mff = merge --ff-only
 	mnc = "!f() { git merge --no-commit --no-ff \"$@\"; EC=$?; git merge --abort; exit $EC; }; f"
-	mt = mergetool
 	r = rebase
 	ra = rebase --abort
 	rc = rebase --continue
@@ -239,6 +244,9 @@
 	cpa = cherry-pick --abort
 	cpc = cherry-pick --continue
 	cpq = cherry-pick --quit
+
+	mt = mergetool
+	dt = difftool
 
 	re = reset
 	rv = revert
