@@ -1,4 +1,4 @@
-rofi.theme: ~/.config/rofi/gruvbox-line.rasi
+rofi.theme: ~/.config/rofi/gruvbox.rasi
 
 rofi.modi: window,run,ssh,drun,combi
 rofi.lines: 10
