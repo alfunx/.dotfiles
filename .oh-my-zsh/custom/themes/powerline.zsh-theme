@@ -103,14 +103,19 @@ prompt_git() {
             prompt_segment "${PROMPT_3_BG}" "${PROMPT_3_FG_CLEAN}"
         fi
 
-        [[ -e "${repo_path}/BISECT_LOG" ]] \
-            && mode+=" $SEGMENT_SEPARATOR2 B"
-        [[ -e "${repo_path}/MERGE_HEAD" ]] \
-            && mode+=" $SEGMENT_SEPARATOR2 M"
-        [[ -e "${repo_path}/REBASE_HEAD" || -e "${repo_path}/rebase" || -e "${repo_path}/rebase-apply" || -e "${repo_path}/rebase-merge" || -e "${repo_path}/../.dotest" ]] \
-            && mode+=" $SEGMENT_SEPARATOR2 R"
-        [[ -e "${repo_path}/CHERRY_PICK_HEAD" ]] \
-            && mode+=" $SEGMENT_SEPARATOR2 C"
+        if [[ -e "${repo_path}/BISECT_LOG" ]]; then
+            mode+=" $SEGMENT_SEPARATOR2 B"
+        fi
+
+        if [[ -e "${repo_path}/MERGE_HEAD" ]]; then
+            mode+=" $SEGMENT_SEPARATOR2 M"
+        fi
+
+        if [[ -e "${repo_path}/REBASE_HEAD" || -e "${repo_path}/rebase" || -e "${repo_path}/rebase-apply" || -e "${repo_path}/rebase-merge" || -e "${repo_path}/../.dotest" ]]; then
+            mode+=" $SEGMENT_SEPARATOR2 R"
+        elif [[ -e "${repo_path}/CHERRY_PICK_HEAD" ]]; then
+            mode+=" $SEGMENT_SEPARATOR2 C"
+        fi
 
         setopt promptsubst
         autoload -Uz vcs_info
