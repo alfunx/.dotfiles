@@ -72,26 +72,28 @@
 
 [merge]
 	ff = false
-	tool = diffconflicts
+	tool = vim-diffconflicts
 
-[rebase]
-	missingCommitsCheck = warn
-	abbreviateCommands = false
+[mergetool]
+	prompt = false
+	keepBackup = false
+	writeToTemp = true
 
 [mergetool "vim-diffconflicts"]
 	cmd = vim -c DiffConflicts "$MERGED" "$BASE" "$LOCAL" "$REMOTE"
 	trustExitCode = true
-	keepBackup = false
 
 [mergetool "diffconflicts"]
 	cmd = diffconflicts vim "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
 	trustExitCode = true
-	keepBackup = false
 
 [mergetool "fugitive"]
 	cmd = vim -f -c "Gvdiff" "$MERGED"
 	trustExitCode = true
-	keepBackup = false
+
+[rebase]
+	missingCommitsCheck = warn
+	abbreviateCommands = false
 
 [fetch]
 	prune = true
@@ -153,40 +155,47 @@
 [url "https://aur.archlinux.org/"]
 	insteadOf = aur://
 
+[pretty]
+	custom-oneline = %C(auto)%h%C(reset)%C(auto)%d%C(reset) %s %C(italic blue)%ad%C(reset) %C(241)%an%C(reset)
+	custom-twoline = %C(auto)%h%C(reset) %C(white)-%C(reset) %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n %C(white)⤷%C(reset) %s %C(241)- %an <%ae>%C(reset)%n
+	custom-fuller = %C(auto)%h%C(reset)%C(auto)%d%C(reset)%n%C(white)SHA-1:%C(reset)    %C(italic)%H%C(reset)%n%C(white)Author:%C(reset)   %an %C(241)<%ae>%C(reset)%n          %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%n%C(white)Commit:%C(reset)   %cn %C(241)<%ce>%C(reset)%n          %C(italic blue)%cd%C(reset) %C(italic cyan)(%cr)%C(reset)%w(0,4,4)%n%+C(bold)%s%C(reset)%n%+b%n
+	custom-reflog = %C(auto)%h%C(reset) %C(white)-%C(reset) %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n %C(white)⤷%C(reset) %s %C(241)- %an <%ae>%C(reset)%n %C(white)⤷%C(reset) %C(bold yellow)(%C(red)%gd%C(bold yellow))%C(reset) %gs %C(241)- %gn <%ge>%C(reset)%n
+	custom-oneline-reflog = %C(auto)%h%C(reset) %C(bold yellow)(%C(red)%gd%C(bold yellow))%C(reset)%C(auto)%d%C(reset) %s %C(italic blue)%ad%C(reset) %C(241)%an%C(reset)
+
 [alias]
 	ec = config --global --edit
 
 	# log, current branch
-	lg = log --format=format:'%C(auto)%h%C(reset) - %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n''%C(black)%h%C(reset)   %C(auto)%s%C(reset) %C(241)- %an%C(reset)%n' --graph
-	lgo = log --format='%C(auto)%h%C(reset)%C(auto)%d%C(reset) %C(auto)%s%C(reset) %C(italic blue)%ad%C(reset) %C(241)%an%C(reset)' --graph --date=short
-	lgm = log --format=medium --graph
-	lgmm = log --format=medium --graph --stat --summary
-	lgf = log --format=fuller --graph
-	lgff = log --format=fuller --graph --stat --summary
+	l = log --pretty=custom-twoline --graph --color
+	lo = log --pretty=custom-oneline --graph --color --date=short
+	lf = log --pretty=custom-fuller --graph --color
+	lff = log --pretty=fuller --graph --color --stat --summary
+	lp = log --pretty=medium --patch --graph --color -c
+	ld = log --format=medium --stat --summary --left-right
 
 	# log, all branches+tags on all remotes
-	la = "!git lg --all"
-	lao = "!git lgo --all"
-	lam = "!git lgm --all"
-	lamm = "!git lgmm --all"
-	laf = "!git lgf --all"
-	laff = "!git lgff --all"
+	la = "!git l --all"
+	lao = "!git lo --all"
+	laf = "!git lf --all"
+	laff = "!git lff --all"
+	lap = "!git lp --all"
+	lad = "!git ld --all"
 
 	# log, all branches+tags on remotes 'origin' and 'upstream'
-	l = "!git lg --branches='*' --tags='*' --remotes={origin,upstream}"
-	lo = "!git lgo --branches='*' --tags='*' --remotes={origin,upstream}"
-	lm = "!git lgm --branches='*' --tags='*' --remotes={origin,upstream}"
-	lmm = "!git lgmm --branches='*' --tags='*' --remotes={origin,upstream}"
-	lf = "!git lgf --branches='*' --tags='*' --remotes={origin,upstream}"
-	lff = "!git lgff --branches='*' --tags='*' --remotes={origin,upstream}"
+	lg = "!git l --branches='*' --tags='*' --remotes={origin,upstream}"
+	lgo = "!git lo --branches='*' --tags='*' --remotes={origin,upstream}"
+	lgf = "!git lf --branches='*' --tags='*' --remotes={origin,upstream}"
+	lgff = "!git lff --branches='*' --tags='*' --remotes={origin,upstream}"
+	lgp = "!git lp --branches='*' --tags='*' --remotes={origin,upstream}"
+	lgd = "!git ld --branches='*' --tags='*' --remotes={origin,upstream}"
 
-	lr = "!f() { git log --format=fuller --stat --summary \"${1:-HEAD}\"~..\"${1:-HEAD}\"; }; f"
-	ld = log --format=medium --stat --summary --left-right
-	lad = log --format=medium --stat --summary --left-right --all
-	lp = log --patch --graph -c
-	lap = log --patch --graph -c --all
-	lw = "!f() { watch -ctn 2 git \"${@:-l --color}\"; }; f"
-	rl = reflog
+	ls = "!git la --simplify-by-decoration"
+	sh = "!f() { git show --format=custom-fuller --stat --summary --patch \"${1:-HEAD}\"; }; f"
+	w = "!f() { watch -ctn 2 git \"${@:-l}\"; }; f"
+	rl = reflog --pretty=custom-reflog
+	rlo = reflog --pretty=custom-oneline-reflog --date=short
+	sl = stash list --pretty=custom-reflog --color
+	slo = stash list --pretty=custom-oneline-reflog --color --date=short
 
 	d = diff -c
 	ds = diff --find-renames --stat -c
@@ -213,9 +222,8 @@
 	b = branch
 	bl = branch --all -vv
 	bc = branch --contains
-	bd = branch --delete
-	bdf = branch --delete --force
-	bdr = "!f() { [ \"$#\" -gt 1 ] && REMOTE=\"$1\" && shift; git push \"${REMOTE:-origin}\" --delete \"$1\"; }; f"
+	bd = branch --delete --force
+	bdr = "!f() { [ \"$#\" -gt 1 ] && REMOTE=\"$1\" && shift; git push --delete \"${REMOTE:-origin}\" \"$1\"; }; f"
 	bt = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git branch --set-upstream-to=\"${1:-origin/$CURRENT}\"; }; f"
 
 	cl = clone
@@ -226,13 +234,14 @@
 	su = submodule update --init --recursive
 
 	pu = push
-	pusu = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git push --set-upstream \"${1:-origin}\" \"$CURRENT\"; }; f"
+	puu = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git push -u \"${1:-origin}\" \"$CURRENT\"; }; f"
 
 	m = merge
 	ma = merge --abort
 	mc = merge --continue
 	mff = merge --ff-only
 	mnc = "!f() { git merge --no-commit --no-ff \"$@\"; EC=$?; git merge --abort; exit $EC; }; f"
+
 	r = rebase
 	ra = rebase --abort
 	rc = rebase --continue
@@ -240,6 +249,7 @@
 	rs = rebase --skip
 	ri = rebase --interactive
 	rim = rebase --interactive master
+
 	cp = cherry-pick
 	cpa = cherry-pick --abort
 	cpc = cherry-pick --continue
@@ -264,8 +274,11 @@
 	# initialize repository in current directory
 	this = "!git init && git commit --message='Initialize' --allow-empty"
 
-	# open github repository in browser
+	# open Github repository in browser
 	open = "!f() { URL=$(git config remote.\"${1:-origin}\".url); xdg-open \"${URL%%.git}\"; }; f"
+
+	# fetch and checkout a Github pull request
+	pr = "!f() { git config remote.upstream.url > /dev/null 2>&1 && REMOTE=upstream || REMOTE=origin; [ \"$#\" -gt 1 ] && REMOTE=\"$1\" && shift; git fetch \"${REMOTE:-origin}\" \"pull/$1/head\" && git checkout FETCH_HEAD; }; f"
 
 	# hard reset with commit before (use reflog to restore)
 	wipe = "!f() { git add --all && git commit --quiet --message='WIPE-SAVEPOINT' && git reset \"${1:-HEAD~}\" --hard; }; f"
@@ -282,7 +295,7 @@
 	# generate tags file
 	ctags = "!$HOME/.config/git/hooks/ctags"
 
-	# fzf commands (custom)
+	# fzf commands
 	fbr = fzf-branch
 	fco = fzf-checkout
 	fcoc = fzf-checkout-commit
