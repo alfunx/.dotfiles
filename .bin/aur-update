@@ -22,6 +22,7 @@ usage() {
 
 source /usr/share/makepkg/util/util.sh
 source /usr/share/makepkg/util/message.sh
+source /usr/share/makepkg/util/parseopts.sh
 
 if [[ -t 2 && ! -o xtrace ]]; then
     colorize
