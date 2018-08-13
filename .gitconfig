@@ -189,7 +189,14 @@
 	lgp = "!git lp --branches='*' --tags='*' --remotes={origin,upstream}"
 	lgd = "!git ld --branches='*' --tags='*' --remotes={origin,upstream}"
 
+	# log, simplified by decoration
 	ls = "!git la --simplify-by-decoration"
+	lso = "!git lao --simplify-by-decoration"
+	lsf = "!git laf --simplify-by-decoration"
+	lsff = "!git laff --simplify-by-decoration"
+	lsp = "!git lap --simplify-by-decoration"
+	lsd = "!git lad --simplify-by-decoration"
+
 	sh = "!f() { git show --format=custom-fuller --stat --summary --patch \"${1:-HEAD}\"; }; f"
 	w = "!f() { watch -ctn 2 git \"${@:-l}\"; }; f"
 	rl = reflog --pretty=custom-reflog
