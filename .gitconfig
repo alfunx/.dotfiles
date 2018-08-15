@@ -72,7 +72,7 @@
 
 [merge]
 	ff = false
-	tool = vim-diffconflicts
+	tool = diffconflicts
 
 [mergetool]
 	prompt = false
@@ -127,6 +127,8 @@
 	decorate = short
 	date = format:%a, %Y-%m-%d %R (%z)
 	graphColors = 1,2,3,4,5,6,8,166,9,10,11,12,13,14,15,208
+	showRoot = true
+	mailmap = true
 
 [rerere]
 	enabled = true
@@ -156,11 +158,11 @@
 	insteadOf = aur://
 
 [pretty]
-	custom-oneline = %C(auto)%h%C(reset)%C(auto)%d%C(reset) %s %C(italic blue)%ad%C(reset) %C(241)%an%C(reset)
-	custom-twoline = %C(auto)%h%C(reset) %C(white)-%C(reset) %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n %C(white)⤷%C(reset) %s %C(241)- %an <%ae>%C(reset)%n
-	custom-fuller = %C(auto)%h%C(reset)%C(auto)%d%C(reset)%n%C(white)SHA-1:%C(reset)    %C(italic)%H%C(reset)%n%C(white)Author:%C(reset)   %an %C(241)<%ae>%C(reset)%n          %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%n%C(white)Commit:%C(reset)   %cn %C(241)<%ce>%C(reset)%n          %C(italic blue)%cd%C(reset) %C(italic cyan)(%cr)%C(reset)%w(0,4,4)%n%+C(bold)%s%C(reset)%n%+b%n
-	custom-reflog = %C(auto)%h%C(reset) %C(white)-%C(reset) %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n %C(white)⤷%C(reset) %s %C(241)- %an <%ae>%C(reset)%n %C(white)⤷%C(reset) %C(bold yellow)(%C(red)%gd%C(bold yellow))%C(reset) %gs %C(241)- %gn <%ge>%C(reset)%n
-	custom-oneline-reflog = %C(auto)%h%C(reset) %C(bold yellow)(%C(red)%gd%C(bold yellow))%C(reset)%C(auto)%d%C(reset) %s %C(italic blue)%ad%C(reset) %C(241)%an%C(reset)
+	custom-oneline = %C(auto)%h%C(reset)%C(auto)%d%C(reset) %s %C(italic blue)%ad%C(reset) %C(241)%aN%C(reset)
+	custom-twoline = %C(auto)%h%C(reset) %C(white)-%C(reset) %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n %C(white)⤷%C(reset) %s %C(241)- %aN <%aE>%C(reset)%n
+	custom-fuller = %C(auto)%h%C(reset)%C(auto)%d%C(reset)%n%C(white)SHA-1:%C(reset)    %C(italic)%H%C(reset)%n%C(white)Author:%C(reset)   %aN %C(241)<%aE>%C(reset)%n          %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%n%C(white)Commit:%C(reset)   %cN %C(241)<%cE>%C(reset)%n          %C(italic blue)%cd%C(reset) %C(italic cyan)(%cr)%C(reset)%w(0,4,4)%n%+C(bold)%s%C(reset)%n%+b%n
+	custom-reflog = %C(auto)%h%C(reset) %C(white)-%C(reset) %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n %C(white)⤷%C(reset) %s %C(241)- %aN <%aE>%C(reset)%n %C(white)⤷%C(reset) %C(bold yellow)(%C(red)%gd%C(bold yellow))%C(reset) %gs %C(241)- %gN <%gE>%C(reset)%n
+	custom-oneline-reflog = %C(auto)%h%C(reset) %C(bold yellow)(%C(red)%gd%C(bold yellow))%C(reset)%C(auto)%d%C(reset) %s %C(italic blue)%ad%C(reset) %C(241)%aN%C(reset)
 
 [alias]
 	ec = config --global --edit
@@ -170,34 +172,37 @@
 	lo = log --pretty=custom-oneline --graph --color --date=short
 	lf = log --pretty=custom-fuller --graph --color
 	lff = log --pretty=fuller --graph --color --stat --summary
-	lp = log --pretty=medium --patch --graph --color -c
+	lp = log --pretty=medium --patch --graph --color -c -M -C
 	ld = log --format=medium --stat --summary --left-right
 
 	# log, all branches+tags on all remotes
-	la = "!git l --all"
-	lao = "!git lo --all"
-	laf = "!git lf --all"
-	laff = "!git lff --all"
-	lap = "!git lp --all"
-	lad = "!git ld --all"
+	#    added: --all
+	la = log --pretty=custom-twoline --graph --color --all
+	lao = log --pretty=custom-oneline --graph --color --date=short --all
+	laf = log --pretty=custom-fuller --graph --color --all
+	laff = log --pretty=fuller --graph --color --stat --summary --all
+	lap = log --pretty=medium --patch --graph --color -c -M -C --all
+	lad = log --format=medium --stat --summary --left-right --all
 
 	# log, all branches+tags on remotes 'origin' and 'upstream'
-	lg = "!git l --branches='*' --tags='*' --remotes={origin,upstream}"
-	lgo = "!git lo --branches='*' --tags='*' --remotes={origin,upstream}"
-	lgf = "!git lf --branches='*' --tags='*' --remotes={origin,upstream}"
-	lgff = "!git lff --branches='*' --tags='*' --remotes={origin,upstream}"
-	lgp = "!git lp --branches='*' --tags='*' --remotes={origin,upstream}"
-	lgd = "!git ld --branches='*' --tags='*' --remotes={origin,upstream}"
+	#    added: --branches='*' --tags='*' --remotes={origin,upstream}
+	lg = log --pretty=custom-twoline --graph --color --branches='*' --tags='*' --remotes={origin,upstream}
+	lgo = log --pretty=custom-oneline --graph --color --date=short --branches='*' --tags='*' --remotes={origin,upstream}
+	lgf = log --pretty=custom-fuller --graph --color --branches='*' --tags='*' --remotes={origin,upstream}
+	lgff = log --pretty=fuller --graph --color --stat --summary --branches='*' --tags='*' --remotes={origin,upstream}
+	lgp = log --pretty=medium --patch --graph --color -c -M -C --branches='*' --tags='*' --remotes={origin,upstream}
+	lgd = log --format=medium --stat --summary --left-right --branches='*' --tags='*' --remotes={origin,upstream}
 
 	# log, simplified by decoration
-	ls = "!git la --simplify-by-decoration"
-	lso = "!git lao --simplify-by-decoration"
-	lsf = "!git laf --simplify-by-decoration"
-	lsff = "!git laff --simplify-by-decoration"
-	lsp = "!git lap --simplify-by-decoration"
-	lsd = "!git lad --simplify-by-decoration"
+	#    added: --all --simplify-by-decoration
+	ls = log --pretty=custom-twoline --graph --color --all --simplify-by-decoration
+	lso = log --pretty=custom-oneline --graph --color --date=short --all --simplify-by-decoration
+	lsf = log --pretty=custom-fuller --graph --color --all --simplify-by-decoration
+	lsff = log --pretty=fuller --graph --color --stat --summary --all --simplify-by-decoration
+	lsp = log --pretty=medium --patch --graph --color -c -M -C --all --simplify-by-decoration
+	lsd = log --format=medium --stat --summary --left-right --all --simplify-by-decoration
 
-	sh = "!f() { git show --format=custom-fuller --stat --summary --patch \"${1:-HEAD}\"; }; f"
+	sh = show --format=custom-fuller --stat --summary --patch
 	w = "!f() { watch -ctn 2 git \"${@:-l}\"; }; f"
 	rl = reflog --pretty=custom-reflog
 	rlo = reflog --pretty=custom-oneline-reflog --date=short
