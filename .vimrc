@@ -31,6 +31,7 @@ Plug 'junegunn/limelight.vim'
 "Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-git'
 Plug 'tpope/vim-fugitive'
+Plug 'whiteinge/diffconflicts'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
@@ -60,6 +61,7 @@ Plug 'xtal8/traces.vim'
 Plug 'chrisbra/NrrwRgn'
 "Plug 'kopischke/vim-fetch'
 Plug 'w0rp/ale'
+Plug 'majutsushi/tagbar'
 "Plug 'ludovicchabant/vim-gutentags'
 
 " Text objects
@@ -269,9 +271,6 @@ cnoremap <expr> <S-Tab> getcmdtype() =~ '[?/]' ? '<C-t>' : feedkeys('<S-Tab>', '
 " Remove trailing whitespaces
 nnoremap <silent> <F3> mz:keepp %s/\\\@1<!\s\+$//e<CR>`z
 
-" Make
-nnoremap <F5> :make!<CR>
-
 " Allow saving of files as sudo
 command! W execute 'silent! w !sudo /usr/bin/tee % >/dev/null' <bar> edit!
 
@@ -394,7 +393,7 @@ let g:grepper.next_tool='<C-g>'
 let g:grepper.jump=0
 let g:grepper.quickfix=1
 let g:grepper.dir='repo,cwd'
-let g:grepper.stop=5000
+let g:grepper.stop=500
 
 nnoremap <leader>s :Grepper -tool rg<CR>
 nmap gs <plug>(GrepperOperator)
@@ -550,7 +549,10 @@ xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
 "" Undotree
-nnoremap <F4> :UndotreeToggle<CR>
+nnoremap <silent> <F4> :UndotreeToggle<CR>
+
+"" Tagbar
+nnoremap <silent> <F5> :TagbarToggle<CR>
 
 " "" Titlecase
 " let g:titlecase_map_keys=0
@@ -714,6 +716,8 @@ set wildmode=longest:full,full
 set completeopt=menuone,longest,preview
 set lazyredraw
 set mouse=a
+map <ScrollWheelUp> <C-y>
+map <ScrollWheelDown> <C-e>
 
 set cursorline  " horizontal line
 "set colorcolumn=81  " vertical line
@@ -761,7 +765,7 @@ augroup VCSConflictMarker
     autocmd!
     "autocmd ColorScheme * highlight VCSConflict guibg=#cc241d guifg=#282828
     autocmd ColorScheme * if &background == "dark" | highlight VCSConflict guibg=#cc241d guifg=#282828 | else | highlight VCSConflict guibg=#cc241d guifg=#fbf1c7 | endif
-    autocmd BufEnter,WinEnter * match VCSConflict '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
+    autocmd BufEnter,WinEnter * match VCSConflict '^\(<\|=\||\|>\)\{7\}\([^=].\+\)\?$'
 augroup END
 
 " """ Color overlength
