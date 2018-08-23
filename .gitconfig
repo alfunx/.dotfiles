@@ -1,7 +1,7 @@
 [user]
 	name = Alphonse Mariya
 	email = alphonse.mariya@hotmail.com
-	signingkey = 24D4C85E7B4585A9
+	signingkey = alphonse.mariya@hotmail.com
 
 [core]
 	editor = vim
@@ -14,13 +14,16 @@
 	helper = cache
 
 [color]
+	advice = true
 	branch = true
 	diff = true
 	grep = true
 	interactive = true
 	pager = true
+	push = true
 	showBranch = true
 	status = true
+	transport = true
 	ui = true
 
 [color "diff"]
@@ -46,6 +49,12 @@
 	header = 15 bold
 	help = 15
 	error = 1
+
+[color "push"]
+	error = 1 bold
+
+[color "transport"]
+	rejected = 1 bold
 
 [color "status"]
 	header = 15 bold
@@ -94,6 +103,7 @@
 [rebase]
 	missingCommitsCheck = warn
 	abbreviateCommands = false
+	stat = true
 
 [fetch]
 	prune = true
@@ -136,6 +146,20 @@
 [protocol]
 	version = 2
 
+[advice]
+	pushUpdateRejected = false
+	statusHints = false
+	statusUoption = false
+	commitBeforeMerge = false
+	resolveConflict = false
+	implicitIdentity = false
+	detachedHead = false
+	amWorkDir = true
+	rmHints = true
+	addEmbeddedRepo = false
+	ignoredHook = true
+	waitingForEditor = false
+
 [url "git@github.com:"]
 	insteadOf = @gh:
 
@@ -144,6 +168,9 @@
 
 [url "git@bitbucket.org:"]
 	insteadOf = @bb:
+
+[url "aur@aur.archlinux.org"]
+	insteadOf = @aur:
 
 [url "https://github.com/"]
 	insteadOf = gh://
@@ -158,56 +185,59 @@
 	insteadOf = aur://
 
 [pretty]
-	custom-oneline = %C(auto)%h%C(reset)%C(auto)%d%C(reset) %s %C(italic blue)%ad%C(reset) %C(241)%aN%C(reset)
-	custom-twoline = %C(auto)%h%C(reset) %C(white)-%C(reset) %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n %C(white)⤷%C(reset) %s %C(241)- %aN <%aE>%C(reset)%n
-	custom-fuller = %C(auto)%h%C(reset)%C(auto)%d%C(reset)%n%C(white)SHA-1:%C(reset)    %C(italic)%H%C(reset)%n%C(white)Author:%C(reset)   %aN %C(241)<%aE>%C(reset)%n          %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%n%C(white)Commit:%C(reset)   %cN %C(241)<%cE>%C(reset)%n          %C(italic blue)%cd%C(reset) %C(italic cyan)(%cr)%C(reset)%w(0,4,4)%n%+C(bold)%s%C(reset)%n%+b%n
-	custom-reflog = %C(auto)%h%C(reset) %C(white)-%C(reset) %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n %C(white)⤷%C(reset) %s %C(241)- %aN <%aE>%C(reset)%n %C(white)⤷%C(reset) %C(bold yellow)(%C(red)%gd%C(bold yellow))%C(reset) %gs %C(241)- %gN <%gE>%C(reset)%n
-	custom-oneline-reflog = %C(auto)%h%C(reset) %C(bold yellow)(%C(red)%gd%C(bold yellow))%C(reset)%C(auto)%d%C(reset) %s %C(italic blue)%ad%C(reset) %C(241)%aN%C(reset)
+	lo = tformat:%C(auto)%h%C(reset)%C(auto)%d%C(reset) %s %C(italic blue)%ad%C(reset) %C(241)%aN%C(reset)
+	lt = tformat:%C(auto)%h%C(reset) %C(white)-%C(reset) %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n %C(white)⤷%C(reset) %s %C(241)- %aN <%aE>%C(reset)%n
+	lf = tformat:%C(auto)%h%C(reset)%C(auto)%d%C(reset)%n%C(white)SHA-1:%C(reset)    %C(italic)%H%C(reset)%n%C(white)Author:%C(reset)   %aN %C(241)<%aE>%C(reset)%n          %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%n%C(white)Commit:%C(reset)   %cN %C(241)<%cE>%C(reset)%n          %C(italic blue)%cd%C(reset) %C(italic cyan)(%cr)%C(reset)%w(0,4,4)%n%+C(bold)%s%C(reset)%n%+b%n
+	rlo = tformat:%C(auto)%h%C(reset) %C(bold yellow)(%C(red)%gd%C(bold yellow))%C(reset)%C(auto)%d%C(reset) %s %C(italic blue)%ad%C(reset) %C(241)%aN%C(reset)
+	rlt = tformat:%C(auto)%h%C(reset) %C(white)-%C(reset) %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n %C(white)⤷%C(reset) %s %C(241)- %aN <%aE>%C(reset)%n %C(white)⤷%C(reset) %C(bold yellow)(%C(red)%gd%C(bold yellow))%C(reset) %gs %C(241)- %gN <%gE>%C(reset)%n
+	rlf = tformat:%C(auto)%h%C(reset)%C(auto)%d%C(reset)%n%C(white)SHA-1:%C(reset)    %C(italic)%H%C(reset)%n%C(white)Author:%C(reset)   %aN %C(241)<%aE>%C(reset)%n          %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%n%C(white)Commit:%C(reset)   %cN %C(241)<%cE>%C(reset)%n          %C(italic blue)%cd%C(reset) %C(italic cyan)(%cr)%C(reset)%n%C(white)Reflog:%C(reset)   %gN %C(241)<%gE>%C(reset)%n          %C(italic)%gs%C(reset)%w(0,4,4)%n%+C(bold)%s%C(reset)%n%+b%n
 
 [alias]
 	ec = config --global --edit
 
 	# log, current branch
-	l = log --pretty=custom-twoline --graph --color
-	lo = log --pretty=custom-oneline --graph --color --date=short
-	lf = log --pretty=custom-fuller --graph --color
+	l = log --pretty=lt --graph --color
+	lo = log --pretty=lo --graph --color --date=short
+	lf = log --pretty=lf --graph --color
 	lff = log --pretty=fuller --graph --color --stat --summary
 	lp = log --pretty=medium --patch --graph --color -c -M -C
 	ld = log --format=medium --stat --summary --left-right
 
 	# log, all branches+tags on all remotes
 	#    added: --all
-	la = log --pretty=custom-twoline --graph --color --all
-	lao = log --pretty=custom-oneline --graph --color --date=short --all
-	laf = log --pretty=custom-fuller --graph --color --all
+	la = log --pretty=lt --graph --color --all
+	lao = log --pretty=lo --graph --color --date=short --all
+	laf = log --pretty=lf --graph --color --all
 	laff = log --pretty=fuller --graph --color --stat --summary --all
 	lap = log --pretty=medium --patch --graph --color -c -M -C --all
 	lad = log --format=medium --stat --summary --left-right --all
 
 	# log, all branches+tags on remotes 'origin' and 'upstream'
 	#    added: --branches='*' --tags='*' --remotes={origin,upstream}
-	lg = log --pretty=custom-twoline --graph --color --branches='*' --tags='*' --remotes={origin,upstream}
-	lgo = log --pretty=custom-oneline --graph --color --date=short --branches='*' --tags='*' --remotes={origin,upstream}
-	lgf = log --pretty=custom-fuller --graph --color --branches='*' --tags='*' --remotes={origin,upstream}
+	lg = log --pretty=lt --graph --color --branches='*' --tags='*' --remotes={origin,upstream}
+	lgo = log --pretty=lo --graph --color --date=short --branches='*' --tags='*' --remotes={origin,upstream}
+	lgf = log --pretty=lf --graph --color --branches='*' --tags='*' --remotes={origin,upstream}
 	lgff = log --pretty=fuller --graph --color --stat --summary --branches='*' --tags='*' --remotes={origin,upstream}
 	lgp = log --pretty=medium --patch --graph --color -c -M -C --branches='*' --tags='*' --remotes={origin,upstream}
 	lgd = log --format=medium --stat --summary --left-right --branches='*' --tags='*' --remotes={origin,upstream}
 
 	# log, simplified by decoration
 	#    added: --all --simplify-by-decoration
-	ls = log --pretty=custom-twoline --graph --color --all --simplify-by-decoration
-	lso = log --pretty=custom-oneline --graph --color --date=short --all --simplify-by-decoration
-	lsf = log --pretty=custom-fuller --graph --color --all --simplify-by-decoration
+	ls = log --pretty=lt --graph --color --all --simplify-by-decoration
+	lso = log --pretty=lo --graph --color --date=short --all --simplify-by-decoration
+	lsf = log --pretty=lf --graph --color --all --simplify-by-decoration
 	lsff = log --pretty=fuller --graph --color --stat --summary --all --simplify-by-decoration
 	lsp = log --pretty=medium --patch --graph --color -c -M -C --all --simplify-by-decoration
 	lsd = log --format=medium --stat --summary --left-right --all --simplify-by-decoration
 
-	sh = show --format=custom-fuller --stat --summary --patch
+	sh = show --format=lf --stat --summary --patch
 	w = "!f() { watch -ctn 2 git \"${@:-l}\"; }; f"
-	rl = reflog --pretty=custom-reflog
-	rlo = reflog --pretty=custom-oneline-reflog --date=short
-	sl = stash list --pretty=custom-reflog --color
-	slo = stash list --pretty=custom-oneline-reflog --color --date=short
+	rl = reflog --pretty=rlt --color
+	rlo = reflog --pretty=rlo --color
+	rlf = reflog --pretty=rlf --color
+	sl = stash list --pretty=rlt --color
+	slo = stash list --pretty=rlo --color
+	slf = stash list --pretty=rlf --color
 
 	d = diff -c
 	ds = diff --find-renames --stat -c
@@ -224,19 +254,20 @@
 	au = add --update
 	ai = add --interactive
 	ap = add --patch
+	u = reset HEAD --
+	up = reset --patch HEAD --
 	c = commit --verbose
 	ca = commit --verbose --amend
 	can = commit --verbose --amend --no-edit
 
 	co = checkout
 	com = checkout master
+	cod = checkout develop
 	cob = checkout -b
 	b = branch
-	bl = branch --all -vv
+	bv = branch --all -vv
 	bc = branch --contains
 	bd = branch --delete --force
-	bdr = "!f() { [ \"$#\" -gt 1 ] && REMOTE=\"$1\" && shift; git push --delete \"${REMOTE:-origin}\" \"$1\"; }; f"
-	bt = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git branch --set-upstream-to=\"${1:-origin/$CURRENT}\"; }; f"
 
 	cl = clone
 	p = pull
@@ -244,9 +275,7 @@
 	fa = fetch --all --tags
 	pfa = "!f() { git remote | xargs -I@ -P0 git fetch --tags \"$@\" @; }; f"
 	su = submodule update --init --recursive
-
 	pu = push
-	puu = "!f() { CURRENT=$(git symbolic-ref --short HEAD); git push -u \"${1:-origin}\" \"$CURRENT\"; }; f"
 
 	m = merge
 	ma = merge --abort
@@ -260,7 +289,9 @@
 	rq = rebase --quit
 	rs = rebase --skip
 	ri = rebase --interactive
+	ru = rebase --interactive @{u}
 	rim = rebase --interactive master
+	rid = rebase --interactive develop
 
 	cp = cherry-pick
 	cpa = cherry-pick --abort
@@ -272,6 +303,7 @@
 
 	re = reset
 	rv = revert
+	cln = clean
 
 	which = branch --contains
 	who = shortlog --summary --numbered --no-merges
@@ -287,22 +319,27 @@
 	this = "!git init && git commit --message='Initialize' --allow-empty"
 
 	# open Github repository in browser
+	#    git open [<remote>]
 	open = "!f() { URL=$(git config remote.\"${1:-origin}\".url); xdg-open \"${URL%%.git}\"; }; f"
 
 	# fetch and checkout a Github pull request
+	#    git pr [[<remote>] <number>]
 	pr = "!f() { git config remote.upstream.url > /dev/null 2>&1 && REMOTE=upstream || REMOTE=origin; [ \"$#\" -gt 1 ] && REMOTE=\"$1\" && shift; git fetch \"${REMOTE:-origin}\" \"pull/$1/head\" && git checkout FETCH_HEAD; }; f"
 
-	# hard reset with commit before (use reflog to restore)
-	wipe = "!f() { git add --all && git commit --quiet --message='WIPE-SAVEPOINT' && git reset \"${1:-HEAD~}\" --hard; }; f"
+	# hard reset with commit before (use reflog to recover)
+	#    git wipe [<commit>]
+	wipe = "!f() { git add --all && git commit --quiet --message='WIPE-SAVEPOINT' && git reset \"${1:-HEAD~}\" --hard && git clean -fd; }; f"
 
-	# hard reset and clean
+	# hard reset and clean (unrecoverable)
 	nuke = !"git reset --hard HEAD && git clean -fd"
 
 	# set up remotes for fork
+	#    git fork [<old-remote> [<new-remote>]]
 	fork = "!f() { URL=$(git config remote.\"${1:-origin}\".url); git remote set-url \"${1:-origin}\" \"$(echo \"$URL\" | perl -pe 's/(?<=[:\\/])[^:\\/]+(?=\\/[^\\/]+$)/alfunx/')\"; git remote add \"${2:-upstream}\" \"$URL\"; }; f"
 
 	# get gitignore from github/gitignore.git
-	gitignore = "!f() { [ -f .gitignore ] && echo >> .gitignore; curl -f \"https://raw.githubusercontent.com/github/gitignore/master/${1}.gitignore\" | tee -a .gitignore; }; f"
+	#    git gitignore <type>
+	gitignore = "!f() { curl -sf \"https://raw.githubusercontent.com/github/gitignore/master/$1.gitignore\" -o \"$1.gitignore\"; }; f"
 
 	# generate tags file
 	ctags = "!$HOME/.config/git/hooks/ctags"

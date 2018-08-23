@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+# git-github - github stuff
+set -o errexit -o pipefail
+shopt -s nullglob
+shopt -s extglob
+readonly argv0=github
+readonly PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+
+# default arguments
+username='alfunx'
+reponame=$(basename "$(git rev-parse --show-toplevel)")
+
+# default options (enabled)
+events=1
+
+# default options (disabled)
+tag=0 tree=0 commit=0 blob=0
+
+usage() {
+    plain "usage: $argv0 [-eurbso] [long options]"
+    exit 1
+}
+
+source /usr/share/makepkg/util/util.sh
+source /usr/share/makepkg/util/message.sh
+source /usr/share/makepkg/util/parseopts.sh
+
+if [[ -t 2 && ! -o xtrace ]]; then
+    colorize
+fi
+
+opt_short='eEtTcbu:r:o:'
+opt_long=('events' 'no-events' 'noevents' 'tag' 'tree' 'commit' 'blob' 'user:'
+          'repo:' 'output:')
+
+if ! parseopts "$opt_short" "${opt_long[@]}" -- "$@"; then
+    usage
+fi
+set -- "${OPTRET[@]}"
+
+unset output object
+while true; do
+    case "$1" in
+        -e|--events)       events=1 ;;
+        -E|--no?(-)events) events=0 ;;
+        -t|--tag)          tag=1; events=0 ;;
+        -T|--tree)         tree=1; events=0 ;;
+        -c|--commit)       commit=1; events=0 ;;
+        -b|--blob)         blob=1; events=0 ;;
+        -u|--user)         shift; username=$1 ;;
+        -r|--repo)         shift; reponame=$1 ;;
+        -o|--output)       shift; output=$1 ;;
+        --)                shift; break ;;
+    esac
+    shift
+done
+unset opt_short opt_long OPTRET
+
+if ! [[ -n "$output" ]]; then
+    output="/tmp/github-events-$reponame"
+    trap 'rm -f "$output"' SIGINT SIGTERM EXIT
+fi
+
+if ((events)); then
+    curl -su "$username" "https://api.github.com/repos/$username/$reponame/events" \
+        > "$output" \
+        && jq --color-output '' "$output" | less
+    exit $?
+fi
+
+((tag)) && object='tags'
+((tree)) && object='trees'
+((commit)) && object='commits'
+((blob)) && object='blobs'
+
+if [[ -n "$object" ]]; then
+    if [[ -n "$1" ]]; then
+        branch=$1; shift
+    fi
+    branch=${branch:-$(git symbolic-ref --short HEAD)}
+
+    curl -su "$username" "https://api.github.com/repos/$username/$reponame/git/$object/$branch" \
+        > "$output" \
+        && jq --color-output '' "$output" | less
+    exit $?
+fi
+
+if [[ $# -eq 2 ]]; then
+    branch=$1; shift; sha=$1; shift
+    curl -su "$username" -X POST \
+        -d "{\"ref\":\"refs/heads/$branch\", \"sha\":\"$sha\"}" \
+        "https://api.github.com/repos/$username/$reponame/git/refs"
+    exit $?
+fi
