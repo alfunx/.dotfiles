@@ -9,6 +9,7 @@
 	whitespace = fix,trailing-space,cr-at-eol
 	hooksPath = ~/.config/git/hooks
 	excludesfile = ~/.ignore
+	commitGraph = true
 
 [credential]
 	helper = cache
@@ -69,6 +70,7 @@
 
 [commit]
 	gpgSign = true
+	status = true
 
 [diff]
 	tool = vimdiff
@@ -103,6 +105,7 @@
 [rebase]
 	missingCommitsCheck = warn
 	abbreviateCommands = false
+	autoSquash = true
 	stat = true
 
 [fetch]
@@ -145,6 +148,9 @@
 
 [protocol]
 	version = 2
+
+[column]
+	ui = auto,column
 
 [advice]
 	pushUpdateRejected = false
@@ -213,13 +219,13 @@
 	lad = log --format=medium --stat --summary --left-right --all
 
 	# log, all branches+tags on remotes 'origin' and 'upstream'
-	#    added: --branches='*' --tags='*' --remotes={origin,upstream}
-	lg = log --pretty=lt --graph --color --branches='*' --tags='*' --remotes={origin,upstream}
-	lgo = log --pretty=lo --graph --color --date=short --branches='*' --tags='*' --remotes={origin,upstream}
-	lgf = log --pretty=lf --graph --color --branches='*' --tags='*' --remotes={origin,upstream}
-	lgff = log --pretty=fuller --graph --color --stat --summary --branches='*' --tags='*' --remotes={origin,upstream}
-	lgp = log --pretty=medium --patch --graph --color -c -M -C --branches='*' --tags='*' --remotes={origin,upstream}
-	lgd = log --format=medium --stat --summary --left-right --branches='*' --tags='*' --remotes={origin,upstream}
+	#    added: --branches='*' --tags='*' --remotes=origin --remotes=upstream
+	lg = log --pretty=lt --graph --color --branches='*' --tags='*' --remotes=origin --remotes=upstream
+	lgo = log --pretty=lo --graph --color --date=short --branches='*' --tags='*' --remotes=origin --remotes=upstream
+	lgf = log --pretty=lf --graph --color --branches='*' --tags='*' --remotes=origin --remotes=upstream
+	lgff = log --pretty=fuller --graph --color --stat --summary --branches='*' --tags='*' --remotes=origin --remotes=upstream
+	lgp = log --pretty=medium --patch --graph --color -c -M -C --branches='*' --tags='*' --remotes=origin --remotes=upstream
+	lgd = log --format=medium --stat --summary --left-right --branches='*' --tags='*' --remotes=origin --remotes=upstream
 
 	# log, simplified by decoration
 	#    added: --all --simplify-by-decoration

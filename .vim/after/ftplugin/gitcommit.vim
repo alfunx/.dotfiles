@@ -8,7 +8,7 @@ setlocal formatoptions+=q
 setlocal formatoptions+=n
 setlocal formatlistpat=^\\s*[-*0-9]\\+[\]:.)}\\t\ ]\\s*
 
-" "setlocal formatprg=commitmsgfmt
+" setlocal formatprg=commitmsgfmt
 "
 " " On <LocalLeader>gq, reformat the entire buffer and return the cursor to its
 " " position before reformatting (as best as possible).
@@ -37,6 +37,12 @@ setlocal formatlistpat=^\\s*[-*0-9]\\+[\]:.)}\\t\ ]\\s*
 "
 " " If you want to use the value of 'textwidth', instead use
 " "let &l:formatprg='commitmsgfmt --width=' . &l:textwidth
+"
+" " However, I recommend disabling Vim's line breaking in favour of display
+" " wrapping. Otherwise, Vim can break lines with long words in a way
+" " commitmsgfmt wouldn't and cannot undo.
+" "setlocal textwidth=0
+" "setlocal wrap
 "
 " " commitmsgfmt was not written to work with merge commits, which, in the Git
 " " and Linux kernel projects, often use special, hard-to-detect constructs not

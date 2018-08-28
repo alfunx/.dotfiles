@@ -1,6 +1,1 @@
-#!/bin/sh
-
-DIR=$(dirname "$0")
-case "$1" in
-    rebase) exec "$DIR/post-merge" ;;
-esac
+/home/amariya/.config/git/hook
