@@ -318,7 +318,7 @@ local clock_widget = wibox.widget {
 
 -- Calendar
 theme.cal = lain.widget.calendar {
-    cal = "cal --color=always --monday",
+    cal = "/usr/bin/env TERM=linux /usr/bin/cal --color=always --monday",
     attach_to = { clock_widget },
     icons = "",
     notification_preset = naughty.config.presets.normal,
