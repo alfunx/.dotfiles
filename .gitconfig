@@ -73,6 +73,7 @@
 	status = true
 
 [diff]
+	algorithm = histogram
 	tool = vimdiff
 	colorMoved = default
 	renames = copy
@@ -151,6 +152,9 @@
 
 [column]
 	ui = auto,column
+
+[web]
+	browser = chromium
 
 [advice]
 	pushUpdateRejected = false

@@ -11,6 +11,8 @@ videos/
 .gnupg/*
 !.gnupg/*.conf
 .ssh/
+*.pem
+*.key
 # Common caches
 .adobe/
 .atom/
@@ -30,8 +32,13 @@ videos/
 .dropbox/
 .ICEauthority
 .lesshst
+.wpa_cli_history
 .python_history
 .sqlite_history
+.psql_history
+.gdb_history
+.tmux.history
+.Rhistory
 .subversion/
 .wine/
 .Xauthority
@@ -41,6 +48,8 @@ videos/
 *.bak
 *.log
 *.swp
+*.swo
+*.swn
 *.tmp
 # Automatically appended
 .dotfiles
