@@ -38,6 +38,7 @@ diffutils
 dmidecode
 docker
 e2fsprogs
+ebtables
 editorconfig-core-c
 efibootmgr
 emacs
@@ -63,8 +64,10 @@ gettext
 gimp
 girara
 git
+git-lfs
 glances
 glibc
+gnome-keyring
 gpick
 grep
 groff
@@ -85,6 +88,7 @@ jdk8-openjdk
 jfsutils
 jre8-openjdk
 jshon
+jupyter
 keepassxc
 ldoc
 less
@@ -94,6 +98,7 @@ libreoffice-fresh
 libtool
 libva-intel-driver
 licenses
+lighttpd
 linux
 linux-headers
 linux-lts
@@ -147,8 +152,8 @@ parted
 pass
 patch
 pciutils
-pcmciautils
 perl
+perl-cgi
 perl-file-mimeinfo
 pigz
 pkgconf
@@ -160,6 +165,8 @@ psmisc
 pygmentize
 python
 python-jedi
+python-markdown
+python-matplotlib
 python-neovim
 python-pip
 python2-jedi
