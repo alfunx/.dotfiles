@@ -8,5 +8,14 @@
 .vim-swap
 .undo
 .vim-undo
-*.bak
 tags
+*history
+*.pem
+*.key
+*.bak
+*.log
+*.swp
+*.swo
+*.swn
+*.tmp
+*~

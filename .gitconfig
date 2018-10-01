@@ -77,6 +77,7 @@
 	tool = vimdiff
 	colorMoved = default
 	renames = copy
+	mnemonicPrefix = true
 	wsErrorHighlight = all
 
 [difftool]
@@ -269,6 +270,7 @@
 	c = commit --verbose
 	ca = commit --verbose --amend
 	can = commit --verbose --amend --no-edit
+	car = commit --verbose --amend -a
 
 	co = checkout
 	com = checkout master
