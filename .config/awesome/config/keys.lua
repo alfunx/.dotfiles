@@ -31,9 +31,9 @@ function config.init(context)
     context.keys.short.u = context.keys.upkey
     context.keys.short.d = context.keys.downkey
 
-    local k             = context.keys.short
-    local terminal      = context.vars.terminal
-    local browser       = context.vars.browser
+    local k        = context.keys.short
+    local terminal = context.vars.terminal
+    local browser  = context.vars.browser
 
     -- Exit mode
     context.keys.escape =
@@ -102,9 +102,9 @@ function config.init(context)
                   { description = "upload last screenshot to Imgur", group = "screenshot" }),
 
         -- -- Copy primary to clipboard (terminals to gtk)
-        -- awful.key({ k.m }, "c", function() awful.spawn("xsel | xsel -i -b") end),
+        -- awful.key({ k.m                }, "c", function() awful.spawn("xsel | xsel -i -b") end),
         -- -- Copy clipboard to primary (gtk to terminals)
-        -- awful.key({ k.m }, "v", function() awful.spawn("xsel -b | xsel") end),
+        -- awful.key({ k.m                }, "v", function() awful.spawn("xsel -b | xsel") end),
 
         -- Prompt
         awful.key({ k.m                }, "r", function() awful.screen.focused()._promptbox:run() end,
@@ -112,25 +112,17 @@ function config.init(context)
         awful.key({ k.m                }, "p", function() menubar.show() end,
                   { description = "show the menubar", group = "launcher" }),
         awful.key({ k.m                }, "-", function()
-            context.util.easy_async_with_unfocus("rofi -show drun")
-            -- awful.spawn("dmenu_run")
-            -- awful.spawn(string.format("dmenu_run -i -t -dim 0.5 -p 'Run: ' -h 21 -fn 'Meslo LG S for Powerline-10' -nb '%s' -nf '%s' -sb '%s' -sf '%s'",
-            -- beautiful.tasklist_bg_normal, beautiful.fg_normal, beautiful.tasklist_bg_urgent, beautiful.tasklist_fg_urgent))
+            awful.spawn.easy_async("rofi -show drun", function() end)
         end,
                   { description = "show application menu (rofi)", group = "launcher" }),
         awful.key({ k.m                }, ".", function()
-            context.util.easy_async_with_unfocus("rofi -show run")
+            awful.spawn.easy_async("rofi -show run", function() end)
         end,
                   { description = "show commands menu (rofi)", group = "launcher" }),
         awful.key({ k.m                }, "$", function()
-            context.util.easy_async_with_unfocus(context.vars.scripts_dir .. "/rofi-session")
+            awful.spawn.easy_async(context.vars.scripts_dir .. "/rofi-session", function() end)
         end,
                   { description = "show session menu (rofi)", group = "launcher" }),
-        -- awful.key({ k.a                }, "space", function()
-        --     -- awful.spawn(string.format("dmenu_run -i -fn 'Meslo LG S for Powerline' -nb '%s' -nf '%s' -sb '%s' -sf '%s'",
-        --     awful.spawn(string.format("rofi -show run -width 100 -location 1 -lines 5 -bw 2 -yoffset -2",
-        --     beautiful.tasklist_bg_normal, beautiful.tasklist_fg_normal, beautiful.tasklist_bg_urgent, beautiful.tasklist_fg_urgent))
-        -- end),
         awful.key({ k.m                }, "x", function()
                       awful.prompt.run {
                           prompt       = "Run Lua code: ",
@@ -171,7 +163,7 @@ function config.init(context)
         awful.key({ k.m, k.a           }, "d", function() lain.util.delete_tag() end,
                   { description = "delete tag", group = "tag" }),
         awful.key({ k.m, k.a           }, "a", function()
-                for i = 1, 9 do
+                for i = 1, awful.util.tagcolumns or #awful.util.tagnames do
                     awful.tag.add(tostring(i), {
                         screen = awful.screen.focused(),
                         layout = layout or awful.layout.suit.tile,
@@ -340,11 +332,11 @@ function config.init(context)
         end),
 
         -- -- Backlight / Brightness (using xbacklight)
-        -- awful.key({ }, "XF86MonBrightnessUp",
+        -- awful.key({                    }, "XF86MonBrightnessUp",
         --     function()
         --         awful.spawn("xbacklight -inc 2 -time 1 -steps 1")
         --     end),
-        -- awful.key({ }, "XF86MonBrightnessDown",
+        -- awful.key({                    }, "XF86MonBrightnessDown",
         --     function()
         --         awful.spawn.easy_async_with_shell("xbacklight -get | sed 's/\\..*//'",
         --         function(stdout, stderr, reason, exit_code)
@@ -353,11 +345,11 @@ function config.init(context)
         --             end
         --         end)
         --     end),
-        -- awful.key({ k.c }, "XF86MonBrightnessUp",
+        -- awful.key({ k.c                }, "XF86MonBrightnessUp",
         --     function()
         --         awful.spawn("xbacklight -set 100 -time 1 -steps 1")
         --     end),
-        -- awful.key({ k.c }, "XF86MonBrightnessDown",
+        -- awful.key({ k.c                }, "XF86MonBrightnessDown",
         --     function()
         --         awful.spawn("xbacklight -set 1 -time 1 -steps 1")
         --     end),

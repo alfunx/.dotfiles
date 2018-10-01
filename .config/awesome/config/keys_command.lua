@@ -19,9 +19,9 @@ function config.init(context)
 
     context.keys = context.keys or { }
 
-    local k             = context.keys.short
-    local terminal      = context.vars.terminal
-    local browser       = context.vars.browser
+    local k        = context.keys.short
+    local terminal = context.vars.terminal
+    local browser  = context.vars.browser
 
     context.keys.global = gears.table.join(
         context.keys.global,

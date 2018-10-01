@@ -17,9 +17,9 @@ function config.init(context)
     context.keys = context.keys or { }
     context.mouse = context.mouse or { }
 
-    local k             = context.keys.short
-    local terminal      = context.vars.terminal
-    local browser       = context.vars.browser
+    local k        = context.keys.short
+    local terminal = context.vars.terminal
+    local browser  = context.vars.browser
 
     context.keys.client = gears.table.join(
         awful.key({ k.m, k.a           }, "Return", function(c) c:swap(awful.client.getmaster()) end,

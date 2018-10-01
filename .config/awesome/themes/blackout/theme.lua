@@ -396,13 +396,10 @@ local mem = lain.widget.mem {
 
         if tonumber(mem_now.perc) >= 90 then
             _color = colors.red_2
-            _font = theme.font
         elseif tonumber(mem_now.perc) >= 80 then
             _color = colors.orange_2
-            _font = theme.font
         elseif tonumber(mem_now.perc) >= 70 then
             _color = colors.yellow_2
-            _font = theme.font
         end
 
         widget:set_markup(markup.fontfg(_font, _color, mem_now.perc))
@@ -459,13 +456,10 @@ local cpu = lain.widget.cpu {
 
         if tonumber(cpu_now.usage) >= 90 then
             _color = colors.red_2
-            _font = theme.font
         elseif tonumber(cpu_now.usage) >= 80 then
             _color = colors.orange_2
-            _font = theme.font
         elseif tonumber(cpu_now.usage) >= 70 then
             _color = colors.yellow_2
-            _font = theme.font
         end
 
         widget:set_markup(markup.fontfg(_font, _color, cpu_now.usage))
@@ -514,13 +508,16 @@ local sysload = lain.widget.sysload {
 
         if tonumber(load_5) / cores >= 1.5 then
             _color = colors.red_2
-            _font = theme.font
-        elseif tonumber(load_5) / cores >= 1.0 then
+        elseif tonumber(load_5) / cores >= 0.8 then
+            if tonumber(load_1) > tonumber(load_5) then
+                _color = colors.red_2
+            else
+                _color = colors.orange_2
+            end
+        elseif tonumber(load_5) / cores >= 0.65 then
             _color = colors.orange_2
-            _font = theme.font
-        elseif tonumber(load_5) / cores >= 0.7 then
+        elseif tonumber(load_5) / cores >= 0.5 then
             _color = colors.yellow_2
-            _font = theme.font
         end
         widget:set_markup(markup.fontfg(_font, _color, load_5))
 
@@ -594,7 +591,6 @@ local users = widgets.users {
 
         if tonumber(logged_in) > 1 then
             _color = colors.red_2
-            _font = theme.font
         end
         widget:set_markup(markup.fontfg(_font, _color, logged_in))
     end,
@@ -646,13 +642,10 @@ end)
 --
 --         if tonumber(coretemp_now) >= 90 then
 --             _color = colors.red_2
---             _font = theme.font
 --         elseif tonumber(coretemp_now) >= 80 then
 --             _color = colors.orange_2
---             _font = theme.font
 --         elseif tonumber(coretemp_now) >= 70 then
 --             _color = colors.yellow_2
---             _font = theme.font
 --         end
 --         widget:set_markup(markup.fontfg(_font, _color, coretemp_now))
 --     end,
@@ -781,15 +774,12 @@ local bat = lain.widget.bat {
         if tonumber(bat_now.perc) <= 10 then
             bat_icon:set_image(theme.widget_battery_empty)
             _color = colors.red_2
-            _font = theme.font
         elseif tonumber(bat_now.perc) <= 20 then
             bat_icon:set_image(theme.widget_battery_low)
             _color = colors.orange_2
-            _font = theme.font
         elseif tonumber(bat_now.perc) <= 30 then
             bat_icon:set_image(theme.widget_battery_low)
             _color = colors.yellow_2
-            _font = theme.font
         elseif tonumber(bat_now.perc) <= 50 then
             bat_icon:set_image(theme.widget_battery_low)
         else
@@ -812,7 +802,6 @@ local bat = lain.widget.bat {
             bat_icon:set_image(theme.widget_ac)
             if tonumber(bat_now.perc) >= 95 then
                 _color = colors.green_2
-                _font = theme.font
             end
         end
 
@@ -879,7 +868,6 @@ local net = lain.widget.net {
 
         if not net_now.state or net_now.state == "down" then
             _color = colors.red_2
-            _font = theme.font
             widget:set_markup(markup.fontfg(_font, _color, " N/A "))
         else
             widget:set_markup(markup.fontfg(_font, _color, net_now.received .. " ↓↑ " .. net_now.sent))
