@@ -300,7 +300,7 @@ endfunction
 nnoremap cr :call ChangeReg()<CR>
 
 " Diff update
-nnoremap <silent> du :windo diffupdate<CR>
+nnoremap <silent> du :diffupdate<CR>
 
 
 """""""""""""""""""""
