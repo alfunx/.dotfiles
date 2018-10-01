@@ -31,7 +31,7 @@ unset root repo
 while true; do
     case "$1" in
         -d|--database|--repo) shift; repo=$1 ;;
-        --root)               root=$1 ;;
+        --root)               shift; root=$1 ;;
         --)                   shift; break ;;
     esac
     shift

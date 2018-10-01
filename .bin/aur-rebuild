@@ -43,7 +43,7 @@ unset root repo
 while true; do
     case "$1" in
         -c|--chroot)                   chroot=1; build_args+=(-c) ;;
-        --bind)                        makechrootpkg_args+=(-D "$1") ;;
+        --bind)                        shift; makechrootpkg_args+=(-D "$1") ;;
         -T|--temp)                     makechrootpkg_args+=(-T) ;;
         -A|--ignorearch|--ignore-arch) makepkg_args+=(-A); makechrootpkg_makepkg_args+=(-A) ;;
         -d|--database|--repo)          shift; repo=$1 ;;

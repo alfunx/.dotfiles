@@ -4,6 +4,15 @@ BINDIR ?= $(PREFIX)/bin
 
 default: install
 
+help:
+	@echo 'default:        install'
+	@echo 'install:        install-root'
+	@echo 'uninstall:      uninstall-root'
+	@echo 'install-root:   Install root scripts'
+	@echo 'uninstall-root: Uninstall root scripts'
+	@echo 'install-user:   Install user scripts'
+	@echo 'uninstall-user: Uninstall user scripts'
+
 install: install-root
 uninstall: uninstall-root
 
