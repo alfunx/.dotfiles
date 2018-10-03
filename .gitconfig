@@ -330,6 +330,10 @@
 	# initialize repository in current directory
 	this = "!git init && git commit --message='Initialize' --allow-empty"
 
+	# regex checkout
+	#    git rco <regex> [<options>]
+	rco = "!f() { REGEX=$1; shift; git checkout \"$@\" \"$(git branch --all | cut -c 3- | sed 's|^remotes/.*/||' | grep -m 1 -iEe \"$REGEX\" )\"; }; f"
+
 	# open Github repository in browser
 	#    git open [<remote>]
 	open = "!f() { URL=$(git config remote.\"${1:-origin}\".url); xdg-open \"${URL%%.git}\"; }; f"
