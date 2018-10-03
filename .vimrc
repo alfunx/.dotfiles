@@ -203,9 +203,13 @@ nnoremap Y y$
 
 " Copy to system clipboard
 nnoremap gy "+y
+nnoremap gY "+Y
 nnoremap gp "+p
+nnoremap gP "+P
 xnoremap gy "+y
+xnoremap gY "+Y
 xnoremap gp "+p
+xnoremap gP "+P
 
 " Keep selection after indenting
 xnoremap < <gv
