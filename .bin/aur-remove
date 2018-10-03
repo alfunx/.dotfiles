@@ -6,6 +6,16 @@ shopt -s extglob
 readonly argv0=remove
 readonly PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 
+conf_file_repo() {
+    awk -F'= ' '
+        $1 ~ /^\[.+\]$/ {
+            repo = substr($1, 2, length($1)-2)
+        }
+        $1 ~ /^Server/ && $2 ~ /^file:/ {
+            printf("%s\n%s\n", repo, $2)
+        }'
+}
+
 usage() {
     plain "usage: $argv0 [-d] [long options] [--] pkgname... [-]"
     exit 1
@@ -19,8 +29,8 @@ if [[ -t 2 && ! -o xtrace ]]; then
     colorize
 fi
 
-opt_short='d:'
-opt_long=('repo:' 'database:' 'root:')
+opt_short='d:ma'
+opt_long=('repo:' 'database:' 'root:' 'manual' 'aur')
 
 if ! parseopts "$opt_short" "${opt_long[@]}" -- "$@"; then
     usage
@@ -31,6 +41,8 @@ unset root repo
 while true; do
     case "$1" in
         -d|--database|--repo) shift; repo=$1 ;;
+        -m|--manual)          repo=manual ;;
+        -a|--aur)             repo=aur ;;
         --root)               shift; root=$1 ;;
         --)                   shift; break ;;
     esac

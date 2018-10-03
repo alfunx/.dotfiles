@@ -50,12 +50,12 @@ if ((all)); then
 fi
 
 if ((sync)); then
-    rm "$AURDEST/*/*.log"
+    rm "$AURDEST"/*/*.log
 fi
 
 if ((manual)); then
     manual_dir="$HOME/packages"
-    rm "$manual_dir/*/*.log"
+    rm "$manual_dir"/*/*.log
 fi
 
 # vim: set et sw=4 sts=4 ft=sh:

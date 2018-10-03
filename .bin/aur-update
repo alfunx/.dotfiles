@@ -13,10 +13,10 @@ build_args=()
 all=1
 
 # default options (disabled)
-normal=0 vcs=0 manual=0
+normal=0 vcs=0
 
 usage() {
-    plain "usage: $argv0 [-canvm] [long options]"
+    plain "usage: $argv0 [-canv] [long options]"
     exit 1
 }
 
@@ -28,8 +28,8 @@ if [[ -t 2 && ! -o xtrace ]]; then
     colorize
 fi
 
-opt_short='canvm'
-opt_long=('chroot' 'all' 'normal' 'vcs' 'manual')
+opt_short='canv'
+opt_long=('chroot' 'all' 'normal' 'vcs')
 
 if ! parseopts "$opt_short" "${opt_long[@]}" -- "$@"; then
     usage
@@ -43,7 +43,6 @@ while true; do
         -a|--all)    all=1 ;;
         -n|--normal) all=0; normal=1 ;;
         -v|--vcs)    all=0; vcs=1 ;;
-        -m|--manual) all=0; manual=1 ;;
         --)          shift; break ;;
     esac
     shift
@@ -51,7 +50,7 @@ done
 unset opt_short opt_long OPTRET
 
 if ((all)); then
-    normal=1 vcs=1 manual=1
+    normal=1 vcs=1
 fi
 
 if ((normal)); then
@@ -61,16 +60,7 @@ fi
 if ((vcs)); then
     aur vercmp-devel 2> /dev/null \
         | cut -d: -f1 \
-        | aur sync "${build_args[@]}" --no-ver-shallow -
-fi
-
-if ((manual)); then
-    AURDEST_bak=$AURDEST
-    export AURDEST="$HOME/packages"
-    aur vercmp-devel -d manual 2> /dev/null \
-        | cut -d: -f1 \
-        | aur rebuild -cd manual -
-    export AURDEST=$AURDEST_bak
+        | xargs aur sync "${build_args[@]}" --rebuild
 fi
 
 # vim: set et sw=4 sts=4 ft=sh:
