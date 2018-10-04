@@ -7,6 +7,7 @@ dropbox
 grabc
 kakoune-git
 light-git
+lua-argparse
 luacheck
 modprobed-db
 netctl-dispatcher-chrony

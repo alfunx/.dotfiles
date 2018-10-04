@@ -2,7 +2,7 @@
 
 _pkgname=ranger
 pkgname=$_pkgname-git
-pkgver=1.9.1.148.gbb277d1e
+pkgver=1.9.2.4.g036d2f31
 pkgrel=1
 pkgdesc="A simple, vim-like file manager."
 arch=('any')

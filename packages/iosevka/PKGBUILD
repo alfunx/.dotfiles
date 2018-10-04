@@ -2,33 +2,34 @@
 
 _pkgname=ttf-iosevka-custom
 pkgname=$_pkgname-git
-pkgver=r1122.0a8375f
+pkgver=r1141.046c7253
 pkgrel=1
 pkgdesc='A slender monospace typeface. (Customized)'
 arch=('any')
 url='https://be5invis.github.io/Iosevka/'
 license=('custom:OFL')
-makedepends=('git' 'nodejs' 'npm' 'ttfautohint' 'otfcc')
+makedepends=('git' 'python2' 'nodejs' 'npm' 'ttfautohint' 'otfcc')
 depends=('fontconfig' 'xorg-font-utils')
 provides=('ttf-iosevka-custom')
 conflicts=('ttf-iosevka-custom')
-source=("git+https://github.com/be5invis/Iosevka")
-md5sums=('SKIP')
+source=("git+https://github.com/be5invis/Iosevka"
+        "private-build-plans.toml")
+sha512sums=('SKIP'
+            'd3205dde946bd00bfa56c3f83824b6e45c1227e4aae5f502e1fba99199103ad9aab6da60832fbcf73ff61b86632569ba76942a6029d6523e6c3e447813b3a99f')
 
 pkgver() {
     cd "Iosevka"
     printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
+prepare() {
+    cp private-build-plans.toml Iosevka/
+}
+
 build() {
-    design='v-l-italic v-i-italic v-q-taily v-eszet-traditional v-tilde-low v-asterisk-low v-caret-low v-underscore-low v-at-short v-three-flattop expanded term'
-    upright='v-g-opendoublestorey'
-    italic='v-g-singlestorey'
-    oblique='v-g-opendoublestorey'
-    cd Iosevka
+    cd "Iosevka"
     npm install
-    make custom-config design="$design" upright="$upright" italic="$italic" oblique="$oblique" family='Iosevka Custom'
-    make custom
+    npm run build -- contents:iosevka-custom
 }
 
 package() {
