@@ -61,6 +61,10 @@ $if Bash
 "\M-\C-v": "\C-a\C-k$\C-y\M-\C-e\C-a\C-y="
 $endif
 
+# Python
+$if Python
+$endif
+
 # Mappings for ctrl-left and ctrl-right for word moving
 "\e[1;5C": forward-word
 "\e[1;5D": backward-word
@@ -69,8 +73,14 @@ $endif
 "\e\e[C": forward-word
 "\e\e[D": backward-word
 
+# Adds punctuation as word delimiters
+set bind-tty-special-chars off
+
 # Use a visible bell if one is available
 set bell-style visible
+
+# Useful stuff for UTF-8
+set meta-flag on
 
 # Don't strip characters to 7 bits when reading
 set input-meta on
@@ -87,6 +97,13 @@ set output-meta on
 # wants to see all of them
 set completion-query-items 150
 
+# Completion Options
+set page-completions on
+set completion-ignore-case on
+set show-all-if-ambiguous on
+set show-all-if-unmodified on
+set visible-stats on
+
 # Use different colors to indicate the file type
 set colored-stats on
 
@@ -96,3 +113,5 @@ $if Ftp
 "\C-xt": "put \M-?"
 "\M-.": yank-last-arg
 $endif
+
+set keymap emacs
