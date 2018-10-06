@@ -8,7 +8,7 @@
     foregroundcolorinverse: #839496;
     selectioncolor: #3b4252;
 
-    font: "Iosevka Custom 14";
+    font: "monospace 14";
     border-color: @separatorcolor;
     background-color: @backgroundcolor;
     text-color: @foregroundcolor;

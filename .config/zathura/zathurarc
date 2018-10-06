@@ -1,6 +1,6 @@
 # gruvbox
 
-set font                        "Iosevka Custom 11"
+set font                        "monospace 11"
 set default-bg                  "#282828"
 set default-fg                  "#fbf1c7"
 

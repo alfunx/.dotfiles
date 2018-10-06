@@ -9,7 +9,7 @@
     selectioncolor: #504945;
     bordercolor: #928374;
 
-    font: "Iosevka Custom 11";
+    font: "monospace 11";
     border-color: @separatorcolor;
     background-color: @backgroundcolor;
     text-color: @foregroundcolor;

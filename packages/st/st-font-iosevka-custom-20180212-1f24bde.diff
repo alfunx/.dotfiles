@@ -8,7 +8,7 @@ index 877afab..96575a3 100644
   */
 -char font[] = "Liberation Mono:pixelsize=12:antialias=true:autohint=true";
 -int borderperc = 20;
-+char font[] = "Iosevka Custom:pixelsize=16:antialias=true:autohint=true";
++char font[] = "monospace:pixelsize=16:antialias=true:autohint=true";
 +int borderperc = 50;
  
  /*

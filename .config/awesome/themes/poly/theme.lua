@@ -74,7 +74,7 @@ theme.wallpaper                                 = theme.dir .. "/wallpapers/esch
 -- theme.wallpaper_blur                            = theme.dir .. "/wallpapers/matterhorn_blur.jpg"
 -- theme.wallpaper_offset                          = 0
 
-local font_name                                 = "Iosevka Custom"
+local font_name                                 = "monospace"
 local font_size                                 = "11"
 theme.font                                      = font_name .. " " ..                         font_size
 theme.font_bold                                 = font_name .. " " .. "Bold"        .. " " .. font_size
