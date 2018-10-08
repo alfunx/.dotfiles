@@ -131,6 +131,10 @@
 [interactive]
 	singlekey = true
 
+[branch]
+	autoSetupMerge = true
+	autoSetupRebase = always
+
 [status]
 	short = true
 	branch = true
@@ -254,7 +258,8 @@
 	ds = diff --find-renames --stat -c
 	dc = diff --cached -c
 	dl = diff --cached -c HEAD~
-	dr = "!f() { git diff \"${1:-HEAD}\"~..\"${1:-HEAD}\"; }; f"
+	du = diff --cached -c @{u}
+	dr = "!f() { git diff -c \"${1:-HEAD}\"~..\"${1:-HEAD}\"; }; f"
 	grep = grep -Ii
 
 	s = status
@@ -300,8 +305,11 @@
 	rc = rebase --continue
 	rq = rebase --quit
 	rs = rebase --skip
+	ret = rebase --edit-todo
+	rsh = rebase --show-current-patch
+
 	ri = rebase --interactive
-	ru = rebase --interactive @{u}
+	riu = rebase --interactive @{u}
 	rim = rebase --interactive master
 	rid = rebase --interactive develop
 
@@ -310,12 +318,18 @@
 	cpc = cherry-pick --continue
 	cpq = cherry-pick --quit
 
+	rv = revert
+	rva = revert --abort
+	rvc = revert --continue
+	rvq = revert --quit
+
+	re = reset --mixed
+	res = reset --soft
+	reh = reset --hard
+	cln = clean
+
 	mt = mergetool
 	dt = difftool
-
-	re = reset
-	rv = revert
-	cln = clean
 
 	which = branch --contains
 	who = shortlog --summary --numbered --no-merges
