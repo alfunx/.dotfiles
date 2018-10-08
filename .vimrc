@@ -63,6 +63,7 @@ Plug 'chrisbra/NrrwRgn'
 Plug 'w0rp/ale'
 Plug 'majutsushi/tagbar'
 "Plug 'ludovicchabant/vim-gutentags'
+Plug 'Shougo/echodoc.vim'
 
 " Text objects
 Plug 'wellle/targets.vim'
@@ -87,18 +88,20 @@ Plug 'wellle/tmux-complete.vim'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 
-" " Language server
-" Plug 'autozimu/LanguageClient-neovim', {
-"             \ 'branch': 'next',
-"             \ 'do': 'bash install.sh',
-"             \ }
+" Language server
+Plug 'autozimu/LanguageClient-neovim', {
+            \ 'branch': 'next',
+            \ 'do': 'bash install.sh',
+            \ }
 
 " Language specific
 Plug 'editorconfig/editorconfig-vim'
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 Plug 'lervag/vimtex', { 'for': ['latex', 'tex'] }
 Plug 'racer-rust/vim-racer', { 'for': 'rust' }
-Plug 'zchee/deoplete-clang'
+Plug 'zchee/deoplete-clang', { 'for': ['c', 'cpp'] }
+Plug 'Shougo/neco-vim', { 'for': 'vim' }
+Plug 'Shougo/neco-syntax'
 
 " Themes
 "Plug 'morhetz/gruvbox'
@@ -305,6 +308,10 @@ nnoremap cr :call ChangeReg()<CR>
 
 " Diff update
 nnoremap <silent> du :diffupdate<CR>
+
+" Scroll
+map <ScrollWheelUp> <C-y>
+map <ScrollWheelDown> <C-e>
 
 
 """""""""""""""""""""
@@ -575,8 +582,8 @@ let g:vimtex_view_method='zathura'
 
 "" UltiSnips
 let g:UltiSnipsExpandTrigger='<tab>'
-let g:UltiSnipsJumpForwardTrigger='<c-b>'
-let g:UltiSnipsJumpBackwardTrigger='<c-z>'
+let g:UltiSnipsJumpForwardTrigger='<c-k>'
+let g:UltiSnipsJumpBackwardTrigger='<c-j>'
 
 "" Multiple-Cursors
 let g:multi_cursor_next_key='<C-n>'
@@ -679,22 +686,70 @@ let g:racer_experimental_completer=1
 "" Deoplete
 let g:deoplete#enable_at_startup=1
 
-let g:deoplete#sources#clang#libclang_path='/usr/lib/rstudio/bin/rsclang/libclang.so'
-let g:deoplete#sources#clang#clang_header='/usr/lib/rstudio/resources/libclang'
+"let g:deoplete#sources#clang#libclang_path='/usr/lib/rstudio/bin/rsclang/libclang.so'
+"let g:deoplete#sources#clang#clang_header='/usr/lib/rstudio/resources/libclang'
 
-" "" LanguageClient
-" let g:LanguageClient_serverCommands = {
-"             \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
-"             \ 'c': ['cquery'],
-"             \ 'javascript': ['/opt/javascript-typescript-langserver/lib/language-server-stdio.js'],
-"             \ }
-"
-" " Automatically start language servers.
-" let g:LanguageClient_autoStart=1
-"
-"nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
-"nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
-"nnoremap <silent> <F6> :call LanguageClient_textDocument_rename()<CR>
+call g:deoplete#custom#source('LanguageClient',
+            \ 'min_pattern_length',
+            \ 2)
+
+"" EchoDoc
+let g:echodoc#enable_at_startup=1
+
+"" LanguageClient
+let g:LanguageClient_serverCommands = {
+            \ 'rust': ['rls'],
+            \ 'java': ['jdtls'],
+            \ 'c': ['clangd'],
+            \ 'cpp': ['clangd'],
+            \ 'python': ['pyls'],
+            \ }
+
+" Automatically start language servers
+let g:LanguageClient_autoStart=1
+
+augroup LanguageClient_config
+    autocmd!
+    autocmd User LanguageClientStarted setlocal signcolumn=yes
+    autocmd User LanguageClientStopped setlocal signcolumn=auto
+augroup END
+
+nnoremap <silent> <F12> :call LanguageClient_contextMenu()<CR>
+nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
+nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
+nnoremap <silent> gr :call LanguageClient_textDocument_rename()<CR>
+
+""" Use UltiSnips for completion
+function! CompleteSnippet()
+    if empty(v:completed_item)
+        return
+    endif
+
+    call UltiSnips#ExpandSnippet()
+    if g:ulti_expand_res > 0
+        return
+    endif
+
+    let l:complete = type(v:completed_item) == v:t_dict ? v:completed_item.word : v:completed_item
+    let l:comp_len = len(l:complete)
+
+    let l:cur_col = mode() == 'i' ? col('.') - 2 : col('.') - 1
+    let l:cur_line = getline('.')
+
+    let l:start = l:comp_len <= l:cur_col ? l:cur_line[:l:cur_col - l:comp_len] : ''
+    let l:end = l:cur_col < len(l:cur_line) ? l:cur_line[l:cur_col + 1 :] : ''
+
+    call setline('.', l:start . l:end)
+    call cursor('.', l:cur_col - l:comp_len + 2)
+
+    call UltiSnips#Anon(l:complete)
+endfunction
+
+augroup LanguageClient_omplete
+    autocmd!
+    autocmd CompleteDone * call CompleteSnippet()
+augroup END
+inoremap <silent><expr> <tab> pumvisible() ? "\<c-y>" : "\<tab>"
 
 "" Unimpaired
 let g:nremap={"[": "ü", "]": "¨"}
@@ -718,10 +773,9 @@ set hidden
 set wildmenu  " shows autocomplete in commandline
 set wildmode=longest:full,full
 set completeopt=menuone,longest,preview
+set shortmess+=atIc
 set lazyredraw
 set mouse=a
-map <ScrollWheelUp> <C-y>
-map <ScrollWheelDown> <C-e>
 
 set cursorline  " horizontal line
 "set colorcolumn=81  " vertical line
@@ -796,7 +850,7 @@ augroup SpellBadUnderline
 augroup END
 
 if &term !=? 'linux' || has('gui_running')
-    set listchars=tab:▸\ ,extends:>,precedes:<,nbsp:˷,eol:⤶,trail:~
+    set listchars=tab:›\ ,extends:>,precedes:<,nbsp:˷,eol:⤶,trail:~
     set fillchars=vert:│,fold:─,diff:-
     augroup TrailingSpaces
         autocmd!
