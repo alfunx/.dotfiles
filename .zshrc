@@ -3,58 +3,23 @@
 ###########
 
 export ZSH_CONFIG="$HOME/.zsh.d"
-# fpath=("$HOME/.zsh" $fpath)
-
-# If you come from bash you might have to change your $PATH.
-# export PATH="$HOME/bin:/usr/local/bin:$PATH"
-
-# Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
+export ZSH_CUSTOM="$ZSH_CONFIG/custom"
 
 if [[ "$TERM" != 'linux' ]]; then
-    # Set name of the theme to load. Optionally, if you set this to "random"
-    # it'll load a random theme each time that oh-my-zsh is loaded.
-    # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
     ZSH_THEME='gruvbox-dark'
 fi
 
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
-
-# Uncomment the following line to use hyphen-insensitive completion. Case
-# sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
-
-# Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
-
-# Uncomment the following line to change how often to auto-update (in days).
-export UPDATE_ZSH_DAYS=7
-
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# HIST_STAMPS="mm/dd/yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
+#CASE_SENSITIVE="true"
+#HYPHEN_INSENSITIVE="true"
+#DISABLE_AUTO_UPDATE="true"
+UPDATE_ZSH_DAYS=7
+#DISABLE_LS_COLORS="true"
+#DISABLE_AUTO_TITLE="true"
+#ENABLE_CORRECTION="true"
+#COMPLETION_WAITING_DOTS="true"
+#DISABLE_UNTRACKED_FILES_DIRTY="true"
+#HIST_STAMPS="yyyy-mm-dd"
 
 
 #############
@@ -172,8 +137,8 @@ stty -ixon
 [[ -f "$ZSH_CONFIG/fzf.zsh" ]] \
     && source "$ZSH_CONFIG/fzf.zsh"
 
-# # Vim mode
-# [[ -f "$ZSH_CONFIG/vim.zsh" ]] \
+# Vim mode
+#[[ -f "$ZSH_CONFIG/vim.zsh" ]] \
 #    && source "$ZSH_CONFIG/vim.zsh"
 
 # Gruvbox colors fix
@@ -183,10 +148,10 @@ stty -ixon
     && source "$HOME/.bin/fix-gruvbox-palette"
 
 # TMUX
-main_attached="$(tmux list-sessions -F '#S #{session_attached}' \
+local main_attached="$(tmux list-sessions -F '#S #{session_attached}' \
     2>/dev/null \
     | sed -n 's/^main[[:space:]]//p')"
-if [[ ! "$main_attached" -gt '0' ]] && [[ ! "$TERM" == 'linux' ]]; then
+if [[ "$main_attached" -le '0' ]] && [[ "$TERM" != 'linux' ]]; then
     tmux attach -t main >/dev/null 2>&1 || tmux new -s main >/dev/null 2>&1
     exit
 fi
@@ -202,5 +167,5 @@ if [[ "$TERM" == "linux" ]]; then
     ZSH_THEME_GIT_PROMPT_CLEAN=""
 fi
 
-# # Directly source prompt
-# source "$ZSH/custom/themes/gruvbox-dark.zsh-theme"
+# Directly source prompt
+#source "$ZSH_CUSTOM/themes/gruvbox-dark.zsh-theme"

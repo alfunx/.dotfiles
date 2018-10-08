@@ -4,14 +4,14 @@
 [submodule ".config/awesome/freedesktop"]
 	path = .config/awesome/freedesktop
 	url = https://github.com/copycat-killer/awesome-freedesktop
-[submodule ".oh-my-zsh/custom/plugins/zsh-completions"]
-	path = .oh-my-zsh/custom/plugins/zsh-completions
+[submodule ".zsh.d/.custom/plugins/zsh-completions"]
+	path = .zsh.d/custom/plugins/zsh-completions
 	url = https://github.com/zsh-users/zsh-completions
-[submodule ".oh-my-zsh/custom/plugins/zsh-syntax-highlighting"]
-	path = .oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+[submodule ".zsh.d/.custom/plugins/zsh-syntax-highlighting"]
+	path = .zsh.d/custom/plugins/zsh-syntax-highlighting
 	url = https://github.com/zsh-users/zsh-syntax-highlighting
-[submodule ".oh-my-zsh/custom/plugins/zsh-autosuggestions"]
-	path = .oh-my-zsh/custom/plugins/zsh-autosuggestions
+[submodule ".zsh.d/.custom/plugins/zsh-autosuggestions"]
+	path = .zsh.d/custom/plugins/zsh-autosuggestions
 	url = https://github.com/zsh-users/zsh-autosuggestions
 [submodule "projects/gdb-dashboard"]
 	path = projects/gdb-dashboard

@@ -63,6 +63,7 @@ alias egrep='egrep --color=auto --exclude-dir={.git,.svn}'
 alias -g C='| xclip -selection clipboard -rmlastnl'
 alias diff='diff --color=auto'
 alias journalctl='journalctl -r'
+alias tmuxtty='/usr/bin/tmux -L linux -f "$HOME/.tmux.minimal.conf"'
 
 foreground-job() {
     fg
@@ -163,6 +164,13 @@ bak() {
         echo "Found: $1.bak"
         mv "$1"{.bak,}
     fi
+}
+
+clangd_prep() {
+    pushd build > /dev/null \
+        && cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+        && popd > /dev/null \
+        && mv -f build/compile_commands.json .
 }
 
 
