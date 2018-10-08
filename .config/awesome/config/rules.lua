@@ -121,6 +121,7 @@ function config.init(context)
                     "Pinentry",
                     "Event Tester",
                     "alsamixer",
+                    "Arandr",
                 },
                 name = {
                     "Event Tester",

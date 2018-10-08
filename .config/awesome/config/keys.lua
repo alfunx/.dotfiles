@@ -163,13 +163,13 @@ function config.init(context)
         awful.key({ k.m, k.a           }, "d", function() lain.util.delete_tag() end,
                   { description = "delete tag", group = "tag" }),
         awful.key({ k.m, k.a           }, "a", function()
-                for i = 1, awful.util.tagcolumns or #awful.util.tagnames do
-                    awful.tag.add(tostring(i), {
-                        screen = awful.screen.focused(),
-                        layout = layout or awful.layout.suit.tile,
-                    })
-                end
-            end,
+            for i = 1, awful.util.tagcolumns or #awful.util.tagnames do
+                awful.tag.add(tostring(i), {
+                    screen = awful.screen.focused(),
+                    layout = layout or awful.layout.suit.tile,
+                })
+            end
+        end,
                   { description = "add row of tags", group = "tag" }),
         awful.key({ k.m, k.a           }, "BackSpace", awful.tag.history.restore,
                   { description = "go back", group = "tag" }),
@@ -258,7 +258,7 @@ function config.init(context)
         awful.key({ k.m, k.s           }, "space", function() awful.layout.inc(-1) end,
                   { description = "select previous", group = "layout" }),
 
-        -- Show/Hide Wibox
+        -- Show/hide wibox
         awful.key({ k.m, k.c           }, "b", function()
             for s in screen do
                 s._wibox.visible = not s._wibox.visible
@@ -267,6 +267,20 @@ function config.init(context)
                 end
             end
         end),
+
+        -- Update widgets
+        awful.key({ k.m, k.c           }, "u", function()
+            if beautiful.pacman then
+                beautiful.pacman.update()
+            end
+            if beautiful.volume then
+                beautiful.volume.update()
+            end
+            if beautiful.mpd then
+                beautiful.mpd.update()
+            end
+        end,
+                  { description = "update widgets", group = "client" }),
 
         -- ALSA volume control
         awful.key({                    }, "XF86AudioRaiseVolume", function()
@@ -384,11 +398,11 @@ function config.init(context)
         end)
     )
 
-    -- Bind all key numbers to tags.
-    -- NOTE: Using keycodes to make it works on any keyboard layout.
+    -- Bind all key numbers to tags
+    -- NOTE: Using keycodes to make it works on any keyboard layout
     for i = 1, 10 do
         context.keys.global = gears.table.join(context.keys.global,
-            -- View tag only.
+            -- View tag only
             awful.key({ k.m                }, "#" .. i + 9, function()
                 local _screen = awful.screen.focused()
                 local _tag = _screen.tags[i]
@@ -397,7 +411,7 @@ function config.init(context)
                 end
             end),
 
-            -- Toggle tag display.
+            -- Toggle tag display
             awful.key({ k.m, k.c           }, "#" .. i + 9, function()
                 local _screen = awful.screen.focused()
                 local _tag = _screen.tags[i]
@@ -406,7 +420,7 @@ function config.init(context)
                 end
             end),
 
-            -- Move client to tag.
+            -- Move client to tag
             awful.key({ k.m, k.s           }, "#" .. i + 9, function()
                 if client.focus then
                     local _tag = client.focus.screen.tags[i]
@@ -416,7 +430,7 @@ function config.init(context)
                 end
             end),
 
-            -- Move client to tag and view it.
+            -- Move client to tag and view it
             awful.key({ k.m, k.c, k.s      }, "#" .. i + 9, function()
                 if client.focus then
                     local _tag = client.focus.screen.tags[i]
@@ -427,7 +441,7 @@ function config.init(context)
                 end
             end),
 
-            -- Toggle tag on focused client.
+            -- Toggle tag on focused client
             awful.key({ k.m, k.a           }, "#" .. i + 9, function()
                 if client.focus then
                     local _tag = client.focus.screen.tags[i]
@@ -441,23 +455,23 @@ function config.init(context)
 
     -- Fake bindings for description
     gears.table.join(context.keys.global,
-        -- View tag only.
+        -- View tag only
         awful.key({ k.m                }, "1..9", nil,
                   { description = "view tag", group = "numeric keys" }),
 
-        -- Toggle tag display.
+        -- Toggle tag display
         awful.key({ k.m, k.c           }, "1..9", nil,
                   { description = "toggle tag", group = "numeric keys" }),
 
-        -- Move client to tag.
+        -- Move client to tag
         awful.key({ k.m, k.s           }, "1..9", nil,
                   { description = "move focused client to tag", group = "numeric keys" }),
 
-        -- Move client to tag and view it.
+        -- Move client to tag and view it
         awful.key({ k.m, k.c, k.s      }, "1..9", nil,
                   { description = "move focused client to tag and view it", group = "numeric keys" }),
 
-        -- Toggle tag on focused client.
+        -- Toggle tag on focused client
         awful.key({ k.m, k.a           }, "1..9", nil,
                   { description = "toggle focused client on tag", group = "numeric keys" })
     )

@@ -256,7 +256,7 @@ function config.init(context)
         root.keys(context.keys.global)
     end
 
-    -- Blur Wallpaper (only set if theme has blurred wallpaper)
+    -- Blur wallpaper (only set if theme has blurred wallpaper)
     if beautiful.wallpaper_blur or beautiful.wallpaper_offset then
         context.util.set_wallpaper = function(clients)
             local w

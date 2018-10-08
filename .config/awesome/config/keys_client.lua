@@ -27,6 +27,7 @@ function config.init(context)
         awful.key({ k.m, k.c           }, "m", lain.util.magnify_client,
                   { description = "magnify", group = "client" }),
 
+        -- Client manipulation
         awful.key({ k.m                }, "z", function(c) c:kill() end,
                   { description = "close", group = "client" }),
         awful.key({ k.m, k.c           }, "space", awful.client.floating.toggle,
@@ -46,6 +47,13 @@ function config.init(context)
         awful.key({ k.m                }, "f", context.util.toggle_fullscreen,
                   { description = "fullscreen", group = "client" }),
 
+        -- Move client to screen
+        awful.key({ k.c, k.a, k.s      }, k.l, function(c) c:move_to_screen(c.screen.index+1) end,
+                  { description = "focus the previous screen", group = "screen" }),
+        awful.key({ k.c, k.a, k.s      }, k.r, function(c) c:move_to_screen(c.screen.index-1) end,
+                  { description = "focus the next screen", group = "screen" }),
+
+        -- Edit in Vim
         awful.key({ k.m                }, "v", function(c) --luacheck: no unused args
             awful.spawn(terminal .. " zsh -lic '" .. context.vars.scripts_dir .. "/edit-in-vim'", {
                 floating = true,

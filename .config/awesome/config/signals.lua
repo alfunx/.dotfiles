@@ -100,12 +100,12 @@ function config.init(context)
             }
         end
 
-        -- Hide the titlebar if floating
+        -- Hide the titlebar if not floating
         if not context.util.client_floats(c) then
             context.util.hide_titlebar(c)
         end
 
-        -- Hide the titlebar if maximized
+        -- Hide the titlebar if maximized or fullscreen
         if c.maximized or c.fullscreen then
             context.util.hide_titlebar(c)
         end
