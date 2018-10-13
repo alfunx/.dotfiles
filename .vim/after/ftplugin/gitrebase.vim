@@ -5,3 +5,4 @@ nnoremap <buffer><silent> gs :Squash<CR>
 nnoremap <buffer><silent> gf :Fixup<CR>
 nnoremap <buffer><silent> gd :Drop<CR>
 nnoremap <buffer><silent> S :Cycle<CR>
+nnoremap <buffer><silent> K :Cycle<CR>

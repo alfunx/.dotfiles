@@ -31,7 +31,6 @@ Plug 'junegunn/limelight.vim'
 "Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-git'
 Plug 'tpope/vim-fugitive'
-Plug 'whiteinge/diffconflicts'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
@@ -40,7 +39,9 @@ Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-endwise'
-"Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-commentary'
+Plug 'whiteinge/diffconflicts'
 Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/vim-easy-align'
 Plug 'junegunn/vim-peekaboo'
@@ -53,8 +54,7 @@ Plug 'terryma/vim-multiple-cursors'
 Plug 'jiangmiao/auto-pairs'
 "Plug 'Raimondi/delimitMate'
 Plug 'mbbill/undotree'
-"Plug 'christoomey/vim-titlecase'
-Plug 'tomtom/tcomment_vim'
+"Plug 'tomtom/tcomment_vim'
 Plug 'ap/vim-css-color'
 "Plug 'jceb/vim-orgmode'
 Plug 'xtal8/traces.vim'
@@ -64,6 +64,7 @@ Plug 'w0rp/ale'
 Plug 'majutsushi/tagbar'
 "Plug 'ludovicchabant/vim-gutentags'
 Plug 'Shougo/echodoc.vim'
+Plug 'editorconfig/editorconfig-vim'
 
 " Text objects
 Plug 'wellle/targets.vim'
@@ -71,22 +72,18 @@ Plug 'junegunn/vim-after-object'
 "Plug 'michaeljsmith/vim-indent-object'
 Plug 'alfunx/vim-indent-object'  " fork
 Plug 'kana/vim-textobj-user'
-"Plug 'kana/vim-textobj-entire'
 Plug 'Julian/vim-textobj-variable-segment'
-
-" Completion
-Plug 'Shougo/deoplete.nvim'
-Plug 'roxma/nvim-yarp'
-Plug 'roxma/vim-hug-neovim-rpc'
 
 " Tmux
 Plug 'benmills/vimux'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'wellle/tmux-complete.vim'
+"Plug 'wellle/tmux-complete.vim'
 
 " Snippets
 Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
+"Plug 'honza/vim-snippets'
+Plug 'alfunx/vim-snippets'  " fork
+Plug 'ncm2/ncm2-ultisnips'
 
 " Language server
 Plug 'autozimu/LanguageClient-neovim', {
@@ -94,14 +91,19 @@ Plug 'autozimu/LanguageClient-neovim', {
             \ 'do': 'bash install.sh',
             \ }
 
+" Completion
+Plug 'ncm2/ncm2'
+Plug 'roxma/nvim-yarp'
+Plug 'roxma/vim-hug-neovim-rpc'
+Plug 'ncm2/ncm2-bufword'
+"Plug 'Shougo/neco-syntax'
+
 " Language specific
-Plug 'editorconfig/editorconfig-vim'
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 Plug 'lervag/vimtex', { 'for': ['latex', 'tex'] }
 Plug 'racer-rust/vim-racer', { 'for': 'rust' }
-Plug 'zchee/deoplete-clang', { 'for': ['c', 'cpp'] }
-Plug 'Shougo/neco-vim', { 'for': 'vim' }
-Plug 'Shougo/neco-syntax'
+"Plug 'zchee/deoplete-clang', { 'for': ['c', 'cpp'] }
+"Plug 'Shougo/neco-vim', { 'for': 'vim' }
 
 " Themes
 "Plug 'morhetz/gruvbox'
@@ -131,10 +133,10 @@ let mapleader=' '
 let maplocalleader=''
 
 "" Split navigation
-"nnoremap <C-h> <C-w><C-h>
-"nnoremap <C-j> <C-w><C-j>
-"nnoremap <C-k> <C-w><C-k>
-"nnoremap <C-l> <C-w><C-l>
+"nnoremap <silent> <C-h> <C-w><C-h>
+"nnoremap <silent> <C-j> <C-w><C-j>
+"nnoremap <silent> <C-k> <C-w><C-k>
+"nnoremap <silent> <C-l> <C-w><C-l>
 
 "" Split navigation (vim-tmux-navigator)
 let g:tmux_navigator_no_mappings=1
@@ -150,6 +152,11 @@ nnoremap <silent> <C-w>j 5<C-w>-
 nnoremap <silent> <C-w>k 5<C-w>+
 nnoremap <silent> <C-w>l 5<C-w>>
 
+nnoremap <silent> <Home> <C-w><
+nnoremap <silent> <PageDown> <C-w>-
+nnoremap <silent> <PageUp> <C-w>+
+nnoremap <silent> <End> <C-w>>
+
 "" New tab
 nnoremap <silent> <C-w>t :tabedit<CR>
 nnoremap <silent> <C-w><C-t> :tabedit<CR>
@@ -161,68 +168,57 @@ nnoremap <silent> <C-w><C-l> :tabnext<CR>
 "" Fullscreen
 nnoremap <silent> <C-w>F <C-w>_<C-w><Bar>
 
-"nnoremap <silent> <Home> <C-w><
-"nnoremap <silent> <PageDown> <C-w>-
-"nnoremap <silent> <PageUp> <C-w>+
-"nnoremap <silent> <End> <C-w>>
-
-"augroup Quickfix
-"  autocmd!
-"  autocmd QuickFixCmdPost [^l]* cwindow
-"  autocmd QuickFixCmdPost l*        lwindow
-"augroup END
-
 " German keyboard mappings
-nmap ä ^
-xmap ä ^
-omap ä ^
-nmap ö "
-xmap ö "
-omap ö "
+nmap <silent> ä ^
+xmap <silent> ä ^
+omap <silent> ä ^
+nmap <silent> ö "
+xmap <silent> ö "
+omap <silent> ö "
 
-nmap ü [
-xmap ü [
-omap ü [
-nmap ¨ ]
-xmap ¨ ]
-omap ¨ ]
+nmap <silent> ü [
+xmap <silent> ü [
+omap <silent> ü [
+nmap <silent> ¨ ]
+xmap <silent> ¨ ]
+omap <silent> ¨ ]
 
-nnoremap è <C-]>
-xnoremap è <C-]>
+nnoremap <silent> è <C-]>
+xnoremap <silent> è <C-]>
 
 execute "set <M-h>=\<Esc>h"
 execute "set <M-j>=\<Esc>j"
 execute "set <M-k>=\<Esc>k"
 execute "set <M-l>=\<Esc>l"
-nnoremap <M-j> }
-xnoremap <M-j> }
-onoremap <M-j> }
-nnoremap <M-k> {
-xnoremap <M-k> {
-onoremap <M-k> {
+nnoremap <silent> <M-j> }
+xnoremap <silent> <M-j> }
+onoremap <silent> <M-j> }
+nnoremap <silent> <M-k> {
+xnoremap <silent> <M-k> {
+onoremap <silent> <M-k> {
 
 " Make Y behave like other commands
-nnoremap Y y$
+nnoremap <silent> Y y$
 
 " Copy to system clipboard
-nnoremap gy "+y
-nnoremap gY "+Y
-nnoremap gp "+p
-nnoremap gP "+P
-xnoremap gy "+y
-xnoremap gY "+Y
-xnoremap gp "+p
-xnoremap gP "+P
+nnoremap <silent> gy "+y
+nnoremap <silent> gY "+Y
+nnoremap <silent> gp "+p
+nnoremap <silent> gP "+P
+xnoremap <silent> gy "+y
+xnoremap <silent> gY "+Y
+xnoremap <silent> gp "+p
+xnoremap <silent> gP "+P
 
 " Keep selection after indenting
-xnoremap < <gv
-xnoremap > >gv
+xnoremap <silent> < <gv
+xnoremap <silent> > >gv
 
 " Swap lines
-xnoremap <leader>j :m '>+1<CR>gv=gv
-xnoremap <leader>k :m '<-2<CR>gv=gv
-nnoremap <leader>j :m .+1<CR>
-nnoremap <leader>k :m .-2<CR>
+xnoremap <silent> <leader>j :m '>+1<CR>gv=gv
+xnoremap <silent> <leader>k :m '<-2<CR>gv=gv
+nnoremap <silent> <leader>j :m .+1<CR>
+nnoremap <silent> <leader>k :m .-2<CR>
 
 " Use CTRL-S for saving, also in Insert mode
 nnoremap <silent> <C-s> :write<CR>
@@ -234,9 +230,9 @@ nnoremap <silent> <leader>q :copen<CR>
 nnoremap <silent> <leader>l :lopen<CR>
 
 "" Insert mode mappings
-inoremap <C-u> <C-g>u<C-u>
-inoremap àà <C-o>O
-inoremap éé <C-o>o
+inoremap <silent> <C-u> <C-g>u<C-u>
+inoremap <silent> àà <C-o>O
+inoremap <silent> éé <C-o>o
 
 " Select last inserted text
 nnoremap gV `[v`]
@@ -257,15 +253,15 @@ execute "set <M-6>=\<Esc>6"
 execute "set <M-7>=\<Esc>7"
 execute "set <M-8>=\<Esc>8"
 execute "set <M-9>=\<Esc>9"
-nnoremap <M-1> 1gt
-nnoremap <M-2> 2gt
-nnoremap <M-3> 3gt
-nnoremap <M-4> 4gt
-nnoremap <M-5> 5gt
-nnoremap <M-6> 6gt
-nnoremap <M-7> 7gt
-nnoremap <M-8> 8gt
-nnoremap <M-9> :tablast<CR>
+nnoremap <silent> <M-1> 1gt
+nnoremap <silent> <M-2> 2gt
+nnoremap <silent> <M-3> 3gt
+nnoremap <silent> <M-4> 4gt
+nnoremap <silent> <M-5> 5gt
+nnoremap <silent> <M-6> 6gt
+nnoremap <silent> <M-7> 7gt
+nnoremap <silent> <M-8> 8gt
+nnoremap <silent> <M-9> :tablast<CR>
 
 " Magic regex search
 noremap <leader>/ /\v
@@ -279,39 +275,39 @@ cnoremap <expr> <S-Tab> getcmdtype() =~ '[?/]' ? '<C-t>' : feedkeys('<S-Tab>', '
 nnoremap <silent> <F3> mz:keepp %s/\\\@1<!\s\+$//e<CR>`z
 
 " Allow saving of files as sudo
-command! W execute 'silent! w !sudo /usr/bin/tee % >/dev/null' <bar> edit!
+command! W execute 'silent! w !sudo /usr/bin/tee % >/dev/null' <Bar> edit!
 
 " Set path to current file
 command! -bang -nargs=* Cd  cd %:p:h
 nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>
+
+" No highlight
+execute "set <M-b>=\<Esc>b"
+nnoremap <silent> <M-b> :<C-u>nohlsearch<CR>
+
+" Run last macro
+nnoremap Q @@
 
 " Run macro on visual selection
 function! ExecuteMacroOverVisualRange()
     echo "@".getcmdline()
     execute ":'<,'>normal @".nr2char(getchar())
 endfunction
-xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
-
-" Run last macro
-nnoremap Q @@
-
-" No highlight
-execute "set <M-b>=\<Esc>b"
-nnoremap <silent> <M-b> :<C-u>nohlsearch<CR>
+xnoremap <silent> @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
 
 " Change register
 function! ChangeReg() abort
     let x = nr2char(getchar())
-    call feedkeys("q:ilet @" . x . " = \<c-r>\<c-r>=string(@" . x . ")\<CR>\<esc>$", 'n')
+    call feedkeys("q:ilet @" . x . " = \<C-r>\<C-r>=string(@" . x . ")\<CR>\<Esc>$", 'n')
 endfunction
-nnoremap cr :call ChangeReg()<CR>
+nnoremap <silent> cx :call ChangeReg()<CR>
 
 " Diff update
 nnoremap <silent> du :diffupdate<CR>
 
 " Scroll
-map <ScrollWheelUp> <C-y>
-map <ScrollWheelDown> <C-e>
+map <silent> <ScrollWheelUp> <C-y>
+map <silent> <ScrollWheelDown> <C-e>
 
 
 """""""""""""""""""""
@@ -333,26 +329,25 @@ let g:fzf_commits_log_options='--graph --color=always --format="%c(auto)%h%d %s 
 " Command to generate tags file
 let g:fzf_tags_command = 'ctags -R'
 
-" Mapping selecting mappings
-nmap <leader><tab> <plug>(fzf-maps-n)
-xmap <leader><tab> <plug>(fzf-maps-x)
-omap <leader><tab> <plug>(fzf-maps-o)
-"imap <leader><tab> <plug>(fzf-maps-i)
-
-"" FZF
+" FZF
 nnoremap <leader>f :Files<CR>
 nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>w :Windows<CR>
 nnoremap <leader>t :Tags<CR>
 
+" Mapping selecting mappings
+nmap <leader><Tab> <plug>(fzf-maps-n)
+xmap <leader><Tab> <plug>(fzf-maps-x)
+omap <leader><Tab> <plug>(fzf-maps-o)
+
 " Insert mode completion
-imap <c-x><c-k> <plug>(fzf-complete-word)
-imap <c-x><c-f> <plug>(fzf-complete-path)
-imap <c-x><c-j> <plug>(fzf-complete-file-ag)
-imap <c-x><c-l> <plug>(fzf-complete-line)
+imap <C-x><C-k> <plug>(fzf-complete-word)
+imap <C-x><C-f> <plug>(fzf-complete-path)
+imap <C-x><C-j> <plug>(fzf-complete-file-ag)
+imap <C-x><C-l> <plug>(fzf-complete-line)
 
 " Use custom dictionary
-inoremap <expr> <c-x><c-k> fzf#complete('cat /usr/share/dict/words-insane')
+inoremap <expr> <C-x><C-k> fzf#complete('cat /usr/share/dict/words-insane')
 
 "" RG
 command! -bang -nargs=* Rg
@@ -366,17 +361,17 @@ command! -bang -nargs=* Ag
             \ <q-args>, '--color-path "0;37" --color-line-number "0;37" --color-match "" --hidden --smart-case --follow',
             \ <bang>0)
 
-if executable('rg')
-    augroup Rg
-        autocmd!
-        autocmd VimEnter * nnoremap <Leader>r :Rg<CR>
-    augroup End
-elseif executable('ag')
-    augroup Ag
-        autocmd!
-        autocmd VimEnter * nnoremap <Leader>r :Ag<CR>
-    augroup End
-endif
+" if executable('rg')
+"     augroup Rg
+"         autocmd!
+"         autocmd VimEnter * nnoremap <Leader>r :Rg<CR>
+"     augroup End
+" elseif executable('ag')
+"     augroup Ag
+"         autocmd!
+"         autocmd VimEnter * nnoremap <Leader>r :Ag<CR>
+"     augroup End
+" endif
 
 if executable('rg')
     set grepprg=rg\ --smart-case\ --vimgrep
@@ -396,9 +391,9 @@ elseif executable('ag')
 endif
 let g:grepper.tools+=['git', 'grep']
 let g:grepper.rg = {
-            \ 'grepprg':        'rg --vimgrep',
+            \ 'grepprg':    'rg --vimgrep',
             \ 'grepformat': '%f:%l:%c:%m',
-            \ 'escape':         '\^$.*+?()[]{}|'
+            \ 'escape':     '\^$.*+?()[]{}|'
             \ }
 let g:grepper.next_tool='<C-g>'
 let g:grepper.jump=0
@@ -565,12 +560,6 @@ nnoremap <silent> <F4> :UndotreeToggle<CR>
 "" Tagbar
 nnoremap <silent> <F5> :TagbarToggle<CR>
 
-" "" Titlecase
-" let g:titlecase_map_keys=0
-" nmap gwt <Plug>Titlecase
-" xmap gwt <Plug>Titlecase
-" nmap gwT <Plug>TitlecaseLine
-
 "" After text object
 augroup AfterTextObject
     autocmd!
@@ -581,9 +570,10 @@ augroup End
 let g:vimtex_view_method='zathura'
 
 "" UltiSnips
-let g:UltiSnipsExpandTrigger='<tab>'
-let g:UltiSnipsJumpForwardTrigger='<c-k>'
-let g:UltiSnipsJumpBackwardTrigger='<c-j>'
+let g:UltiSnipsExpandTrigger='<Tab>'
+let g:UltiSnipsJumpForwardTrigger='<C-k>'
+let g:UltiSnipsJumpBackwardTrigger='<C-j>'
+let g:UltiSnipsEditSplit="vertical"
 
 "" Multiple-Cursors
 let g:multi_cursor_next_key='<C-n>'
@@ -651,13 +641,14 @@ function! SendToTmuxSplit(type, ...)
 endfunction
 
 nnoremap <silent> _ mv:set opfunc=SendToTmuxSplit<CR>g@
-vnoremap <silent> _ mv:<C-U>call SendToTmuxSplit(visualmode(), 1)<CR>
+xnoremap <silent> _ mv:<C-U>call SendToTmuxSplit(visualmode(), 1)<CR>
 
 "" Ale
-" Using special space: U+2000 (EN QUAD)
+" Use special space: ( ) U+2000 (EN QUAD)
 let g:ale_set_loclist=1
-let g:ale_sign_error=' ●'
-let g:ale_sign_warning=' ●'
+let g:ale_sign_error='●'
+let g:ale_sign_warning='●'
+let g:ale_sign_info='●'
 let g:ale_lint_on_text_changed='never'
 let g:ale_lint_on_enter=1
 let g:ale_lint_on_save=1
@@ -667,46 +658,90 @@ let g:ale_set_signs=1
 
 nmap [w <plug>(ale_previous_wrap)
 nmap ]w <plug>(ale_next_wrap)
-nnoremap <leader>a :ALEEnable<CR>
+nnoremap <silent> <leader>a :ALEToggle <Bar> echo g:ale_enabled ? 'ALE enabled' : 'ALE disabled' <CR>
 
-augroup Ale
+augroup ALE
     autocmd!
     autocmd VimEnter * ALEDisable
 augroup END
 
 "" AutoPairs
 execute "set <M-p>=\<Esc>p"
-execute "set <M-b>=\<Esc>b"
 "let g:AutoPairsMapSpace=0
 
 "" RustRacer
 let g:racer_cmd="/usr/bin/racer"
-let g:racer_experimental_completer=1
+let g:racer_experimental_completer=0
 
-"" Deoplete
-let g:deoplete#enable_at_startup=1
-
-"let g:deoplete#sources#clang#libclang_path='/usr/lib/rstudio/bin/rsclang/libclang.so'
-"let g:deoplete#sources#clang#clang_header='/usr/lib/rstudio/resources/libclang'
-
-call g:deoplete#custom#source('LanguageClient',
-            \ 'min_pattern_length',
-            \ 2)
+"" NCM2
+augroup NCM2
+    autocmd!
+    autocmd BufEnter * call ncm2#enable_for_buffer()
+augroup END
 
 "" EchoDoc
 let g:echodoc#enable_at_startup=1
 
 "" LanguageClient
+let g:LanguageClient_autoStart=1
+let g:LanguageClient_diagnosticsList="Location"
+let g:LanguageClient_hoverPreview="Never"
+
 let g:LanguageClient_serverCommands = {
-            \ 'rust': ['rls'],
-            \ 'java': ['jdtls'],
-            \ 'c': ['clangd'],
-            \ 'cpp': ['clangd'],
+            \ 'rust':   ['rustup', 'run', 'stable', 'rls'],
+            \ 'java':   ['jdtls'],
+            \ 'c':      ['clangd'],
+            \ 'cpp':    ['clangd'],
             \ 'python': ['pyls'],
             \ }
 
-" Automatically start language servers
-let g:LanguageClient_autoStart=1
+let g:LanguageClient_diagnosticsDisplay = {
+            \     1: {
+            \         "name": "Error",
+            \         "texthl": "ALEError",
+            \         "signText": "●",
+            \         "signTexthl": "ALEErrorSign",
+            \     },
+            \     2: {
+            \         "name": "Warning",
+            \         "texthl": "ALEWarning",
+            \         "signText": "●",
+            \         "signTexthl": "ALEWarningSign",
+            \     },
+            \     3: {
+            \         "name": "Information",
+            \         "texthl": "ALEInfo",
+            \         "signText": "●",
+            \         "signTexthl": "ALEInfoSign",
+            \     },
+            \     4: {
+            \         "name": "Hint",
+            \         "texthl": "ALEInfo",
+            \         "signText": "●",
+            \         "signTexthl": "ALEInfoSign",
+            \     },
+            \ }
+
+function! LanguageClient_settings()
+    if has_key(g:LanguageClient_serverCommands, &filetype)
+        setlocal formatexpr=LanguageClient#textDocument_rangeFormatting_sync()
+
+        nnoremap <buffer><silent> K :call LanguageClient_contextMenu()<CR>
+        nnoremap <buffer><silent> <F1> :call LanguageClient_textDocument_hover()<CR>
+        nnoremap <buffer><silent> gd :call LanguageClient_textDocument_definition()<CR>
+        nnoremap <buffer><silent> gx :call LanguageClient_textDocument_typeDefinition()<CR>
+        nnoremap <buffer><silent> gs :call LanguageClient_textDocument_documentSymbol()<CR>
+        nnoremap <buffer><silent> gr :call LanguageClient_textDocument_references()<CR>
+
+        nnoremap <buffer><silent> <leader>gr :call LanguageClient_textDocument_rename()<CR>
+        nnoremap <buffer><silent> <leader>gc :call LanguageClient#textDocument_rename(
+                    \ {'newName': Abolish.camelcase(expand('<cword>'))})<CR>
+        nnoremap <buffer><silent> <leader>gs :call LanguageClient#textDocument_rename(
+                    \ {'newName': Abolish.snakecase(expand('<cword>'))})<CR>
+        nnoremap <buffer><silent> <leader>gu :call LanguageClient#textDocument_rename(
+                    \ {'newName': Abolish.uppercase(expand('<cword>'))})<CR>
+    endif
+endfunction
 
 augroup LanguageClient_config
     autocmd!
@@ -714,10 +749,10 @@ augroup LanguageClient_config
     autocmd User LanguageClientStopped setlocal signcolumn=auto
 augroup END
 
-nnoremap <silent> <F12> :call LanguageClient_contextMenu()<CR>
-nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
-nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
-nnoremap <silent> gr :call LanguageClient_textDocument_rename()<CR>
+augroup LanguageClient_settings
+    autocmd!
+    autocmd FileType * call LanguageClient_settings()
+augroup END
 
 """ Use UltiSnips for completion
 function! CompleteSnippet()
@@ -749,7 +784,6 @@ augroup LanguageClient_omplete
     autocmd!
     autocmd CompleteDone * call CompleteSnippet()
 augroup END
-inoremap <silent><expr> <tab> pumvisible() ? "\<c-y>" : "\<tab>"
 
 "" Unimpaired
 let g:nremap={"[": "ü", "]": "¨"}
@@ -772,10 +806,11 @@ set showcmd
 set hidden
 set wildmenu  " shows autocomplete in commandline
 set wildmode=longest:full,full
-set completeopt=menuone,longest,preview
+set completeopt=menuone,noinsert,noselect
 set shortmess+=atIc
 set lazyredraw
 set mouse=a
+set diffopt+=hiddenoff,algorithm:histogram
 
 set cursorline  " horizontal line
 "set colorcolumn=81  " vertical line
@@ -894,7 +929,6 @@ set expandtab
 set encoding=utf-8
 set smarttab
 set autoindent
-"filetype plugin indent on
 set linespace=0
 set scrolloff=3
 set sidescrolloff=5
@@ -980,10 +1014,7 @@ endif
 
 "" GUI options
 set guifont=monospace
-set guioptions-=m  "remove menu bar
-set guioptions-=T  "remove toolbar
-set guioptions-=r  "remove right-hand scroll bar
-set guioptions-=L  "remove left-hand scroll bar
+set guioptions-=mTrl
 
 "" Switch cursor according to mode
 if &term !=? 'linux' || has('gui_running')
@@ -999,29 +1030,6 @@ endif
 
 """ TODO Disable highlighting on re-source (bug)
 nohlsearch
-
-
-""""""""""""""
-"  FILETYPE  "
-""""""""""""""
-
-augroup QFAdjustWindowHeight
-    autocmd FileType qf call AdjustWindowHeight(3, 10)
-augroup END
-
-function! AdjustWindowHeight(minheight, maxheight)
-    let l = 1
-    let n_lines = 0
-    let w_width = winwidth(0)
-    while l <= line('$')
-        " number to float for division
-        let l_len = strlen(getline(l)) + 0.0
-        let line_width = l_len/w_width
-        let n_lines += float2nr(ceil(line_width))
-        let l += 1
-    endw
-    exe max([min([n_lines, a:maxheight]), a:minheight]) . "wincmd _"
-endfunction
 
 
 """"""""""""""""""""""""""
