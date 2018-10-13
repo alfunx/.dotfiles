@@ -5,7 +5,6 @@
 
 [core]
 	editor = vim
-	pager = less -S
 	whitespace = fix,trailing-space,cr-at-eol
 	hooksPath = ~/.config/git/hooks
 	excludesfile = ~/.ignore
@@ -201,11 +200,11 @@
 
 [pretty]
 	lo = tformat:%C(auto)%h%C(reset)%C(auto)%d%C(reset) %s %C(italic blue)%ad%C(reset) %C(241)%aN%C(reset)
-	lt = tformat:%C(auto)%h%C(reset) %C(white)-%C(reset) %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n %C(white)⤷%C(reset) %s %C(241)- %aN <%aE>%C(reset)%n
-	lf = tformat:%C(auto)%h%C(reset)%C(auto)%d%C(reset)%n%C(white)SHA-1:%C(reset)    %C(italic)%H%C(reset)%n%C(white)Author:%C(reset)   %aN %C(241)<%aE>%C(reset)%n          %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%n%C(white)Commit:%C(reset)   %cN %C(241)<%cE>%C(reset)%n          %C(italic blue)%cd%C(reset) %C(italic cyan)(%cr)%C(reset)%w(0,4,4)%n%+C(bold)%s%C(reset)%n%+b%n
+	lt =  format:%C(auto)%h%C(reset) %C(white)-%C(reset) %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n %C(white)⤷%C(reset) %s %C(241)- %aN <%aE>%C(reset)%n
+	lf =  format:%C(auto)%h%C(reset)%C(auto)%d%C(reset)%n%C(white)SHA-1:%C(reset)    %C(italic)%H%C(reset)%n%C(white)Author:%C(reset)   %aN %C(241)<%aE>%C(reset)%n          %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%n%C(white)Commit:%C(reset)   %cN %C(241)<%cE>%C(reset)%n          %C(italic blue)%cd%C(reset) %C(italic cyan)(%cr)%C(reset)%w(0,4,4)%n%+C(bold)%s%C(reset)%n%+b%n
 	rlo = tformat:%C(auto)%h%C(reset) %C(bold yellow)(%C(red)%gd%C(bold yellow))%C(reset)%C(auto)%d%C(reset) %s %C(italic blue)%ad%C(reset) %C(241)%aN%C(reset)
-	rlt = tformat:%C(auto)%h%C(reset) %C(white)-%C(reset) %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n %C(white)⤷%C(reset) %s %C(241)- %aN <%aE>%C(reset)%n %C(white)⤷%C(reset) %C(bold yellow)(%C(red)%gd%C(bold yellow))%C(reset) %gs %C(241)- %gN <%gE>%C(reset)%n
-	rlf = tformat:%C(auto)%h%C(reset)%C(auto)%d%C(reset)%n%C(white)SHA-1:%C(reset)    %C(italic)%H%C(reset)%n%C(white)Author:%C(reset)   %aN %C(241)<%aE>%C(reset)%n          %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%n%C(white)Commit:%C(reset)   %cN %C(241)<%cE>%C(reset)%n          %C(italic blue)%cd%C(reset) %C(italic cyan)(%cr)%C(reset)%n%C(white)Reflog:%C(reset)   %gN %C(241)<%gE>%C(reset)%n          %C(italic)%gs%C(reset)%w(0,4,4)%n%+C(bold)%s%C(reset)%n%+b%n
+	rlt =  format:%C(auto)%h%C(reset) %C(white)-%C(reset) %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n %C(white)⤷%C(reset) %s %C(241)- %aN <%aE>%C(reset)%n %C(white)⤷%C(reset) %C(bold yellow)(%C(red)%gd%C(bold yellow))%C(reset) %gs %C(241)- %gN <%gE>%C(reset)%n
+	rlf =  format:%C(auto)%h%C(reset)%C(auto)%d%C(reset)%n%C(white)SHA-1:%C(reset)    %C(italic)%H%C(reset)%n%C(white)Author:%C(reset)   %aN %C(241)<%aE>%C(reset)%n          %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%n%C(white)Commit:%C(reset)   %cN %C(241)<%cE>%C(reset)%n          %C(italic blue)%cd%C(reset) %C(italic cyan)(%cr)%C(reset)%n%C(white)Reflog:%C(reset)   %gN %C(241)<%gE>%C(reset)%n          %C(italic)%gs%C(reset)%w(0,4,4)%n%+C(bold)%s%C(reset)%n%+b%n
 
 [alias]
 	ec = config --global --edit
@@ -215,8 +214,8 @@
 	lo = log --pretty=lo --graph --color --date=short
 	lf = log --pretty=lf --graph --color
 	lff = log --pretty=fuller --graph --color --stat --summary
-	lp = log --pretty=medium --patch --graph --color -c -M -C
-	ld = log --format=medium --stat --summary --left-right
+	lp = log --pretty=lt --graph --color --patch -c -M -C
+	ld = log --pretty=lt --graph --color --stat --summary
 
 	# log, all branches+tags on all remotes
 	#    added: --all
@@ -224,8 +223,8 @@
 	lao = log --pretty=lo --graph --color --date=short --all
 	laf = log --pretty=lf --graph --color --all
 	laff = log --pretty=fuller --graph --color --stat --summary --all
-	lap = log --pretty=medium --patch --graph --color -c -M -C --all
-	lad = log --format=medium --stat --summary --left-right --all
+	lap = log --pretty=lt --graph --color --patch -c -M -C --all
+	lad = log --pretty=lt --graph --color --stat --summary --all
 
 	# log, all branches+tags on remotes 'origin' and 'upstream'
 	#    added: --branches='*' --tags='*' --remotes=origin --remotes=upstream
@@ -233,8 +232,8 @@
 	lgo = log --pretty=lo --graph --color --date=short --branches='*' --tags='*' --remotes=origin --remotes=upstream
 	lgf = log --pretty=lf --graph --color --branches='*' --tags='*' --remotes=origin --remotes=upstream
 	lgff = log --pretty=fuller --graph --color --stat --summary --branches='*' --tags='*' --remotes=origin --remotes=upstream
-	lgp = log --pretty=medium --patch --graph --color -c -M -C --branches='*' --tags='*' --remotes=origin --remotes=upstream
-	lgd = log --format=medium --stat --summary --left-right --branches='*' --tags='*' --remotes=origin --remotes=upstream
+	lgp = log --pretty=lt --graph --color --patch -c -M -C --branches='*' --tags='*' --remotes=origin --remotes=upstream
+	lgd = log --pretty=lt --graph --color --stat --summary --branches='*' --tags='*' --remotes=origin --remotes=upstream
 
 	# log, simplified by decoration
 	#    added: --all --simplify-by-decoration
@@ -242,8 +241,8 @@
 	lso = log --pretty=lo --graph --color --date=short --all --simplify-by-decoration
 	lsf = log --pretty=lf --graph --color --all --simplify-by-decoration
 	lsff = log --pretty=fuller --graph --color --stat --summary --all --simplify-by-decoration
-	lsp = log --pretty=medium --patch --graph --color -c -M -C --all --simplify-by-decoration
-	lsd = log --format=medium --stat --summary --left-right --all --simplify-by-decoration
+	lsp = log --pretty=lt --graph --color --patch -c -M -C --all --simplify-by-decoration
+	lsd = log --pretty=lt --graph --color --stat --summary --all --simplify-by-decoration
 
 	sh = show --format=lf --stat --summary --patch
 	w = "!f() { watch -ctn 2 git \"${@:-l}\"; }; f"
@@ -264,7 +263,7 @@
 
 	s = status
 	si = status --ignored
-	siu = status --ignored --untracked-files
+	sa = status --ignored --untracked-files
 
 	a = add
 	au = add --update
@@ -272,7 +271,11 @@
 	ap = add --patch
 	u = reset HEAD --
 	up = reset --patch HEAD --
+
 	c = commit --verbose
+	cc = commit --verbose -c
+	cf = commit --verbose --fixup
+	cs = commit --verbose --squash
 	ca = commit --verbose --amend
 	can = commit --verbose --amend --no-edit
 	car = commit --verbose --amend -a
@@ -323,7 +326,7 @@
 	rvc = revert --continue
 	rvq = revert --quit
 
-	re = reset --mixed
+	re = reset
 	res = reset --soft
 	reh = reset --hard
 	cln = clean
@@ -334,9 +337,6 @@
 	which = branch --contains
 	who = shortlog --summary --numbered --no-merges
 	whoami = !"git config --get user.name && git config --get user.email"
-
-	# list aliases
-	alias = "!git config --get-regexp alias | cut -c 7- | sed -e \"s/^/[1m/\" -e \"s/ /[0m$(echo 2B | xxd -r -p)/\" | column -t -s \"$(echo 2B | xxd -r -p)\" | sort | less -SR "
 
 	# list branches sorted by last modified
 	bls = "!git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's@refs/heads/@@'"
