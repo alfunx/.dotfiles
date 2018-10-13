@@ -2,7 +2,7 @@
 #  ZSHRC  #
 ###########
 
-export ZSH_CONFIG="$HOME/.zsh.d"
+export ZSH_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/zsh"
 export ZSH="$HOME/.oh-my-zsh"
 export ZSH_CUSTOM="$ZSH_CONFIG/custom"
 
@@ -169,3 +169,6 @@ fi
 
 # Directly source prompt
 #source "$ZSH_CUSTOM/themes/gruvbox-dark.zsh-theme"
+
+# Kitty completion
+source <(kitty + complete setup zsh)
