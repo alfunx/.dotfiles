@@ -6,6 +6,10 @@ shopt -s extglob
 readonly argv0=manual
 readonly PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 
-aur build -cfd manual -C /etc/pacman.conf -M ~/.config/pacman/makepkg.conf
+aur build \
+    -cfd manual \
+    "$@" \
+    -C /etc/pacman.conf \
+    -M ~/.config/pacman/makepkg.conf
 
 # vim: set et sw=4 sts=4 ft=sh:
