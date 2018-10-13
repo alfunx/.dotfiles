@@ -42,6 +42,7 @@ function config.init(context)
 
     -- Global key bindings
     context.keys.global = gears.table.join(
+
         -- Awesome Hotkeys
         awful.key({ k.m, k.c           }, "s", hotkeys_popup.show_help,
                   { description = "show help", group = "awesome" }),
@@ -124,13 +125,13 @@ function config.init(context)
         end,
                   { description = "show session menu (rofi)", group = "launcher" }),
         awful.key({ k.m                }, "x", function()
-                      awful.prompt.run {
-                          prompt       = "Run Lua code: ",
-                          textbox      = awful.screen.focused()._promptbox.widget,
-                          exe_callback = awful.util.eval,
-                          history_path = gears.filesystem.get_cache_dir() .. "/history_eval",
-                      }
-                  end,
+            awful.prompt.run {
+                prompt       = "Run Lua code: ",
+                textbox      = awful.screen.focused()._promptbox.widget,
+                exe_callback = awful.util.eval,
+                history_path = gears.filesystem.get_cache_dir() .. "/history_eval",
+            }
+        end,
                   { description = "lua execute prompt", group = "awesome" }),
 
         -- Dropdown application
@@ -190,16 +191,6 @@ function config.init(context)
         awful.key({ k.m, k.c           }, k.d, function() context.util.select_tag_in_grid("d") end,
                   { description = "view below", group = "tag" }),
 
-        -- Move client to tag in grid
-        awful.key({ k.m, k.c, k.s      }, k.l, function() context.util.move_client_in_grid("l") end,
-                  { description = "move to previous tag", group = "client" }),
-        awful.key({ k.m, k.c, k.s      }, k.r, function() context.util.move_client_in_grid("r") end,
-                  { description = "move to next tag", group = "client" }),
-        awful.key({ k.m, k.c, k.s      }, k.u, function() context.util.move_client_in_grid("u") end,
-                  { description = "move to tag above", group = "client" }),
-        awful.key({ k.m, k.c, k.s      }, k.d, function() context.util.move_client_in_grid("d") end,
-                  { description = "move to tag below", group = "client" }),
-
         -- Client manipulation
         awful.key({ k.m                }, k.u, function() awful.client.focus.byidx(-1) end,
                   { description = "focus previous client by index", group = "client" }),
@@ -212,6 +203,7 @@ function config.init(context)
         awful.key({ k.m                }, "u", awful.client.urgent.jumpto,
                   { description = "jump to urgent client", group = "client" }),
 
+        -- Cycle clients
         awful.key({ k.m, k.a           }, k.u, function()
             awful.client.cycle(false)
             awful.client.focus.byidx(1)
@@ -223,6 +215,7 @@ function config.init(context)
         end,
                   { description = "clockwise cycle", group = "client" }),
 
+        -- Toggle between clients
         awful.key({ k.m,               }, "Tab", function()
             awful.client.focus.history.previous()
             if client.focus then
@@ -231,6 +224,7 @@ function config.init(context)
         end,
                   { description = "go back", group = "client" }),
 
+        -- Restore minimized client
         awful.key({ k.m, k.c           }, "n", function()
             local c = awful.client.restore()
             if c then
@@ -271,7 +265,7 @@ function config.init(context)
         -- Update widgets
         awful.key({ k.m, k.c           }, "u", function()
             if beautiful.pacman then
-                beautiful.pacman.update()
+                beautiful.pacman.manual_update()
             end
             if beautiful.volume then
                 beautiful.volume.update()
@@ -331,18 +325,13 @@ function config.init(context)
             awful.spawn("light -A 2")
         end),
         awful.key({                    }, "XF86MonBrightnessDown", function()
-            awful.spawn.easy_async_with_shell("light -G",
-            function(stdout, stderr, reason, exit_code) --luacheck: no unused args
-                if tonumber(stdout) > 2 then
-                    awful.spawn("light -U 2")
-                end
-            end)
+            awful.spawn("light -U 2")
         end),
         awful.key({ k.c                }, "XF86MonBrightnessUp", function()
             awful.spawn("light -S 100")
         end),
         awful.key({ k.c                }, "XF86MonBrightnessDown", function()
-            awful.spawn("light -S 1")
+            awful.spawn("light -Sr 1")
         end),
 
         -- -- Backlight / Brightness (using xbacklight)
@@ -398,10 +387,12 @@ function config.init(context)
         end)
     )
 
-    -- Bind all key numbers to tags
+    -- Bind number keys
     -- NOTE: Using keycodes to make it works on any keyboard layout
     for i = 1, 10 do
-        context.keys.global = gears.table.join(context.keys.global,
+        context.keys.global = gears.table.join(
+            context.keys.global,
+
             -- View tag only
             awful.key({ k.m                }, "#" .. i + 9, function()
                 local _screen = awful.screen.focused()
@@ -418,43 +409,14 @@ function config.init(context)
                 if _tag then
                     awful.tag.viewtoggle(_tag)
                 end
-            end),
-
-            -- Move client to tag
-            awful.key({ k.m, k.s           }, "#" .. i + 9, function()
-                if client.focus then
-                    local _tag = client.focus.screen.tags[i]
-                    if _tag then
-                        client.focus:move_to_tag(_tag)
-                    end
-                end
-            end),
-
-            -- Move client to tag and view it
-            awful.key({ k.m, k.c, k.s      }, "#" .. i + 9, function()
-                if client.focus then
-                    local _tag = client.focus.screen.tags[i]
-                    if _tag then
-                        client.focus:move_to_tag(_tag)
-                        _tag:view_only()
-                    end
-                end
-            end),
-
-            -- Toggle tag on focused client
-            awful.key({ k.m, k.a           }, "#" .. i + 9, function()
-                if client.focus then
-                    local _tag = client.focus.screen.tags[i]
-                    if _tag then
-                        client.focus:toggle_tag(_tag)
-                    end
-                end
             end)
         )
     end
 
     -- Fake bindings for description
-    gears.table.join(context.keys.global,
+    gears.table.join(
+        context.keys.global,
+
         -- View tag only
         awful.key({ k.m                }, "1..9", nil,
                   { description = "view tag", group = "numeric keys" }),

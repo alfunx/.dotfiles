@@ -101,13 +101,10 @@ function config.init(context)
     end
 
     -- Move client to tag by direction in a grid (taggrid feature)
-    context.util.move_client_in_grid = function(direction)
-        if client.focus then
-            local current_client = client.focus
-            local new_tag = context.util.select_tag_in_grid(direction)
-            current_client:move_to_tag(new_tag)
-            current_client:raise()
-        end
+    context.util.move_client_in_grid = function(c, direction)
+        local new_tag = context.util.select_tag_in_grid(direction)
+        c:move_to_tag(new_tag)
+        c:raise()
     end
 
     -- Show only tags of current row (taggrid feature)
