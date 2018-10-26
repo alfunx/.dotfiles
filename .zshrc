@@ -62,7 +62,6 @@ plugins=(
     command-not-found
     colorize
     bgnotify
-    svn
 )
 
 # # Native plugins
@@ -70,7 +69,6 @@ plugins=(
 #     command-not-found
 #     colorize
 #     bgnotify
-#     svn
 # )
 # source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
@@ -157,7 +155,7 @@ if [[ "$main_attached" -le '0' ]] && [[ "$TERM" != 'linux' ]]; then
 fi
 
 # Alternative prompt
-if [[ "$TERM" == "linux" ]]; then
+if [[ "$TERM" == "linux" ]] || [[ ! -d "$ZSH_CONFIG" ]]; then
     PROMPT='[%F{167}%B%n%b%f@%M %~]'
     PROMPT+='$(git_prompt_info)'
     PROMPT+=' %(?.%F{108}.%F{167})%B%(!.#.$)%b%f '
@@ -166,6 +164,13 @@ if [[ "$TERM" == "linux" ]]; then
     ZSH_THEME_GIT_PROMPT_DIRTY="%F{167}%B*%b%f"
     ZSH_THEME_GIT_PROMPT_CLEAN=""
 fi
+
+# Empty line
+function echo_blank() {
+    echo
+}
+precmd_functions+=echo_blank
+preexec_functions+=echo_blank
 
 # Directly source prompt
 #source "$ZSH_CUSTOM/themes/gruvbox-dark.zsh-theme"
