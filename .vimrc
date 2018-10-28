@@ -18,17 +18,14 @@ endif
 
 call plug#begin('~/.vim/plugged')
 
-" If fzf is not available in the package manager
+" FZF
 "Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-" If fzf is installed through the package manager
 Plug '/usr/bin/fzf'
 
 " General
-"Plug 'junegunn/fzf.vim'
-Plug 'alfunx/fzf.vim'  " fork
+Plug 'alfunx/fzf.vim'  " fork of 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
-"Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-git'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
@@ -38,52 +35,45 @@ Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-sleuth'
-Plug 'tpope/vim-endwise'
+"Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-abolish'
-Plug 'tpope/vim-commentary'
+"Plug 'tpope/vim-commentary'
+Plug 'tomtom/tcomment_vim'
 Plug 'whiteinge/diffconflicts'
 Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/vim-easy-align'
 Plug 'junegunn/vim-peekaboo'
-Plug 'easymotion/vim-easymotion'
 Plug 'haya14busa/incsearch.vim'
-Plug 'haya14busa/incsearch-easymotion.vim'
+Plug 'justinmk/vim-sneak'
 Plug 'mhinz/vim-grepper'
 Plug 'terryma/vim-multiple-cursors'
 "Plug 'terryma/vim-expand-region'
 Plug 'jiangmiao/auto-pairs'
-"Plug 'Raimondi/delimitMate'
 Plug 'mbbill/undotree'
-"Plug 'tomtom/tcomment_vim'
 Plug 'ap/vim-css-color'
-"Plug 'jceb/vim-orgmode'
 Plug 'xtal8/traces.vim'
 Plug 'chrisbra/NrrwRgn'
-"Plug 'kopischke/vim-fetch'
 Plug 'w0rp/ale'
 Plug 'majutsushi/tagbar'
 "Plug 'ludovicchabant/vim-gutentags'
-Plug 'Shougo/echodoc.vim'
 Plug 'editorconfig/editorconfig-vim'
 
 " Text objects
 Plug 'wellle/targets.vim'
 Plug 'junegunn/vim-after-object'
-"Plug 'michaeljsmith/vim-indent-object'
-Plug 'alfunx/vim-indent-object'  " fork
+Plug 'alfunx/vim-indent-object'  " fork of 'michaeljsmith/vim-indent-object'
 Plug 'kana/vim-textobj-user'
 Plug 'Julian/vim-textobj-variable-segment'
 
 " Tmux
 Plug 'benmills/vimux'
 Plug 'christoomey/vim-tmux-navigator'
-"Plug 'wellle/tmux-complete.vim'
+Plug 'wellle/tmux-complete.vim'
 
 " Snippets
 Plug 'SirVer/ultisnips'
-"Plug 'honza/vim-snippets'
-Plug 'alfunx/vim-snippets'  " fork
-Plug 'ncm2/ncm2-ultisnips'
+Plug 'alfunx/vim-snippets'  " fork of 'honza/vim-snippets'
+"Plug 'ncm2/ncm2-ultisnips'
 
 " Language server
 Plug 'autozimu/LanguageClient-neovim', {
@@ -92,11 +82,11 @@ Plug 'autozimu/LanguageClient-neovim', {
             \ }
 
 " Completion
-Plug 'ncm2/ncm2'
-Plug 'roxma/nvim-yarp'
 Plug 'roxma/vim-hug-neovim-rpc'
+Plug 'roxma/nvim-yarp'
+Plug 'ncm2/ncm2'
 Plug 'ncm2/ncm2-bufword'
-"Plug 'Shougo/neco-syntax'
+Plug 'Shougo/echodoc.vim'
 
 " Language specific
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
@@ -106,8 +96,7 @@ Plug 'racer-rust/vim-racer', { 'for': 'rust' }
 "Plug 'Shougo/neco-vim', { 'for': 'vim' }
 
 " Themes
-"Plug 'morhetz/gruvbox'
-Plug 'alfunx/gruvbox'  " fork
+Plug 'alfunx/gruvbox'  " fork of 'morhetz/gruvbox'
 
 " Don't load in console
 if &term !=? 'linux' || has('gui_running')
@@ -152,10 +141,10 @@ nnoremap <silent> <C-w>j 5<C-w>-
 nnoremap <silent> <C-w>k 5<C-w>+
 nnoremap <silent> <C-w>l 5<C-w>>
 
-nnoremap <silent> <Home> <C-w><
-nnoremap <silent> <PageDown> <C-w>-
-nnoremap <silent> <PageUp> <C-w>+
-nnoremap <silent> <End> <C-w>>
+"nnoremap <silent> <Home> <C-w><
+"nnoremap <silent> <PageDown> <C-w>-
+"nnoremap <silent> <PageUp> <C-w>+
+"nnoremap <silent> <End> <C-w>>
 
 "" New tab
 nnoremap <silent> <C-w>t :tabedit<CR>
@@ -263,9 +252,7 @@ nnoremap <silent> <M-7> 7gt
 nnoremap <silent> <M-8> 8gt
 nnoremap <silent> <M-9> :tablast<CR>
 
-" Magic regex search
-noremap <leader>/ /\v
-noremap <leader>? ?\v
+" Wildmenu
 set wildchar=<Tab>
 set wildcharm=<Tab>
 cnoremap <expr> <Tab> getcmdtype() =~ '[?/]' ? '<C-g>' : '<Tab>'
@@ -279,11 +266,16 @@ command! W execute 'silent! w !sudo /usr/bin/tee % >/dev/null' <Bar> edit!
 
 " Set path to current file
 command! -bang -nargs=* Cd  cd %:p:h
-nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>
 
 " No highlight
 execute "set <M-b>=\<Esc>b"
 nnoremap <silent> <M-b> :<C-u>nohlsearch<CR>
+
+" augroup incsearch_highlight
+"     autocmd!
+"     autocmd CmdlineEnter [/\?] :set hlsearch
+"     autocmd CmdlineLeave [/\?] :set nohlsearch
+" augroup END
 
 " Run last macro
 nnoremap Q @@
@@ -490,10 +482,11 @@ let g:airline#extensions#whitespace#show_message=1
 let g:airline#extensions#hunks#enabled=0
 
 "" GitGutter
-nmap <Leader>ha <Plug>GitGutterStageHunk
-nmap <Leader>hu <Plug>GitGutterUndoHunk
-nmap ]c <Plug>GitGutterNextHunk
-nmap [c <Plug>GitGutterPrevHunk
+nmap <leader>hp <Plug>(GitGutterPrevHunk)
+nmap <leader>ha <Plug>(GitGutterStageHunk)
+nmap <leader>hu <Plug>(GitGutterUndoHunk)
+nmap ]c <Plug>(GitGutterNextHunk)
+nmap [c <Plug>(GitGutterPrevHunk)
 
 let g:gitgutter_sign_added='┃'
 let g:gitgutter_sign_modified='┃'
@@ -501,50 +494,31 @@ let g:gitgutter_sign_removed='◢'
 let g:gitgutter_sign_removed_first_line='◥'
 let g:gitgutter_sign_modified_removed='◢'
 
-"" EasyMotion
-"let g:EasyMotion_do_mapping=0  " Disable default mappings
-let g:EasyMotion_smartcase=1  " Turn on case insensitive feature
-let g:EasyMotion_keys='asdghklqwertyuiopzxcvbnmfj,'
-
-"nmap s <Plug>(easymotion-overwin-f)
-nmap s <Plug>(easymotion-overwin-f2)
-"map <Leader>j <Plug>(easymotion-j)
-"map <Leader>k <Plug>(easymotion-k)
+"" Sneak
+let g:sneak#label=1
+let g:sneak#use_ic_scs=1
+map f <Plug>Sneak_f
+map F <Plug>Sneak_F
+map t <Plug>Sneak_t
+map T <Plug>Sneak_T
 
 "" Incsearch
 map / <Plug>(incsearch-forward)
 map ? <Plug>(incsearch-backward)
 map g/ <Plug>(incsearch-stay)
 
-map n <Plug>(incsearch-nohl-n)
-map N <Plug>(incsearch-nohl-N)
-map * <Plug>(incsearch-nohl-*)
-map # <Plug>(incsearch-nohl-#)
-map g* <Plug>(incsearch-nohl-g*)
-map g# <Plug>(incsearch-nohl-g#)
-
 let g:incsearch#magic='\v'
 let g:incsearch#smart_backward_word=1
 let g:incsearch#consistent_n_direction=1
 let g:incsearch#auto_nohlsearch=0
 let g:incsearch#no_inc_hlsearch=1
-let g:incsearch#highlight={
-            \       'match' : {
-            \           'priority' : '10'
-            \       },
-            \       'on_cursor' : {
-            \           'priority' : '100'
-            \       },
-            \       'cursor' : {
-            \           'group' : 'ErrorMsg',
-            \           'priority' : '1000'
-            \       }
-            \ }
+let g:incsearch#separate_highlight=1
+let g:incsearch#no_inc_hlsearch=1
 
-"" Incsearch-EasyMotion
-map z/ <Plug>(incsearch-easymotion-/)
-map z? <Plug>(incsearch-easymotion-?)
-"map zg/ <Plug>(incsearch-easymotion-stay)
+"" TComment
+let g:tcomment_mapleader1='<c-,>'
+nnoremap <leader>c V:TCommentInline<cr>
+xnoremap <leader>c :TCommentInline<cr>
 
 "" Netrw
 let g:netrw_liststyle=0
@@ -576,12 +550,15 @@ let g:UltiSnipsJumpBackwardTrigger='<C-j>'
 let g:UltiSnipsEditSplit="vertical"
 
 "" Multiple-Cursors
+let g:multi_cursor_use_default_mapping=0
+let g:multi_cursor_start_key='<C-n>'
+let g:multi_cursor_select_all_key='<A-n>'
+let g:multi_cursor_start_word_key='g<C-n>'
+let g:multi_cursor_select_all_word_key='g<A-n>'
 let g:multi_cursor_next_key='<C-n>'
 let g:multi_cursor_prev_key='<C-p>'
 let g:multi_cursor_skip_key='<C-x>'
 let g:multi_cursor_quit_key='<Esc>'
-let g:multi_cursor_start_key='<C-n>'
-let g:multi_cursor_start_word_key='g<C-n>'
 let g:multi_cursor_exit_from_visual_mode=0
 let g:multi_cursor_exit_from_insert_mode=0
 
@@ -674,9 +651,18 @@ let g:racer_cmd="/usr/bin/racer"
 let g:racer_experimental_completer=0
 
 "" NCM2
+let g:ncm2#complete_delay=100
+let g:ncm2#popup_delay=500
+
+imap <silent><expr> <CR> pumvisible() ? "\<C-e>\<CR>" : "\<CR>"
+imap <silent><expr> <Tab> pumvisible() ? "\<C-y>" : "\<Tab>"
+
 augroup NCM2
     autocmd!
     autocmd BufEnter * call ncm2#enable_for_buffer()
+    autocmd User Ncm2PopupOpen set completeopt=menuone,noinsert,noselect
+    autocmd User Ncm2PopupClose set completeopt=menuone
+    autocmd TextChangedI * call ncm2#auto_trigger()
 augroup END
 
 "" EchoDoc
@@ -723,24 +709,26 @@ let g:LanguageClient_diagnosticsDisplay = {
             \ }
 
 function! LanguageClient_settings()
-    if has_key(g:LanguageClient_serverCommands, &filetype)
-        setlocal formatexpr=LanguageClient#textDocument_rangeFormatting_sync()
-
-        nnoremap <buffer><silent> K :call LanguageClient_contextMenu()<CR>
-        nnoremap <buffer><silent> <F1> :call LanguageClient_textDocument_hover()<CR>
-        nnoremap <buffer><silent> gd :call LanguageClient_textDocument_definition()<CR>
-        nnoremap <buffer><silent> gx :call LanguageClient_textDocument_typeDefinition()<CR>
-        nnoremap <buffer><silent> gs :call LanguageClient_textDocument_documentSymbol()<CR>
-        nnoremap <buffer><silent> gr :call LanguageClient_textDocument_references()<CR>
-
-        nnoremap <buffer><silent> <leader>gr :call LanguageClient_textDocument_rename()<CR>
-        nnoremap <buffer><silent> <leader>gc :call LanguageClient#textDocument_rename(
-                    \ {'newName': Abolish.camelcase(expand('<cword>'))})<CR>
-        nnoremap <buffer><silent> <leader>gs :call LanguageClient#textDocument_rename(
-                    \ {'newName': Abolish.snakecase(expand('<cword>'))})<CR>
-        nnoremap <buffer><silent> <leader>gu :call LanguageClient#textDocument_rename(
-                    \ {'newName': Abolish.uppercase(expand('<cword>'))})<CR>
+    if !has_key(g:LanguageClient_serverCommands, &filetype)
+        return
     endif
+
+    " setlocal formatexpr=LanguageClient#textDocument_rangeFormatting_sync()
+
+    nnoremap <buffer><silent> K :call LanguageClient_contextMenu()<CR>
+    nnoremap <buffer><silent> <F1> :call LanguageClient_textDocument_hover()<CR>
+    nnoremap <buffer><silent> <leader>d :call LanguageClient_textDocument_definition()<CR>
+    nnoremap <buffer><silent> <leader>x :call LanguageClient_textDocument_typeDefinition()<CR>
+    nnoremap <buffer><silent> <leader>y :call LanguageClient_textDocument_documentSymbol()<CR>
+    nnoremap <buffer><silent> <leader>r :call LanguageClient_textDocument_references()<CR>
+
+    nnoremap <buffer><silent> <leader>gr :call LanguageClient_textDocument_rename()<CR>
+    nnoremap <buffer><silent> <leader>gc :call LanguageClient#textDocument_rename(
+                \ {'newName': Abolish.camelcase(expand('<cword>'))})<CR>
+    nnoremap <buffer><silent> <leader>gs :call LanguageClient#textDocument_rename(
+                \ {'newName': Abolish.snakecase(expand('<cword>'))})<CR>
+    nnoremap <buffer><silent> <leader>gu :call LanguageClient#textDocument_rename(
+                \ {'newName': Abolish.uppercase(expand('<cword>'))})<CR>
 endfunction
 
 augroup LanguageClient_config
@@ -754,36 +742,38 @@ augroup LanguageClient_settings
     autocmd FileType * call LanguageClient_settings()
 augroup END
 
-""" Use UltiSnips for completion
-function! CompleteSnippet()
-    if empty(v:completed_item)
-        return
+function! ExpandLspSnippet()
+    call UltiSnips#ExpandSnippetOrJump()
+    if !pumvisible() || empty(v:completed_item)
+        return ''
     endif
 
-    call UltiSnips#ExpandSnippet()
-    if g:ulti_expand_res > 0
-        return
+    " Only expand Lsp if UltiSnips#ExpandSnippetOrJump not effect
+    let l:value = v:completed_item['word']
+    let l:matched = len(l:value)
+    if l:matched <= 0
+        return ''
     endif
 
-    let l:complete = type(v:completed_item) == v:t_dict ? v:completed_item.word : v:completed_item
-    let l:comp_len = len(l:complete)
+    " Remove inserted chars before expand snippet
+    if col('.') == col('$')
+        let l:matched -= 1
+        exec 'normal! ' . l:matched . 'Xx'
+    else
+        exec 'normal! ' . l:matched . 'X'
+    endif
 
-    let l:cur_col = mode() == 'i' ? col('.') - 2 : col('.') - 1
-    let l:cur_line = getline('.')
+    if col('.') == col('$') - 1
+        " Move to $ if at the end of line
+        call cursor(line('.'), col('$'))
+    endif
 
-    let l:start = l:comp_len <= l:cur_col ? l:cur_line[:l:cur_col - l:comp_len] : ''
-    let l:end = l:cur_col < len(l:cur_line) ? l:cur_line[l:cur_col + 1 :] : ''
-
-    call setline('.', l:start . l:end)
-    call cursor('.', l:cur_col - l:comp_len + 2)
-
-    call UltiSnips#Anon(l:complete)
+    " Expand snippet
+    call UltiSnips#Anon(l:value)
+    return ''
 endfunction
 
-augroup LanguageClient_omplete
-    autocmd!
-    autocmd CompleteDone * call CompleteSnippet()
-augroup END
+inoremap <silent> <C-k> <C-r>=ExpandLspSnippet()<CR>
 
 "" Unimpaired
 let g:nremap={"[": "ü", "]": "¨"}
@@ -794,17 +784,16 @@ let g:oremap={"[": "ü", "]": "¨"}
 let g:rsi_no_meta=1
 
 
-""""""""""""""""
-"  APPEARANCE  "
-""""""""""""""""
+""""""""""""""
+"  SETTINGS  "
+""""""""""""""
 
-"" UI config
 "syntax enable
 set synmaxcol=800
 set number
 set showcmd
 set hidden
-set wildmenu  " shows autocomplete in commandline
+set wildmenu
 set wildmode=longest:full,full
 set completeopt=menuone,noinsert,noselect
 set shortmess+=atIc
@@ -812,14 +801,85 @@ set lazyredraw
 set mouse=a
 set diffopt+=hiddenoff,algorithm:histogram
 
-set cursorline  " horizontal line
-"set colorcolumn=81  " vertical line
+set cursorline
+"set colorcolumn=81
 set textwidth=80
-set wrapmargin=0  " turns off automatic newlines
-set nowrap  " line wrapping off
-set showmatch  " show matching brackets
-set mat=5  " bracket blinking
+set wrapmargin=0
+set nowrap
+set showmatch
+set matchtime=5
 set list
+
+set novisualbell
+set noerrorbells
+set display=lastline
+set laststatus=2
+set showtabline=2
+set noshowmode
+
+set notimeout
+set ttimeout
+set ttimeoutlen=100
+set updatetime=100
+
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set expandtab
+
+" function! ExpandSpaces()
+"     set tabstop=2
+"     set noexpandtab
+"     '<,'>retab!
+"     set tabstop=4
+"     set expandtab
+"     '<,'>retab
+" endfunction
+" nnoremap <leader>i :call ExpandSpaces()<CR>
+
+set encoding=utf-8
+set smarttab
+set autoindent
+set linespace=0
+set scrolloff=3
+set sidescrolloff=5
+set backspace=indent,eol,start
+set formatoptions+=roj
+set nrformats-=octal
+set pastetoggle=<F2>
+set dictionary+=/usr/share/dict/words-insane
+
+"set clipboard+=unnamed
+set history=10000
+set tabpagemax=50
+set autoread
+set autowrite
+set ruler
+set nostartofline
+set nohidden
+set nojoinspaces
+set sessionoptions-=options
+
+if filereadable('/bin/zsh')
+    set shell=/bin/zsh\ --login
+endif
+
+set incsearch
+set hlsearch
+set ignorecase
+set smartcase
+
+set foldenable
+set foldmethod=indent
+set foldnestmax=100
+
+set guifont=monospace
+set guioptions-=mTrl
+
+
+"""""""""""""
+"  AUTOCMD  "
+"""""""""""""
 
 " augroup TransparentBackground
 "     autocmd!
@@ -847,13 +907,12 @@ augroup LighterQuickFixLine
     autocmd ColorScheme * if &background == "dark" | highlight qfFileName guifg=#fe8019 | else | highlight qfFileName guifg=#af3a03 | endif
 augroup END
 
-augroup SearchHighlightColor
-    autocmd!
-    "autocmd ColorScheme * highlight Search guibg=#282828 guifg=#fe8019
-    autocmd ColorScheme * if &background == "dark" | highlight Search guibg=#282828 guifg=#fe8019 | else | highlight Search guibg=#fbf1c7 guifg=#af3a03 | endif
-augroup END
+" augroup SearchHighlightColor
+"     autocmd!
+"     "autocmd ColorScheme * highlight Search guibg=#282828 guifg=#fe8019
+"     autocmd ColorScheme * if &background == "dark" | highlight Search guibg=#282828 guifg=#fe8019 | else | highlight Search guibg=#fbf1c7 guifg=#af3a03 | endif
+" augroup END
 
-""" Color VCS conflict markers
 augroup VCSConflictMarker
     autocmd!
     "autocmd ColorScheme * highlight VCSConflict guibg=#cc241d guifg=#282828
@@ -861,7 +920,6 @@ augroup VCSConflictMarker
     autocmd BufEnter,WinEnter * match VCSConflict '^\(<\|=\||\|>\)\{7\}\([^=].\+\)\?$'
 augroup END
 
-" """ Color overlength
 " augroup OverLength
 "     autocmd!
 "     "autocmd ColorScheme * highlight OverLength guibg=#cc241d guifg=#282828
@@ -902,75 +960,10 @@ else
     augroup END
 endif
 
-set novisualbell  " no blinking
-set noerrorbells  " no noise
-set display=lastline
-set laststatus=2  " always show status line
-set showtabline=2  " always show tab line
-set noshowmode  " Hide the default mode text (e.g. -- INSERT -- below the statusline)
-
-"" Tabs
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
-set expandtab
-
-" function! ExpandSpaces()
-"     set tabstop=2
-"     set noexpandtab
-"     '<,'>retab!
-"     set tabstop=4
-"     set expandtab
-"     '<,'>retab
-" endfunction
-" nnoremap <leader>i :call ExpandSpaces()<CR>
-
-"" Spaces, indents
-set encoding=utf-8
-set smarttab
-set autoindent
-set linespace=0
-set scrolloff=3
-set sidescrolloff=5
-set backspace=indent,eol,start  " backspace over everything in insert mode
-set formatoptions+=roj
-set nrformats-=octal
-set pastetoggle=<F2>
-
-set notimeout
-set ttimeout
-set ttimeoutlen=100
-set updatetime=100
-
-if filereadable('/bin/zsh')
-    set shell=/bin/zsh\ --login
-endif
-
-"" Searching
-set incsearch
-set hlsearch
-set ignorecase
-set smartcase
-
-"" Folding
-set foldenable
-set foldmethod=indent
-set foldnestmax=100
 augroup CustomFolding
     autocmd!
     autocmd BufWinEnter * let &foldlevel=max(add(map(range(1, line('$')), 'foldlevel(v:val)'), 10))  " with this, everything is unfolded at start
 augroup End
-
-"set clipboard+=unnamed  " yanks go on clipboard instead.
-set history=10000  " Number of things to remember in history.
-set tabpagemax=50
-set autoread
-set autowrite
-set ruler
-set nostartofline
-set nohidden
-set nojoinspaces
-set sessionoptions-=options
 
 function! NeatFoldText()
     let line = ' ' . substitute(getline(v:foldstart), '^\s*"\?\s*\|\s*"\?\s*{{' . '{\d*\s*', '', 'g') . ' '
@@ -984,15 +977,16 @@ function! NeatFoldText()
 endfunction
 set foldtext=NeatFoldText()
 
-"" Last position
 set viminfo='10,\"100,:20,%,n~/.viminfo
 augroup SavePosition
     autocmd!
     autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | execute 'normal! g`"zvzz' | endif
 augroup END
 
-"" Dictionary
-set dictionary+=/usr/share/dict/words-insane
+
+"""""""""""
+"  THEME  "
+"""""""""""
 
 "" Theme and colors
 set termguicolors
@@ -1012,10 +1006,6 @@ else
     silent! colorscheme gruvbox
 endif
 
-"" GUI options
-set guifont=monospace
-set guioptions-=mTrl
-
 "" Switch cursor according to mode
 if &term !=? 'linux' || has('gui_running')
     let &t_SI="\<Esc>[6 q"
@@ -1028,7 +1018,11 @@ if &term !=? 'linux' || has('gui_running')
     " let &t_Cs="\<Esc>[4:3m"
 endif
 
-""" TODO Disable highlighting on re-source (bug)
+
+""""""""""""
+"  BUGFIX  "
+""""""""""""
+
 nohlsearch
 
 
