@@ -4,18 +4,21 @@ readonly cmd=$1
 shift
 
 case $cmd in
+
     vim)
         vim \
             ~/.vimrc \
             ~/.vim/after/**/* \
             "$@"
         ;;
+
     tmux)
         vim \
             ~/.tmux.conf \
             ~/.tmux.minimal.conf \
             "$@"
         ;;
+
     git)
         vim \
             ~/.gitconfig \
@@ -24,23 +27,25 @@ case $cmd in
             ~/.config/git/hooks/**/* \
             "$@"
         ;;
+
     zsh)
         vim \
             ~/.zshrc \
-            ~/.zsh.d/*.zsh \
+            ~/.config/zsh/* \
             ~/.zprofile \
             ~/.profile \
-            ~/.oh-my-zsh/custom/**/*.zsh-theme \
             "$@"
         ;;
+
     bash)
         vim \
             ~/.bashrc \
+            ~/.config/bash/* \
             ~/.bash_profile \
             ~/.profile \
-            ~/.fzf.bash \
             "$@"
         ;;
+
     aw)
         vim \
             ~/.config/awesome/rc.lua \
@@ -48,18 +53,22 @@ case $cmd in
             ~/.config/awesome/config/* \
             "$@"
         ;;
+
     xorg)
         vim \
             ~/.xinitrc \
             "$@"
         ;;
+
     bin)
         vim \
             ~/.bin/* \
             "$@"
         ;;
+
     *)
         vim ~/.bin/conf \
             "$0"
         ;;
+
 esac
