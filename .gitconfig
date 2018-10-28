@@ -35,7 +35,13 @@
 	new = 10
 	oldMoved = 8
 	newMoved = 14
+	oldMovedAlternative = 8
+	newMovedAlternative = 14
 	whitespace = 1 reverse
+
+[color "diff-highlight"]
+	oldHighlight = reverse
+	oldReset = noreverse
 
 [color "decorate"]
 	branch = 2 bold
@@ -129,6 +135,7 @@
 
 [interactive]
 	singlekey = true
+	diffFilter = "/usr/share/git/diff-highlight/diff-highlight | less"
 
 [branch]
 	autoSetupMerge = true
@@ -147,6 +154,12 @@
 	graphColors = 1,2,3,4,5,6,8,166,9,10,11,12,13,14,15,208
 	showRoot = true
 	mailmap = true
+
+
+[pager]
+	log = "/usr/share/git/diff-highlight/diff-highlight | less"
+	show = "/usr/share/git/diff-highlight/diff-highlight | less"
+	diff = "/usr/share/git/diff-highlight/diff-highlight | less"
 
 [rerere]
 	enabled = true
@@ -296,6 +309,7 @@
 	pfa = "!f() { git remote | xargs -I@ -P0 git fetch --tags \"$@\" @; }; f"
 	su = submodule update --init --recursive
 	pu = push
+	puu = "!f() { REMOTE=${1:-origin}; shift; git push \"$@\" -u \"$REMOTE\" \"$(git rev-parse --short --abbrev-ref HEAD)\"; }; f"
 
 	m = merge
 	ma = merge --abort
@@ -354,7 +368,7 @@
 
 	# fetch and checkout a Github pull request
 	#    git pr [[<remote>] <number>]
-	pr = "!f() { git config remote.upstream.url > /dev/null 2>&1 && REMOTE=upstream || REMOTE=origin; [ \"$#\" -gt 1 ] && REMOTE=\"$1\" && shift; git fetch \"${REMOTE:-origin}\" \"pull/$1/head\" && git checkout FETCH_HEAD; }; f"
+	pr = "!f() { git config remote.upstream.url > /dev/null 2>&1 && REMOTE=upstream || REMOTE=origin; [ \"$#\" -gt 1 ] && REMOTE=$1 && shift; git fetch \"${REMOTE:-origin}\" \"pull/$1/head\" && git checkout FETCH_HEAD; }; f"
 
 	# hard reset with commit before (use reflog to recover)
 	#    git wipe [<commit>]

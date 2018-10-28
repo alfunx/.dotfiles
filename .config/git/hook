@@ -12,7 +12,11 @@ hookpath=$(git config core.hooksPath)
 hookpath=${hookpath/#\~/$HOME}
 
 # Run local hook
-localhook="$GIT_DIR/hooks/$hookname"
+if [[ -d '.git' ]]; then
+    localhook=".git/hooks/$hookname"
+else
+    localhook="hooks/$hookname"
+fi
 if [[ -x $localhook ]]; then
     $localhook "$@"
     exitcodes+=($?)
@@ -20,7 +24,7 @@ fi
 
 # Fallback to default hooks location
 if [[ -z $hookpath ]]; then
-    hookpath="$GIT_DIR/hooks"
+    hookpath="hooks"
 fi
 
 # Run all executable hooks
