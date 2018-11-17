@@ -1,6 +1,13 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
-readonly cmd=$1
+shopt -s nullglob
+shopt -s globstar
+
+[ -f "${XDG_CONFIG_HOME:-$HOME/.config}"/dotfiles.conf ] \
+    && . "${XDG_CONFIG_HOME:-$HOME/.config}"/dotfiles.conf
+export GIT_DIR="$dotfiles_dir"
+
+readonly cmd="$1"
 shift
 
 case $cmd in
@@ -46,10 +53,11 @@ case $cmd in
             "$@"
         ;;
 
-    aw)
+    aw|awesome)
         vim \
             ~/.config/awesome/rc.lua \
             ~/.config/awesome/themes/blackout/theme.lua \
+            ~/.config/awesome/themes/whiteout/theme.lua \
             ~/.config/awesome/config/* \
             "$@"
         ;;
@@ -66,9 +74,12 @@ case $cmd in
             "$@"
         ;;
 
+    conf)
+        vim "$0"
+        ;;
+
     *)
-        vim ~/.bin/conf \
-            "$0"
+        vim "$cmd" "$@"
         ;;
 
 esac
