@@ -57,7 +57,7 @@ git-fzf-b() {
     is_in_git_repo || return
     git branch -a --color=always | grep -v '/HEAD\s' | sort \
         | fzf-down --ansi --multi --tac --preview-window right:70% \
-        --preview 'git lgo --color=always $(sed s/^..// <<< {} | cut -d" " -f1) | head -'$LINES \
+        --preview 'git lo --color=always $(sed s/^..// <<< {} | cut -d" " -f1) -- | head -'$LINES \
         | sed 's/^..//' | cut -d' ' -f1 | sed 's#^remotes/##'
 }
 
@@ -70,7 +70,7 @@ git-fzf-t() {
 
 git-fzf-h() {
     is_in_git_repo || return
-    git lgo --color=always \
+    git lo --color=always \
         | fzf-down --ansi --no-sort --reverse --multi --bind 'ctrl-s:toggle-sort' \
         --header 'Press CTRL-S to toggle sort' --preview-window right:50% \
         --preview 'grep -o "[a-f0-9]\{7,\}" <<< {} | xargs git show --color=always | head -'$LINES \
@@ -81,7 +81,7 @@ git-fzf-r() {
     is_in_git_repo || return
     git remote -v | awk '{print $1 "\t" $2}' | uniq \
         | fzf-down --tac --preview-window right:70% \
-        --preview 'git lgo --color=always {1} | head -200' \
+        --preview 'git lo --color=always {1} -- | head -200' \
         | cut -d$'\t' -f1
 }
 

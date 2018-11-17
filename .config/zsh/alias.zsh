@@ -167,11 +167,9 @@ bak() {
     fi
 }
 
-clangd_prep() {
-    pushd build > /dev/null \
-        && cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-        && popd > /dev/null \
-        && mv -f build/compile_commands.json .
+lsp_prep() {
+    (cd build && cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON) \
+        && ln -sf build/compile_commands.json
 }
 
 toggle() {
