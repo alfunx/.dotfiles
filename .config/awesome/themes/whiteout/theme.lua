@@ -5,9 +5,6 @@
      by alfunx (Alphonse Mariya)
      based on Blackout
 
-     Powerarrow Awesome WM theme: github.com/copycat-killer
-     Gruvbox: github.com/morhetz/gruvbox/
-
 --]]
 
 local gears            = require("gears")

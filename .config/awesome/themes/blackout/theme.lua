@@ -4,9 +4,6 @@
      Blackout
      by alfunx (Alphonse Mariya)
 
-     Powerarrow Awesome WM theme: github.com/copycat-killer
-     Gruvbox: github.com/morhetz/gruvbox/
-
 --]]
 
 local gears            = require("gears")
@@ -127,12 +124,9 @@ theme.titlebar_bg_normal                        = theme.border_normal
 theme.titlebar_bg_focus                         = theme.border_focus
 theme.titlebar_bg_marked                        = theme.border_marked
 
-theme.hotkeys_border_width                      = dpi(30)
-theme.hotkeys_border_color                      = colors.bw_0
-theme.hotkeys_group_margin                      = dpi(30)
-theme.hotkeys_shape                             = function(cr, width, height)
-                                                      gears.shape.rounded_rect(cr, width, height, dpi(20))
-                                                  end
+theme.hotkeys_border_width                      = theme.border_width
+theme.hotkeys_border_color                      = theme.border_focus
+theme.hotkeys_group_margin                      = dpi(50)
 
 theme.prompt_bg                                 = colors.bw_0
 theme.prompt_fg                                 = theme.fg_normal

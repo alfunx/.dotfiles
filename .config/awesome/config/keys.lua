@@ -71,6 +71,8 @@ function config.init(context)
                   { description = "open email client", group = "launcher" }),
         awful.key({ k.m                }, "w", function() awful.spawn("Whatsapp") end,
                   { description = "open whatsapp", group = "launcher" }),
+        awful.key({ k.m                }, "p", function() awful.spawn("arandr") end,
+                  { description = "open arandr", group = "launcher" }),
 
         -- Screenshot
         awful.key({                    }, "Print", function()
@@ -110,7 +112,7 @@ function config.init(context)
         -- Prompt
         awful.key({ k.m                }, "r", function() awful.screen.focused()._promptbox:run() end,
                   { description = "run prompt", group = "launcher" }),
-        awful.key({ k.m                }, "p", function() menubar.show() end,
+        awful.key({ k.m, k.a           }, "p", function() menubar.show() end,
                   { description = "show the menubar", group = "launcher" }),
         awful.key({ k.m                }, "-", function()
             awful.spawn.easy_async("rofi -show drun", function() end)
@@ -427,15 +429,15 @@ function config.init(context)
 
         -- Move client to tag
         awful.key({ k.m, k.s           }, "1..9", nil,
-                  { description = "move focused client to tag", group = "numeric keys" }),
+                  { description = "move client to tag", group = "numeric keys" }),
 
         -- Move client to tag and view it
         awful.key({ k.m, k.c, k.s      }, "1..9", nil,
-                  { description = "move focused client to tag and view it", group = "numeric keys" }),
+                  { description = "move client to tag and view it", group = "numeric keys" }),
 
-        -- Toggle tag on focused client
+        -- Toggle tag on client
         awful.key({ k.m, k.a           }, "1..9", nil,
-                  { description = "toggle focused client on tag", group = "numeric keys" })
+                  { description = "toggle client on tag", group = "numeric keys" })
     )
 
     -- Set keys

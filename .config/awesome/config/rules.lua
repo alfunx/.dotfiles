@@ -106,6 +106,16 @@ function config.init(context)
             },
         },
 
+        {
+            rule = {
+                class = "Arandr",
+            },
+            properties = {
+                width = 500,
+                height = 400,
+            },
+        },
+
         -- Clients that should float
         {
             rule_any = {
@@ -130,11 +140,18 @@ function config.init(context)
             },
             properties = {
                 floating = true,
-                placement = awful.placement.centered,
+                delayed_placement = awful.placement.centered,
             },
         },
 
     }
+
+    -- placement, that should be applied after setting x/y/width/height/geometry
+    function awful.rules.delayed_properties.delayed_placement(c, value, props)
+        if props.delayed_placement then
+            awful.rules.extra_properties.placement(c, props.delayed_placement, props)
+        end
+    end
 
 end
 
