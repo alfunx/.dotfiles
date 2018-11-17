@@ -220,7 +220,7 @@
 	rlf =  format:%C(auto)%h%C(reset)%C(auto)%d%C(reset)%n%C(white)SHA-1:%C(reset)    %C(italic)%H%C(reset)%n%C(white)Author:%C(reset)   %aN %C(241)<%aE>%C(reset)%n          %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%n%C(white)Commit:%C(reset)   %cN %C(241)<%cE>%C(reset)%n          %C(italic blue)%cd%C(reset) %C(italic cyan)(%cr)%C(reset)%n%C(white)Reflog:%C(reset)   %gN %C(241)<%gE>%C(reset)%n          %C(italic)%gs%C(reset)%w(0,4,4)%n%+C(bold)%s%C(reset)%n%+b%n
 
 [alias]
-	ec = config --global --edit
+	ec = "!f() { [ -f \"${XDG_CONFIG_HOME:-$HOME/.config}\"/dotfiles.conf ] && . \"${XDG_CONFIG_HOME:-$HOME/.config}\"/dotfiles.conf; git --git-dir=\"$dotfiles_dir\" config --global --edit; }; f"
 
 	# log, current branch
 	l = log --pretty=lt --graph --color
@@ -307,9 +307,12 @@
 	f = fetch --tags
 	fa = fetch --all --tags
 	pfa = "!f() { git remote | xargs -I@ -P0 git fetch --tags \"$@\" @; }; f"
-	su = submodule update --init --recursive
 	pu = push
 	puu = "!f() { REMOTE=${1:-origin}; shift; git push \"$@\" -u \"$REMOTE\" \"$(git rev-parse --short --abbrev-ref HEAD)\"; }; f"
+	puf = push --force-with-lease
+
+	sub = submodule
+	subu = submodule update --init --recursive
 
 	m = merge
 	ma = merge --abort
