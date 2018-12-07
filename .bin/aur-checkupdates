@@ -10,10 +10,10 @@ readonly PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 all=1 format=1
 
 # default options (disabled)
-official=0 normal=0 vcs=0 manual=0 verbose=0
+official=0 aur=0 vcs=0 verbose=0
 
 usage() {
-    plain "usage: $argv0 [-aonvmfFV] [long options]"
+    plain "usage: $argv0 [-AoavmfFV]"
     exit 1
 }
 
@@ -25,8 +25,8 @@ if [[ -t 2 && ! -o xtrace ]]; then
     colorize
 fi
 
-opt_short='aonvmfFV'
-opt_long=('all' 'official' 'normal' 'vcs' 'manual' 'format' 'no-format'
+opt_short='AoavfFV'
+opt_long=('all' 'official' 'aur' 'vcs' 'format' 'no-format'
           'verbose')
 
 if ! parseopts "$opt_short" "${opt_long[@]}" -- "$@"; then
@@ -36,23 +36,22 @@ set -- "${OPTRET[@]}"
 
 while true; do
     case "$1" in
-        -a|--all)       all=1 ;;
-        -o|--official)  all=0; official=1 ;;
-        -n|--normal)    all=0; normal=1 ;;
-        -v|--vcs)       all=0; vcs=1 ;;
-        -m|--manual)    all=0; manual=1 ;;
-        -f|--format)    format=1 ;;
-        -F|--no-format) format=0 ;;
-        -V|--verbose)   verbose=1 ;;
-        -h|--help)      usage ;;
-        --)             shift; break ;;
+        -A|--all)          all=1 ;;
+        -o|--official)     all=0; official=1 ;;
+        -a|--aur)          all=0; aur=1 ;;
+        -v|--vcs)          all=0; vcs=1 ;;
+        -f|--format)       format=1 ;;
+        -F|--no?(-)format) format=0 ;;
+        -V|--verbose)      verbose=1 ;;
+        -h|--help)         usage ;;
+        --)                shift; break ;;
     esac
     shift
 done
 unset opt_short opt_long OPTRET
 
 if ((all)); then
-    official=1 normal=1 vcs=1 manual=1
+    official=1 aur=1 vcs=1
 fi
 
 _check() {
@@ -61,20 +60,14 @@ _check() {
             | sed -e 's/://' -e 's/^/pacman: /'
     fi
 
-    if ((normal)); then
-        aur vercmp -d aur \
+    if ((aur)); then
+        aur repo -d aur -u \
             | sed -e 's/://' -e 's/^/aur: /'
     fi
 
     if ((vcs)); then
         aur vercmp-devel -d aur \
             | sed -e 's/://' -e 's/^/vcs: /'
-    fi
-
-    if ((manual)); then
-        export AURDEST="$HOME/packages"
-        aur vercmp-devel -d manual \
-            | sed -e 's/://' -e 's/^/manual: /'
     fi
 }
 

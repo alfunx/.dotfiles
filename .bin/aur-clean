@@ -6,14 +6,11 @@ shopt -s extglob
 readonly argv0=clean
 readonly PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 
-# default options (enabled)
-all=1
-
 # default options (disabled)
-sync=0 manual=0
+all=0 aur=0 manual=0
 
 usage() {
-    plain "usage: $argv0 [-asm] [long options]"
+    plain "usage: $argv0 [-Aam] [long options]"
     exit 1
 }
 
@@ -25,19 +22,18 @@ if [[ -t 2 && ! -o xtrace ]]; then
     colorize
 fi
 
-opt_short='asm'
-opt_long=('all' 'sync' 'manual')
+opt_short='Aam'
+opt_long=('all' 'aur' 'manual')
 
 if ! parseopts "$opt_short" "${opt_long[@]}" -- "$@"; then
     usage
 fi
 set -- "${OPTRET[@]}"
 
-unset root repo
 while true; do
     case "$1" in
-        -a|--all)    all=1 ;;
-        -s|--sync)   all=0; sync=1 ;;
+        -A|--all)    all=1 ;;
+        -a|--aur)    all=0; aur=1 ;;
         -m|--manual) all=0; manual=1 ;;
         --)          shift; break ;;
     esac
@@ -46,16 +42,15 @@ done
 unset opt_short opt_long OPTRET
 
 if ((all)); then
-    sync=1 manual=1
+    aur=1 manual=1
 fi
 
-if ((sync)); then
+if ((aur)); then
     rm "$AURDEST"/*/*.log
 fi
 
 if ((manual)); then
-    manual_dir="$HOME/packages"
-    rm "$manual_dir"/*/*.log
+    rm "$HOME/packages"/*/*.log
 fi
 
 # vim: set et sw=4 sts=4 ft=sh:
