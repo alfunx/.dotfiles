@@ -1,17 +1,20 @@
-.git
-.hg
-.svn
-.tmux
-.backup
-.vim-backup
-.swap
-.vim-swap
-.undo
-.vim-undo
+# vcs
+.git/
+.hg/
+.svn/
+
+# tools
 tags
+.tmux
+.backup/
+.vim-backup/
+.swap/
+.vim-swap/
+.undo/
+.vim-undo/
+
+# cache/history
 *history
-*.pem
-*.key
 *.bak
 *.log
 *.swp
@@ -19,3 +22,11 @@ tags
 *.swn
 *.tmp
 *~
+
+# security
+*.pem
+*.key
+
+# compiler
+.ccls-cache/
+compile_commands.json
