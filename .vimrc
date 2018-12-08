@@ -40,6 +40,7 @@ Plug 'tpope/vim-abolish'
 "Plug 'tpope/vim-commentary'
 Plug 'tomtom/tcomment_vim'
 Plug 'whiteinge/diffconflicts'
+Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/vim-easy-align'
 Plug 'junegunn/vim-peekaboo'
@@ -69,6 +70,7 @@ Plug 'Julian/vim-textobj-variable-segment'
 Plug 'benmills/vimux'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'wellle/tmux-complete.vim'
+Plug 'tmux-plugins/vim-tmux-focus-events'
 
 " Snippets
 Plug 'SirVer/ultisnips'
@@ -147,12 +149,12 @@ nnoremap <silent> <C-w>l 5<C-w>>
 "nnoremap <silent> <End> <C-w>>
 
 "" New tab
-nnoremap <silent> <C-w>t :tabedit<CR>
-nnoremap <silent> <C-w><C-t> :tabedit<CR>
+nnoremap <silent> <C-w>t :tabnew<CR>
+nnoremap <silent> <C-w><C-t> :tabnew<CR>
 
 "" Tab navigation
-nnoremap <silent> <C-w><C-h> :tabprevious<CR>
-nnoremap <silent> <C-w><C-l> :tabnext<CR>
+nnoremap <silent> <C-w><C-h> gT
+nnoremap <silent> <C-w><C-l> gt
 
 "" Fullscreen
 nnoremap <silent> <C-w>F <C-w>_<C-w><Bar>
@@ -482,11 +484,12 @@ let g:airline#extensions#whitespace#show_message=1
 let g:airline#extensions#hunks#enabled=0
 
 "" GitGutter
-nmap <leader>hp <Plug>(GitGutterPrevHunk)
-nmap <leader>ha <Plug>(GitGutterStageHunk)
-nmap <leader>hu <Plug>(GitGutterUndoHunk)
-nmap ]c <Plug>(GitGutterNextHunk)
-nmap [c <Plug>(GitGutterPrevHunk)
+let g:gitgutter_map_keys=0
+nmap <leader>hp <Plug>GitGutterPrevHunk
+nmap <leader>ha <Plug>GitGutterStageHunk
+nmap <leader>hu <Plug>GitGutterUndoHunk
+nmap ]c <Plug>GitGutterNextHunk
+nmap [c <Plug>GitGutterPrevHunk
 
 let g:gitgutter_sign_added='┃'
 let g:gitgutter_sign_modified='┃'
@@ -644,17 +647,21 @@ augroup END
 
 "" AutoPairs
 execute "set <M-p>=\<Esc>p"
-"let g:AutoPairsMapSpace=0
+execute "set <M-z>=\<Esc>z"
+let g:AutoPairsShortcutBackInsert='<M-z>'
+"let g:AutoPairs={'(':')', '[':']', '{':'}',"'":"'",'"':'"', '`':'`', '<':'>'}
 
 "" RustRacer
 let g:racer_cmd="/usr/bin/racer"
 let g:racer_experimental_completer=0
 
 "" NCM2
-let g:ncm2#complete_delay=100
-let g:ncm2#popup_delay=500
+let g:ncm2#complete_delay=60
+let g:ncm2#popup_delay=300
+let g:ncm2#auto_popup=1
 
-imap <silent><expr> <CR> pumvisible() ? "\<C-e>\<CR>" : "\<CR>"
+imap <C-n> <plug>(ncm2_manual_trigger)
+imap <silent><expr> <CR> pumvisible() ? "\<C-y>\<CR>" : "\<CR>"
 imap <silent><expr> <Tab> pumvisible() ? "\<C-y>" : "\<Tab>"
 
 augroup NCM2
@@ -676,8 +683,8 @@ let g:LanguageClient_hoverPreview="Never"
 let g:LanguageClient_serverCommands = {
             \ 'rust':   ['rustup', 'run', 'stable', 'rls'],
             \ 'java':   ['jdtls'],
-            \ 'c':      ['clangd'],
-            \ 'cpp':    ['clangd'],
+            \ 'c':      ['ccls'],
+            \ 'cpp':    ['ccls'],
             \ 'python': ['pyls'],
             \ }
 
@@ -733,8 +740,8 @@ endfunction
 
 augroup LanguageClient_config
     autocmd!
-    autocmd User LanguageClientStarted setlocal signcolumn=yes
-    autocmd User LanguageClientStopped setlocal signcolumn=auto
+    autocmd User LanguageClientStarted set signcolumn=yes
+    autocmd User LanguageClientStopped set signcolumn=auto
 augroup END
 
 augroup LanguageClient_settings
@@ -788,7 +795,6 @@ let g:rsi_no_meta=1
 "  SETTINGS  "
 """"""""""""""
 
-"syntax enable
 set synmaxcol=800
 set number
 set showcmd
@@ -802,7 +808,6 @@ set mouse=a
 set diffopt+=hiddenoff,algorithm:histogram
 
 set cursorline
-"set colorcolumn=81
 set textwidth=80
 set wrapmargin=0
 set nowrap
@@ -849,7 +854,7 @@ set nrformats-=octal
 set pastetoggle=<F2>
 set dictionary+=/usr/share/dict/words-insane
 
-"set clipboard+=unnamed
+"set clipboard+=unnamed,unnamedplus
 set history=10000
 set tabpagemax=50
 set autoread
@@ -940,6 +945,12 @@ augroup END
 augroup SpellBadUnderline
     autocmd!
     autocmd BufEnter,WinEnter * highlight SpellBad gui=underline term=underline cterm=underline
+augroup END
+
+augroup AutoRead
+    autocmd!
+    autocmd FocusGained,BufEnter,CursorHold,CursorHoldI ?* if getcmdwintype() == '' | checktime | endif
+    autocmd FileChangedShellPost * echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
 augroup END
 
 if &term !=? 'linux' || has('gui_running')
