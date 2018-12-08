@@ -117,6 +117,7 @@ TERM xterm-88color
 TERM xterm-color
 TERM xterm-debian
 TERM xterm-termite
+TERM xterm-kitty
 
 # EIGHTBIT, followed by '1' for on, '0' for off. (8-bit output)
 EIGHTBIT 0

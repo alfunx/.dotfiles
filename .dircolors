@@ -373,33 +373,33 @@ EXEC 91  # Unix
 .psd 31
 
 # Archives, compressed
-.7z 1;35
-.apk 1;35
-.arj 1;35
-.bin 1;35
-.bz 1;35
-.bz2 1;35
-.cab 1;35  # Win
-.deb 1;35
-.dmg 1;35  # OSX
-.gem 1;35
-.gz 1;35
-.iso 1;35
-.jar 1;35
-.msi 1;35  # Win
-.rar 1;35
-.rpm 1;35
-.tar 1;35
-.tbz 1;35
-.tbz2 1;35
-.tgz 1;35
-.tx 1;35
-.war 1;35
-.xpi 1;35
-.xz 1;35
-.z 1;35
-.Z 1;35
-.zip 1;35
+.7z 95
+.apk 95
+.arj 95
+.bin 95
+.bz 95
+.bz2 95
+.cab 95  # Win
+.deb 95
+.dmg 95  # OSX
+.gem 95
+.gz 95
+.iso 95
+.jar 95
+.msi 95  # Win
+.rar 95
+.rpm 95
+.tar 95
+.tbz 95
+.tbz2 95
+.tgz 95
+.tx 95
+.war 95
+.xpi 95
+.xz 95
+.z 95
+.Z 95
+.zip 95
 
 # For testing
 .ANSI-30-black 30
@@ -446,8 +446,8 @@ EXEC 91  # Unix
 #.DIST 96
 #.orig 96
 #.ORIG 96
-# .rej 96
-# .REJ 96
+#.rej 96
+#.REJ 96
 #.swp 96
 #.swo 96
 #*,v 96
