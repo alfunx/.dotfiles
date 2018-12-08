@@ -138,3 +138,5 @@ zstyle ':completion:*' original false
 
 autoload -Uz compinit
 compinit -D
+autoload -Uz +X bashcompinit
+bashcompinit -D

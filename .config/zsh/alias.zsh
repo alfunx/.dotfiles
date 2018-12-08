@@ -167,7 +167,7 @@ bak() {
     fi
 }
 
-lsp_prep() {
+lsp-prep() {
     (cd build && cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON) \
         && ln -sf build/compile_commands.json
 }

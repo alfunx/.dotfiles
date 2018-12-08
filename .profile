@@ -24,6 +24,10 @@ export RIPGREP_CONFIG_PATH="$HOME/.config/ripgrep/ripgreprc"
 
 # aurutils
 export AUR_REPO='aur'
+export AUR_PAGER='ranger'
+
+# makeflags
+export MAKEFLAGS="-j$(nproc)"
 
 # man / less colors
 export LESS_TERMCAP_mb=$'\e[1;31m'
