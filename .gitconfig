@@ -401,3 +401,6 @@
 
 [svn]
 	rmdir = true
+
+[include]
+	path = .gitconfig-local
