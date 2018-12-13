@@ -17,16 +17,15 @@ function config.init(context)
 
     local last_focus
 
-    -- Signal function to execute when a new client appears.
+    -- Signal function to execute when a new client appears
     client.connect_signal("manage", function(c)
-        -- Set the windows at the slave,
-        -- i.e. put it at the end of others instead of setting it master.
+        -- Set the windows at the slave
         -- if not awesome.startup then awful.client.setslave(c) end
 
         if awesome.startup and
             not c.size_hints.user_position
             and not c.size_hints.program_position then
-            -- Prevent clients from being unreachable after screen count changes.
+            -- Prevent clients from being unreachable after screen count changes
             awful.placement.no_offscreen(c)
         end
 
@@ -53,7 +52,7 @@ function config.init(context)
         last_focus = c
     end)
 
-    -- Add a titlebar if titlebars_enabled is set to true in the rules.
+    -- Add a titlebar if titlebars_enabled is set to true in the rules
     client.connect_signal("request::titlebars", function(c)
         -- Set custom titlebar or fallback
         if beautiful.titlebar_fun then
@@ -122,7 +121,6 @@ function config.init(context)
             context.util.hide_titlebar(c)
             c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 0) end
         else
-            c.border_width = beautiful.border_width
             c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, beautiful.border_radius or 0) end
         end
     end)
@@ -132,7 +130,6 @@ function config.init(context)
             context.util.hide_titlebar(c)
             c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 0) end
         else
-            c.border_width = beautiful.border_width
             c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, beautiful.border_radius or 0) end
         end
     end)
@@ -147,7 +144,9 @@ function config.init(context)
 
     awful.tag.attached_connect_signal(nil, "property::layout", function(t)
         for _,c in pairs(t:clients()) do
-            c.floating = t.layout == awful.layout.suit.floating
+            if t.layout == awful.layout.suit.floating then
+                c.floating = true
+            end
         end
     end)
 
@@ -171,7 +170,7 @@ function config.init(context)
         t:delete(fallback_tag, true)
     end)
 
-    -- Enable sloppy focus, so that focus follows mouse.
+    -- Enable sloppy focus, so that focus follows mouse
     if context.vars.sloppy_focus then
         client.connect_signal("mouse::enter", function(c)
             if awful.layout.get(c.screen) ~= awful.layout.suit.magnifier

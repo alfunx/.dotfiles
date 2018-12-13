@@ -13,7 +13,7 @@ local config = { }
 
 function config.init(context)
 
-    -- Rules to apply to new clients (through the "manage" signal).
+    -- Rules to apply to new clients (through the "manage" signal)
     awful.rules.rules = {
 
         -- All clients will match this rule
