@@ -158,6 +158,7 @@ EIGHTBIT 0
 #   05;37;41                         unclear in Putty dark
 
 
+#############################################################################
 ### By file type
 
 # global default
@@ -167,26 +168,17 @@ FILE 00
 # directory
 DIR 34
 # 777 directory
-OTHER_WRITABLE 34;40
+OTHER_WRITABLE 34
 # symbolic link
 LINK 35
-
-# pipe, socket, block device, character device (blue bg)
-FIFO 30;44
-SOCK 35;44
-DOOR 35;44 # Solaris 2.5 and later
-BLK 33;44
-CHR 37;44
 
 
 #############################################################################
 ### By file attributes
 
-# Orphaned symlinks (blinking white on red)
-# Blink may or may not work (works on iTerm dark or light, and Putty dark)
-ORPHAN 05;37;41
-# ... and the files that orphaned symlinks point to (blinking white on red)
-MISSING 05;37;41
+# orphaned symlinks
+ORPHAN 7;91
+MISSING 7;91
 
 # files with execute permission
 EXEC 91  # Unix
@@ -196,6 +188,18 @@ EXEC 91  # Unix
 .bat 91  # Win
 .reg 91  # Win
 .app 91  # OSX
+
+
+#############################################################################
+### By file type
+
+# pipe, socket, block device, character device
+FIFO 4;94
+SOCK 4;95
+DOOR 4;95
+BLK 4;93
+CHR 4;97
+
 
 #############################################################################
 ### By extension
@@ -450,6 +454,8 @@ EXEC 91  # Unix
 #.REJ 96
 #.swp 96
 #.swo 96
+#.swn 96
+#.swm 96
 #*,v 96
 #.pacnew 96
 #.pacsave 96
@@ -468,15 +474,25 @@ EXEC 91  # Unix
 .REJ 93
 .swp 93
 .swo 93
+.swn 93
+.swm 93
 *,v 93
 .pacnew 93
 .pacsave 93
 
-# Sensitive files
+# History
+*history 96
 *_history 96
 *_hist 96
+
+# Sensitive files
 *_rsa 96
+*_rsa.* 96
+*_dsa 96
+*_dsa.* 96
 *_keys 96
+.pem 96
+.key 96
 
 # The brightmagenta (Solarized: purple) color is free for you to use for your
 # custom file type
