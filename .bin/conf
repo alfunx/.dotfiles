@@ -31,7 +31,14 @@ case $cmd in
             ~/.gitconfig \
             ~/.gitignore \
             ~/.gitmodules \
+            ~/.bin/git-* \
             ~/.config/git/hooks/**/* \
+            "$@"
+        ;;
+
+    aur|aurutils)
+        vim \
+            ~/.bin/aur-* \
             "$@"
         ;;
 
