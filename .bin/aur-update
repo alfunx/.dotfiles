@@ -8,7 +8,7 @@ readonly AURVCS=${AURVCS:-.*-(bzr|git|hg|svn)$}
 readonly PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 
 # default arguments
-build_args=(--no-ver-shallow)
+build_args=(--rebuild)
 packages=()
 
 # default options (disabled)
@@ -55,7 +55,7 @@ unset opt_short opt_long OPTRET
 
 if ((refresh_cache)); then
     mapfile -t _packages < <(aur repo --list | cut -f1 | grep -E "$AURVCS")
-    aur sync "${_packages[@]}" --no-ver --print
+    aur sync -c --no-ver --print "${_packages[@]}"
 fi
 
 if ((all)); then
@@ -77,7 +77,11 @@ if ((filter)); then
 fi
 
 if ((${#packages[@]})); then
-    aur sync "${build_args[@]}" "${packages[@]}"
+    aur sync \
+        -d aur \
+        -C /etc/pacman.conf \
+        -M /home/amairya/.config/pacman/makepkg.conf \
+        "${build_args[@]}" "${packages[@]}"
 fi
 
 # vim: set et sw=4 sts=4 ft=sh:
