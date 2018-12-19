@@ -7,7 +7,7 @@ readonly PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 aur sync \
     -cd aur \
     -C /etc/pacman.conf \
-    -M /home/amairya/.config/pacman/makepkg.conf \
+    -M "$HOME"/.config/pacman/makepkg.conf \
     "$@"
 
 # vim: set et sw=4 sts=4 ft=sh:

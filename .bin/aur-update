@@ -80,7 +80,7 @@ if ((${#packages[@]})); then
     aur sync \
         -d aur \
         -C /etc/pacman.conf \
-        -M /home/amairya/.config/pacman/makepkg.conf \
+        -M "$HOME"/.config/pacman/makepkg.conf \
         "${build_args[@]}" "${packages[@]}"
 fi
 
