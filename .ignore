@@ -1,0 +1,84 @@
+# vcs
+.git/
+.hg/
+.svn/
+
+# compiler
+.ccls-cache/
+compile_commands.json
+
+# binary
+*.o
+*.so
+*.class
+*.exe
+*.dll
+*.com
+
+# tools
+tags
+.tmux
+.backup/
+.vim-backup/
+.swap/
+.vim-swap/
+.undo/
+.vim-undo/
+
+# cache
+*.log
+*~
+*#
+*.bak
+*.BAK
+*.old
+*.OLD
+*.off
+*.OFF
+*.dist
+*.DIST
+*.orig
+*.ORIG
+*.rej
+*.REJ
+*.swp
+*.swo
+*.swn
+*.swm
+*.tmp
+
+# state
+*.pid
+*.state
+
+# dumps
+*.dump
+*.stackdump
+*.zcompdump
+*.zwc
+*.pcap
+*.cap
+*.dmp
+
+# error
+*.err
+*.error
+*.stderr
+
+# history
+*history
+*_history
+*_hist
+
+# security
+*_rsa
+*_rsa.*
+*_dsa
+*_dsa.*
+*_keys
+*.pem
+*.key
+*.gpg
+
+# os
+.DS_Store*

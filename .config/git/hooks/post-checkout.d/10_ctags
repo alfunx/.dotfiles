@@ -1,0 +1,6 @@
+#!/bin/sh
+
+hookpath=$(git config core.hooksPath)
+hookpath=${hookpath/#\~/$HOME}
+
+"$hookpath/ctags" > /dev/null 2>&1 &

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+pacman -Qeq \
+    > ~/.pkglist/pacman
+pacman -Qm \
+    | sed 's/\s.*//' \
+    > ~/.pkglist/aur

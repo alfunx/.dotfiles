@@ -1,0 +1,4 @@
+#command
+h left-scroll
+l right-scroll
+\eb undo-hilite

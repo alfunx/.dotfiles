@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+# aur-tmpfs - setup tmpfs for chroot
+set -o errexit -o pipefail
+shopt -s nullglob
+shopt -s extglob
+readonly argv0=tmpfs
+readonly PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+
+usage() {
+    plain "usage: $argv0 [-u]"
+    exit 1
+}
+
+source /usr/share/makepkg/util/util.sh
+source /usr/share/makepkg/util/message.sh
+source /usr/share/makepkg/util/parseopts.sh
+
+if [[ -t 2 && ! -o xtrace ]]; then
+    colorize
+fi
+
+opt_short='u'
+opt_long=('unmount')
+
+if ! parseopts "$opt_short" "${opt_long[@]}" -- "$@"; then
+    usage
+fi
+set -- "${OPTRET[@]}"
+
+while true; do
+    case "$1" in
+        -u|--unmount) unmount=1 ;;
+        --)           shift; break ;;
+    esac
+    shift
+done
+unset opt_short opt_long OPTRET
+
+if ((unmount)); then
+    mountpoint -q /var/lib/aurbuild \
+        && sudo umount /var/lib/aurbuild
+else
+    mountpoint -q /var/lib/aurbuild \
+        && echo 'Already mounted.' \
+        && exit 1
+    sudo mount /var/lib/aurbuild
+fi
+
+# vim: set et sw=4 sts=4 ft=sh:

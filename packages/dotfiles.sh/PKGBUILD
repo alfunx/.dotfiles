@@ -1,0 +1,22 @@
+# Maintainer: alfunx <alphonse.mariya@hotmail.com>
+
+pkgname=dotfiles.sh
+pkgver=r10.07c2a57
+pkgrel=1
+pkgdesc="A simple wrapper around Git to manage dotfiles."
+arch=('any')
+url="https://github.com/alfunx/dotfiles.sh"
+depends=('git')
+source=("$pkgname::git+https://github.com/eli-schwartz/dotfiles.sh")
+sha512sums=('SKIP')
+
+pkgver() {
+    cd "$pkgname"
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+package() {
+    cd "$pkgname"
+    make PREFIX=/usr DESTDIR="$pkgdir" install
+}
+

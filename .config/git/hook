@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+# Usage: Create directory with hookname and post-fix ".d" in the Git hookpath.
+# Create symbolic link with hookname, pointing to this script. E.g.:
+#  $ mkdir ~/.config/git/hooks/post-checkout.d
+#  $ ln -s ~/.config/git/hook ~/.config/git/hooks/post-checkout
+
+# Run all executable hooks in hookname.d/* hooks
+exitcodes=()
+hookname=$(basename "$0")
+hookpath=$(git config core.hooksPath)
+hookpath=${hookpath/#\~/$HOME}
+
+# Run local hook
+if [[ -d '.git' ]]; then
+    localhook=".git/hooks/$hookname"
+else
+    localhook="hooks/$hookname"
+fi
+if [[ -x $localhook ]]; then
+    $localhook "$@"
+    exitcodes+=($?)
+fi
+
+# Fallback to default hooks location
+if [[ -z $hookpath ]]; then
+    hookpath="hooks"
+fi
+
+# Run all executable hooks
+for hook in "$hookpath/$hookname.d/"*; do
+    if [[ -x $hook ]]; then
+        $hook "$@"
+        exitcodes+=($?)
+    fi
+done
+
+# Exit with first non-zero exit code
+for exitcode in "${exitcodes[@]}"; do
+    if [[ $exitcode -ne 0 ]]; then
+        exit "$exitcode"
+    fi
+done
+
+exit 0

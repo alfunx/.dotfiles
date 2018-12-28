@@ -1,0 +1,11 @@
+# ripgrep config
+
+--follow
+--hidden
+--smart-case
+--line-number
+--colors=match:fg:red
+--colors=match:style:bold
+--colors=path:fg:white
+--colors=line:fg:yellow
+--colors=line:style:bold

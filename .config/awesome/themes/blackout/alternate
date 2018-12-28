@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+readonly cmd=$1
+shift
+
+blackout() {
+    kitty @ --to "unix:/tmp/_kitty_$USER" set-colors -a -c "$HOME/.config/kitty/gruvbox-dark.conf"
+}
+
+whiteout() {
+    kitty @ --to "unix:/tmp/_kitty_$USER" set-colors -a -c "$HOME/.config/kitty/gruvbox-light.conf"
+}
+
+case $cmd in
+    blackout)
+        blackout ;;
+    whiteout)
+        whiteout ;;
+    *)
+        exit 1 ;;
+esac

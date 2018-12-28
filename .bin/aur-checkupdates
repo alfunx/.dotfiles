@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+# aur-checkupdates - check AUR updates / print all updates
+set -o errexit -o pipefail
+shopt -s nullglob
+shopt -s extglob
+readonly argv0=checkupdates
+readonly PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+
+# default options (enabled)
+all=1 format=1
+
+# default options (disabled)
+official=0 aur=0 vcs=0 verbose=0
+
+usage() {
+    plain "usage: $argv0 [-AoavmfFV]"
+    exit 1
+}
+
+source /usr/share/makepkg/util/util.sh
+source /usr/share/makepkg/util/message.sh
+source /usr/share/makepkg/util/parseopts.sh
+
+if [[ -t 2 && ! -o xtrace ]]; then
+    colorize
+fi
+
+opt_short='AoavfFV'
+opt_long=('all' 'official' 'aur' 'vcs' 'format' 'no-format'
+          'verbose')
+
+if ! parseopts "$opt_short" "${opt_long[@]}" -- "$@"; then
+    usage
+fi
+set -- "${OPTRET[@]}"
+
+while true; do
+    case "$1" in
+        -A|--all)          all=1 ;;
+        -o|--official)     all=0; official=1 ;;
+        -a|--aur)          all=0; aur=1 ;;
+        -v|--vcs)          all=0; vcs=1 ;;
+        -f|--format)       format=1 ;;
+        -F|--no?(-)format) format=0 ;;
+        -V|--verbose)      verbose=1 ;;
+        -h|--help)         usage ;;
+        --)                shift; break ;;
+    esac
+    shift
+done
+unset opt_short opt_long OPTRET
+
+if ((all)); then
+    official=1 aur=1 vcs=1
+fi
+
+_check() {
+    if ((official)); then
+        checkupdates \
+            | sed -e 's/://' -e 's/^/pacman: /'
+    fi
+
+    if ((aur)); then
+        aur repo -d aur -u \
+            | sed -e 's/://' -e 's/^/aur: /'
+    fi
+
+    if ((vcs)); then
+        aur vercmp-devel -d aur \
+            | sed -e 's/://' -e 's/^/vcs: /'
+    fi
+}
+
+check() {
+    if ((verbose)); then
+        _check
+    else
+        _check 2> /dev/null
+    fi
+}
+
+if ((format)); then
+    check | sed 's/->/→/' | column -t
+else
+    check
+fi
+
+# vim: set et sw=4 sts=4 ft=sh:

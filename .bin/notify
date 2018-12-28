@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+notify-send 'Notify' 'Command has been executed.' \
+    --expire-time=0 --urgency=critical
+tput bel

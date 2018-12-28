@@ -1,0 +1,46 @@
+# Maintainer: alfunx <alphonse.mariya@hotmail.com>
+
+_pkgname=tmux
+pkgname=$_pkgname-git
+pkgver=2.8.r141.g1c5093c1
+pkgrel=1
+pkgdesc="A terminal multiplexer"
+url="https://github.com/tmux/tmux/wiki"
+arch=('i686' 'x86_64')
+license=('BSD')
+depends=('ncurses' 'libevent')
+makedepends=('git')
+optdepends=('libutempter: Record user sessions to utmp and wtmp files (add to depends array and rebuild to enable)')
+#depends+=('libutempter')
+provides=('tmux')
+conflicts=('tmux')
+source=("$_pkgname::git+https://github.com/alfunx/tmux"
+        'LICENSE')
+sha512sums=('SKIP'
+            'b03188cd81ffe7443905bb2cd2bb9330a00ddad258eb0f1ad64add09c2c305f1ad6686855986ce6f828a3884bfbaebbd9896e2307e65a47797a628d81c4e3677')
+
+pkgver() {
+  cd "$_pkgname"
+  git describe --long | sed -e 's:\([^-]*-g\):r\1:' -e 's:-:.:g'
+}
+
+prepare() {
+  cd "$_pkgname"
+  ./autogen.sh
+}
+
+build() {
+  cd "$_pkgname"
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "$_pkgname"
+
+  make DESTDIR="$pkgdir" install
+  install -Dm644 "$srcdir/LICENSE" "$pkgdir/usr/share/licenses/tmux/LICENSE"
+
+  # install example config file
+  install -Dm755 example_tmux.conf "$pkgdir/usr/share/tmux/example_tmux.conf"
+}

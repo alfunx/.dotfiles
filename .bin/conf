@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+
+shopt -s nullglob
+shopt -s globstar
+
+[ -f "${XDG_CONFIG_HOME:-$HOME/.config}"/dotfiles.conf ] \
+    && . "${XDG_CONFIG_HOME:-$HOME/.config}"/dotfiles.conf
+export GIT_DIR="$dotfiles_dir"
+
+readonly cmd="$1"
+shift
+
+case $cmd in
+
+    vim)
+        vim \
+            ~/.vimrc \
+            ~/.vim/after/**/* \
+            "$@"
+        ;;
+
+    tmux)
+        vim \
+            ~/.tmux.conf \
+            ~/.tmux.minimal.conf \
+            "$@"
+        ;;
+
+    git)
+        vim \
+            ~/.gitconfig \
+            ~/.gitignore \
+            ~/.gitmodules \
+            ~/.bin/git-* \
+            ~/.config/git/hooks/**/* \
+            "$@"
+        ;;
+
+    aur|aurutils)
+        vim \
+            ~/.bin/aur-* \
+            "$@"
+        ;;
+
+    zsh)
+        vim \
+            ~/.zshrc \
+            ~/.config/zsh/* \
+            ~/.zprofile \
+            ~/.profile \
+            "$@"
+        ;;
+
+    bash)
+        vim \
+            ~/.bashrc \
+            ~/.config/bash/* \
+            ~/.bash_profile \
+            ~/.profile \
+            "$@"
+        ;;
+
+    aw|awesome)
+        vim \
+            ~/.config/awesome/rc.lua \
+            ~/.config/awesome/themes/blackout/theme.lua \
+            ~/.config/awesome/themes/whiteout/theme.lua \
+            ~/.config/awesome/config/* \
+            "$@"
+        ;;
+
+    xorg)
+        vim \
+            ~/.xinitrc \
+            "$@"
+        ;;
+
+    bin)
+        vim \
+            ~/.bin/* \
+            "$@"
+        ;;
+
+    conf)
+        vim "$0"
+        ;;
+
+    *)
+        vim "$cmd" "$@"
+        ;;
+
+esac

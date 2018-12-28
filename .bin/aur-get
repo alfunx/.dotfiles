@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# aur-get - download and build AUR packages automatically
+set -o errexit -o pipefail
+readonly argv0=get
+readonly PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+
+aur sync \
+    -cd aur \
+    -C /etc/pacman.conf \
+    -M "$HOME"/.config/pacman/makepkg.conf \
+    "$@"
+
+# vim: set et sw=4 sts=4 ft=sh:

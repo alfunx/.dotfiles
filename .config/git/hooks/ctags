@@ -1,0 +1,10 @@
+#!/bin/sh
+
+DIR="$(git rev-parse --git-dir)"
+mkdir "$DIR/tags_lock" 2> /dev/null || exit 0
+trap 'rm -rf "$DIR/tags_lock"; rm -f "$DIR/$$.tags"' INT TERM EXIT
+
+git ls-files \
+    | ctags --tag-relative -L - -f"$DIR/$$.tags" --exclude=.git --languages=-javascript,-sql
+
+mv "$DIR/$$.tags" "$DIR/tags"

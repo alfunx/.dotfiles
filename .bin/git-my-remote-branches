@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+for branch in $(git branch --remote | grep -v HEAD); do
+    last_committer=$(git show --no-patch --format='%an' "$branch")
+    name=$(git config --get user.name)
+    if [[ "$last_committer" = "$name" ]]; then
+        echo "$branch"
+    fi
+done

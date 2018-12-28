@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+fzf() {
+    fzf-tmux -d 30% -- "$@"
+}
+
+# print git commit sha-hash
+
+if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+    exit 1
+fi
+
+commits=$(git log --format=oneline --abbrev-commit --all \
+    --decorate --color=always) \
+    || exit 1
+
+commit=$(echo "$commits" | fzf +s +m -e --ansi) \
+    || exit 1
+
+echo -n "${commit// */}"

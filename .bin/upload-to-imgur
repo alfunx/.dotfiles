@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+client_id='9a6fd61088e51d4'
+pictures_dir="$(xdg-user-dir PICTURES 2> /dev/null)"
+input_dir="${pictures_dir:-$HOME/Pictures}/screenshots"
+input_file=$(find "$input_dir" -print0 \
+    | xargs -0 ls -1 -t 2> /dev/null \
+    | head -1)
+output_dir="${pictures_dir:-$HOME/Pictures}/imgur"
+
+readonly argv0="$0"
+
+usage() {
+    echo "usage: $argv0 [-i input-file] [-d delete-hash-file]"
+    exit 1
+}
+
+while getopts d:i: OPT; do
+    case $OPT in
+        d) delete_hash_file=$OPTARG ;;
+        i) input_file=$OPTARG ;;
+        *) usage ;;
+    esac
+done
+shift $((OPTIND - 1))
+OPTIND=1
+
+readonly delete_hash_file input_file
+
+if [[ -z $delete_hash_file ]]; then
+    link=$(curl --silent \
+        --request POST \
+        --url "https://api.imgur.com/3/image" \
+        --header "authorization: Client-ID $client_id" \
+        --header 'content-type: multipart/form-data;' \
+        --form "image=@$input_file" \
+        | jq '. | {link: .data.link, deletehash: .data.deletehash}' \
+        | tee "$output_dir/$(date +%Y-%m-%d_%T)" \
+        | jq --raw-output '.link')
+    echo "$link" | tee >(xclip -i -selection clipboard -rmlastnl > /dev/null 2>&1)
+
+    notify-send \
+        --expire-time=5000 \
+        --icon="$input_file" \
+        'Upload to Imgur' \
+        "Uploaded screenshot to\\n$link)"
+else
+    delete_hash=$(jq --raw-output '.deletehash' "$delete_hash_file")
+    success=$(curl --silent \
+        --request DELETE \
+        --url "https://api.imgur.com/3/image/$delete_hash" \
+        --header "authorization: Client-ID $client_id" \
+        | jq '.success')
+    if [[ $success = 'true' ]]; then
+        rm -rf "$delete_hash_file"
+    else
+        exit 1
+    fi
+fi

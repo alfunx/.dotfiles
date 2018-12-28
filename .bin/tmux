@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+if [[ $1 = '.' ]]; then
+    if [[ -f './.tmux' ]]; then
+        echo -n "[1;97mSource [1;91m$(pwd)/.tmux[1;97m? [yN] [0m"
+        read -r reply
+        if [[ ! $reply =~ ^[Yy]$ ]]; then
+            echo 'Not sourced [1;97m.tmux[0m file.'
+            exit
+        fi
+
+        if [[ ! -z "$TMUX" ]]; then
+            tmux source-file "$(pwd)/.tmux"
+        else
+            echo 'No tmux session attached.'
+            exit 1
+        fi
+    else
+        echo 'No [1;97m.tmux[0m file found.'
+        exit 1
+    fi
+elif [[ $TERM = 'linux' ]]; then
+    /usr/bin/tmux -L linux -f "$HOME/.tmux.minimal.conf" "$@"
+else
+    /usr/bin/tmux "$@"
+fi

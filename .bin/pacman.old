@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+update-widget() {
+    if [[ -n "$SUDO_USER" ]]; then
+        runuser -u "$SUDO_USER" -- \
+            update-pacman-widget
+    else
+        update-pacman-widget
+    fi
+}
+
+update-widget
+
+/usr/bin/pacman "$@"
+
+update-widget

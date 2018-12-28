@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+if (( $# < 1 )); then
+  echo "Usage: $0 IMAGE [SHADOW-IMAGE] [BLUR-OPTION]"
+  exit 1
+fi
+
+originalfile=$1
+filename="${originalfile%.*}"
+fileextension="${originalfile##*.}"
+
+base_file="${filename}_base.${fileextension}"
+blur_file="${filename}_blur.${fileextension}"
+shadow_file="$2"
+blur_setting="${3:-0x128}"
+
+cp "$originalfile" "$base_file"
+convert "$originalfile" -blur "$blur_setting" "$blur_file"
+
+if [ -f "$2" ]; then
+  convert "$base_file" "$2" -gravity center -composite -matte "$base_file"
+  convert "$blur_file" "$2" -gravity center -composite -matte "$blur_file"
+fi

@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+git-one() {
+    pushd "$1" >/dev/null || exit 1
+    shift;
+    if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+        output=$(git "$@" 2>&1 | awk 'NF')
+        message="Done: [1m$(pwd)[0m"
+        line=$(printf %"$(tput cols)"s | sed 's/ /─/g')
+        echo -e "$output\\n$message\\n$line"
+    fi
+    popd >/dev/null || exit 1
+}
+export -f git-one
+
+find . -mindepth 1 -maxdepth 1 -type d \
+    | xargs -I@ -P0 bash -c "git-one @ $*"

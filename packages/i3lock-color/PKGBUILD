@@ -1,0 +1,42 @@
+# Maintainer: alfunx <alphonse.mariya@hotmail.com>
+
+_pkgname=i3lock-color
+pkgname=$_pkgname-git
+pkgver=r518.fb9d064
+pkgrel=1
+pkgdesc="An improved screenlocker based upon XCB and PAM with color configuration support"
+arch=('i686' 'x86_64')
+url="https://github.com/PandorasFox/i3lock-color"
+license=('MIT')
+depends=('xcb-util-xrm' 'xcb-util-image' 'pam' 'libev' 'cairo' 'libxkbcommon-x11' 'libjpeg-turbo')
+provides=('i3lock' 'i3lock-color')
+conflicts=('i3lock')
+makedepends=('git')
+source=("$_pkgname::git+https://github.com/PandorasFox/i3lock-color")
+md5sums=('SKIP')
+
+pkgver() {
+    cd "$_pkgname"
+    echo "r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+    cd "$_pkgname"
+}
+
+build() {
+    cd "$_pkgname"
+    # https://bugs.archlinux.org/task/31544
+    sed -i -e 's:login:system-auth:' pam/i3lock
+
+    git tag -f "aur-$(git rev-parse --short HEAD)"
+    autoreconf -fi
+    ./configure --prefix="/usr" --sysconfdir="/etc"
+    make -j8
+}
+
+package() {
+    cd "$_pkgname"
+    make DESTDIR="$pkgdir" install
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$_pkgname/LICENSE"
+}

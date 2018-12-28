@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+
+set -o errexit -o pipefail
+shopt -s nullglob
+shopt -s extglob
+readonly argv0="$0"
+readonly PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+
+# default arguments
+maim_args=()
+pictures_dir="$(xdg-user-dir PICTURES 2> /dev/stderr)"
+output_dir="${pictures_dir:-$HOME/Pictures}/screenshots"
+output_file="$output_dir/$(date +%Y-%m-%d_%T).png"
+
+# default options (enabled)
+cursor=1
+
+# default options (disabled)
+select=0 timeout=0
+
+usage() {
+    plain "usage: $argv0 [-cCsStT] [-o output-file] [long options]"
+    exit 1
+}
+
+source /usr/share/makepkg/util/util.sh
+source /usr/share/makepkg/util/message.sh
+source /usr/share/makepkg/util/parseopts.sh
+
+if [[ -t 2 && ! -o xtrace ]]; then
+    colorize
+fi
+
+opt_short='cCsStTo:h'
+opt_long=('cursor' 'no-cursor' 'select' 'no-select' 'timeout'
+          'no-timeout' 'output:' 'output-file:' 'help')
+
+if ! parseopts "$opt_short" "${opt_long[@]}" -- "$@"; then
+    usage
+fi
+set -- "${OPTRET[@]}"
+
+unset maim_args
+while true; do
+    case "$1" in
+        -c|--cursor)               cursor=1 ;;
+        -C|--no?(-)cursor)         cursor=0 ;;
+        -s|--select)               select=1 ;;
+        -S|--no?(-)select)         select=0 ;;
+        -t|--timeout)              timeout=1 ;;
+        -T|--no?(-)timeout)        timeout=0 ;;
+        -o|--output|--output-file) shift; output_file=$1 ;;
+        -h|--help)                 usage ;;
+        --)                        shift; break ;;
+    esac
+    shift
+done
+unset opt_short opt_long OPTRET
+
+if ((! cursor)); then
+    maim_args+=(-u)
+fi
+
+if ((select)); then
+    maim_args+=(-s)
+    maim_args+=(-b 3)
+    maim_args+=(-c '0.98431372549019607843,0.28627450980392156862,0.20392156862745098039,1')
+fi
+
+if ((timeout)); then
+    sleep 5
+fi
+
+# We want word splitting here
+if maim "${maim_args[@]}" "$output_file"; then
+    notify-send \
+        --expire-time=10000 \
+        --icon="$output_file" \
+        'Screenshot' \
+        "Saved as $(basename "$output_file")\\nunder $("$HOME/.bin/show-short-dir" "$output_dir")"
+    xclip -selection clipboard -t image/png -i "$output_file"
+fi
+# vim: set et sw=4 sts=4 ft=sh:

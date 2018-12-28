@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+# aur-update - update AUR packages
+set -o errexit -o pipefail
+shopt -s nullglob
+shopt -s extglob
+readonly argv0=update
+readonly AURVCS=${AURVCS:-.*-(bzr|git|hg|svn)$}
+readonly PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+
+# default arguments
+build_args=(--rebuild)
+packages=()
+
+# default options (disabled)
+all=0 aur=0 vcs=0 refresh_cache=0 filter=0
+
+fzf() {
+    fzf-tmux -d 30% -- "$@"
+}
+
+usage() {
+    plain "usage: $argv0 [-cAavrf]"
+    exit 1
+}
+
+source /usr/share/makepkg/util/util.sh
+source /usr/share/makepkg/util/message.sh
+source /usr/share/makepkg/util/parseopts.sh
+
+if [[ -t 2 && ! -o xtrace ]]; then
+    colorize
+fi
+
+opt_short='cAavrf'
+opt_long=('chroot' 'all' 'aur' 'vcs' 'refresh' 'filter')
+
+if ! parseopts "$opt_short" "${opt_long[@]}" -- "$@"; then
+    usage
+fi
+set -- "${OPTRET[@]}"
+
+while true; do
+    case "$1" in
+        -c|--chroot)  build_args+=(-c) ;;
+        -A|--all)     all=1 ;;
+        -a|--aur)     all=0; aur=1 ;;
+        -v|--vcs)     all=0; vcs=1 ;;
+        -r|--refresh) refresh_cache=1 ;;
+        -f|--filter)  filter=1 ;;
+        --)           shift; break ;;
+    esac
+    shift
+done
+unset opt_short opt_long OPTRET
+
+if ((refresh_cache)); then
+    mapfile -t _packages < <(aur repo --list | cut -f1 | grep -E "$AURVCS")
+    aur sync -c --no-ver --print "${_packages[@]}"
+fi
+
+if ((all)); then
+    aur=1 vcs=1
+fi
+
+if ((aur)); then
+    mapfile -t _packages < <(aur repo -u | cut -d: -f1)
+    packages+=("${_packages[@]}")
+fi
+
+if ((vcs)); then
+    mapfile -t _packages < <(aur vercmp-devel | cut -d: -f1)
+    packages+=("${_packages[@]}")
+fi
+
+if ((filter)); then
+    mapfile -t packages < <(printf '%s\n' "${packages[@]}" | fzf +s -m)
+fi
+
+if ((${#packages[@]})); then
+    aur sync \
+        -d aur \
+        -C /etc/pacman.conf \
+        -M "$HOME"/.config/pacman/makepkg.conf \
+        "${build_args[@]}" "${packages[@]}"
+fi
+
+# vim: set et sw=4 sts=4 ft=sh:

@@ -1,0 +1,52 @@
+# docs:
+# https://github.com/be5invis/Iosevka
+
+# ss## stylistic sets:
+# https://raw.githubusercontent.com/be5invis/Iosevka/master/images/stylesets.png
+
+# cv## character variants:
+# https://raw.githubusercontent.com/be5invis/Iosevka/master/images/charvars.png
+
+# ligset-* ligature sets:
+# https://raw.githubusercontent.com/be5invis/Iosevka/master/images/ligations.png
+
+
+[buildPlans.iosevka-custom]
+family = "Iosevka Custom"
+
+design = [
+
+    "sans",
+    "expanded",
+    "term",
+
+    "v-l-italic",
+    "v-i-italic",
+    "v-q-taily",
+    "v-eszet-traditional",
+    "v-tilde-low",
+    "v-asterisk-low",
+    "v-caret-low",
+    "v-underscore-low",
+    "v-at-short",
+    "v-three-flattop"
+
+]
+
+upright = [
+
+    "v-g-opendoublestorey"
+
+]
+
+italic = [
+
+    "v-g-singlestorey"
+
+]
+
+oblique = [
+
+    "v-g-opendoublestorey"
+
+]

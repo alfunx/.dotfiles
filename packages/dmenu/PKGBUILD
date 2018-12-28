@@ -1,0 +1,58 @@
+# Maintainer: alfunx <alphonse.mariya@hotmail.com>
+
+_pkgname=dmenu
+pkgname=$_pkgname-git
+pkgver=4.8.r12.gbbc464d
+pkgrel=1
+pkgdesc='A generic menu for X. (Including patches and colorschemes)'
+arch=('i686' 'x86_64')
+url='https://st.suckless.org/'
+license=('MIT')
+options=('zipman')
+depends=('sh' 'libxinerama' 'libxft')
+makedepends=('git')
+provides=('dmenu')
+conflicts=('dmenu')
+
+_patches=('dmenu-lineheight-20180518-e75494b.diff'
+          'dmenu-fuzzymatch-20180518-e75494b.diff'
+          'dmenu-config-20180215-8895128.diff')
+
+source=("$_pkgname::git+https://git.suckless.org/dmenu"
+        "${_patches[@]}")
+
+sha512sums=('SKIP'
+            'b7d413b2a9941e92c3fb9223dfb6bf0d8fca84c61a490caf4cf899d327fb8a9c1dc5779b398e0ea33578457c2bd2280df144a051f923975f5096755bd452642f'
+            '9013c525321d54f35aa74b3b8792ae7afe66c4adf0412339122e894dc8e2afc3390c35d9ea0b46a7f2594c12d4fe9879b308b46edc47a714c43ee8c5630d9ce3'
+            'SKIP')
+
+pkgver() {
+    cd "$_pkgname"
+    git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+    local file
+    cd "$_pkgname"
+
+    for file in "${_patches[@]}"; do
+        if [[ "$file" == *.h ]]; then
+            cp "$srcdir/$file" .
+        elif [[ "$file" == *.diff || "$file" == *.patch ]]; then
+            echo -e "\e[1mApplying patch: $(basename "$file")\e[0m"
+            patch -Np1 <"$srcdir/$(basename "$file")"
+        fi
+    done
+}
+
+build() {
+    cd "$_pkgname"
+    make X11INC=/usr/include/X11 X11LIB=/usr/lib/X11
+}
+
+package() {
+    cd "$_pkgname"
+    make PREFIX=/usr DESTDIR="$pkgdir" install
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$_pkgname/LICENSE"
+    install -Dm644 README "$pkgdir/usr/share/doc/$_pkgname/README"
+}

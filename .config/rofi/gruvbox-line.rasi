@@ -1,0 +1,107 @@
+* {
+    backgroundcolor: #282828;
+    bg1: #504945;
+    backgroundcoloralternate: #282828;
+    separatorcolor: #504945;
+    scrollbarcolor: #504945;
+    foregroundcolor: #ebdbb2;
+    foregroundcolorinverse: #ebdbb2;
+    selectioncolor: #504945;
+    bordercolor: #928374;
+
+    font: "monospace 11";
+    border-color: @separatorcolor;
+    background-color: @backgroundcolor;
+    text-color: @foregroundcolor;
+    margin: 0;
+    margin-bottom: 0;
+    margin-top: 0;
+    spacing: 0;
+}
+
+#listview {
+    spacing: 0;
+    layout: horizontal;
+    margin: 0;
+    dynamic: true;
+    lines: 100;
+}
+
+#window {
+    anchor: north;
+    location: north;
+    width: 100%;
+    height: 29;
+    background-color: @backgroundcolor;
+    border-color: @bordercolor;
+    border: 0 0 4 0;
+    border-radius: 0;
+    children: [ horibox ];
+}
+
+#horibox {
+    orientation: horizontal;
+    children: [ prompt, entry, listview ];
+}
+
+#mainbox {
+    border: 0;
+    padding: 0;
+    background-color: @backgroundcoloralternate;
+}
+
+#element {
+    padding: 3 10 3 10;
+    background-color: @backgroundcoloralternate;
+}
+
+#element.selected.normal {
+    background-color: @selectioncolor;
+    text-color: @foregroundcolorinverse;
+}
+
+#element.alternate.normal {
+    background-color: @backgroundcoloralternate;
+}
+
+#element.normal.active {
+    background-color: #7c6f64;
+}
+
+#element.alternate.active {
+    background-color: #7c6f64;
+}
+
+#element.selected.active {
+    background-color: @selectioncolor;
+    text-color: @foregroundcolorinverse;
+}
+
+#inputbar {
+    margin: 0;
+    spacing: 0;
+}
+
+#prompt {
+    padding: 3 10 3 10;
+    background-color: @backgroundcoloralternate;
+    border: 0 2 0 0;
+    border-color: @bordercolor;
+    expand: false;
+}
+
+#entry {
+    padding: 3 10 3 10;
+    expand: false;
+    width: 10em;
+}
+
+#scrollbar {
+    border: 0;
+    width: 0;
+    handle-color: @scrollbarcolor;
+    handle-width: 0;
+    background-color: @backgroundcoloralternate;
+}
+
+/* vim: set ft=css : */

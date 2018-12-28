@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+netName=$(ip link show | grep enp | awk '{ print $2 }')
+netName=${netName%?}
+sudo ip link set "$netName" up > /dev/null 2>&1
+sudo dhcpcd > /dev/null 2>&1
+sudo ip link set wlp2s0 down > /dev/null 2>&1
