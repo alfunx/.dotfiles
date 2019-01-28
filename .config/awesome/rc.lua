@@ -100,11 +100,13 @@ beautiful.init(theme_path)
 config.widgets.init(context)
 config.util.init(context)
 config.menu.init(context)
+-- config.popups.init(context)
 config.keys.init(context)
 config.keys_command.init(context)
 config.keys_client.init(context)
 config.rules.init(context)
 config.signals.init(context)
+-- config.sidebar.init(context)
 config.screen.init(context)
 -- }}}
 

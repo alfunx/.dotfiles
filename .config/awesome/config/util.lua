@@ -10,6 +10,7 @@ local gears = require("gears")
 local awful = require("awful")
 local beautiful = require("beautiful")
 local xresources = require("beautiful.xresources")
+local wibox = require("wibox")
 local dpi = xresources.apply_dpi
 
 local config = { }
@@ -117,6 +118,56 @@ function config.init(context)
         local columns = awful.util.tagcolumns or #awful.util.tagnames
         return math.floor((index - 1) / columns) == math.floor((selected - 1) / columns)
     end
+
+    -- {{{ Dynamic tagging
+
+    -- Add a new tag
+    function context.util.add_tag(layout)
+        awful.prompt.run {
+            prompt       = "New tag name: ",
+            textbox      = awful.screen.focused()._promptbox.widget,
+            exe_callback = function(name)
+                if not name or #name == 0 then return end
+                awful.tag.add(name, { screen = awful.screen.focused(), layout = layout or awful.layout.suit.tile }):view_only()
+            end
+        }
+    end
+
+    -- Rename current tag
+    function context.util.rename_tag()
+        awful.prompt.run {
+            prompt       = "Rename tag: ",
+            textbox      = awful.screen.focused()._promptbox.widget,
+            exe_callback = function(new_name)
+                if not new_name or #new_name == 0 then return end
+                local t = awful.screen.focused().selected_tag
+                if t then
+                    t.name = new_name
+                end
+            end
+        }
+    end
+
+    -- Move current tag
+    -- pos in {-1, 1} <-> {previous, next} tag position
+    function context.util.move_tag(pos)
+        local tag = awful.screen.focused().selected_tag
+        if tonumber(pos) <= -1 then
+            awful.tag.move(tag.index - 1, tag)
+        else
+            awful.tag.move(tag.index + 1, tag)
+        end
+    end
+
+    -- Delete current tag
+    -- Any rule set on the tag shall be broken
+    function context.util.delete_tag()
+        local t = awful.screen.focused().selected_tag
+        if not t then return end
+        t:delete()
+    end
+
+    -- }}}
 
     -- Set titlebar visibility
     local set_titlebar = function(c, f)
@@ -321,6 +372,50 @@ function config.init(context)
 
         primary:connect_signal("mouse::enter", swap_widget)
         primary:connect_signal("mouse::leave", swap_widget)
+    end
+
+    -- Create default popup
+    context.util.popup = function(args)
+        args.width = args.width or 96
+        args.height = args.height or 96
+        args.timeout = args.timeout or 1
+
+        local popup = awful.popup {
+            widget = {
+                {
+                    {
+                        args.widget,
+                        widget = wibox.container.place
+                    },
+                    margins = 16,
+                    widget = wibox.container.margin,
+                },
+                forced_width = dpi(args.width),
+                forced_height = dpi(args.height),
+                widget = wibox.container.background,
+            },
+            border_color = beautiful.border_focus,
+            border_width = beautiful.border_width,
+            ontop = true,
+            visible = false,
+            placement = awful.placement.centered,
+        }
+
+        local timer = gears.timer {
+            timeout = args.timeout,
+            callback = function()
+                popup.visible = false
+                timer:stop()
+            end,
+        }
+
+        -- Show popup
+        function popup:show()
+            self.visible = true
+            timer:again()
+        end
+
+        return popup
     end
 
 end

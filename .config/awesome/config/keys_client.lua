@@ -48,21 +48,42 @@ function config.init(context)
                   { description = "swap with master", group = "client" }),
 
         -- Move client to tag in grid
-        awful.key({ k.m, k.c, k.s      }, k.l, function(c) context.util.move_client_in_grid(c, "l") end,
+        awful.key({ k.m, k.c, k.s      }, k.l, function(c)
+            context.util.move_client_in_grid(c, "l")
+            c.screen._taglist_popup:show()
+        end,
                   { description = "move to previous tag", group = "client" }),
-        awful.key({ k.m, k.c, k.s      }, k.r, function(c) context.util.move_client_in_grid(c, "r") end,
+        awful.key({ k.m, k.c, k.s      }, k.r, function(c)
+            context.util.move_client_in_grid(c, "r")
+            c.screen._taglist_popup:show()
+        end,
                   { description = "move to next tag", group = "client" }),
-        awful.key({ k.m, k.c, k.s      }, k.u, function(c) context.util.move_client_in_grid(c, "u") end,
+        awful.key({ k.m, k.c, k.s      }, k.u, function(c)
+            context.util.move_client_in_grid(c, "u")
+            c.screen._taglist_popup:show()
+        end,
                   { description = "move to tag above", group = "client" }),
-        awful.key({ k.m, k.c, k.s      }, k.d, function(c) context.util.move_client_in_grid(c, "d") end,
+        awful.key({ k.m, k.c, k.s      }, k.d, function(c)
+            context.util.move_client_in_grid(c, "d")
+            c.screen._taglist_popup:show()
+        end,
                   { description = "move to tag below", group = "client" }),
 
         -- Move client to screen
-        awful.key({ k.m                }, "o", function(c) c:move_to_screen() end,
+        awful.key({ k.m                }, "o", function(c)
+            c:move_to_screen()
+            c.screen._taglist_popup:show()
+        end,
                   { description = "move to screen", group = "client" }),
-        awful.key({ k.c, k.a, k.s      }, k.l, function(c) c:move_to_screen(c.screen.index+1) end,
+        awful.key({ k.c, k.a, k.s      }, k.l, function(c)
+            c:move_to_screen(c.screen.index+1)
+            c.screen._taglist_popup:show()
+        end,
                   { description = "move to previous screen", group = "client" }),
-        awful.key({ k.c, k.a, k.s      }, k.r, function(c) c:move_to_screen(c.screen.index-1) end,
+        awful.key({ k.c, k.a, k.s      }, k.r, function(c)
+            c:move_to_screen(c.screen.index-1)
+            c.screen._taglist_popup:show()
+        end,
                   { description = "move to next screen", group = "client" }),
 
         -- Edit in Vim
@@ -96,6 +117,7 @@ function config.init(context)
                 if _tag then
                     c:move_to_tag(_tag)
                 end
+                c.screen._taglist_popup:show()
             end),
 
             -- Move client to tag and view it
@@ -105,6 +127,7 @@ function config.init(context)
                     c:move_to_tag(_tag)
                     _tag:view_only()
                 end
+                c.screen._taglist_popup:show()
             end),
 
             -- Toggle tag on focused client
@@ -113,6 +136,7 @@ function config.init(context)
                 if _tag then
                     c:toggle_tag(_tag)
                 end
+                c.screen._taglist_popup:show()
             end)
         )
     end

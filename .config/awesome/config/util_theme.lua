@@ -58,6 +58,42 @@ function config.init(context)
         end
     end
 
+    -- Generate font string
+    context.util.font = function(args)
+        local args = args or {}
+        args.name = args.name or "monospace"
+        args.bold = args.bold or false
+        args.italic = args.italic or false
+        args.size = args.size or 11
+
+        font_string = args.name
+        if args.bold then font_string = font_string .. " Bold" end
+        if args.italic then font_string = font_string .. " Italic" end
+        font_string = font_string .. " " .. args.size
+
+        return font_string
+    end
+
+    -- Generate markup function
+    context.util.markup_function = function(args, fg, markup)
+        local font_string = context.util.font(args)
+
+        return function(widget, text, color)
+            color = color or fg
+            widget:set_markup(markup.fontfg(font_string, color, text))
+        end
+    end
+
+    -- Generate text markup function
+    context.util.text_markup_function = function(size, fg, markup)
+        return context.util.markup_function({ size = size }, fg, markup)
+    end
+
+    -- Generate symbol markup function
+    context.util.symbol_markup_function = function(size, fg, markup)
+        return context.util.markup_function({ name = "Font Awesome", size = size }, fg, markup)
+    end
+
 end
 
 return config

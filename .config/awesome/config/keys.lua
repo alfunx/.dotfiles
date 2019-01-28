@@ -109,6 +109,10 @@ function config.init(context)
         -- -- Copy clipboard to primary (gtk to terminals)
         -- awful.key({ k.m                }, "v", function() awful.spawn("xsel -b | xsel") end),
 
+        -- -- Sidebar
+        -- awful.key({ k.m, k.c           }, "f", function() context.sidebar.toggle() end,
+        --           { description = "toggle sidebar", group = "awesome" }),
+
         -- Prompt
         awful.key({ k.m                }, "r", function() awful.screen.focused()._promptbox:run() end,
                   { description = "run prompt", group = "launcher" }),
@@ -128,7 +132,7 @@ function config.init(context)
                   { description = "show session menu (rofi)", group = "launcher" }),
         awful.key({ k.m                }, "x", function()
             awful.prompt.run {
-                prompt       = "Run Lua code: ",
+                prompt       = "Run (Lua): ",
                 textbox      = awful.screen.focused()._promptbox.widget,
                 exe_callback = awful.util.eval,
                 history_path = gears.filesystem.get_cache_dir() .. "/history_eval",
@@ -155,15 +159,28 @@ function config.init(context)
         --           { description = "go back", group = "tag" }),
 
         -- Dynamic tagging
-        awful.key({ k.m, k.a           }, k.l, function() lain.util.move_tag(-1) end,
+        awful.key({ k.m, k.a           }, k.l, function()
+            context.util.move_tag(-1)
+            awful.screen.focused()._taglist_popup:show()
+        end,
                   { description = "move tag backward", group = "tag" }),
-        awful.key({ k.m, k.a           }, k.r, function() lain.util.move_tag(1) end,
+        awful.key({ k.m, k.a           }, k.r, function()
+            context.util.move_tag(1)
+            awful.screen.focused()._taglist_popup:show()
+        end,
                   { description = "move tag forward", group = "tag" }),
-        awful.key({ k.m, k.a           }, "n", function() lain.util.add_tag() end,
+        awful.key({ k.m, k.a           }, "n", function()
+            context.util.add_tag()
+        end,
                   { description = "new tag", group = "tag" }),
-        awful.key({ k.m, k.a           }, "r", function() lain.util.rename_tag() end,
+        awful.key({ k.m, k.a           }, "r", function()
+            context.util.rename_tag()
+        end,
                   { description = "rename tag", group = "tag" }),
-        awful.key({ k.m, k.a           }, "d", function() lain.util.delete_tag() end,
+        awful.key({ k.m, k.a           }, "d", function()
+            context.util.delete_tag()
+            awful.screen.focused()._taglist_popup:show()
+        end,
                   { description = "delete tag", group = "tag" }),
         awful.key({ k.m, k.a           }, "a", function()
             for i = 1, awful.util.tagcolumns or #awful.util.tagnames do
@@ -172,25 +189,47 @@ function config.init(context)
                     layout = layout or awful.layout.suit.tile,
                 })
             end
+            awful.screen.focused()._taglist_popup:show()
         end,
                   { description = "add row of tags", group = "tag" }),
-        awful.key({ k.m, k.a           }, "BackSpace", awful.tag.history.restore,
+        awful.key({ k.m, k.a           }, "BackSpace", function()
+            awful.tag.history.restore()
+            awful.screen.focused()._taglist_popup:show()
+        end,
                   { description = "go back", group = "tag" }),
 
         -- Non-empty tag browsing
-        awful.key({ k.m, k.c           }, k.l, function() lain.util.tag_view_nonempty(-1) end,
+        awful.key({ k.m, k.c           }, k.l, function()
+            lain.util.tag_view_nonempty(-1)
+            awful.screen.focused()._taglist_popup:show()
+        end,
                   { description = "view previous nonempty", group = "tag" }),
-        awful.key({ k.m, k.c           }, k.r, function() lain.util.tag_view_nonempty(1) end,
+        awful.key({ k.m, k.c           }, k.r, function()
+            lain.util.tag_view_nonempty(1)
+            awful.screen.focused()._taglist_popup:show()
+        end,
                   { description = "view next nonempty", group = "tag" }),
 
         -- Select tag in grid
-        awful.key({ k.m                }, k.l, function() context.util.select_tag_in_grid("l") end,
+        awful.key({ k.m                }, k.l, function()
+            context.util.select_tag_in_grid("l")
+            awful.screen.focused()._taglist_popup:show()
+        end,
                   { description = "view previous", group = "tag" }),
-        awful.key({ k.m                }, k.r, function() context.util.select_tag_in_grid("r") end,
+        awful.key({ k.m                }, k.r, function()
+            context.util.select_tag_in_grid("r")
+            awful.screen.focused()._taglist_popup:show()
+        end,
                   { description = "view next", group = "tag" }),
-        awful.key({ k.m, k.c           }, k.u, function() context.util.select_tag_in_grid("u") end,
+        awful.key({ k.m, k.c           }, k.u, function()
+            context.util.select_tag_in_grid("u")
+            awful.screen.focused()._taglist_popup:show()
+        end,
                   { description = "view above", group = "tag" }),
-        awful.key({ k.m, k.c           }, k.d, function() context.util.select_tag_in_grid("d") end,
+        awful.key({ k.m, k.c           }, k.d, function()
+            context.util.select_tag_in_grid("d")
+            awful.screen.focused()._taglist_popup:show()
+        end,
                   { description = "view below", group = "tag" }),
 
         -- Client manipulation
@@ -202,7 +241,10 @@ function config.init(context)
                   { description = "swap with previous client by index", group = "client" }),
         awful.key({ k.m, k.s           }, k.d, function() awful.client.swap.byidx(1) end,
                   { description = "swap with next client by index", group = "client" }),
-        awful.key({ k.m                }, "u", awful.client.urgent.jumpto,
+        awful.key({ k.m                }, "u", function()
+            awful.client.urgent.jumpto()
+            awful.screen.focused()._taglist_popup:show()
+        end,
                   { description = "jump to urgent client", group = "client" }),
 
         -- Cycle clients
@@ -249,10 +291,16 @@ function config.init(context)
                   { description = "increase the number of slave columns", group = "layout" }),
         awful.key({ k.m, k.a, k.s      }, k.l, function() awful.tag.incncol(-1, nil, true) end,
                   { description = "decrease the number of slave columns", group = "layout" }),
-        awful.key({ k.m,               }, "space", function() awful.layout.inc(1) end,
-                  { description = "select next", group = "layout" }),
-        awful.key({ k.m, k.s           }, "space", function() awful.layout.inc(-1) end,
-                  { description = "select previous", group = "layout" }),
+        awful.key({ k.m,               }, "space", function()
+            awful.layout.inc(1)
+            awful.screen.focused()._layout_popup:show()
+        end,
+                  { description = "select next layout", group = "layout" }),
+        awful.key({ k.m, k.s           }, "space", function()
+            awful.layout.inc(-1)
+            awful.screen.focused()._layout_popup:show()
+        end,
+                  { description = "select previous layout", group = "layout" }),
 
         -- Show/hide wibox
         awful.key({ k.m, k.c           }, "b", function()
@@ -284,6 +332,7 @@ function config.init(context)
             function(stdout, stderr, reason, exit_code) --luacheck: no unused args
                 beautiful.volume.manual = true
                 beautiful.volume.update()
+                -- context.popups.vol:show()
             end)
         end),
         awful.key({                    }, "XF86AudioLowerVolume", function()
@@ -291,6 +340,7 @@ function config.init(context)
             function(stdout, stderr, reason, exit_code) --luacheck: no unused args
                 beautiful.volume.manual = true
                 beautiful.volume.update()
+                -- context.popups.vol:show()
             end)
         end),
         awful.key({                    }, "XF86AudioMute", function()
@@ -298,6 +348,7 @@ function config.init(context)
             function(stdout, stderr, reason, exit_code) --luacheck: no unused args
                 beautiful.volume.manual = true
                 beautiful.volume.update()
+                -- context.popups.vol:show()
             end)
         end),
         awful.key({ k.c                }, "XF86AudioRaiseVolume", function()
@@ -305,6 +356,7 @@ function config.init(context)
             function(stdout, stderr, reason, exit_code) --luacheck: no unused args
                 beautiful.volume.manual = true
                 beautiful.volume.update()
+                -- context.popups.vol:show()
             end)
         end),
         awful.key({ k.c                }, "XF86AudioLowerVolume", function()
@@ -312,6 +364,7 @@ function config.init(context)
             function(stdout, stderr, reason, exit_code) --luacheck: no unused args
                 beautiful.volume.manual = true
                 beautiful.volume.update()
+                -- context.popups.vol:show()
             end)
         end),
         awful.key({ k.c                }, "XF86AudioMute", function()
@@ -319,6 +372,7 @@ function config.init(context)
             function(stdout, stderr, reason, exit_code) --luacheck: no unused args
                 beautiful.volume.manual = true
                 beautiful.volume.update()
+                -- context.popups.vol:show()
             end)
         end),
 
@@ -402,6 +456,7 @@ function config.init(context)
                 if _tag then
                     _tag:view_only()
                 end
+                _screen._taglist_popup:show()
             end),
 
             -- Toggle tag display
@@ -411,6 +466,7 @@ function config.init(context)
                 if _tag then
                     awful.tag.viewtoggle(_tag)
                 end
+                _screen._taglist_popup:show()
             end)
         )
     end
@@ -452,6 +508,29 @@ function config.init(context)
 
     -- Set buttons
     root.buttons(context.mouse.global)
+
+    -- -- Layout
+    -- awful.keygrabber {
+    --     start_callback = function() awful.screen.focused()._layout_popup.visible = true end,
+    --     stop_callback  = function() awful.screen.focused()._layout_popup.visible = false end,
+    --     export_keybindings = true,
+    --     stop_event = "release",
+    --     stop_key = { k.m },
+    --     allowed_keys   = { "Shift_L", "Shift_R", " " },
+    --     keybindings = {
+    --         {{ k.m,               } , " " , function()
+    --             awful.layout.inc(1)
+    --             -- awful.layout.set(gears.table.iterate_value(ll.layouts, ll.current_layout, 1), nil)
+    --         end,
+    --          { description = "select next", group = "layout" }},
+    --         {{ k.m, k.s           } , " " , function()
+    --             -- awful.layout.set(gears.table.iterate_value(ll.layouts, ll.current_layout, -1), nil)
+    --             awful.layout.inc(-1)
+    --         end,
+    --          { description = "select previous", group = "layout" }},
+    --     }
+    -- }
+
 
 end
 

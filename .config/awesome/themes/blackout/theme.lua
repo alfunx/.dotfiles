@@ -17,6 +17,9 @@ local context          = require("config").context
 local dpi              = xresources.apply_dpi
 local os, math, string = os, math, string
 
+local markup           = lain.util.markup
+local separators       = lain.util.separators
+
 local colors = { }
 
 colors.black_1          = "#282828"
@@ -269,9 +272,6 @@ naughty.config.presets.critical                 = {
                                                       timeout      = 0,
                                                   }
 
-local markup = lain.util.markup
--- local separators = lain.util.separators
-
 -- Spacing
 local space = wibox.widget {
     widget = wibox.widget.separator,
@@ -290,13 +290,18 @@ local vert_sep = wibox.widget {
     color = theme.border_normal,
 }
 
--- Textclock
+-- Markup
+local symbol = context.util.symbol_markup_function(8, bar_fg, markup)
+local text = context.util.text_markup_function(font_size, bar_fg, markup)
+local text_bold = context.util.markup_function({bold=true, size=font_size}, bar_fg, markup)
+
+-- {{{ Textclock
 -- local clock_icon = wibox.widget.imagebox(theme.widget_clock)
 local clock = awful.widget.watch(
     -- "date +'%a %d %b %R'", 60,
     "date +'%R'", 5,
     function(widget, stdout)
-        widget:set_markup(markup.fontfg(theme.font_bold, colors.bw_8, stdout))
+        text_bold(widget, stdout, colors.bw_8)
     end
 )
 
@@ -309,16 +314,18 @@ local clock_widget = wibox.widget {
     },
     layout = wibox.layout.align.horizontal,
 }
+-- }}}
 
--- Calendar
+-- {{{ Calendar
 theme.cal = lain.widget.calendar {
     cal = "cal --color=always --monday",
     attach_to = { clock_widget },
     icons = "",
     notification_preset = naughty.config.presets.normal,
 }
+-- }}}
 
--- -- Mail IMAP check
+-- -- {{{ Mail IMAP check
 -- local mail_icon = wibox.widget.imagebox(theme.widget_mail)
 -- --[[ commented because it needs to be set before use
 -- mail_icon:buttons(gears.table.join(awful.button({ }, 1, function() awful.spawn(mail) end)))
@@ -337,9 +344,9 @@ theme.cal = lain.widget.calendar {
 --         end
 --     end,
 -- })
--- --]]
+-- -- }}}
 
--- MPD
+-- {{{ MPD
 --luacheck: push ignore widget mpd_now artist title
 -- local musicplr = context.vars.terminal .. " -title Music -g 130x34-320+16 ncmpcpp"
 local mpd_icon = wibox.widget.imagebox(theme.widget_music)
@@ -378,15 +385,15 @@ theme.mpd = lain.widget.mpd {
     end,
 }
 --luacheck: pop
+-- }}}
 
--- MEM
+-- {{{ MEM
 --luacheck: push ignore widget mem_now
 local mem_icon = wibox.widget.imagebox(theme.widget_mem)
 local mem = lain.widget.mem {
     timeout = 5,
     settings = function()
         local _color = bar_fg
-        local _font = theme.font
 
         if tonumber(mem_now.perc) >= 90 then
             _color = colors.red_2
@@ -396,7 +403,7 @@ local mem = lain.widget.mem {
             _color = colors.yellow_2
         end
 
-        widget:set_markup(markup.fontfg(_font, _color, mem_now.perc))
+        text(widget, mem_now.perc, _color)
 
         widget.used  = mem_now.used
         widget.total = mem_now.total
@@ -420,9 +427,7 @@ local mem_widget = wibox.widget {
 }
 
 mem_widget:buttons(awful.button({ }, 1, function()
-    if mem_widget.notification then
-        naughty.destroy(mem_widget.notification)
-    end
+    naughty.destroy(mem_widget.notification)
     mem.update()
     mem_widget.notification = naughty.notify {
         title = "Memory",
@@ -438,15 +443,15 @@ mem_widget:buttons(awful.button({ }, 1, function()
     }
 end))
 --luacheck: pop
+-- }}}
 
--- CPU
+-- {{{ CPU
 --luacheck: push ignore widget cpu_now
 local cpu_icon = wibox.widget.imagebox(theme.widget_cpu)
 local cpu = lain.widget.cpu {
     timeout = 5,
     settings = function()
         local _color = bar_fg
-        local _font = theme.font
 
         if tonumber(cpu_now.usage) >= 90 then
             _color = colors.red_2
@@ -456,9 +461,9 @@ local cpu = lain.widget.cpu {
             _color = colors.yellow_2
         end
 
-        widget:set_markup(markup.fontfg(_font, _color, cpu_now.usage))
+        text(widget, cpu_now.usage, _color)
 
-        widget.core  = cpu_now
+        widget.core = cpu_now
     end,
 }
 
@@ -473,9 +478,7 @@ local cpu_widget = wibox.widget {
 }
 
 cpu_widget:buttons(awful.button({ }, 1, function()
-    if cpu_widget.notification then
-        naughty.destroy(cpu_widget.notification)
-    end
+    naughty.destroy(cpu_widget.notification)
     cpu.update()
     cpu_widget.notification = naughty.notify {
         title = "CPU",
@@ -487,15 +490,15 @@ cpu_widget:buttons(awful.button({ }, 1, function()
     }
 end))
 --luacheck: pop
+-- }}}
 
--- SYSLOAD
+-- {{{ SYSLOAD
 --luacheck: push ignore widget load_1 load_5 load_15
 local sysload_icon = wibox.widget.imagebox(theme.widget_hdd)
 local sysload = lain.widget.sysload {
     timeout = 5,
     settings = function()
         local _color = bar_fg
-        local _font = theme.font
 
         -- check with: grep 'model name' /proc/cpuinfo | wc -l
         local cores = context.vars.cores or 4
@@ -513,7 +516,8 @@ local sysload = lain.widget.sysload {
         elseif tonumber(load_5) / cores >= 0.5 then
             _color = colors.yellow_2
         end
-        widget:set_markup(markup.fontfg(_font, _color, load_5))
+
+        text(widget, load_5, _color)
 
         widget.load_1  = load_1
         widget.load_5  = load_5
@@ -532,9 +536,7 @@ local sysload_widget = wibox.widget {
 }
 
 sysload_widget:buttons(awful.button({ }, 1, function()
-    if sysload_widget.notification then
-        naughty.destroy(sysload_widget.notification)
-    end
+    naughty.destroy(sysload_widget.notification)
     sysload.update()
     sysload_widget.notification = naughty.notify {
         title = "Load Average",
@@ -545,8 +547,9 @@ sysload_widget:buttons(awful.button({ }, 1, function()
     }
 end))
 --luacheck: pop
+-- }}}
 
--- PACMAN
+-- {{{ PACMAN
 --luacheck: push ignore widget available
 local pacman_icon = wibox.widget.imagebox(theme.widget_pacman)
 theme.pacman = widgets.pacman {
@@ -554,9 +557,7 @@ theme.pacman = widgets.pacman {
     notify = "on",
     notification_preset = naughty.config.presets.normal,
     settings = function()
-        local _color = bar_fg
-        local _font = theme.font
-        widget:set_markup(markup.fontfg(_font, _color, available))
+        text(widget, available)
     end,
 }
 
@@ -574,19 +575,18 @@ pacman_widget:buttons(awful.button({ }, 1, function()
     theme.pacman.manual_update()
 end))
 --luacheck: pop
+-- }}}
 
--- USERS
+-- {{{ USERS
 --luacheck: push ignore widget logged_in
 local users_icon = wibox.widget.imagebox(theme.widget_users)
 local users = widgets.users {
     settings = function()
         local _color = bar_fg
-        local _font = theme.font
-
         if tonumber(logged_in) > 1 then
             _color = colors.red_2
         end
-        widget:set_markup(markup.fontfg(_font, _color, logged_in))
+        text(widget, logged_in, _color)
     end,
 }
 
@@ -602,9 +602,7 @@ local users_widget = wibox.widget {
 
 users_widget:buttons(awful.button({ }, 1, function()
     awful.spawn.easy_async("users", function(stdout, stderr, reason, exit_code)
-        if users_widget.notification then
-            naughty.destroy(users_widget.notification)
-        end
+        naughty.destroy(users_widget.notification)
         users.update()
         users_widget.notification = naughty.notify {
             title = "Users",
@@ -614,19 +612,20 @@ users_widget:buttons(awful.button({ }, 1, function()
     end)
 end))
 --luacheck: pop
+-- }}}
 
---[[ Coretemp (lm_sensors, per core)
-local tempwidget = awful.widget.watch({awful.util.shell, '-c', 'sensors | grep Core'}, 30,
-function(widget, stdout)
-    local temps = ""
-    for line in stdout:gmatch("[^\r\n]+") do
-        temps = temps .. line:match("+(%d+).*°C")  .. "° " -- in Celsius
-    end
-    widget:set_markup(markup.font(theme.font, " " .. temps))
-end)
---]]
+-- -- {{{ CORETEMP (lm_sensors, per core)
+-- local tempwidget = awful.widget.watch({awful.util.shell, '-c', 'sensors | grep Core'}, 30,
+-- function(widget, stdout)
+--     local temps = ""
+--     for line in stdout:gmatch("[^\r\n]+") do
+--         temps = temps .. line:match("+(%d+).*°C")  .. "° " -- in Celsius
+--     end
+--     widget:set_markup(markup.font(theme.font, " " .. temps))
+-- end)
+-- -- }}}
 
--- -- CORETEMP (lain, average)
+-- -- {{{ CORETEMP (lain, average)
 -- local temp_icon = wibox.widget.imagebox(theme.widget_temp)
 -- local temp = lain.widget.temp({
 --     tempfile = "/sys/class/thermal/thermal_zone7/temp",
@@ -644,7 +643,7 @@ end)
 --         widget:set_markup(markup.fontfg(_font, _color, coretemp_now))
 --     end,
 -- })
-
+--
 -- local temp_widget = wibox.widget {
 --     temp_icon,
 --     {
@@ -654,8 +653,9 @@ end)
 --     },
 --     layout = wibox.layout.align.horizontal,
 -- }
+-- -- }}}
 
--- -- FS
+-- -- {{{ FS
 -- local fs_icon = wibox.widget.imagebox(theme.widget_hdd)
 -- theme.fs = lain.widget.fs({
 --     options  = "--exclude-type=tmpfs",
@@ -664,7 +664,7 @@ end)
 --         widget:set_markup(markup.fontfg(theme.font, bar_fg, " " .. fs_now.available_gb .. "GB "))
 --     end,
 -- })
-
+--
 -- local fs_widget = wibox.widget {
 --     fs_icon,
 --     {
@@ -674,8 +674,9 @@ end)
 --     },
 --     layout = wibox.layout.align.horizontal,
 -- }
+-- -- }}}
 
--- ALSA volume
+-- {{{ ALSA volume
 --luacheck: push ignore widget volume_now vol_text volume_before
 local vol_icon = wibox.widget.imagebox(theme.widget_vol)
 theme.volume = lain.widget.alsa {
@@ -691,12 +692,10 @@ theme.volume = lain.widget.alsa {
             vol_icon:set_image(theme.widget_vol)
         end
 
-        widget:set_markup(markup.fontfg(theme.font, bar_fg, volume_now.level))
+        text(widget, volume_now.level)
 
         if theme.volume.manual then
-            if theme.volume.notification then
-                naughty.destroy(theme.volume.notification)
-            end
+            naughty.destroy(theme.volume.notification)
 
             if volume_now.status == "off" then
                 vol_text = "Muted"
@@ -753,8 +752,9 @@ vol_widget:buttons(gears.table.join(
     end)
 ))
 --luacheck: pop
+-- }}}
 
--- BAT
+-- {{{ BAT
 --luacheck: push ignore widget bat_now
 local bat_icon = wibox.widget.imagebox(theme.widget_battery)
 local bat = lain.widget.bat {
@@ -763,7 +763,6 @@ local bat = lain.widget.bat {
     ac = context.vars.ac,
     settings = function()
         local _color = bar_fg
-        local _font = theme.font
 
         if tonumber(bat_now.perc) <= 10 then
             bat_icon:set_image(theme.widget_battery_empty)
@@ -799,7 +798,7 @@ local bat = lain.widget.bat {
             end
         end
 
-        widget:set_markup(markup.fontfg(_font, _color, bat_now.perc))
+        text(widget, bat_now.perc, _color)
     end,
 }
 
@@ -815,9 +814,7 @@ local bat_widget = wibox.widget {
 
 bat_widget:buttons(awful.button({ }, 1, function()
     awful.spawn.easy_async(context.vars.scripts_dir .. "/show-battery-status", function(stdout, stderr, reason, exit_code)
-        if bat_widget.notification then
-            naughty.destroy(bat_widget.notification)
-        end
+        naughty.destroy(bat_widget.notification)
         bat.update()
         bat_widget.notification = naughty.notify {
             title = "Battery",
@@ -827,8 +824,9 @@ bat_widget:buttons(awful.button({ }, 1, function()
     end)
 end))
 --luacheck: pop
+-- }}}
 
--- -- WEATHER
+-- -- {{{ WEATHER
 -- local weather = lain.widget.weather({
 --     city_id = 2661604,
 --     settings = function()
@@ -836,7 +834,7 @@ end))
 --         widget:set_markup(markup.fontfg(theme.font, bar_fg, " " .. units .. "°C "))
 --     end,
 -- })
-
+--
 -- weather_widget = wibox.widget {
 --     weather.icon,
 --     {
@@ -846,8 +844,9 @@ end))
 --     },
 --     layout = wibox.layout.align.horizontal,
 -- }
+-- -- }}}
 
--- NET
+-- {{{ NET
 --luacheck: push ignore widget net_now
 -- local net_icon = wibox.widget.imagebox(theme.widget_net)
 local net = lain.widget.net {
@@ -881,9 +880,7 @@ local net_widget = wibox.widget {
 
 net_widget:buttons(awful.button({ }, 1, function()
     awful.spawn.easy_async(context.vars.scripts_dir .. "/show-ip-address", function(stdout, stderr, reason, exit_code)
-        if net_widget.notification then
-            naughty.destroy(net_widget.notification)
-        end
+        naughty.destroy(net_widget.notification)
         net.update()
         net_widget.notification = naughty.notify {
             title = "Network",
@@ -892,9 +889,7 @@ net_widget:buttons(awful.button({ }, 1, function()
         }
 
         awful.spawn.easy_async(context.vars.scripts_dir .. "/show-ip-address -f", function(stdout, stderr, reason, exit_code)
-            if net_widget.notification then
-                naughty.destroy(net_widget.notification)
-            end
+            naughty.destroy(net_widget.notification)
             net.update()
             net_widget.notification = naughty.notify {
                 title = "Network",
@@ -905,6 +900,7 @@ net_widget:buttons(awful.button({ }, 1, function()
     end)
 end))
 --luacheck: pop
+-- }}}
 
 -- NOTE: This will be called after fully initializing the context-object, so
 --       context.util etc. can be used here.
@@ -941,7 +937,11 @@ function theme.at_screen_connect(s)
     )
 
     -- Create a taglist widget
-    s._taglist = awful.widget.taglist(s, context.util.rowfilter, awful.util.taglist_buttons)
+    s._taglist = awful.widget.taglist{
+        screen = s,
+        filter = context.util.rowfilter,
+        buttons = awful.util.taglist_buttons,
+    }
 
     local gen_tasklist = function()
         -- Create a tasklist widget
@@ -967,8 +967,6 @@ function theme.at_screen_connect(s)
                                 widget = wibox.widget.textbox,
                             },
                         },
-                        halign = 'center',
-                        valign = 'center',
                         widget = wibox.container.place,
                     },
                     left = dpi(5),
@@ -995,8 +993,6 @@ function theme.at_screen_connect(s)
                 spacing = dpi(8),
                 spacing_widget = {
                     vert_sep,
-                    valign = 'center',
-                    halign = 'center',
                     widget = wibox.container.place,
                 },
             },
@@ -1156,6 +1152,37 @@ function theme.at_screen_connect(s)
         color = theme.border_normal,
         widget = wibox.container.margin,
     }
+
+    -- {{{ POPUPS
+    local popup_font = context.util.font { size = 20 , bold = true }
+
+    -- Layoutbox popup
+    s._layout_popup = context.util.popup {
+        widget = awful.widget.layoutbox(s),
+    }
+
+    -- Taglist popup
+    s._taglist_popup = context.util.popup {
+        widget = awful.widget.taglist {
+            screen = s,
+            filter = context.util.rowfilter,
+            buttons = awful.util.taglist_buttons,
+            style = {
+                font = popup_font,
+                bg_focus = theme.taglist_bg_normal,
+                bg_urgent = theme.taglist_bg_normal,
+            },
+            layout = {
+                spacing = 8,
+                layout = wibox.layout.fixed.horizontal
+            },
+        },
+        width = 330,
+        height = 72,
+    }
+
+    -- }}}
+
 end
 
 return theme

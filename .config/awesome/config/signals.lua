@@ -121,6 +121,7 @@ function config.init(context)
             context.util.hide_titlebar(c)
             c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 0) end
         else
+            c.border_width = beautiful.border_width
             c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, beautiful.border_radius or 0) end
         end
     end)
@@ -130,6 +131,7 @@ function config.init(context)
             context.util.hide_titlebar(c)
             c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 0) end
         else
+            c.border_width = beautiful.border_width
             c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, beautiful.border_radius or 0) end
         end
     end)
@@ -144,9 +146,7 @@ function config.init(context)
 
     awful.tag.attached_connect_signal(nil, "property::layout", function(t)
         for _,c in pairs(t:clients()) do
-            if t.layout == awful.layout.suit.floating then
-                c.floating = true
-            end
+            c.floating = t.layout == awful.layout.suit.floating
         end
     end)
 
