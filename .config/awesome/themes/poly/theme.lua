@@ -332,7 +332,7 @@ local clock_widget = wibox.widget {
 }
 
 -- Calendar
-theme.cal = lain.widget.calendar {
+theme.cal = lain.widget.cal {
     cal = "cal --color=always --monday",
     attach_to = { clock_widget },
     icons = "",
