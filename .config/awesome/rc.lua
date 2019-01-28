@@ -114,9 +114,9 @@ config.screen.init(context)
 -- }}}
 
 -- {{{ Spawn
-context.util.run_once {
-    -- "redshift -c .config/redshift.conf &",
-}
+-- context.util.run_once {
+--     "redshift -c .config/redshift.conf &",
+-- }
 
 -- context.util.spawn_once {
 --     command = "kitty --class='kitty-main'",
