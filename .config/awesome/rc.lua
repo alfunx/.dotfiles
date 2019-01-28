@@ -21,7 +21,6 @@ local menubar       = require("menubar")
 local freedesktop   = require("freedesktop")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
 local xresources    = require("beautiful.xresources")
-local dpi           = xresources.apply_dpi
 local config        = require("config")
 
 require("awful.autofocus")
@@ -88,6 +87,10 @@ do
         in_error = false
     end)
 end
+-- }}}
+
+-- {{{ Auto DPI
+awful.screen.set_auto_dpi_enabled(true)
 -- }}}
 
 -- {{{ Theme

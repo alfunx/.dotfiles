@@ -14,9 +14,7 @@ local lain             = require("lain")
 local awful            = require("awful")
 local wibox            = require("wibox")
 local naughty          = require("naughty")
-local xresources       = require("beautiful.xresources")
 local context          = require("config").context
-local dpi              = xresources.apply_dpi
 local os, math, string = os, math, string
 
 local colors = { }
@@ -126,27 +124,27 @@ theme.titlebar_bg_normal                        = theme.border_normal
 theme.titlebar_bg_focus                         = theme.border_focus
 theme.titlebar_bg_marked                        = theme.border_marked
 
-theme.hotkeys_border_width                      = dpi(30)
+theme.hotkeys_border_width                      = 30
 theme.hotkeys_border_color                      = colors.bw_0
-theme.hotkeys_group_margin                      = dpi(30)
+theme.hotkeys_group_margin                      = 30
 theme.hotkeys_shape                             = function(cr, width, height)
-                                                      gears.shape.rounded_rect(cr, width, height, dpi(20))
+                                                      gears.shape.rounded_rect(cr, width, height, 20)
                                                   end
 
 theme.prompt_bg                                 = colors.bw_0 .. "00"
 theme.prompt_fg                                 = theme.fg_normal
 theme.bg_systray                                = theme.tasklist_bg_normal
 
-theme.border_width                              = dpi(10)
--- theme.border_radius                             = dpi(8)
-theme.border_radius                             = dpi(0)
-theme.menu_height                               = dpi(20)
-theme.menu_width                                = dpi(250)
+theme.border_width                              = 10
+-- theme.border_radius                             = 8
+theme.border_radius                             = 0
+theme.menu_height                               = 20
+theme.menu_width                                = 250
 theme.tasklist_plain_task_name                  = true
 theme.tasklist_disable_icon                     = true
-theme.tasklist_spacing                          = dpi(3)
-theme.useless_gap                               = dpi(14)
-theme.systray_icon_spacing                      = dpi(4)
+theme.tasklist_spacing                          = 3
+theme.useless_gap                               = 14
+theme.systray_icon_spacing                      = 4
 
 theme.snap_bg                                   = theme.border_focus
 theme.snap_shape                                = function(cr, w, h)
@@ -235,17 +233,17 @@ theme.notification_fg                           = theme.fg_normal
 theme.notification_bg                           = theme.bg_normal
 theme.notification_border_color                 = theme.border_normal
 theme.notification_border_width                 = theme.border_width
-theme.notification_icon_size                    = dpi(80)
+theme.notification_icon_size                    = 80
 theme.notification_opacity                      = 1
-theme.notification_max_width                    = dpi(600)
-theme.notification_max_height                   = dpi(400)
-theme.notification_margin                       = dpi(20)
+theme.notification_max_width                    = 600
+theme.notification_max_height                   = 400
+theme.notification_margin                       = 20
 theme.notification_shape                        = function(cr, width, height)
                                                       gears.shape.rounded_rect(cr, width, height, theme.border_radius or 0)
                                                   end
 
-naughty.config.padding                          = dpi(15)
-naughty.config.spacing                          = dpi(10)
+naughty.config.padding                          = 15
+naughty.config.spacing                          = 10
 naughty.config.defaults.timeout                 = 5
 naughty.config.defaults.margin                  = theme.notification_margin
 naughty.config.defaults.border_width            = theme.notification_border_width
@@ -463,7 +461,7 @@ function theme.at_screen_connect(s)
         shape = function(cr, width, height)
                     gears.shape.rounded_rect(cr, width, height, theme.border_radius or 0)
                 end,
-        shape_border_width = dpi(0),
+        shape_border_width = 0,
         shape_border_color = theme.tasklist_bg_normal,
         align = "center" })
 
@@ -471,7 +469,7 @@ function theme.at_screen_connect(s)
     s._wibox = awful.wibar {
         position = "top",
         screen = s,
-        height = dpi(30),
+        height = 30,
         fg = bar_fg,
         bg = bar_bg,
     }
@@ -484,10 +482,10 @@ function theme.at_screen_connect(s)
                 layout = wibox.layout.align.horizontal,
                 wibox.widget.systray(),
             },
-            left = dpi(8),
-            right = dpi(0),
-            top = dpi(4),
-            bottom = dpi(4),
+            left = 8,
+            right = 0,
+            top = 4,
+            bottom = 4,
             widget = wibox.container.margin,
         },
     }
@@ -524,10 +522,10 @@ function theme.at_screen_connect(s)
                             layout = wibox.layout.align.horizontal,
                             s._layoutbox,
                         },
-                        left = dpi(8),
-                        right = dpi(3),
-                        top = dpi(8),
-                        bottom = dpi(8),
+                        left = 8,
+                        right = 3,
+                        top = 8,
+                        bottom = 8,
                         widget = wibox.container.margin,
                     },
                     bg = bar_bg,
@@ -540,8 +538,8 @@ function theme.at_screen_connect(s)
                             layout = wibox.layout.align.horizontal,
                             s._taglist,
                         },
-                        left = dpi(3),
-                        right = dpi(8),
+                        left = 3,
+                        right = 8,
                         widget = wibox.container.margin,
                     },
                     bg = bar_bg,
@@ -556,8 +554,8 @@ function theme.at_screen_connect(s)
                             layout = wibox.layout.align.horizontal,
                             s._promptbox,
                         },
-                        left = dpi(6),
-                        right = dpi(6),
+                        left = 6,
+                        right = 6,
                         widget = wibox.container.margin,
                     },
                     bg = theme.prompt_bg,
@@ -578,8 +576,8 @@ function theme.at_screen_connect(s)
             --             layout = wibox.layout.flex.horizontal,
             --             s._tasklist,
             --         },
-            --         left = dpi(8),
-            --         right = dpi(0),
+            --         left = 8,
+            --         right = 0,
             --         widget = wibox.container.margin,
             --     },
             --     bg = bar_bg,
@@ -589,13 +587,13 @@ function theme.at_screen_connect(s)
             { -- Right widgets
                 layout = wibox.layout.fixed.horizontal,
 
-                wibox.container.background(wibox.container.margin(systray_widget, dpi(0), dpi(8)), bar_bg),
+                wibox.container.background(wibox.container.margin(systray_widget, 0, 8), bar_bg),
 
                 vert_sep,
-                wibox.container.background(wibox.container.margin(net_widget,     dpi(8), dpi(10)), bar_bg),
+                wibox.container.background(wibox.container.margin(net_widget,     8, 10), bar_bg),
 
                 vert_sep,
-                wibox.container.background(wibox.container.margin(clock_widget,   dpi(8), dpi(8)),  bar_bg),
+                wibox.container.background(wibox.container.margin(clock_widget,   8, 8),  bar_bg),
             },
         },
     }

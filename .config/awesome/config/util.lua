@@ -9,9 +9,7 @@
 local gears = require("gears")
 local awful = require("awful")
 local beautiful = require("beautiful")
-local xresources = require("beautiful.xresources")
 local wibox = require("wibox")
-local dpi = xresources.apply_dpi
 
 local config = { }
 
@@ -221,7 +219,7 @@ function config.init(context)
 
     -- Resize/Move constants
     do
-        local RESIZE_STEP = dpi(30)
+        local RESIZE_STEP = 30
         local RESIZE_FACTOR = 0.05
 
         local expand_direction = {
@@ -390,8 +388,8 @@ function config.init(context)
                     margins = 16,
                     widget = wibox.container.margin,
                 },
-                forced_width = dpi(args.width),
-                forced_height = dpi(args.height),
+                forced_width = args.width,
+                forced_height = args.height,
                 widget = wibox.container.background,
             },
             border_color = beautiful.border_focus,

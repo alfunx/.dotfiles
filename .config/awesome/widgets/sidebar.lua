@@ -11,7 +11,6 @@ local naughty = require("naughty")
 local gears = require("gears")
 local wibox = require("wibox")
 local lain = require("lain")
-local dpi = require("beautiful.xresources").apply_dpi
 
 local markup = lain.util.markup
 
@@ -178,11 +177,11 @@ local function factory(context, args)
     -- -- }}}
     --
     -- -- Bar sizes
-    -- local bar_height = dpi(24)
-    -- local bar_width  = dpi(200)
+    -- local bar_height = 24
+    -- local bar_width  = 200
     --
     -- -- Icon sizes
-    -- local icon_size = dpi(30)
+    -- local icon_size = 30
     --
     -- -- Font colors
     -- local bar_fg = context.colors.bw_5
@@ -315,10 +314,10 @@ local function factory(context, args)
     --                         -- bat(),
     --                         -- bat(),
     --                         -- bat(),
-    --                         spacing = dpi(20),
+    --                         spacing = 20,
     --                         layout = wibox.layout.flex.vertical,
     --                     },
-    --                     margins = dpi(20),
+    --                     margins = 20,
     --                     widget = wibox.container.margin,
     --                 },
     --                 layout = wibox.layout.flex.vertical,

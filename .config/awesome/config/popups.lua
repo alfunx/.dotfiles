@@ -9,8 +9,6 @@
 local beautiful = require("beautiful")
 local wibox = require("wibox")
 local lain = require("lain")
-local xresources = require("beautiful.xresources")
-local dpi = xresources.apply_dpi
 
 local markup = lain.util.markup
 
@@ -50,12 +48,12 @@ function config.init(context)
         local vol_widget = wibox.widget {
             {
                 vol_icon,
-                margins = dpi(10),
+                margins = 10,
                 widget = wibox.container.margin,
             },
             {
                 vol_text.widget,
-                margins = dpi(4),
+                margins = 4,
                 widget = wibox.container.margin,
             },
             layout = wibox.layout.align.horizontal,

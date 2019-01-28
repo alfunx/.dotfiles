@@ -15,9 +15,7 @@ local widgets          = require("widgets")
 local awful            = require("awful")
 local wibox            = require("wibox")
 local naughty          = require("naughty")
-local xresources       = require("beautiful.xresources")
 local context          = require("config").context
-local dpi              = xresources.apply_dpi
 local os, math, string = os, math, string
 
 local colors = { }
@@ -128,27 +126,27 @@ theme.titlebar_bg_normal                        = theme.border_normal
 theme.titlebar_bg_focus                         = theme.border_focus
 theme.titlebar_bg_marked                        = theme.border_marked
 
-theme.hotkeys_border_width                      = dpi(30)
+theme.hotkeys_border_width                      = 30
 theme.hotkeys_border_color                      = colors.bw_0
-theme.hotkeys_group_margin                      = dpi(30)
+theme.hotkeys_group_margin                      = 30
 theme.hotkeys_shape                             = function(cr, width, height)
-                                                      gears.shape.rounded_rect(cr, width, height, dpi(20))
+                                                      gears.shape.rounded_rect(cr, width, height, 20)
                                                   end
 
 theme.prompt_bg                                 = colors.bw_2
 theme.prompt_fg                                 = theme.fg_normal
 theme.bg_systray                                = theme.tasklist_bg_normal
 
-theme.border_width                              = dpi(4)
--- theme.border_radius                             = dpi(8)
-theme.border_radius                             = dpi(0)
-theme.menu_height                               = dpi(20)
-theme.menu_width                                = dpi(250)
+theme.border_width                              = 4
+-- theme.border_radius                             = 8
+theme.border_radius                             = 0
+theme.menu_height                               = 20
+theme.menu_width                                = 250
 theme.tasklist_plain_task_name                  = true
 theme.tasklist_disable_icon                     = true
-theme.tasklist_spacing                          = dpi(3)
-theme.useless_gap                               = dpi(14)
-theme.systray_icon_spacing                      = dpi(4)
+theme.tasklist_spacing                          = 3
+theme.useless_gap                               = 14
+theme.systray_icon_spacing                      = 4
 
 theme.snap_bg                                   = theme.border_focus
 -- theme.snap_shape                                = function(cr, w, h)
@@ -230,17 +228,17 @@ theme.notification_fg                           = theme.fg_normal
 theme.notification_bg                           = theme.bg_normal
 theme.notification_border_color                 = theme.border_normal
 theme.notification_border_width                 = theme.border_width
-theme.notification_icon_size                    = dpi(80)
+theme.notification_icon_size                    = 80
 -- theme.notification_opacity                      = 0.9
-theme.notification_max_width                    = dpi(600)
-theme.notification_max_height                   = dpi(400)
-theme.notification_margin                       = dpi(20)
+theme.notification_max_width                    = 600
+theme.notification_max_height                   = 400
+theme.notification_margin                       = 20
 theme.notification_shape                        = function(cr, width, height)
                                                       gears.shape.rounded_rect(cr, width, height, theme.border_radius or 0)
                                                   end
 
-naughty.config.padding                          = dpi(15)
-naughty.config.spacing                          = dpi(10)
+naughty.config.padding                          = 15
+naughty.config.spacing                          = 10
 naughty.config.defaults.timeout                 = 5
 naughty.config.defaults.margin                  = theme.notification_margin
 naughty.config.defaults.border_width            = theme.notification_border_width
@@ -863,7 +861,7 @@ function theme.powerline_rl(cr, width, height)
 end
 
 -- local function pl(widget, bgcolor, padding)
---     return wibox.container.background(wibox.container.margin(widget, dpi(16), dpi(16)), bgcolor, theme.powerline_rl)
+--     return wibox.container.background(wibox.container.margin(widget, 16, 16), bgcolor, theme.powerline_rl)
 -- end
 
 -- NOTE: This will be called after fully initializing the context-object, so
@@ -911,7 +909,7 @@ function theme.at_screen_connect(s)
                 shape = function(cr, width, height)
                     gears.shape.rounded_rect(cr, width, height, theme.border_radius or 0)
                 end,
-                shape_border_width = dpi(0),
+                shape_border_width = 0,
                 shape_border_color = theme.tasklist_bg_normal,
             },
             widget_template = {
@@ -961,7 +959,7 @@ function theme.at_screen_connect(s)
             shape = function(cr, width, height)
                         gears.shape.rounded_rect(cr, width, height, theme.border_radius or 0)
                     end,
-            shape_border_width = dpi(0),
+            shape_border_width = 0,
             shape_border_color = theme.tasklist_bg_normal,
             align = "center" })
     end
@@ -970,8 +968,8 @@ function theme.at_screen_connect(s)
     s._wibox = awful.wibar {
         position = "top",
         screen = s,
-        -- height = dpi(21) + theme.border_width,
-        height = dpi(21),
+        -- height = 21 + theme.border_width,
+        height = 21,
         bg = theme.bg_normal,
         fg = theme.fg_normal,
     }
@@ -981,10 +979,10 @@ function theme.at_screen_connect(s)
             layout = wibox.layout.align.horizontal,
             wibox.widget.systray(),
         },
-        left = dpi(12),
-        right = dpi(0),
-        top = dpi(3),
-        bottom = dpi(3),
+        left = 12,
+        right = 0,
+        top = 3,
+        bottom = 3,
         widget = wibox.container.margin,
         visible = false,
     }
@@ -1004,10 +1002,10 @@ function theme.at_screen_connect(s)
                             layout = wibox.layout.align.horizontal,
                             s._layoutbox,
                         },
-                        left = dpi(8),
-                        right = dpi(3),
-                        top = dpi(4),
-                        bottom = dpi(4),
+                        left = 8,
+                        right = 3,
+                        top = 4,
+                        bottom = 4,
                         widget = wibox.container.margin,
                     },
                     bg = clock_bg,
@@ -1020,8 +1018,8 @@ function theme.at_screen_connect(s)
                             layout = wibox.layout.align.horizontal,
                             s._taglist,
                         },
-                        left = dpi(3),
-                        right = dpi(8),
+                        left = 3,
+                        right = 8,
                         widget = wibox.container.margin,
                     },
                     bg = theme.taglist_bg_normal,
@@ -1036,8 +1034,8 @@ function theme.at_screen_connect(s)
                             layout = wibox.layout.align.horizontal,
                             s._promptbox,
                         },
-                        left = dpi(8),
-                        right = dpi(4),
+                        left = 8,
+                        right = 4,
                         widget = wibox.container.margin,
                     },
                     bg = theme.prompt_bg,
@@ -1048,29 +1046,29 @@ function theme.at_screen_connect(s)
             },
 
             -- s._tasklist, -- Middle widget
-            wibox.container.background(wibox.container.margin(s._tasklist, dpi(8), dpi(0)), theme.tasklist_bg_normal),
+            wibox.container.background(wibox.container.margin(s._tasklist, 8, 0), theme.tasklist_bg_normal),
 
             { -- Right widgets
                 layout = wibox.layout.fixed.horizontal,
 
-                wibox.container.background(wibox.container.margin(systray_widget, dpi(0), dpi(8)), theme.tasklist_bg_normal),
+                wibox.container.background(wibox.container.margin(systray_widget, 0, 8), theme.tasklist_bg_normal),
 
                 arrow_l(theme.tasklist_bg_normal, pacman_bg),
-                -- wibox.container.background(wibox.container.margin(fs_widget,      dpi(2), dpi(6)), fs_bg),
-                -- wibox.container.background(wibox.container.margin(temp_widget,    dpi(2), dpi(6)), temp_bg),
-                wibox.container.background(wibox.container.margin(pacman_widget,  dpi(2), dpi(6)),  pacman_bg),
-                wibox.container.background(wibox.container.margin(users_widget,   dpi(2), dpi(6)),  users_bg),
-                wibox.container.background(wibox.container.margin(sysload_widget, dpi(2), dpi(6)),  sysload_bg),
-                wibox.container.background(wibox.container.margin(cpu_widget,     dpi(2), dpi(6)),  cpu_bg),
-                wibox.container.background(wibox.container.margin(mem_widget,     dpi(2), dpi(6)),  mem_bg),
-                wibox.container.background(wibox.container.margin(vol_widget,     dpi(2), dpi(6)),  vol_bg),
-                wibox.container.background(wibox.container.margin(bat_widget,     dpi(2), dpi(10)), bat_bg),
+                -- wibox.container.background(wibox.container.margin(fs_widget,      2, 6), fs_bg),
+                -- wibox.container.background(wibox.container.margin(temp_widget,    2, 6), temp_bg),
+                wibox.container.background(wibox.container.margin(pacman_widget,  2, 6),  pacman_bg),
+                wibox.container.background(wibox.container.margin(users_widget,   2, 6),  users_bg),
+                wibox.container.background(wibox.container.margin(sysload_widget, 2, 6),  sysload_bg),
+                wibox.container.background(wibox.container.margin(cpu_widget,     2, 6),  cpu_bg),
+                wibox.container.background(wibox.container.margin(mem_widget,     2, 6),  mem_bg),
+                wibox.container.background(wibox.container.margin(vol_widget,     2, 6),  vol_bg),
+                wibox.container.background(wibox.container.margin(bat_widget,     2, 10), bat_bg),
 
                 arrow_l(bat_bg, net_bg),
-                wibox.container.background(wibox.container.margin(net_widget,     dpi(8), dpi(10)), net_bg),
+                wibox.container.background(wibox.container.margin(net_widget,     8, 10), net_bg),
 
                 arrow_l(net_bg, clock_bg),
-                wibox.container.background(wibox.container.margin(clock_widget,   dpi(8), dpi(8)),  clock_bg),
+                wibox.container.background(wibox.container.margin(clock_widget,   8, 8),  clock_bg),
             },
         },
         -- bottom = theme.border_width,
