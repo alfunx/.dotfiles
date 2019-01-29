@@ -6,6 +6,7 @@
 
 --]]
 
+local awful = require("awful")
 local beautiful = require("beautiful")
 local wibox = require("wibox")
 local lain = require("lain")
@@ -25,48 +26,88 @@ function config.init(context)
     local symbol = context.util.symbol_markup_function(size, fg_sym, markup)
     local text = context.util.text_markup_function(size, fg_text, markup)
 
-    local function vol()
-        local vol_icon = wibox.widget.textbox()
-        local vol_text = lain.widget.alsa {
-            -- togglechannel = "IEC958,3",
-            timeout = 0,
-            settings = function()
-                if volume_now.status == "off" then
-                    symbol(vol_icon, "")
-                elseif tonumber(volume_now.level) == 0 then
-                    symbol(vol_icon, "")
-                elseif tonumber(volume_now.level) < 50 then
-                    symbol(vol_icon, "")
+    -- {{{ VOL
+    local vol = wibox.widget {
+        {
+            id               = "icon",
+            align            = "center",
+            forced_width     = 20,
+            widget           = wibox.widget.textbox,
+        },
+        {
+            id               = "text",
+            text             = "0%",
+            align            = "center",
+            forced_width     = 100,
+            widget           = wibox.widget.textbox,
+        },
+        layout = wibox.layout.ratio.horizontal,
+        update = function(self)
+            awful.spawn.easy_async({
+                "amixer", "get", "Master",
+            }, function(stdout)
+                local level, muted = string.match(stdout, "([%d]+)%%.*%[([%l]*)]")
+                local level = tonumber(level)
+                local muted = muted == "off"
+                local symbol_text
+
+                if muted then
+                    symbol_text = ""
+                elseif level == 0 then
+                    symbol_text = ""
+                elseif level < 50 then
+                    symbol_text = ""
                 else
-                    symbol(vol_icon, "")
+                    symbol_text = ""
                 end
 
-                text(widget, volume_now.level)
-            end,
-        }
-
-        local vol_widget = wibox.widget {
-            {
-                vol_icon,
-                margins = 10,
-                widget = wibox.container.margin,
-            },
-            {
-                vol_text.widget,
-                margins = 4,
-                widget = wibox.container.margin,
-            },
-            layout = wibox.layout.align.horizontal,
-        }
-
-        return vol_widget
-    end
+                symbol(self.icon, symbol_text)
+                text(self.text, level)
+            end)
+        end,
+    }
 
     context.popups.vol = context.util.popup {
-        widget = vol(),
-        width = 128,
+        widget = vol,
+        width = 200,
         height = 72,
     }
+    -- }}}
+
+    -- {{{ LIGHT
+    local light = wibox.widget {
+        {
+            id               = "icon",
+            align            = "center",
+            forced_width     = 20,
+            widget           = wibox.widget.textbox,
+        },
+        {
+            id               = "text",
+            text             = "0",
+            align            = "center",
+            forced_width     = 100,
+            widget           = wibox.widget.textbox,
+        },
+        layout = wibox.layout.ratio.horizontal,
+        update = function(self)
+            awful.spawn.easy_async({
+                "light", "-G",
+            }, function(stdout)
+                local level = math.floor(tonumber(stdout))
+
+                symbol(self.icon, "")
+                text(self.text, level)
+            end)
+        end,
+    }
+
+    context.popups.light = context.util.popup {
+        widget = light,
+        width = 200,
+        height = 72,
+    }
+    -- }}}
 
 end
 

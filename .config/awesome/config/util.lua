@@ -371,6 +371,7 @@ function config.init(context)
 
         -- Show popup
         function popup:show()
+            if args.widget.update then args.widget:update() end
             self.visible = true
             timer:again()
         end

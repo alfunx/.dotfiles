@@ -330,55 +330,49 @@ function config.init(context)
         awful.key({                    }, "XF86AudioRaiseVolume", function()
             awful.spawn.easy_async(string.format("amixer -q set %s 1%%+", beautiful.volume.channel),
             function(stdout, stderr, reason, exit_code) --luacheck: no unused args
-                beautiful.volume.manual = true
                 beautiful.volume.update()
+                context.popups.vol:show()
                 -- context.vol:update()
-                -- context.popups.vol:show()
             end)
         end),
         awful.key({                    }, "XF86AudioLowerVolume", function()
             awful.spawn.easy_async(string.format("amixer -q set %s 1%%-", beautiful.volume.channel),
             function(stdout, stderr, reason, exit_code) --luacheck: no unused args
-                beautiful.volume.manual = true
                 beautiful.volume.update()
+                context.popups.vol:show()
                 -- context.vol:update()
-                -- context.popups.vol:show()
             end)
         end),
         awful.key({                    }, "XF86AudioMute", function()
             awful.spawn.easy_async(string.format("amixer -q set %s toggle", beautiful.volume.togglechannel or beautiful.volume.channel),
             function(stdout, stderr, reason, exit_code) --luacheck: no unused args
-                beautiful.volume.manual = true
                 beautiful.volume.update()
+                context.popups.vol:show()
                 -- context.vol:update()
-                -- context.popups.vol:show()
             end)
         end),
         awful.key({ k.c                }, "XF86AudioRaiseVolume", function()
             awful.spawn.easy_async(string.format("amixer -q set %s 100%%", beautiful.volume.channel),
             function(stdout, stderr, reason, exit_code) --luacheck: no unused args
-                beautiful.volume.manual = true
                 beautiful.volume.update()
+                context.popups.vol:show()
                 -- context.vol:update()
-                -- context.popups.vol:show()
             end)
         end),
         awful.key({ k.c                }, "XF86AudioLowerVolume", function()
             awful.spawn.easy_async(string.format("amixer -q set %s 0%%", beautiful.volume.channel),
             function(stdout, stderr, reason, exit_code) --luacheck: no unused args
-                beautiful.volume.manual = true
                 beautiful.volume.update()
+                context.popups.vol:show()
                 -- context.vol:update()
-                -- context.popups.vol:show()
             end)
         end),
         awful.key({ k.c                }, "XF86AudioMute", function()
             awful.spawn.easy_async(string.format("amixer -q set %s mute", beautiful.volume.togglechannel or beautiful.volume.channel),
             function(stdout, stderr, reason, exit_code) --luacheck: no unused args
-                beautiful.volume.manual = true
                 beautiful.volume.update()
+                context.popups.vol:show()
                 -- context.vol:update()
-                -- context.popups.vol:show()
             end)
         end),
 
@@ -387,24 +381,28 @@ function config.init(context)
             awful.spawn.easy_async("light -A 2",
             function(stdout, stderr, reason, exit_code) --luacheck: no unused args
                 beautiful.light.update()
+                context.popups.light:show()
             end)
         end),
         awful.key({                    }, "XF86MonBrightnessDown", function()
             awful.spawn.easy_async("light -U 2",
             function(stdout, stderr, reason, exit_code) --luacheck: no unused args
                 beautiful.light.update()
+                context.popups.light:show()
             end)
         end),
         awful.key({ k.c                }, "XF86MonBrightnessUp", function()
             awful.spawn.easy_async("light -S 100",
             function(stdout, stderr, reason, exit_code) --luacheck: no unused args
                 beautiful.light.update()
+                context.popups.light:show()
             end)
         end),
         awful.key({ k.c                }, "XF86MonBrightnessDown", function()
             awful.spawn.easy_async("light -Sr 1",
             function(stdout, stderr, reason, exit_code) --luacheck: no unused args
                 beautiful.light.update()
+                context.popups.light:show()
             end)
         end),
 
