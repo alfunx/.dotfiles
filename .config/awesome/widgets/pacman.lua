@@ -13,10 +13,7 @@ local naughty       = require("naughty")
 local lines, floor  = io.lines, math.floor
 local string        = { format = string.format,
                         gsub   = string.gsub,
-                        len    = string.len}
-
--- Available updates
--- themes.powerarrow-gruvbox.widgets
+                        len    = string.len }
 
 local function factory(args)
     local pacman          = { widget = wibox.widget.textbox() }
@@ -41,7 +38,7 @@ local function factory(args)
 
     function pacman.update(notify)
         helpers.async({ shell, "-c", command }, function(update_text)
-            available  = tonumber((update_text:gsub('[^\n]', '')):len())
+            available = tonumber((update_text:gsub('[^\n]', '')):len())
             widget = pacman.widget
 
             if available > update_count and notify == "on" then

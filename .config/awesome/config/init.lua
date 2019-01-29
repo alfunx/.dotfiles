@@ -12,6 +12,7 @@ local config = {
     menu = require("config.menu"),
     widgets = require("config.widgets"),
     popups = require("config.popups"),
+    notifications = require("config.notifications"),
     keys = require("config.keys"),
     keys_command = require("config.keys_command"),
     keys_client = require("config.keys_client"),

@@ -332,6 +332,7 @@ function config.init(context)
             function(stdout, stderr, reason, exit_code) --luacheck: no unused args
                 beautiful.volume.manual = true
                 beautiful.volume.update()
+                -- context.vol:update()
                 -- context.popups.vol:show()
             end)
         end),
@@ -340,6 +341,7 @@ function config.init(context)
             function(stdout, stderr, reason, exit_code) --luacheck: no unused args
                 beautiful.volume.manual = true
                 beautiful.volume.update()
+                -- context.vol:update()
                 -- context.popups.vol:show()
             end)
         end),
@@ -348,6 +350,7 @@ function config.init(context)
             function(stdout, stderr, reason, exit_code) --luacheck: no unused args
                 beautiful.volume.manual = true
                 beautiful.volume.update()
+                -- context.vol:update()
                 -- context.popups.vol:show()
             end)
         end),
@@ -356,6 +359,7 @@ function config.init(context)
             function(stdout, stderr, reason, exit_code) --luacheck: no unused args
                 beautiful.volume.manual = true
                 beautiful.volume.update()
+                -- context.vol:update()
                 -- context.popups.vol:show()
             end)
         end),
@@ -364,6 +368,7 @@ function config.init(context)
             function(stdout, stderr, reason, exit_code) --luacheck: no unused args
                 beautiful.volume.manual = true
                 beautiful.volume.update()
+                -- context.vol:update()
                 -- context.popups.vol:show()
             end)
         end),
@@ -372,46 +377,36 @@ function config.init(context)
             function(stdout, stderr, reason, exit_code) --luacheck: no unused args
                 beautiful.volume.manual = true
                 beautiful.volume.update()
+                -- context.vol:update()
                 -- context.popups.vol:show()
             end)
         end),
 
         -- Backlight / Brightness
         awful.key({                    }, "XF86MonBrightnessUp", function()
-            awful.spawn("light -A 2")
+            awful.spawn.easy_async("light -A 2",
+            function(stdout, stderr, reason, exit_code) --luacheck: no unused args
+                beautiful.light.update()
+            end)
         end),
         awful.key({                    }, "XF86MonBrightnessDown", function()
-            awful.spawn("light -U 2")
+            awful.spawn.easy_async("light -U 2",
+            function(stdout, stderr, reason, exit_code) --luacheck: no unused args
+                beautiful.light.update()
+            end)
         end),
         awful.key({ k.c                }, "XF86MonBrightnessUp", function()
-            awful.spawn("light -S 100")
+            awful.spawn.easy_async("light -S 100",
+            function(stdout, stderr, reason, exit_code) --luacheck: no unused args
+                beautiful.light.update()
+            end)
         end),
         awful.key({ k.c                }, "XF86MonBrightnessDown", function()
-            awful.spawn("light -Sr 1")
+            awful.spawn.easy_async("light -Sr 1",
+            function(stdout, stderr, reason, exit_code) --luacheck: no unused args
+                beautiful.light.update()
+            end)
         end),
-
-        -- -- Backlight / Brightness (using xbacklight)
-        -- awful.key({                    }, "XF86MonBrightnessUp",
-        --     function()
-        --         awful.spawn("xbacklight -inc 2 -time 1 -steps 1")
-        --     end),
-        -- awful.key({                    }, "XF86MonBrightnessDown",
-        --     function()
-        --         awful.spawn.easy_async_with_shell("xbacklight -get | sed 's/\\..*//'",
-        --         function(stdout, stderr, reason, exit_code)
-        --             if tonumber(stdout) > 2 then
-        --                 awful.spawn("xbacklight -dec 2 -time 1 -steps 1")
-        --             end
-        --         end)
-        --     end),
-        -- awful.key({ k.c                }, "XF86MonBrightnessUp",
-        --     function()
-        --         awful.spawn("xbacklight -set 100 -time 1 -steps 1")
-        --     end),
-        -- awful.key({ k.c                }, "XF86MonBrightnessDown",
-        --     function()
-        --         awful.spawn("xbacklight -set 1 -time 1 -steps 1")
-        --     end),
 
         -- MPD control
         awful.key({                    }, "XF86AudioPlay", function()

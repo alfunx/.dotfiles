@@ -14,25 +14,24 @@ local string       = { format = string.format,
                        len    = string.len }
 
 local function factory(args)
-    local users    = { widget = wibox.widget.textbox() }
+    local light    = { widget = wibox.widget.textbox() }
     local args     = args or { }
     local timeout  = args.timeout or 120
     local settings = args.settings or function() end
-    local cmd      = "users | wc -w"
-    -- local cmd      = "echo \"$(users | wc -w)-$(tmux list-panes -a | wc -l)\" | bc"
+    local cmd      = "light -G"
 
-    function users.update()
+    function light.update()
         helpers.async({ shell, "-c", cmd }, function(f)
-            logged_in = f
+            percent = math.floor(f)
 
-            widget = users.widget
+            widget = light.widget
             settings()
         end)
     end
 
-    helpers.newtimer("users", timeout, users.update)
+    helpers.newtimer("light", timeout, light.update)
 
-    return users
+    return light
 end
 
 return factory

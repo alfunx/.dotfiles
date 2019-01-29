@@ -10,6 +10,9 @@ local gears = require("gears")
 local awful = require("awful")
 local beautiful = require("beautiful")
 local naughty = require("naughty")
+local lain = require("lain")
+
+local markup = lain.util.markup
 
 local config = { }
 
@@ -21,6 +24,7 @@ function config.init(context)
         -- Override colors with context.colors per default
         -- (Allows a theme to be based on another)
         context.colors = gears.table.join(colors, context.colors)
+        return context.colors
     end
 
     context.util.alternate_theme = function()
@@ -75,23 +79,23 @@ function config.init(context)
     end
 
     -- Generate markup function
-    context.util.markup_function = function(args, fg, markup)
+    context.util.markup_function = function(args, color)
         local font_string = context.util.font(args)
 
-        return function(widget, text, color)
-            color = color or fg
-            widget:set_markup(markup.fontfg(font_string, color, text))
+        return function(widget, text, fg)
+            fg = fg or color
+            widget:set_markup(markup.fontfg(font_string, fg, text))
         end
     end
 
     -- Generate text markup function
-    context.util.text_markup_function = function(size, fg, markup)
-        return context.util.markup_function({ size = size }, fg, markup)
+    context.util.text_markup_function = function(size, color)
+        return context.util.markup_function({ size = size }, color)
     end
 
     -- Generate symbol markup function
-    context.util.symbol_markup_function = function(size, fg, markup)
-        return context.util.markup_function({ name = "Font Awesome", size = size }, fg, markup)
+    context.util.symbol_markup_function = function(size, color)
+        return context.util.markup_function({ name = "Font Awesome", size = size }, color)
     end
 
 end

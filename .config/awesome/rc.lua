@@ -102,6 +102,7 @@ beautiful.init(theme_path)
 -- {{{ Config
 config.widgets.init(context)
 config.util.init(context)
+config.notifications.init(context)
 config.menu.init(context)
 -- config.popups.init(context)
 config.keys.init(context)

@@ -53,8 +53,7 @@ colors.bw_8             = "#d5c4a1"
 colors.bw_9             = "#ebdbb2"
 colors.bw_10            = "#fbf1c7"
 
-context.util.set_colors(colors)
-colors = context.colors
+colors = context.util.set_colors(colors)
 
 local bar_fg            = colors.bw_5
 local bar_bg            = colors.bw_0
@@ -192,6 +191,7 @@ theme.widget_music                              = theme.dir .. "/icons/note.png"
 theme.widget_music_on                           = theme.dir .. "/icons/note_on.png"
 theme.widget_music_pause                        = theme.dir .. "/icons/pause.png"
 theme.widget_music_stop                         = theme.dir .. "/icons/stop.png"
+theme.widget_light                              = theme.dir .. "/icons/light.png"
 theme.widget_vol                                = theme.dir .. "/icons/vol.png"
 theme.widget_vol_low                            = theme.dir .. "/icons/vol_low.png"
 theme.widget_vol_no                             = theme.dir .. "/icons/vol_no.png"
@@ -315,7 +315,7 @@ local clock_widget = wibox.widget {
 -- }}}
 
 -- {{{ Calendar
-theme.cal = lain.widget.cal {
+local cal = lain.widget.cal {
     cal = "cal --color=always --monday",
     attach_to = { clock_widget },
     icons = "",
@@ -612,6 +612,53 @@ end))
 --luacheck: pop
 -- }}}
 
+-- {{{ LIGHT
+--luacheck: push ignore widget percent
+local light_icon = wibox.widget.imagebox(theme.widget_light)
+theme.light = widgets.light {
+    settings = function()
+        text(widget, percent)
+    end,
+}
+
+local light_widget = wibox.widget {
+    light_icon,
+    {
+        theme.light.widget,
+        right = 4,
+        widget = wibox.container.margin,
+    },
+    layout = wibox.layout.align.horizontal,
+}
+
+light_widget:buttons(gears.table.join(
+    awful.button({ }, 1, function()
+        awful.spawn.easy_async("light -G", function(stdout, stderr, reason, exit_code) --luacheck: no unused args
+            naughty.destroy(light_widget.notification)
+            theme.light.update()
+            light_widget.notification = naughty.notify {
+                title = "light",
+                text = string.gsub(string.gsub(stdout, '\n*$', ''), ' ', '\n'),
+                timeout = 10,
+            }
+        end)
+    end),
+    awful.button({ }, 4, function()
+        awful.spawn.easy_async("light -U 2",
+        function(stdout, stderr, reason, exit_code) --luacheck: no unused args
+            theme.light.update()
+        end)
+    end),
+    awful.button({ }, 5, function()
+        awful.spawn.easy_async("light -A 2",
+        function(stdout, stderr, reason, exit_code) --luacheck: no unused args
+            theme.light.update()
+        end)
+    end)
+))
+--luacheck: pop
+-- }}}
+
 -- -- {{{ CORETEMP (lm_sensors, per core)
 -- local tempwidget = awful.widget.watch({awful.util.shell, '-c', 'sensors | grep Core'}, 30,
 -- function(widget, stdout)
@@ -705,6 +752,7 @@ theme.volume = lain.widget.alsa {
                 theme.volume.notification = naughty.notify {
                     title = "Audio",
                     text = vol_text,
+                    timeout = 10,
                 }
             end
 
@@ -959,11 +1007,11 @@ function theme.at_screen_connect(s)
                 {
                     {
                         {
-                            layout = wibox.layout.fixed.horizontal,
                             {
-                                id     = 'text_role',
+                                id     = "text_role",
                                 widget = wibox.widget.textbox,
                             },
+                            layout = wibox.layout.fixed.horizontal,
                         },
                         widget = wibox.container.place,
                     },
@@ -983,7 +1031,7 @@ function theme.at_screen_connect(s)
                         preferred_positions = { "bottom" },
                     }
                 end,
-                id = 'background_role',
+                id = "background_role",
                 widget = wibox.container.background,
             },
             layout = {
@@ -1131,6 +1179,7 @@ function theme.at_screen_connect(s)
                     sysload_widget, space,
                     cpu_widget, space,
                     mem_widget, space,
+                    light_widget, space,
                     vol_widget, space,
                     bat_widget, space,
 

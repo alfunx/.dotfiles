@@ -53,8 +53,7 @@ colors.bw_8             = "#d5c4a1"
 colors.bw_9             = "#ebdbb2"
 colors.bw_10            = "#fbf1c7"
 
-context.util.set_colors(colors)
-colors = context.colors
+colors = context.util.set_colors(colors)
 
 local bar_fg            = colors.bw_5
 local bar_bg            = colors.bw_0
