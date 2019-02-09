@@ -15,7 +15,10 @@
 	url = https://github.com/zsh-users/zsh-syntax-highlighting
 [submodule "projects/gdb-dashboard"]
 	path = projects/gdb-dashboard
-	url = git@github.com:alfunx/gdb-dashboard
+	url = https://github.com/alfunx/gdb-dashboard
 [submodule ".config/ranger/colorschemes"]
 	path = .config/ranger/colorschemes
-	url = git@github.com:alfunx/ranger-colorschemes
+	url = https://github.com/alfunx/ranger-colorschemes
+[submodule ".config/awesome/yaawl"]
+	path = .config/awesome/yaawl
+	url = https://github.com/alfunx/yaawl
