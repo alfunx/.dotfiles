@@ -1,10 +1,16 @@
+
+--[[
+
+     Licensed under GNU General Public License v2
+      * (c) 2019, Alphonse Mariyagnanaseelan
+
+--]]
+
 local widgets = {
-    pacman = require("widgets.pacman"),
-    light = require("widgets.light"),
+
     bar = require("widgets.bar"),
     sidebar = require("widgets.sidebar"),
-    users = require("widgets.users"),
-    -- widget_palette = require("widgets.widget_palette"),
+
 }
 
 return widgets

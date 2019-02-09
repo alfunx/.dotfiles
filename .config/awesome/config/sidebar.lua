@@ -8,16 +8,18 @@
 
 local widgets = require("widgets")
 
-local config = { }
+local context = require("config.context")
 
-function config.init(context)
+local _config = { }
 
-    context.sidebar = widgets.sidebar(context, {
+function _config.init()
+
+    _config.widget = widgets.sidebar {
         mouse_toggle = true,
         colors = context.colors,
-    })
-    context.sidebar.show()
+        vars = context.vars,
+    }
 
 end
 
-return config
+return _config

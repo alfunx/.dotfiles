@@ -7,8 +7,7 @@
 
 --]]
 
-local gears            = require("gears")
-local context          = require("config").context
+local util             = require("config.util")
 local os, math, string = os, math, string
 
 local colors = { }
@@ -46,7 +45,7 @@ colors.bw_8             = "#504945"
 colors.bw_9             = "#3c3836"
 colors.bw_10            = "#282828"
 
-colors = context.util.set_colors(colors)
+colors = util.set_colors(colors)
 
 -- Use _dir to preserve parent theme.dir
 local theme = require("themes.blackout.theme")
@@ -54,8 +53,9 @@ theme.name = "whiteout"
 theme.alternative = "blackout"
 theme._dir = string.format("%s/.config/awesome/themes/%s", os.getenv("HOME"), theme.name)
 
-theme.wallpaper                                 = theme._dir .. "/wallpapers/wall.png"
--- theme.wallpaper                                 = theme._dir .. "/wallpapers/escheresque.png"
+-- theme.wallpaper                                 = theme._dir .. "/wallpapers/wall.png"
+theme.wallpaper                                 = theme._dir .. "/wallpapers/escheresque.png"
+-- theme.wallpaper_offset                          = 5
 
 theme.titlebar_close_button_focus               = theme._dir .. "/icons/titlebar/close_focus.png"
 theme.titlebar_close_button_normal              = theme._dir .. "/icons/titlebar/close_normal.png"

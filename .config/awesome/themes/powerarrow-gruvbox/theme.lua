@@ -15,8 +15,13 @@ local widgets          = require("widgets")
 local awful            = require("awful")
 local wibox            = require("wibox")
 local naughty          = require("naughty")
-local context          = require("config").context
 local os, math, string = os, math, string
+
+local context          = require("config.context")
+local util             = require("config.util")
+local tags             = require("config.tags")
+local taglist_binds    = require("config.bindings_taglist")
+local tasklist_binds   = require("config.bindings_tasklist")
 
 local colors = { }
 
@@ -864,8 +869,6 @@ end
 --     return wibox.container.background(wibox.container.margin(widget, 16, 16), bgcolor, theme.powerline_rl)
 -- end
 
--- NOTE: This will be called after fully initializing the context-object, so
---       context.util etc. can be used here.
 function theme.at_screen_connect(s)
     -- Quake application
     s.quake = lain.util.quake {
@@ -880,7 +883,7 @@ function theme.at_screen_connect(s)
     gears.wallpaper.maximized(wallpaper, s, true)
 
     -- Tags
-    awful.tag(awful.util.tagnames, s, awful.util.layouts)
+    awful.tag(tags.names, s, tags.layouts)
 
     -- Create a promptbox for each screen
     s._promptbox = awful.widget.prompt()
@@ -896,14 +899,14 @@ function theme.at_screen_connect(s)
     )
 
     -- Create a taglist widget
-    s._taglist = awful.widget.taglist(s, context.util.rowfilter, awful.util.taglist_buttons)
+    s._taglist = awful.widget.taglist(s, util.rowfilter, taglist_binds.buttons)
 
     local gen_tasklist = function()
         -- Create a tasklist widget
         s._tasklist = awful.widget.tasklist {
             screen = s,
             filter = awful.widget.tasklist.filter.currenttags,
-            buttons = awful.util.tasklist_buttons,
+            buttons = tasklist_binds.buttons,
             bg_focus = theme.tasklist_bg_focus,
             style = {
                 shape = function(cr, width, height)
@@ -954,7 +957,7 @@ function theme.at_screen_connect(s)
         -- Create a tasklist widget
         s._tasklist = awful.widget.tasklist(s,
         awful.widget.tasklist.filter.currenttags,
-        awful.util.tasklist_buttons, {
+        tasklist_binds.buttons, {
             bg_focus = theme.tasklist_bg_focus,
             shape = function(cr, width, height)
                         gears.shape.rounded_rect(cr, width, height, theme.border_radius or 0)
@@ -986,7 +989,7 @@ function theme.at_screen_connect(s)
         widget = wibox.container.margin,
         visible = false,
     }
-    context.util.show_on_mouse(s._wibox, systray_widget)
+    util.show_on_mouse(s._wibox, systray_widget)
 
     -- Add widgets to the wibox
     s._wibox:setup {

@@ -6,28 +6,26 @@
 
 --]]
 
-local awful = require("awful")
-local beautiful = require("beautiful")
 local wibox = require("wibox")
-local lain = require("lain")
 
-local markup = lain.util.markup
+local context = require("config.context")
+local brokers = require("config.brokers")
+local util = require("config.util")
+local t_util = require("config.util_theme")
 
-local config = { }
+local _config = { }
 
-function config.init(context)
-
-    context.popups = context.popups or { }
+function _config.init()
 
     local fg_text = context.colors.bw_8
     local fg_sym = context.colors.bw_5
     local size = 20
 
-    local symbol = context.util.symbol_markup_function(size, fg_sym, markup)
-    local text = context.util.text_markup_function(size, fg_text, markup)
+    local symbol = t_util.symbol_markup_function(size, fg_sym)
+    local text = t_util.text_markup_function(size, fg_text)
 
-    -- {{{ VOL
-    local vol = wibox.widget {
+    -- {{{ AUDIO
+    local audio = wibox.widget {
         {
             id               = "icon",
             align            = "center",
@@ -42,40 +40,40 @@ function config.init(context)
             widget           = wibox.widget.textbox,
         },
         layout = wibox.layout.ratio.horizontal,
-        update = function(self)
-            awful.spawn.easy_async({
-                "amixer", "get", "Master",
-            }, function(stdout)
-                local level, muted = string.match(stdout, "([%d]+)%%.*%[([%l]*)]")
-                local level = tonumber(level)
-                local muted = muted == "off"
-                local symbol_text
-
-                if muted then
-                    symbol_text = ""
-                elseif level == 0 then
-                    symbol_text = ""
-                elseif level < 50 then
-                    symbol_text = ""
-                else
-                    symbol_text = ""
-                end
-
-                symbol(self.icon, symbol_text)
-                text(self.text, level)
-            end)
-        end,
     }
 
-    context.popups.vol = context.util.popup {
-        widget = vol,
+    _config.audio = util.popup {
+        widget = audio,
         width = 200,
         height = 72,
     }
+
+    brokers.audio:add_callback(function(x)
+        local icon
+
+        if x.muted then
+            icon = ""
+        elseif x.percent <= 20 then
+            icon = ""
+        elseif x.percent < 50 then
+            icon = ""
+        else
+            icon = ""
+        end
+
+        symbol(audio.icon, icon)
+        text(audio.text, x.percent)
+    end)
+
+    brokers.audio:set_popup(function()
+        _config.audio:show()
+    end)
+
+    _config.audio:buttons(brokers.audio.buttons)
     -- }}}
 
-    -- {{{ LIGHT
-    local light = wibox.widget {
+    -- {{{ BRIGHTNESS
+    local brightness = wibox.widget {
         {
             id               = "icon",
             align            = "center",
@@ -90,25 +88,26 @@ function config.init(context)
             widget           = wibox.widget.textbox,
         },
         layout = wibox.layout.ratio.horizontal,
-        update = function(self)
-            awful.spawn.easy_async({
-                "light", "-G",
-            }, function(stdout)
-                local level = math.floor(tonumber(stdout))
-
-                symbol(self.icon, "")
-                text(self.text, level)
-            end)
-        end,
     }
+    symbol(brightness.icon, "")
 
-    context.popups.light = context.util.popup {
-        widget = light,
+    _config.brightness = util.popup {
+        widget = brightness,
         width = 200,
         height = 72,
     }
+
+    brokers.brightness:add_callback(function(x)
+        text(brightness.text, x.percent)
+    end)
+
+    brokers.brightness:set_popup(function()
+        _config.brightness:show()
+    end)
+
+    _config.brightness:buttons(brokers.brightness.buttons)
     -- }}}
 
 end
 
-return config
+return _config

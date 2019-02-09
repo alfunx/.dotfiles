@@ -10,14 +10,16 @@ local gears = require("gears")
 local awful = require("awful")
 local beautiful = require("beautiful")
 
-local config = { }
+local util = require("config.util")
 
-function config.init(context)
+local _config = { }
+
+function _config.init()
 
     -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
     screen.connect_signal("property::geometry", function(s)
-        if context.util.set_wallpaper then
-            context.util.set_wallpaper(#s.clients)
+        if util.set_wallpaper then
+            util.set_wallpaper(#s.clients)
         else
             local w = beautiful.wallpaper
 
@@ -26,7 +28,8 @@ function config.init(context)
                 w = w(client.screen)
             end
 
-            local offset = -(tonumber(awful.screen.focused().selected_tag.index) - 1) * (beautiful.wallpaper_offset or 0)
+            local offset = - (tonumber(awful.screen.focused().selected_tag.index) - 1)
+                           * (beautiful.wallpaper_offset or 0)
             gears.wallpaper.tiled(w, client.screen, {x = offset})
         end
     end)
@@ -55,4 +58,4 @@ function config.init(context)
 
 end
 
-return config
+return _config

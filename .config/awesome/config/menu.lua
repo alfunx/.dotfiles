@@ -6,27 +6,28 @@
 
 --]]
 
-local awful = require("awful")
 local beautiful = require("beautiful")
 local menubar = require("menubar")
 local freedesktop = require("freedesktop")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
 
-local config = { }
+local context = require("config.context")
 
-function config.init(context)
+local _config = { }
 
-    local _awesomemenu = {
+function _config.init()
+
+    local awesomemenu = {
         { "hotkeys", function() return false, hotkeys_popup.show_help end },
         { "manual", context.vars.terminal .. " man awesome" },
         { "restart", awesome.restart },
         { "quit", function() awesome.quit() end },
     }
 
-    awful.util._mainmenu = freedesktop.menu.build {
+    _config.main = freedesktop.menu.build {
         icon_size = beautiful.menu_height or 16,
         before = {
-            { "Awesome", _awesomemenu, beautiful.awesome_icon },
+            { "Awesome", awesomemenu, beautiful.awesome_icon },
             -- Other triads can be put here
         },
         after = {
@@ -40,4 +41,4 @@ function config.init(context)
 
 end
 
-return config
+return _config

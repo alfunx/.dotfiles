@@ -6,14 +6,13 @@
 
 --]]
 
-local awful = require("awful")
-local beautiful = require("beautiful")
+local gears = require("gears")
 
 local _config = { }
 
-function _config.init()
+function _config.init(context)
 
-    -- do something
+    gears.table.crush(_config, context)
 
 end
 

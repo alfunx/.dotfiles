@@ -1,7 +1,8 @@
+
 --[[
 
      Licensed under GNU General Public License v2
-      * (c) 2017, Alphonse Mariyagnanaseelan
+      * (c) 2019, Alphonse Mariyagnanaseelan
 
 --]]
 
@@ -11,63 +12,66 @@ local naughty = require("naughty")
 local gears = require("gears")
 local wibox = require("wibox")
 local bar = require("widgets.bar")
+local brokers = require("config.brokers")
+local t_util = require("config.util_theme")
 
--- local debug = false
+local debug = false
 
-local function factory(context, args)
+local function factory(args)
 
-    local args = args or { }
-    args.x = args.x or beautiful.sidebar_x or 0
-    args.y = args.y or beautiful.sidebar_y or 0
-    args.bg = args.bg or beautiful.sidebar_bg or beautiful.tasklist_bg_normal or "#000000"
-    args.fg = args.fg or beautiful.sidebar_fg or beautiful.tasklist_fg_normal or "#FFFFFF"
-    args.opacity = args.opacity or beautiful.sidebar_opacity or 1
-    args.height = args.height or beautiful.sidebar_height or awful.screen.focused().geometry.height
-    args.width = args.width or beautiful.sidebar_width or 400
-    args.radius = args.radius or beautiful.border_radius or 0
-    args.mouse_toggle = args.mouse_toggle or beautiful.sidebar_mouse_toggle
-    args.position = args.position or "left"
+    local _x = args.x or beautiful.sidebar_x or awful.screen.focused().geometry.x
+    local _y = args.y or beautiful.sidebar_y or awful.screen.focused().geometry.y
+    local bg = args.bg or beautiful.sidebar_bg or beautiful.tasklist_bg_normal or "#000000"
+    local fg = args.fg or beautiful.sidebar_fg or beautiful.tasklist_fg_normal or "#FFFFFF"
+    local opacity = args.opacity or beautiful.sidebar_opacity or 1
+    local height = args.height or beautiful.sidebar_height or awful.screen.focused().geometry.height
+    local width = args.width or beautiful.sidebar_width or 400
+    local radius = args.radius or beautiful.border_radius or 0
+    local mouse_toggle = args.mouse_toggle or beautiful.sidebar_mouse_toggle
+    local position = args.position or "left"
+    local colors = args.colors or { }
+    local vars = args.vars or { }
 
     local sidebar = wibox {
-        x = args.x,
-        y = args.y,
-        bg = args.bg,
-        fg = args.fg,
-        opacity = args.opacity,
-        height = args.height,
-        width = args.width,
+        x = _x,
+        y = _y,
+        bg = bg,
+        fg = fg,
+        opacity = opacity,
+        height = height,
+        width = width,
         visible = false,
         ontop = true,
         type = "dock",
     }
 
-    if args.position == "right" then
+    if position == "right" then
         sidebar.x = awful.screen.focused().geometry.width - sidebar.width
         sidebar.shape = function(cr, width, height)
-            gears.shape.partially_rounded_rect(cr, width, height, true, false, false, true, args.radius)
+            gears.shape.partially_rounded_rect(cr, width, height, true, false, false, true, radius)
         end
     else
         sidebar.x = 0
         sidebar.shape = function(cr, width, height)
-            gears.shape.partially_rounded_rect(cr, width, height, false, true, true, false, args.radius)
+            gears.shape.partially_rounded_rect(cr, width, height, false, true, true, false, radius)
         end
     end
 
     sidebar:buttons(gears.table.join(
         awful.button({ }, 2, function ()
-            sidebar.hide()
+            sidebar:hide()
         end)
     ))
 
     -- Hide sidebar when mouse leaves
-    if args.mouse_toggle then
+    if mouse_toggle then
         sidebar:connect_signal("mouse::leave", function ()
-            sidebar.hide()
+            sidebar:hide()
         end)
     end
 
     -- Activate sidebar by moving the mouse at the edge of the screen
-    if args.mouse_toggle then
+    if mouse_toggle then
         local sidebar_activator = wibox {
             y = 0,
             width = 1,
@@ -79,10 +83,10 @@ local function factory(context, args)
         }
 
         sidebar_activator:connect_signal("mouse::enter", function ()
-            sidebar.show()
+            sidebar:show()
         end)
 
-        if args.position == "right" then
+        if position == "right" then
             sidebar_activator.x = awful.screen.focused().geometry.width - sidebar_activator.width
         else
             sidebar_activator.x = 0
@@ -90,7 +94,7 @@ local function factory(context, args)
 
         sidebar_activator:buttons(gears.table.join(
             awful.button({ }, 2, function ()
-                sidebar.toggle()
+                sidebar:toggle()
             end),
             awful.button({ }, 4, function ()
                 awful.tag.viewprev()
@@ -105,164 +109,429 @@ local function factory(context, args)
     -- Store timers
     local timers = { }
 
-    function sidebar.hide()
-        sidebar.visible = false
+    function sidebar:hide()
+        self.visible = false
         for _, t in pairs(timers) do
-            t:stop()
+            if t.started then t:stop() end
         end
     end
 
-    function sidebar.show()
-        sidebar.visible = true
+    function sidebar:show()
+        brokers:update()
+        self.visible = true
         for _, t in pairs(timers) do
-            t:start()
+            t:again()
         end
     end
 
-    function sidebar.toggle()
-        if sidebar.visible then
-            sidebar.hide()
+    function sidebar:toggle()
+        if self.visible then
+            self:hide()
         else
-            sidebar.show()
+            self:show()
         end
     end
     -- }}}
 
     -- {{{ VARS
     -- Bar sizes
-    bar_args = { }
-    bar_args.height = 24
+    local bar_args = { }
+    bar_args.height = 30
     bar_args.width = 200
-    bar_args.total_width = args.width
-    bar_args.border = beautiful.border_width
+    bar_args.total_width = width
+    bar_args.border_width = beautiful.border
+    bar_args.border_color = beautiful.border_normal
     bar_args.inner_color = beautiful.border_focus
-    bar_args.outer_color = beautiful.border_normal
+    bar_args.outer_color = colors.bw_1
 
     -- Font colors
-    local text_fg = context.colors.bw_5
-    local symbol_fg = context.colors.bw_5
+    local text_fg = colors.bw_7
+    local symbol_fg = colors.bw_7
 
     -- Markup
-    local symbol = context.util.symbol_markup_function(14, symbol_fg)
-    local text = context.util.text_markup_function(14, symbol_fg)
-    local time_text = context.util.markup_function({bold=true, size=30}, text_fg)
-    local date_text = context.util.markup_function({bold=true, size=18}, text_fg)
+    local m_symbol = t_util.symbol_markup_function(18, symbol_fg)
+    local m_text = t_util.text_markup_function(14, text_fg)
+    local m_time_text = t_util.markup_function({bold=true, size=48}, text_fg)
+    local m_date_text = t_util.markup_function({bold=true, size=18}, text_fg)
+    local m_weather_text = t_util.markup_function({size=16}, text_fg)
     -- }}}
 
-    -- {{{ TIME
-    local time
-    time, timers.time = awful.widget.watch(
-        -- "date +'%a %d %b %R'", 60,
-        "date +'%R'", 10,
-        function(widget, stdout)
-            if debug then naughty.notify { text = "TIME" } end
-            time_text(widget, stdout)
-        end
-    )
+    -- {{{ CLOCK
+    local clock = wibox.widget {
+            id     = "text",
+            text   = "",
+            align  = "center",
+            widget = wibox.widget.textbox,
+    }
+    timers.clock = gears.timer {
+        timeout = 2,
+        autostart = true,
+        call_now = true,
+        callback = function()
+            if debug then naughty.notify { text = "CLOCK" } end
+            awful.spawn.easy_async("date +'%R'", function(stdout)
+                m_time_text(clock, stdout)
+            end)
+        end,
+    }
     -- }}}
 
     -- {{{ DATE
-    local date
-    date, timers.date = awful.widget.watch(
-        -- "date +'%a %d %b %R'", 60,
-        "date +'%A, %d. %B'", 60,
-        function(widget, stdout)
+    local date = wibox.widget {
+            id     = "text",
+            text   = "",
+            align  = "center",
+            widget = wibox.widget.textbox,
+    }
+    timers.date = gears.timer {
+        timeout = 19,
+        autostart = true,
+        call_now = true,
+        callback = function()
             if debug then naughty.notify { text = "DATE" } end
-            date_text(widget, stdout)
+            awful.spawn.easy_async("date +'%A, %d. %B'", function(stdout)
+                m_date_text(date, stdout)
+            end)
+        end,
+    }
+    -- }}}
+
+    -- {{{ WEATHER
+    local weather = wibox.widget {
+        {
+            id     = "icon",
+            align  = "center",
+            widget = wibox.widget.textbox,
+        },
+        {
+            id     = "text",
+            text   = "",
+            align  = "center",
+            widget = wibox.widget.textbox,
+        },
+        id      = "weather",
+        spacing = 20,
+        layout  = wibox.layout.fixed.horizontal,
+    }
+
+    local daylight = wibox.widget {
+        {
+            id     = "sun_text",
+            text   = "",
+            align  = "center",
+            widget = wibox.widget.textbox,
+        },
+        {
+            id     = "sun",
+            align  = "center",
+            widget = wibox.widget.textbox,
+        },
+        {
+            id     = "arrow",
+            align  = "center",
+            widget = wibox.widget.textbox,
+        },
+        {
+            id     = "moon",
+            align  = "center",
+            widget = wibox.widget.textbox,
+        },
+        {
+            id     = "moon_text",
+            text   = "",
+            align  = "center",
+            widget = wibox.widget.textbox,
+        },
+        id      = "daylight",
+        spacing = 20,
+        layout  = wibox.layout.fixed.horizontal,
+    }
+
+    m_symbol(daylight.sun, "")
+    m_symbol(daylight.moon, "")
+    -- m_symbol(daylight.arrow, "")
+    -- m_symbol(daylight.arrow, "")
+    m_symbol(daylight.arrow, "-")
+
+    local function get_icon(icon_code)
+        local icon
+
+        if string.find(icon_code, "01d") then
+            icon = ""
+        elseif string.find(icon_code, "01n") then
+            icon = ""
+        elseif string.find(icon_code, "02d") then
+            icon = ""
+        elseif string.find(icon_code, "02n") then
+            icon = ""
+        elseif string.find(icon_code, "03") then
+            icon = ""
+        elseif string.find(icon_code, "04") then
+            icon = ""
+        elseif string.find(icon_code, "09") then
+            icon = ""
+        elseif string.find(icon_code, "10d") then
+            icon = ""
+        elseif string.find(icon_code, "10n") then
+            icon = ""
+        elseif string.find(icon_code, "11") then
+            icon = ""
+        elseif string.find(icon_code, "13") then
+            icon = ""
+        elseif string.find(icon_code, "50") or string.find(icon_code, "40") then
+            icon = ""
+        else
+            icon = ""
         end
-    )
-    -- }}}
 
-    -- {{{ VOL
-    local vol = bar(bar_args)
-    context.vol = vol
-    vol.update = function(self)
-        if debug then naughty.notify { text = "VOL" } end
-
-        awful.spawn.easy_async({
-            "amixer", "get", "Master",
-        }, function(stdout)
-            local level, muted = string.match(stdout, "([%d]+)%%.*%[([%l]*)]")
-            local level = tonumber(level)
-            local muted = muted == "off"
-
-            local symbol_text
-
-            if volume_now.status == "off" then
-                symbol_text = ""
-            elseif tonumber(volume_now.level) == 0 then
-                symbol_text = ""
-            elseif tonumber(volume_now.level) < 50 then
-                symbol_text = ""
-            else
-                symbol_text = ""
-            end
-
-            self.bar.value = level
-            symbol(self.icon, symbol_text)
-            text(self.text, level .. "%")
-        end)
+        return icon
     end
 
-    timers.vol = gears.timer {
-        timeout  = 30,
-        call_now = true,
-        callback = function() vol:update() end,
-    }
+    brokers.weather:add_callback(function(x)
+        m_symbol(weather.icon, get_icon(x.data.weather[1].icon))
+        m_weather_text(weather.text, string.format("%s, %s°C", x.data.weather[1].description, x.data.main.temp))
+        m_weather_text(daylight.sun_text, os.date("%H:%M", x.data.sys.sunrise))
+        m_weather_text(daylight.moon_text, os.date("%H:%M", x.data.sys.sunset))
+    end)
+
+    weather:buttons(brokers.weather.buttons)
+    daylight:buttons(brokers.weather.buttons)
     -- }}}
 
-    -- {{{ BAT
-    local bat = bar(bar_args)
-    bat.update = function(self)
-        if debug then naughty.notify { text = "BAT" } end
+    -- {{{ AUDIO
+    local audio = bar(bar_args)
 
-        awful.spawn.easy_async({
-            "cat", "/sys/class/power_supply/BAT0/capacity", "&&",
-            "cat", "/sys/class/power_supply/AC/online",
-        }, function(stdout)
-            local level, ac = string.match(stdout, "([%d]+)\n([%d]+)")
+    brokers.audio:add_callback(function(x)
+        local icon
 
-            local level = tonumber(level)
-            local ac = tonumber(ac) == 1
+        if x.muted then
+            icon = ""
+        elseif x.percent <= 20 then
+            icon = ""
+        elseif x.percent <= 50 then
+            icon = ""
+        else
+            icon = ""
+        end
 
-            local color = text_fg
-            local symbol_text
+        audio.bar.value = x.percent
+        m_symbol(audio.icon, icon)
+        m_text(audio.text, x.percent .. "%")
+    end)
 
-            if level <= 10 then
-                symbol_text = ""
-                color = context.colors.red_2
-            elseif level <= 20 then
-                symbol_text = ""
-                color = context.colors.orange_2
-            elseif level <= 30 then
-                symbol_text = ""
-                color = context.colors.yellow_2
-            elseif level <= 50 then
-                symbol_text = ""
-            elseif level <= 75 then
-                symbol_text = ""
-            else
-                symbol_text = ""
-            end
-
-            if ac then
-                symbol_text = ""
-                if level >= 95 then
-                    color = context.colors.green_2
-                end
-            end
-
-            self.bar.value = level
-            symbol(self.icon, symbol_text)
-            text(self.text, level .. "%", color)
-        end)
-    end
-
-    timers.bat = gears.timer {
-        timeout  = 30,
-        call_now = true,
-        callback = function() bat:update() end,
+    timers.audio = brokers.audio:add_timer {
+        timeout = 29,
+        autostart = false,
     }
+    audio:buttons(brokers.audio.buttons)
+    -- }}}
+
+    -- {{{ BRIGHTNESS
+    local brightness = bar(bar_args)
+    m_symbol(brightness.icon, "")
+
+    brokers.brightness:add_callback(function(x)
+        brightness.bar.value = x.percent
+        m_text(brightness.text, x.percent .. "%")
+    end)
+
+    timers.brightness = brokers.brightness:add_timer {
+        timeout = 31,
+        autostart = false,
+    }
+    brightness:buttons(brokers.brightness.buttons)
+    -- }}}
+
+    -- {{{ BATTERY
+    local battery = bar(bar_args)
+
+    brokers.battery:add_callback(function(x)
+        local color = text_fg
+        local icon
+
+        if x.percent <= 10 then
+            icon = ""
+            color = colors.red_2
+        elseif x.percent <= 20 then
+            icon = ""
+            color = colors.orange_2
+        elseif x.percent <= 30 then
+            icon = ""
+            color = colors.yellow_2
+        elseif x.percent <= 50 then
+            icon = ""
+        elseif x.percent <= 75 then
+            icon = ""
+        else
+            icon = ""
+        end
+
+        if x.charging or x.ac then
+            icon = ""
+            if x.percent >= 95 then
+                color = colors.green_2
+            end
+        end
+
+        battery.bar.value = x.percent
+        m_symbol(battery.icon, icon)
+        m_text(battery.text, x.percent .. "%", color)
+    end)
+
+    timers.battery = brokers.battery:add_timer {
+        timeout = 23,
+        autostart = false,
+    }
+    battery:buttons(brokers.battery.buttons)
+    -- }}}
+
+    -- {{{ LOADAVG
+    local loadavg = bar(bar_args)
+    m_symbol(loadavg.icon, "")
+
+    -- check with: grep 'model name' /proc/cpuinfo | wc -l
+    local _cores = vars.cores or 4
+    loadavg.bar.min_value = 0
+    loadavg.bar.max_value = _cores
+
+    brokers.loadavg:add_callback(function(x)
+        local color = text_fg
+
+        if x.load_5 / _cores >= 1.5 then
+            color = colors.red_2
+        elseif x.load_5 / _cores >= 0.8 then
+            if x.load_1 > x.load_5 then
+                color = colors.red_2
+            else
+                color = colors.orange_2
+            end
+        elseif x.load_5 / _cores >= 0.65 then
+            color = colors.orange_2
+        elseif x.load_5 / _cores >= 0.5 then
+            color = colors.yellow_2
+        end
+
+        loadavg.bar.value = x.load_5
+        m_text(loadavg.text, x.load_5, color)
+    end)
+
+    timers.loadavg = brokers.loadavg:add_timer {
+        timeout = 3,
+        autostart = false,
+    }
+    loadavg:buttons(brokers.loadavg.buttons)
+    -- }}}
+
+    -- {{{ CPU
+    local cpu = bar(bar_args)
+    m_symbol(cpu.icon, "")
+
+    brokers.cpu:add_callback(function(x)
+        local color = text_fg
+
+        if x.percent >= 90 then
+            color = colors.red_2
+        elseif x.percent >= 80 then
+            color = colors.orange_2
+        elseif x.percent >= 70 then
+            color = colors.yellow_2
+        end
+
+        cpu.bar.value = x.percent
+        m_text(cpu.text, x.percent .. "%", color)
+    end)
+
+    timers.cpu = brokers.cpu:add_timer {
+        timeout = 5,
+        autostart = false,
+    }
+    cpu:buttons(brokers.cpu.buttons)
+    -- }}}
+
+    -- {{{ MEMORY
+    local memory = bar(bar_args)
+    m_symbol(memory.icon, "")
+
+    brokers.memory:add_callback(function(x)
+        local color = text_fg
+
+        if x.percent >= 90 then
+            color = colors.red_2
+        elseif x.percent >= 80 then
+            color = colors.orange_2
+        elseif x.percent >= 70 then
+            color = colors.yellow_2
+        end
+
+        memory.bar.value = x.percent
+        m_text(memory.text, x.percent .. "%", color)
+    end)
+
+    timers.memory = brokers.memory:add_timer {
+        timeout = 7,
+        autostart = false,
+    }
+    memory:buttons(brokers.memory.buttons)
+    -- }}}
+
+    -- {{{ TEMPERATURE
+    local temperature = bar(bar_args)
+
+    brokers.temperature:add_callback(function(x)
+        local color = text_fg
+        local icon
+
+        if x.temp >= 80 then
+            icon = ""
+            color = colors.red_2
+        elseif x.temp >= 70 then
+            icon = ""
+            color = colors.orange_2
+        elseif x.temp >= 60 then
+            icon = ""
+            color = colors.yellow_2
+        elseif x.temp >= 30 then
+            icon = ""
+        else
+            icon = ""
+        end
+
+        temperature.bar.value = x.temp
+        m_symbol(temperature.icon, icon)
+        m_text(temperature.text, x.temp, color)
+    end)
+
+    timers.temperature = brokers.temperature:add_timer {
+        timeout = 11,
+        autostart = false,
+    }
+    temperature:buttons(brokers.temperature.buttons)
+    -- }}}
+
+    -- {{{ DRIVE
+    local drive = bar(bar_args)
+    m_symbol(drive.icon, "")
+
+    brokers.drive:add_callback(function(x)
+        local color = text_fg
+
+        if x.percent >= 90 then
+            color = colors.red_2
+        elseif x.percent >= 80 then
+            color = colors.orange_2
+        elseif x.percent >= 70 then
+            color = colors.yellow_2
+        end
+
+        drive.bar.value = x.percent
+        m_text(drive.text, x.percent .. "%", color)
+    end)
+
+    timers.drive = brokers.drive:add_timer {
+        timeout = 7,
+        autostart = false,
+    }
+    drive:buttons(brokers.drive.buttons)
     -- }}}
 
     -- {{{ Item placement
@@ -271,44 +540,63 @@ local function factory(context, args)
             {
                 {
                     {
-                        time,
-                        widget = wibox.container.place,
+                        {
+                            clock,
+                            widget = wibox.container.place,
+                        },
+                        {
+                            date,
+                            widget = wibox.container.place,
+                        },
+                        spacing = 20,
+                        layout = wibox.layout.fixed.vertical,
                     },
-                    {
-                        date,
-                        widget = wibox.container.place,
-                    },
-                    layout = wibox.layout.flex.vertical,
-                },
-                widget = wibox.container.place,
-            },
-            {
-                {
                     {
                         {
-                            vol,
-                            bat,
-                            bat,
-                            bat,
-                            bat,
-                            bat,
+                            weather,
+                            widget = wibox.container.place,
+                        },
+                        {
+                            daylight,
+                            widget = wibox.container.place,
+                        },
+                        spacing = 20,
+                        layout = wibox.layout.fixed.vertical,
+                    },
+                    {
+                        forced_height = 30,
+                        widget = wibox.container.background,
+                    },
+                    {
+                        {
+                            audio,
+                            brightness,
+                            battery,
+                            loadavg,
+                            cpu,
+                            memory,
+                            temperature,
+                            drive,
                             spacing = 20,
                             layout = wibox.layout.flex.vertical,
                         },
                         margins = 20,
                         widget = wibox.container.margin,
                     },
-                    layout = wibox.layout.flex.vertical,
+                    spacing = 50,
+                    layout = wibox.layout.fixed.vertical,
                 },
                 widget = wibox.container.place,
             },
             layout = wibox.layout.flex.vertical,
         },
-        right = beautiful.border_width,
+        right = beautiful.border,
         color = beautiful.border_focus,
         widget = wibox.container.margin,
     }
     -- }}}
+
+    sidebar:hide()
 
     return sidebar
 

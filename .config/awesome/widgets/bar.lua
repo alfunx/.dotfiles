@@ -1,15 +1,12 @@
+
 --[[
 
      Licensed under GNU General Public License v2
-      * (c) 2017, Alphonse Mariyagnanaseelan
+      * (c) 2019, Alphonse Mariyagnanaseelan
 
 --]]
 
-local gears        = require("gears")
-local wibox        = require("wibox")
-local lines, floor = io.lines, math.floor
-local string       = { format = string.format,
-                       gsub   = string.gsub }
+local wibox = require("wibox")
 
 local function factory(args)
 
@@ -28,9 +25,10 @@ local function factory(args)
             value            = 0,
             forced_height    = args.height,
             forced_width     = args.width,
-            paddings         = args.border,
             color            = args.inner_color,
             background_color = args.outer_color,
+            border_width     = args.border_width,
+            border_color     = args.border_color,
             widget           = wibox.widget.progressbar,
         },
         {

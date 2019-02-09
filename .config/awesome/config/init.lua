@@ -6,20 +6,30 @@
 
 --]]
 
-local config = {
+local _config = {
+
+    context = require("config.context"),
+
+    brokers = require("config.brokers"),
+    tags = require("config.tags"),
     util = require("config.util"),
     util_theme = require("config.util_theme"),
-    menu = require("config.menu"),
-    widgets = require("config.widgets"),
-    popups = require("config.popups"),
-    notifications = require("config.notifications"),
+
     keys = require("config.keys"),
-    keys_command = require("config.keys_command"),
-    keys_client = require("config.keys_client"),
+    bindings_global = require("config.bindings_global"),
+    bindings_client = require("config.bindings_client"),
+    bindings_command = require("config.bindings_command"),
+    bindings_taglist = require("config.bindings_taglist"),
+    bindings_tasklist = require("config.bindings_tasklist"),
+
+    menu = require("config.menu"),
+    popups = require("config.popups"),
+    sidebar = require("config.sidebar"),
+
     rules = require("config.rules"),
     signals = require("config.signals"),
-    sidebar = require("config.sidebar"),
     screen = require("config.screen"),
+
 }
 
-return config
+return _config

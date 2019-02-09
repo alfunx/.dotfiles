@@ -9,9 +9,12 @@
 local awful = require("awful")
 local beautiful = require("beautiful")
 
-local config = { }
+local bindings = require("config.bindings_client")
+local tags = require("config.tags")
 
-function config.init(context)
+local _config = { }
+
+function _config.init()
 
     -- Rules to apply to new clients (through the "manage" signal)
     awful.rules.rules = {
@@ -24,8 +27,8 @@ function config.init(context)
                 border_color = beautiful.border_normal,
                 focus = awful.client.focus.filter,
                 raise = true,
-                keys = context.keys.client,
-                buttons = context.mouse.client,
+                keys = bindings.keys,
+                buttons = bindings.buttons,
                 screen = awful.screen.preferred,
                 placement = awful.placement.no_offscreen+awful.placement.no_overlap,
                 size_hints_honor = false,
@@ -52,7 +55,7 @@ function config.init(context)
             },
             properties = {
                 screen = 1,
-                tag = awful.util.tagnames[6],
+                tag = tags.names[6],
             },
         },
 
@@ -62,7 +65,7 @@ function config.init(context)
             },
             properties = {
                 screen = 1,
-                tag = awful.util.tagnames[7],
+                tag = tags.names[7],
             },
         },
 
@@ -72,7 +75,7 @@ function config.init(context)
             },
             properties = {
                 screen = 1,
-                tag = awful.util.tagnames[8],
+                tag = tags.names[8],
             },
         },
 
@@ -155,4 +158,4 @@ function config.init(context)
 
 end
 
-return config
+return _config
