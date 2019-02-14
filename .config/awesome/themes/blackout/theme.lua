@@ -339,7 +339,7 @@ local clock_widget = wibox.widget {
         right = 4,
         widget = wibox.container.margin,
     },
-    layout = wibox.layout.align.horizontal,
+    layout = wibox.layout.fixed.horizontal,
 }
 -- }}}
 
@@ -512,6 +512,7 @@ brokers.mpd = lain.widget.mpd {
 
 -- {{{ MEMORY
 local memory_widget = wibox.widget {
+    space,
     {
         id = "icon",
         image = theme.widget_mem,
@@ -522,21 +523,22 @@ local memory_widget = wibox.widget {
         align = "center",
         widget = wibox.widget.textbox,
     },
-    layout = wibox.layout.align.horizontal,
+    space,
+    layout = wibox.layout.fixed.horizontal,
 }
 
 brokers.memory:add_callback(function(x)
-    local _color = bar_fg
+    local color = bar_fg
 
     if x.percent >= 90 then
-        _color = colors.red_2
+        color = colors.red_2
     elseif x.percent >= 80 then
-        _color = colors.orange_2
+        color = colors.orange_2
     elseif x.percent >= 70 then
-        _color = colors.yellow_2
+        color = colors.yellow_2
     end
 
-    m_text(memory_widget.text, x.percent, _color)
+    m_text(memory_widget.text, x.percent, color)
 end)
 
 memory_widget:buttons(brokers.memory.buttons)
@@ -544,6 +546,7 @@ memory_widget:buttons(brokers.memory.buttons)
 
 -- {{{ CPU
 local cpu_widget = wibox.widget {
+    space,
     {
         id = "icon",
         image = theme.widget_cpu,
@@ -554,21 +557,22 @@ local cpu_widget = wibox.widget {
         align = "center",
         widget = wibox.widget.textbox,
     },
-    layout = wibox.layout.align.horizontal,
+    space,
+    layout = wibox.layout.fixed.horizontal,
 }
 
 brokers.cpu:add_callback(function(x)
-    local _color = bar_fg
+    local color = bar_fg
 
     if x.percent >= 90 then
-        _color = colors.red_2
+        color = colors.red_2
     elseif x.percent >= 80 then
-        _color = colors.orange_2
+        color = colors.orange_2
     elseif x.percent >= 70 then
-        _color = colors.yellow_2
+        color = colors.yellow_2
     end
 
-    m_text(cpu_widget.text, x.percent, _color)
+    m_text(cpu_widget.text, x.percent, color)
 end)
 
 cpu_widget:buttons(brokers.cpu.buttons)
@@ -576,6 +580,7 @@ cpu_widget:buttons(brokers.cpu.buttons)
 
 -- {{{ LOADAVG
 local loadavg_widget = wibox.widget {
+    space,
     {
         id = "icon",
         image = theme.widget_load,
@@ -586,26 +591,27 @@ local loadavg_widget = wibox.widget {
         align = "center",
         widget = wibox.widget.textbox,
     },
-    layout = wibox.layout.align.horizontal,
+    space,
+    layout = wibox.layout.fixed.horizontal,
 }
 
 -- check with: grep 'model name' /proc/cpuinfo | wc -l
 local _cores = context.vars.cores or 4
 
 brokers.loadavg:add_callback(function(x)
-    local _color = bar_fg
+    local color = bar_fg
 
     if x.load_5 / _cores >= 1.5 then
-        _color = colors.red_2
+        color = colors.red_2
     elseif x.load_5 / _cores >= 0.8 then
-        _color = x.load_1 > x.load_5 and colors.red_2 or colors.orange_2
+        color = x.load_1 > x.load_5 and colors.red_2 or colors.orange_2
     elseif x.load_5 / _cores >= 0.65 then
-        _color = colors.orange_2
+        color = colors.orange_2
     elseif x.load_5 / _cores >= 0.5 then
-        _color = colors.yellow_2
+        color = colors.yellow_2
     end
 
-    m_text(loadavg_widget.text, string.format("%.1f", x.load_5), _color)
+    m_text(loadavg_widget.text, string.format("%.1f", x.load_5), color)
 end)
 
 loadavg_widget:buttons(brokers.loadavg.buttons)
@@ -613,6 +619,7 @@ loadavg_widget:buttons(brokers.loadavg.buttons)
 
 -- {{{ PACMAN
 local pacman_widget = wibox.widget {
+    space,
     {
         id = "icon",
         image = theme.widget_pacman,
@@ -623,7 +630,8 @@ local pacman_widget = wibox.widget {
         align = "center",
         widget = wibox.widget.textbox,
     },
-    layout = wibox.layout.align.horizontal,
+    space,
+    layout = wibox.layout.fixed.horizontal,
 }
 
 brokers.pacman:add_callback(function(x)
@@ -634,6 +642,7 @@ pacman_widget:buttons(brokers.pacman.buttons)
 
 -- {{{ USERS
 local users_widget = wibox.widget {
+    space,
     {
         id = "icon",
         image = theme.widget_users,
@@ -644,21 +653,28 @@ local users_widget = wibox.widget {
         align = "center",
         widget = wibox.widget.textbox,
     },
-    layout = wibox.layout.align.horizontal,
+    space,
+    visible = false,
+    layout = wibox.layout.fixed.horizontal,
 }
 
 brokers.users:add_callback(function(x)
-    local _color = bar_fg
+    users_widget.visible = x.count > 1
+
+    local color = bar_fg
+
     if tonumber(x.count) > 1 then
-        _color = colors.red_2
+        color = colors.red_2
     end
-    m_text(users_widget.text, x.count, _color)
+
+    m_text(users_widget.text, x.count, color)
 end)
 users_widget:buttons(brokers.users.buttons)
 -- }}}
 
 -- {{{ BRIGHTNESS
 local brightness_widget = wibox.widget {
+    space,
     {
         id = "icon",
         image = theme.widget_light,
@@ -669,7 +685,8 @@ local brightness_widget = wibox.widget {
         align = "center",
         widget = wibox.widget.textbox,
     },
-    layout = wibox.layout.align.horizontal,
+    space,
+    layout = wibox.layout.fixed.horizontal,
 }
 
 brokers.brightness:add_callback(function(x)
@@ -680,6 +697,7 @@ brightness_widget:buttons(brokers.brightness.buttons)
 
 -- {{{ TEMPERATURE
 local temp_widget = wibox.widget {
+    space,
     {
         id = "icon",
         image = theme.widget_temp,
@@ -690,7 +708,8 @@ local temp_widget = wibox.widget {
         align = "center",
         widget = wibox.widget.textbox,
     },
-    layout = wibox.layout.align.horizontal,
+    space,
+    layout = wibox.layout.fixed.horizontal,
 }
 
 brokers.temperature:add_callback(function(x)
@@ -712,6 +731,7 @@ temp_widget:buttons(brokers.temperature.buttons)
 
 -- {{{ DRIVE
 local drive_widget = wibox.widget {
+    space,
     {
         id = "icon",
         image = theme.widget_hdd,
@@ -722,7 +742,8 @@ local drive_widget = wibox.widget {
         align = "center",
         widget = wibox.widget.textbox,
     },
-    layout = wibox.layout.align.horizontal,
+    space,
+    layout = wibox.layout.fixed.horizontal,
 }
 
 brokers.drive:add_callback(function(x)
@@ -744,12 +765,14 @@ drive_widget:buttons(brokers.drive.buttons)
 
 -- {{{ LOCK
 local lock_widget = wibox.widget {
+    space,
     {
         id = "icon",
         image = theme.widget_lock,
         widget = wibox.widget.imagebox,
     },
-    layout = wibox.layout.align.horizontal,
+    space,
+    layout = wibox.layout.fixed.horizontal,
 }
 
 brokers.lock:add_callback(function(x)
@@ -765,6 +788,7 @@ lock_widget:buttons(brokers.lock.buttons)
 
 -- {{{ AUDIO
 local audio_widget = wibox.widget {
+    space,
     {
         id = "icon",
         image = theme.widget_vol,
@@ -775,7 +799,8 @@ local audio_widget = wibox.widget {
         align = "center",
         widget = wibox.widget.textbox,
     },
-    layout = wibox.layout.align.horizontal,
+    space,
+    layout = wibox.layout.fixed.horizontal,
 }
 
 brokers.audio:add_callback(function(x)
@@ -801,6 +826,7 @@ audio_widget:buttons(brokers.audio.buttons)
 
 -- {{{ BATTERY
 local battery_widget = wibox.widget {
+    space,
     {
         id = "icon",
         image = theme.widget_battery,
@@ -811,7 +837,8 @@ local battery_widget = wibox.widget {
         align = "center",
         widget = wibox.widget.textbox,
     },
-    layout = wibox.layout.align.horizontal,
+    space,
+    layout = wibox.layout.fixed.horizontal,
 }
 
 brokers.battery:add_callback(function(x)
@@ -849,6 +876,7 @@ battery_widget:buttons(brokers.battery.buttons)
 
 -- {{{ NET
 local net_widget = wibox.widget {
+    space,
     {
         {
             id = "icon",
@@ -866,6 +894,7 @@ local net_widget = wibox.widget {
         align = "center",
         widget = wibox.widget.textbox,
     },
+    space,
     layout = wibox.layout.fixed.horizontal,
 }
 
@@ -1137,11 +1166,9 @@ function theme.at_screen_connect(s)
     local systray_widget = wibox.widget {
         space,
         vert_sep,
+        space,
         {
-            {
-                layout = wibox.layout.align.horizontal,
-                wibox.widget.systray(),
-            },
+            wibox.widget.systray(),
             left = 8,
             right = 8,
             top = 4,
@@ -1168,20 +1195,13 @@ function theme.at_screen_connect(s)
     -- Add widgets to the wibox
     s._wibox:setup {
         {
-            layout = wibox.layout.flex.vertical,
             {
-                layout = wibox.layout.align.horizontal,
                 { -- Left widgets
-                    layout = wibox.layout.fixed.horizontal,
-
                     space, space,
 
-                    { -- Layout box
+                    { -- Layoutbox
                         {
-                            {
-                                layout = wibox.layout.align.horizontal,
-                                s._layoutbox,
-                            },
+                            s._layoutbox,
                             left = 4,
                             top = 5,
                             bottom = 5,
@@ -1195,10 +1215,7 @@ function theme.at_screen_connect(s)
 
                     { -- Taglist
                         {
-                            {
-                                layout = wibox.layout.align.horizontal,
-                                s._taglist,
-                            },
+                            s._taglist,
                             left = 2,
                             right = 2,
                             widget = wibox.container.margin,
@@ -1213,10 +1230,7 @@ function theme.at_screen_connect(s)
 
                     { -- Prompt box
                         {
-                            {
-                                layout = wibox.layout.align.horizontal,
-                                s._promptbox,
-                            },
+                            s._promptbox,
                             left = 6,
                             right = 6,
                             widget = wibox.container.margin,
@@ -1226,15 +1240,14 @@ function theme.at_screen_connect(s)
                     },
 
                     vert_sep,
+
+                    layout = wibox.layout.fixed.horizontal,
                 },
 
                 -- Middle widget
                 { -- Tasklist
                     {
-                        {
-                            layout = wibox.layout.flex.horizontal,
-                            s._tasklist,
-                        },
+                        s._tasklist,
                         left = 2,
                         right = 2,
                         widget = wibox.container.margin,
@@ -1244,39 +1257,39 @@ function theme.at_screen_connect(s)
                 },
 
                 { -- Right widgets
-                    layout = wibox.layout.fixed.horizontal,
+                    vert_sep,
 
-                    vert_sep, space,
+                    lock_widget,
 
-                    lock_widget, space,
+                    vert_sep,
 
-                    vert_sep, space,
+                    pacman_widget,
+                    users_widget,
+                    loadavg_widget,
+                    cpu_widget,
+                    memory_widget,
+                    temp_widget,
+                    drive_widget,
+                    brightness_widget,
+                    audio_widget,
+                    battery_widget,
 
-                    pacman_widget, space, space,
-                    users_widget, space, space,
-                    loadavg_widget, space, space,
-                    cpu_widget, space, space,
-                    memory_widget, space, space,
-                    temp_widget, space, space,
-                    drive_widget, space, space,
-                    brightness_widget, space, space,
-                    audio_widget, space, space,
-                    battery_widget, space, space,
+                    space, vert_sep,
 
-                    vert_sep, space,
+                    net_widget,
 
-                    net_widget, space, space,
-
-                    vert_sep, space,
+                    space, vert_sep, space,
 
                     clock_widget,
 
-                    -- space, space,
-
                     systray_widget,
                     systray_activator,
+
+                    layout = wibox.layout.fixed.horizontal,
                 },
+                layout = wibox.layout.align.horizontal,
             },
+            layout = wibox.layout.flex.vertical,
         },
         bottom = theme.border,
         color = colors.bw_2,
