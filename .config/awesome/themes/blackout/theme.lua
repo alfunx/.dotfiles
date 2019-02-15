@@ -810,7 +810,7 @@ brokers.audio:add_callback(function(x)
         icon = theme.widget_vol_mute
     elseif x.percent <= 20 then
         icon = theme.widget_vol_no
-    elseif x.percent <= 50 then
+    elseif x.percent <= 40 then
         icon = theme.widget_vol_low
     else
         icon = theme.widget_vol
@@ -901,25 +901,25 @@ local net_widget = wibox.widget {
 brokers.net:add_callback(function(x)
     local icon
 
-    if not x.wifi then
-        net_widget.wifi.visible = false
-    else
+    if x.wifi and x.signal then
         net_widget.wifi.visible = true
-    end
 
-    if x.signal >= -30 then
-        icon = theme.widget_net_4
-    elseif x.signal >= -60 then
-        icon = theme.widget_net_3
-    elseif x.signal >= -70 then
-        icon = theme.widget_net_2
-    elseif x.signal >= -80 then
-        icon = theme.widget_net_1
+        if x.signal >= -30 then
+            icon = theme.widget_net_4
+        elseif x.signal >= -60 then
+            icon = theme.widget_net_3
+        elseif x.signal >= -70 then
+            icon = theme.widget_net_2
+        elseif x.signal >= -80 then
+            icon = theme.widget_net_1
+        else
+            icon = theme.widget_net_0
+        end
     else
-        icon = theme.widget_net_0
+        net_widget.wifi.visible = false
     end
 
-    if not x.state then
+    if not x.state or x.state ~= "up" then
         m_text(net_widget.text, " N/A ", colors.red_2)
     else
         m_text(net_widget.text, string.format("%.1f ↓↑ %.1f", unit.to_mb(x.received), unit.to_mb(x.sent)))
@@ -1197,7 +1197,8 @@ function theme.at_screen_connect(s)
         {
             {
                 { -- Left widgets
-                    space, space,
+                    space,
+                    space,
 
                     { -- Layoutbox
                         {
@@ -1212,6 +1213,9 @@ function theme.at_screen_connect(s)
                     },
 
                     space,
+                    space,
+                    vert_sep,
+                    space,
 
                     { -- Taglist
                         {
@@ -1225,7 +1229,6 @@ function theme.at_screen_connect(s)
                     },
 
                     space,
-
                     vert_sep,
 
                     { -- Prompt box
