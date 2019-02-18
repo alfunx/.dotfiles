@@ -13,7 +13,7 @@ local naughty = require("naughty")
 local markup = require("lain.util.markup")
 
 local context = require("config.context")
-local screen = require("config.screen")
+local screens = require("config.screens")
 
 local _config = { }
 
@@ -42,7 +42,7 @@ function _config.init()
         beautiful.init(theme_path)
 
         -- Reload wibox and titlebar
-        screen.init()
+        screens.init()
 
         -- Reload border and titlebar colors
         for _, c in ipairs(client.get()) do

@@ -28,7 +28,7 @@ local _config = {
 
     rules = require("config.rules"),
     signals = require("config.signals"),
-    screen = require("config.screen"),
+    screens = require("config.screens"),
 
 }
 

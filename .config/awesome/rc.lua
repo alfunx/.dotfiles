@@ -131,7 +131,7 @@ config.sidebar.init()
 -- {{{ Configs
 config.rules.init()
 config.signals.init()
-config.screen.init()
+config.screens.init()
 -- }}}
 
 -- {{{ Spawn
