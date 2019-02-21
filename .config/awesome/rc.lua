@@ -8,8 +8,9 @@
 
 -- {{{ Libraries
 local awesome, client, mouse, screen, tag = awesome, client, mouse, screen, tag
-local ipairs, string, os, table, tostring, tonumber, type = ipairs, string, os, table, tostring, tonumber, type
+local pairs, ipairs, string, os, table, math, tostring, tonumber, type = pairs, ipairs, string, os, table, math, tostring, tonumber, type
 
+local awful = require("awful")
 local beautiful = require("beautiful")
 local naughty = require("naughty")
 local config = require("config")
@@ -54,6 +55,7 @@ config.context.init {
         batteries        = { "BAT0" },
         ac               = "AC",
         checkupdate      = "checkupdates | sed 's/->/→/' | sort | column -t -c 70 -T 2,4",
+     -- checkupdate      = "checkupdates | sed -E 's/->/→/;s/\\.g[^.-]+-/-/g' | sort | column -t -c 70 -T 2,4",
         scripts_dir      = os.getenv("HOME") .. "/.bin",
         secrets_dir      = os.getenv("HOME") .. "/.secrets",
 
@@ -73,7 +75,7 @@ end
 
 do
     local in_error = false
-    awesome.connect_signal("debug::error", function (err)
+    awesome.connect_signal("debug::error", function(err)
         if in_error then return end
         in_error = true
         naughty.notify {
@@ -97,7 +99,7 @@ end)
 -- }}}
 
 -- {{{ Auto DPI
--- awful.screen.set_auto_dpi_enabled(true)
+awful.screen.set_auto_dpi_enabled(true)
 -- }}}
 
 -- {{{ Utils

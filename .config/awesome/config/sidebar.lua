@@ -16,8 +16,8 @@ function _config.init()
 
     _config.widget = widgets.sidebar {
         mouse_toggle = true,
-        colors = context.colors,
-        vars = context.vars,
+        colors       = context.colors,
+        vars         = context.vars,
     }
 
 end

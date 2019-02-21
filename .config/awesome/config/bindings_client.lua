@@ -88,7 +88,7 @@ function _config.init()
 
         -- Edit in Vim
         awful.key({ k.m                }, "v", function(c) --luacheck: no unused args
-            awful.spawn(context.vars.terminal .. " zsh -lic '" .. context.vars.scripts_dir .. "/edit-in-vim'", {
+            awful.spawn(table.concat { context.vars.terminal, " zsh -lic '", context.vars.scripts_dir, "/edit-in-vim'" }, {
                 floating = true,
                 ontop = true,
                 placement = awful.placement.centered,
@@ -147,15 +147,15 @@ function _config.init()
 
     -- Move client to tag
     util.fake_key({ k.m, k.s           }, "1..9", nil,
-              { description = "move client to tag", group = "numeric keys" })
+                  { description = "move client to tag", group = "numeric keys" })
 
     -- Move client to tag and view it
     util.fake_key({ k.m, k.c, k.s      }, "1..9", nil,
-              { description = "move client to tag and view it", group = "numeric keys" })
+                  { description = "move client to tag and view it", group = "numeric keys" })
 
     -- Toggle tag on focused client
     util.fake_key({ k.m, k.a           }, "1..9", nil,
-              { description = "toggle client on tag", group = "numeric keys" })
+                  { description = "toggle client on tag", group = "numeric keys" })
 
     -- }}}
 

@@ -75,6 +75,19 @@ function _config.init()
         return math.floor((index - 1) / columns) == math.floor((selected - 1) / columns)
     end
 
+    -- Non-empty tag browsing
+    -- direction in {-1, 1} <-> {previous, next} non-empty tag
+    function _config.tag_view_nonempty(direction, s)
+       s = s or awful.screen.focused()
+
+       for _ = 1, #s.tags do
+           awful.tag.viewidx(direction, s)
+           if #s.clients > 0 then
+               return
+           end
+       end
+    end
+
     -- {{{ Dynamic tagging
 
     -- Add a new tag
@@ -84,7 +97,10 @@ function _config.init()
             textbox      = awful.screen.focused()._promptbox.widget,
             exe_callback = function(name)
                 if not name or #name == 0 then return end
-                awful.tag.add(name, { screen = awful.screen.focused(), layout = layout or awful.layout.suit.tile }):view_only()
+                awful.tag.add(name, {
+                    screen = awful.screen.focused(),
+                    layout = layout or awful.layout.suit.tile
+                }):view_only()
             end
         }
     end
@@ -97,9 +113,7 @@ function _config.init()
             exe_callback = function(new_name)
                 if not new_name or #new_name == 0 then return end
                 local t = awful.screen.focused().selected_tag
-                if t then
-                    t.name = new_name
-                end
+                if t then t.name = new_name end
             end
         }
     end
@@ -125,28 +139,63 @@ function _config.init()
 
     -- }}}
 
-    -- Set titlebar visibility
-    local set_titlebar = function(c, f)
-        if beautiful.titlebar_positions then
-            for _, p in ipairs(beautiful.titlebar_positions) do
-                f(c, p)
+    -- {{{ Titlebars
+    do
+        -- Set titlebar visibility
+        local set_titlebar = function(c, f)
+            if beautiful.titlebar_positions then
+                for _, p in ipairs(beautiful.titlebar_positions) do
+                    f(c, p)
+                end
+            else
+                f(c)
             end
-        else
-            f(c)
+        end
+
+        _config.hide_titlebar = function(c)
+            set_titlebar(c, awful.titlebar.hide)
+        end
+
+        _config.show_titlebar = function(c)
+            set_titlebar(c, awful.titlebar.show)
+        end
+
+        _config.toggle_titlebar = function(c)
+            set_titlebar(c, awful.titlebar.toggle)
         end
     end
 
-    _config.hide_titlebar = function(c)
-        set_titlebar(c, awful.titlebar.hide)
+    _config.hide_unneeded_titlebars = function(c)
+        if not _config.client_floats(c) then
+            _config.hide_titlebar(c)
+        end
+        if c.maximized or c.fullscreen then
+            _config.hide_titlebar(c)
+        end
     end
 
-    _config.show_titlebar = function(c)
-        set_titlebar(c, awful.titlebar.show)
-    end
+    _config.hide_all_unneeded_titlebars = function()
+        client.connect_signal("property::floating", function(c)
+            if c.floating and not c.maximized and not c.fullscreen then
+                _config.show_titlebar(c)
+            else
+                _config.hide_titlebar(c)
+            end
+        end)
 
-    _config.toggle_titlebar = function(c)
-        set_titlebar(c, awful.titlebar.toggle)
+        client.connect_signal("property::fullscreen", function(c)
+            if c.fullscreen then
+                _config.hide_titlebar(c)
+            end
+        end)
+
+        client.connect_signal("property::maximized", function(c)
+            if c.maximized then
+                _config.hide_titlebar(c)
+            end
+        end)
     end
+    -- }}}
 
     -- Toggle client property
     do
@@ -175,6 +224,32 @@ function _config.init()
         end
     end
 
+    do
+        local resize_horizontal_by_layout = {
+            tile       = function(r) return awful.tag.incmwfact( r) end,
+            tileleft   = function(r) return awful.tag.incmwfact(-r) end,
+            tiletop    = function(r) return awful.client.incwfact(r) end,
+            tilebottom = function(r) return awful.client.incwfact(r) end,
+        }
+
+        local resize_vertical_by_layout = {
+            tile       = function(r) return awful.client.incwfact(r) end,
+            tileleft   = function(r) return awful.client.incwfact(r) end,
+            tiletop    = function(r) return awful.tag.incmwfact( r) end,
+            tilebottom = function(r) return awful.tag.incmwfact(-r) end,
+        }
+
+        _config.resize_horizontal = function(r)
+            local l = awful.layout.getname(awful.layout.get(awful.screen.focused()))
+            resize_horizontal_by_layout[l](r)
+        end
+
+        _config.resize_vertical = function(r)
+            local l = awful.layout.getname(awful.layout.get(awful.screen.focused()))
+            resize_vertical_by_layout[l](r)
+        end
+    end
+
     -- Resize/Move constants
     do
         local RESIZE_STEP = 30
@@ -191,10 +266,10 @@ function _config.init()
         _config.get_move_function = nil
         do
             local move_by_direction = {
-                l = function(r, c) return c:relative_move(-r, 0, 0, 0) end,
-                d = function(r, c) return c:relative_move(0, r, 0, 0) end,
-                u = function(r, c) return c:relative_move(0, -r, 0, 0) end,
-                r = function(r, c) return c:relative_move(r, 0, 0, 0) end,
+                l = function(r, c) return c:relative_move(-r,  0, 0, 0) end,
+                d = function(r, c) return c:relative_move( 0,  r, 0, 0) end,
+                u = function(r, c) return c:relative_move( 0, -r, 0, 0) end,
+                r = function(r, c) return c:relative_move( r,  0, 0, 0) end,
             }
             _config.get_move_function = function(direction, resize_step)
                 resize_step = resize_step or RESIZE_STEP
@@ -214,16 +289,16 @@ function _config.init()
         _config.get_resize_function = nil
         do
             local resize_floating_by_direction = {
-                l = function(r, c) return c:relative_move(0, 0, -r, 0) end,
-                d = function(r, c) return c:relative_move(0, 0, 0, r) end,
-                u = function(r, c) return c:relative_move(0, 0, 0, -r) end,
-                r = function(r, c) return c:relative_move(0, 0, r, 0) end,
+                l = function(r, c) return c:relative_move(0, 0, -r,  0) end,
+                d = function(r, c) return c:relative_move(0, 0,  0,  r) end,
+                u = function(r, c) return c:relative_move(0, 0,  0, -r) end,
+                r = function(r, c) return c:relative_move(0, 0,  r,  0) end,
             }
             local resize_tiled_by_direction = {
-                l = function(r) return awful.tag.incmwfact(-r) end,
-                d = function(r) return awful.client.incwfact(-r) end,
-                u = function(r) return awful.client.incwfact(r) end,
-                r = function(r) return awful.tag.incmwfact(r) end,
+                l = function(r) return _config.resize_horizontal(-r) end,
+                d = function(r) return _config.resize_vertical(-r) end,
+                u = function(r) return _config.resize_vertical( r) end,
+                r = function(r) return _config.resize_horizontal( r) end,
             }
             _config.get_resize_function = function(direction, resize_step, resize_factor)
                 resize_step = resize_step or RESIZE_STEP
@@ -247,10 +322,10 @@ function _config.init()
 
         if text then
             t.fg = beautiful.tasklist_fg_urgent or beautiful.fg_focus
-            t.widget.markup = markup.bold(text)
+            t.widget:set_markup(markup.bold(text))
         else
             t.fg = beautiful.prompt_fg
-            t.widget.markup = ""
+            t.widget:set_markup("")
         end
     end
 
@@ -263,17 +338,17 @@ function _config.init()
         end
 
         c._shade = wibox {
-            bg = "#00ff0033",
-            ontop = true,
+            bg                = "#00ff0033",
+            ontop             = true,
             input_passthrough = true,
         }
         function c._shade_update()
-            local geo = c:geometry()
-            c._shade.x = geo.x - c.border_width
-            c._shade.y = geo.y - c.border_width
-            c._shade.width = geo.width + 4*c.border_width
+            local geo       = c:geometry()
+            c._shade.x      = geo.x - c.border_width
+            c._shade.y      = geo.y - c.border_width
+            c._shade.width  = geo.width  + 4*c.border_width
             c._shade.height = geo.height + 4*c.border_width
-            c._shade.bg = c == client.focus and "#ff000033" or "#00ff0033"
+            c._shade.bg     = c == client.focus and "#ff000033" or "#00ff0033"
         end
 
         c:connect_signal("property::geometry", c._shade_update)
@@ -356,8 +431,8 @@ function _config.init()
 
     -- Create default popup
     _config.popup = function(args)
-        args.width = args.width or 96
-        args.height = args.height or 96
+        args.width   = args.width   or 96
+        args.height  = args.height  or 96
         args.timeout = args.timeout or 1
 
         local popup = awful.popup {
@@ -368,24 +443,24 @@ function _config.init()
                         widget = wibox.container.place
                     },
                     margins = 16,
-                    widget = wibox.container.margin,
+                    widget  = wibox.container.margin,
                 },
-                forced_width = args.width,
+                forced_width  = args.width,
                 forced_height = args.height,
-                widget = wibox.container.background,
+                widget        = wibox.container.background,
             },
             border_color = beautiful.border_normal,
             border_width = beautiful.border_width,
-            ontop = true,
-            visible = false,
-            placement = awful.placement.centered,
+            ontop        = true,
+            visible      = false,
+            placement    = awful.placement.centered,
         }
 
         local mouse_enter = false
         local t = gears.timer {
-            timeout = args.timeout,
+            timeout     = args.timeout,
             single_shot = true,
-            callback = function()
+            callback    = function()
                 if mouse_enter then return end
                 popup.visible = false
             end,
@@ -420,19 +495,21 @@ function _config.init()
 
     -- Add fake bindings (based on awful.key)
     _config.fake_key = function(mod, _key, press, release, data)
-        if type(release)=='table' then
+        if type(release) == 'table' then
             data=release
             release=nil
         end
 
         -- append custom userdata (like description) to a hotkey
         data = data and gears.table.clone(data) or { }
-        data.mod = mod
-        data.key = _key
-        data.press = press
-        data.release = release
+        gears.table.crush(data, {
+            mod     = mod,
+            key     = _key,
+            press   = press,
+            release = release,
+            execute = function(_) awful.key.execute(mod, _key) end,
+        })
         table.insert(awful.key.hotkeys, data)
-        data.execute = function(_) awful.key.execute(mod, _key) end
 
         return { }
     end

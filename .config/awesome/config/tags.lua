@@ -17,6 +17,57 @@ function _config.init()
     _config.names = { "1", "2", "3", "4", "5", "6", "7", "8", "9" }
     _config.columns = #_config.names
 
+    -- local manual = awful.layout.dynamic.suit.manual
+    -- local tile = awful.layout.dynamic.suit.tile
+    -- local fair = awful.layout.dynamic.suit.fair
+    -- local corner = awful.layout.dynamic.suit.corner
+    -- local cond = require("wibox.container.conditional")
+    -- local wibox = require("wibox")
+    --
+    -- local mycustomtilelayout = manual {
+    --     {
+    --         max_elements = 3,
+    --         {
+    --             {
+    --                 priority     = 2,
+    --                 max_elements = 1,
+    --                 ratio        = 0.33,
+    --                 layout       = tile.vertical,
+    --             },
+    --             {
+    --                 priority     = 1,
+    --                 max_elements = 1,
+    --                 ratio        = 0.33,
+    --                 layout       = tile.vertical,
+    --             },
+    --             {
+    --                 priority     = 3,
+    --                 max_elements = 1,
+    --                 ratio        = 0.33,
+    --                 layout       = tile.vertical,
+    --             },
+    --             reflow              = true,
+    --             inner_fill_strategy = 'spacing',
+    --             layout              = tile.horizontal,
+    --         },
+    --         margins = 3,
+    --         widget  = wibox.container.margin,
+    --     },
+    --     {
+    --         reflow       = true,
+    --         max_elements = 4,
+    --         min_elements = 4,
+    --         layout       = fair,
+    --     },
+    --     {
+    --         reflow       = true,
+    --         min_elements = 5,
+    --         layout       = corner,
+    --     },
+    --     reflow = true,
+    --     layout = cond,
+    -- }
+
     awful.layout.layouts = {
         awful.layout.suit.max,
         --awful.layout.suit.max.fullscreen,

@@ -9,6 +9,7 @@
 local widgets = {
 
     bar = require("widgets.bar"),
+    fade = require("widgets.fade"),
     sidebar = require("widgets.sidebar"),
 
 }

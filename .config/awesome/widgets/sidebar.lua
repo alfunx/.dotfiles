@@ -253,42 +253,8 @@ local function factory(args)
     -- m_symbol(daylight.arrow, "")
     m_symbol(daylight.arrow, "-")
 
-    local function get_icon(icon_code)
-        local icon
-
-        if string.find(icon_code, "01d") then
-            icon = ""
-        elseif string.find(icon_code, "01n") then
-            icon = ""
-        elseif string.find(icon_code, "02d") then
-            icon = ""
-        elseif string.find(icon_code, "02n") then
-            icon = ""
-        elseif string.find(icon_code, "03") then
-            icon = ""
-        elseif string.find(icon_code, "04") then
-            icon = ""
-        elseif string.find(icon_code, "09") then
-            icon = ""
-        elseif string.find(icon_code, "10d") then
-            icon = ""
-        elseif string.find(icon_code, "10n") then
-            icon = ""
-        elseif string.find(icon_code, "11") then
-            icon = ""
-        elseif string.find(icon_code, "13") then
-            icon = ""
-        elseif string.find(icon_code, "50") or string.find(icon_code, "40") then
-            icon = ""
-        else
-            icon = ""
-        end
-
-        return icon
-    end
-
     brokers.weather:add_callback(function(x)
-        m_symbol(weather.icon, get_icon(x.data.weather[1].icon))
+        m_symbol(weather.icon, t_util.get_icon(x.data.weather[1].icon))
         m_weather_text(weather.text, string.format("%s, %s°C", x.data.weather[1].description, x.data.main.temp))
         m_weather_text(daylight.sun_text, os.date("%H:%M", x.data.sys.sunrise))
         m_weather_text(daylight.moon_text, os.date("%H:%M", x.data.sys.sunset))

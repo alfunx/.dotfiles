@@ -11,6 +11,8 @@ local lain             = require("lain")
 local awful            = require("awful")
 local wibox            = require("wibox")
 local naughty          = require("naughty")
+local theme_assets     = require("beautiful.theme_assets")
+local cairo            = require("lgi").cairo
 local os, math, string = os, math, string
 
 local context          = require("config.context")
@@ -20,6 +22,8 @@ local t_util           = require("config.util_theme")
 local tags             = require("config.tags")
 local taglist_binds    = require("config.bindings_taglist")
 local tasklist_binds   = require("config.bindings_tasklist")
+
+local widgets          = require("widgets")
 
 local unit             = require("yaawl.util.unit")
 
@@ -93,8 +97,10 @@ theme.border_marked                             = colors.bw_5
 theme.titlebar_fg_normal                        = colors.bw_5
 theme.titlebar_fg_focus                         = colors.bw_8
 theme.titlebar_fg_marked                        = colors.bw_8
+theme.titlebar_fg_urgent                        = colors.red_2
 theme.titlebar_bg_normal                        = colors.bw_2
 theme.titlebar_bg_focus                         = colors.bw_5
+theme.titlebar_bg_marked                        = colors.bw_5
 theme.titlebar_bg_marked                        = colors.bw_5
 
 theme.fg_normal                                 = colors.bw_9
@@ -298,8 +304,7 @@ naughty.config.presets.critical                 = {
                                                   }
 
 -- Spacing
-local space = wibox.widget {
-    widget = wibox.widget.separator,
+local space = wibox.widget.separator {
     orientation = "vertical",
     forced_width = 3,
     thickness = 3,
@@ -307,8 +312,7 @@ local space = wibox.widget {
 }
 
 -- Separator
-local vert_sep = wibox.widget {
-    widget = wibox.widget.separator,
+local vert_sep = wibox.widget.separator {
     orientation = "vertical",
     forced_width = theme.border / 2,
     thickness = theme.border / 2,
@@ -372,15 +376,15 @@ lain.widget.cal {
 -- styles.normal  = { shape    = rounded_shape(5) }
 -- styles.focus   = { fg_color = '#000000',
 --                    bg_color = '#ff9800',
---                    markup   = function(t) return '<b>' .. t .. '</b>' end,
+--                    markup   = function(t) return table.concat { '<b>', t, '</b>' } end,
 --                    shape    = rounded_shape(5, true)
 -- }
 -- styles.header  = { fg_color = '#de5e1e',
---                    markup   = function(t) return '<b>' .. t .. '</b>' end,
+--                    markup   = function(t) return table.concat { '<b>', t, '</b>' } end,
 --                    shape    = rounded_shape(10)
 -- }
 -- styles.weekday = { fg_color = '#7788af',
---                    markup   = function(t) return '<b>' .. t .. '</b>' end,
+--                    markup   = function(t) return table.concat { '<b>', t, '</b>' } end,
 --                    shape    = rounded_shape(5)
 -- }
 -- local function decorate_cell(widget, flag, date)
@@ -457,7 +461,7 @@ lain.widget.cal {
 --     password = "keyring get mail",
 --     settings = function()
 --         if mailcount > 0 then
---             widget:set_text(" " .. mailcount .. " ")
+--             widget:set_text(table.concat { " ", mailcount, " " })
 --             mail_icon:set_image(theme.widget_mail_on)
 --         else
 --             widget:set_text("")
@@ -493,7 +497,7 @@ brokers.mpd = lain.widget.mpd {
     settings = function()
         if mpd_now.state == "play" then
             artist = " " .. mpd_now.artist .. " "
-            title  = mpd_now.title  .. " "
+            title = mpd_now.title .. " "
             -- mpd_icon:set_image(theme.widget_music_on)
             widget:set_markup(markup.font(theme.font, markup("#FF8466", artist) .. " " .. title))
         elseif mpd_now.state == "pause" then
@@ -872,6 +876,32 @@ end)
 battery_widget:buttons(brokers.battery.buttons)
 -- }}}
 
+-- {{{ WEATHER
+local weather_widget = wibox.widget {
+    space,
+    {
+        id = "icon",
+        align = "center",
+        widget = wibox.widget.textbox,
+    },
+    space, space,
+    {
+        id = "text",
+        align = "center",
+        widget = wibox.widget.textbox,
+    },
+    space,
+    layout = wibox.layout.fixed.horizontal,
+}
+
+brokers.weather:add_callback(function(x)
+    m_symbol(weather_widget.icon, t_util.get_icon(x.data.weather[1].icon))
+    m_text(weather_widget.text, x.data.main.temp)
+end)
+
+weather_widget:buttons(brokers.weather.buttons)
+-- }}}
+
 -- {{{ NET
 local net_widget = wibox.widget {
     space,
@@ -937,91 +967,180 @@ net_widget:buttons(awful.button({ }, 1, function()
     local net_text
     awful.spawn.with_line_callback(context.vars.scripts_dir .. "/show-ip-address -f", {
         stdout = function(line)
-            net_text = net_text and (net_text .. '\n' .. line) or (line)
+            net_text = net_text and table.concat { net_text, '\n', line } or line
             naughty.replace_text(net_widget_notification, "Network", net_text)
         end,
     })
 end))
 -- }}}
 
---[[ 2BWM - style
-
-theme.titlebar_positions = { "top", "left", "right", "bottom" }
-theme.border_width       = 16
-theme.border_normal      = colors.bw_0
-theme.border_focus       = colors.bw_0
-theme.border_marked      = colors.bw_0
-
-function theme.titlebar_fn(c)
-    c.titlebars = c.titlebars or { }
-
-    local function gen_titlebar(pos)
-        local t = awful.titlebar(c, { size = 4, position = pos })
-
-        t:setup {
-            id     = "color",
-            bg     = theme.titlebar_bg_normal,
-            widget = wibox.container.background,
-        }
-
-        function t:focus()
-            self.color.bg = theme.titlebar_bg_focus
-        end
-
-        function t:unfocus()
-            self.color.bg = theme.titlebar_bg_normal
-        end
-
-        table.insert(c.titlebars, t)
-    end
-
-    for _, p in pairs(theme.titlebar_positions) do
-        gen_titlebar(p)
-    end
-end
-
-client.connect_signal("focus", function(c)
-    for _, t in pairs(c.titlebars) do t:focus() end
-end)
-
-client.connect_signal("unfocus", function(c)
-    for _, t in pairs(c.titlebars) do t:unfocus() end
-end)
-
+-- {{{ 2BWM - style
+-- theme.titlebar_fn = require("config.titlebars.double").init(theme, {
+--     outer_width = 16,
+--     outer_color = colors.bw_0,
+-- })
 -- TODO: Disable hiding titlebar when client is floating.
 --       See: config/signals.lua - "property::floating"
+-- }}}
 
---]]
+local function title_markup(client, color, bold)
+    return table.concat {
+        "<span color='", color, "'>",
 
--- {{{ TASKLIST
-local function tasklist_markup(color, class, name, bold)
-    return "<span color='" .. color .. "'>"
-        .. "<small><small><i>" .. gears.string.xml_escape(class) .. ":</i></small></small> "
-        .. (bold and "<b>" or "")
-        .. gears.string.xml_escape(name)
-        .. (bold and "</b>" or "")
-        .. "</span>"
+        "<small><small><i>",
+        gears.string.xml_escape(client.class or "N/A"),
+        ":</i></small></small> ",
+
+        (bold and "<b>" or ""),
+        gears.string.xml_escape(client.name or awful.titlebar.fallback_name or "N/A"),
+        (bold and "</b>" or ""),
+
+        "</span>",
+    }
 end
 
+-- {{{ TITLEBAR
+theme_assets.recolor_titlebar(theme, theme.titlebar_fg_normal, "normal")
+theme_assets.recolor_titlebar(theme, colors.bw_7, "normal", nil, "active")
+theme_assets.recolor_titlebar(theme, theme.titlebar_fg_focus, "focus")
+theme_assets.recolor_titlebar(theme, colors.bw_10, "focus", nil, "active")
+
+-- Markup client title (class: name)
+local function titlewidget(c)
+    local ret = wibox.widget.textbox()
+    local function update()
+        if c == client.focus then
+            ret:set_markup(title_markup(c, theme.titlebar_fg_focus, true))
+        elseif c.urgent then
+            ret:set_markup(title_markup(c, theme.titlebar_fg_urgent, true))
+        else
+            ret:set_markup(title_markup(c, theme.titlebar_fg_normal))
+        end
+    end
+
+    c:connect_signal("property::name", update)
+    c:connect_signal("property::urgent", update)
+    c:connect_signal("focus", update)
+    c:connect_signal("unfocus", update)
+    update()
+
+    return ret
+end
+
+-- Black/White client icon
+local function iconwidget(c)
+    local ret = wibox.widget.imagebox()
+    local function update()
+        local img = gears.surface.duplicate_surface(c.icon)
+        local cr = cairo.Context(img)
+        cr:set_source_rgb(gears.color.parse_color(client.focus == c and
+                theme.titlebar_bg_focus or theme.titlebar_bg_normal))
+        cr:set_operator(cairo.Operator.HSL_COLOR)
+        cr:paint()
+        ret:set_image(img)
+    end
+
+    c:connect_signal("property::icon", update)
+    c:connect_signal("focus", update)
+    c:connect_signal("unfocus", update)
+    update()
+
+    return ret
+end
+
+theme.titlebar_fn = function(c)
+    -- Default buttons for the titlebar
+    local buttons = gears.table.join(
+        awful.button({ }, 1, function()
+            if c.focusable then client.focus = c end
+            c:raise()
+            awful.mouse.client.move(c)
+        end),
+        awful.button({ }, 3, function()
+            if c.focusable then client.focus = c end
+            c:raise()
+            awful.mouse.client.resize(c)
+        end)
+    )
+
+    local t = awful.titlebar(c, { size = 20, position = "top" })
+    t:setup {
+        {
+            -- Left
+            awful.titlebar.widget.stickybutton(c),
+            awful.titlebar.widget.ontopbutton(c),
+            {
+                iconwidget(c),
+                buttons = buttons,
+                margins = 2,
+                widget = wibox.container.margin,
+            },
+            layout = wibox.layout.fixed.horizontal,
+        },
+        {
+            -- Middle
+            {
+                {
+                    {
+                        align = "center",
+                        widget = titlewidget(c),
+                    },
+                    id = "_scroll",
+                    step_function = wibox.container.scroll.step_functions.linear_increase,
+                    speed = 100,
+                    extra_space = 50,
+                    widget = wibox.container.scroll.horizontal,
+                },
+                widget = wibox.container.place,
+            },
+            left = 6,
+            right = 6,
+            buttons = buttons,
+            widget = wibox.container.margin,
+        },
+        {
+            -- Right
+            awful.titlebar.widget.minimizebutton(c),
+            awful.titlebar.widget.maximizedbutton(c),
+            awful.titlebar.widget.closebutton(c),
+            layout = wibox.layout.fixed.horizontal,
+        },
+        layout = wibox.layout.align.horizontal,
+    }
+
+    local scroll = t:get_children_by_id("_scroll")[1]
+    scroll:connect_signal("mouse::enter", function()
+        scroll:continue()
+    end)
+    scroll:connect_signal("mouse::leave", function()
+        scroll:pause()
+        scroll:reset_scrolling()
+    end)
+    scroll:pause()
+    scroll:reset_scrolling()
+
+    util.hide_unneeded_titlebars(c)
+end
+
+util.hide_all_unneeded_titlebars()
+-- }}}
+
+-- {{{ TASKLIST
 local function tasklist_update_callback(self, c, index, objects) --luacheck: no unused args
     local t = self:get_children_by_id("_text")[1]
     local b = self:get_children_by_id("_color_bar")[1]
 
     if c == client.focus then
-        t.markup = tasklist_markup(theme.tasklist_fg_focus, c.class, c.name, true)
-        t.bg = theme.tasklist_bg_focus
+        t:set_markup(title_markup(c, theme.tasklist_fg_focus, true))
         b.color = theme.tasklist_fg_normal
     elseif c.urgent then
-        t.markup = tasklist_markup(theme.tasklist_fg_urgent, c.class, c.name)
-        t.bg = theme.tasklist_bg_urgent
+        t:set_markup(title_markup(c, theme.tasklist_fg_urgent, true))
         b.color = theme.tasklist_fg_urgent
     elseif c.minimized then
-        t.markup = tasklist_markup(theme.tasklist_fg_minimize, c.class, c.name)
-        t.bg = theme.tasklist_bg_minimize
+        t:set_markup(title_markup(c, theme.tasklist_fg_minimize))
         b.color = theme.tasklist_bg_minimize
     else
-        t.markup = tasklist_markup(theme.tasklist_fg_normal, c.class, c.name)
-        t.bg = theme.tasklist_bg_normal
+        t:set_markup(title_markup(c, theme.tasklist_fg_normal))
         b.color = theme.tasklist_bg_normal
     end
 end
@@ -1045,6 +1164,31 @@ function theme.at_screen_connect(s)
     if #s.tags == 0 then
         awful.tag(tags.names, s, tags.layouts)
     end
+
+    -- Create the wibox
+    s._wibox = awful.wibar {
+        position = "top",
+        screen = s,
+        height = 25 + theme.border,
+        fg = bar_fg,
+        bg = bar_bg,
+    }
+
+    -- -- Create the side wibox
+    -- s._wibox_side = awful.wibar {
+    --     position = "left",
+    --     screen = s,
+    --     width = 25 + theme.border,
+    --     fg = bar_fg,
+    --     bg = bar_bg,
+    -- }
+    --
+    -- s._wibox_side:setup {
+    --     wibox.widget.textbox(),
+    --     right = theme.border,
+    --     color = colors.bw_2,
+    --     widget = wibox.container.margin,
+    -- }
 
     -- Create a promptbox for each screen
     s._promptbox = awful.widget.prompt()
@@ -1084,6 +1228,15 @@ function theme.at_screen_connect(s)
                     {
                         {
                             {
+                                layout = wibox.layout.flex.vertical,
+                            },
+                            id = "_color_bar",
+                            top = s._wibox.position == "top" and theme.border / 2 or 0,
+                            bottom = s._wibox.position == "bottom" and theme.border / 2 or 0,
+                            widget = wibox.container.margin,
+                        },
+                        {
+                            {
                                 {
                                     -- id = "text_role",
                                     id = "_text",
@@ -1097,16 +1250,14 @@ function theme.at_screen_connect(s)
                             },
                             widget = wibox.container.place,
                         },
-                        {
-                            wibox.widget.textbox(),
-                            id = "_color_bar",
-                            top = theme.border / 2,
-                            widget = wibox.container.margin,
+                        widgets.fade {
+                            width = 20,
+                            color = theme.tasklist_bg_normal,
                         },
                         layout = wibox.layout.stack,
                     },
-                    left = 5,
-                    right = 5,
+                    left = 6,
+                    right = 6,
                     widget = wibox.container.margin,
                 },
                 id = "background_role",
@@ -1137,10 +1288,11 @@ function theme.at_screen_connect(s)
         }
     end
 
+    -- TODO: remove
     -- For old version (Awesome v4.2)
-    if not pcall(gen_tasklist) then
-        -- Create a tasklist widget
-        s._tasklist = awful.widget.tasklist(s,
+    gears.protected_call(gen_tasklist)
+    -- Create a tasklist widget
+    s._tasklist = s._tasklist or awful.widget.tasklist(s,
         awful.widget.tasklist.filter.currenttags,
         tasklist_binds.buttons, {
             bg_focus = theme.tasklist_bg_focus,
@@ -1150,19 +1302,12 @@ function theme.at_screen_connect(s)
             shape_border_width = 0,
             shape_border_color = theme.tasklist_bg_normal,
             align = "center" })
-    end
 
-    -- Create the wibox
-    s._wibox = awful.wibar {
-        position = "top",
-        screen = s,
-        height = 25 + theme.border,
-        fg = bar_fg,
-        bg = bar_bg,
-    }
+    -- {{{ HIDDEN WIDGET
+    s._hidden_widget = wibox.widget {
+        space, vert_sep, vert_sep,
+        space, weather_widget, space,
 
-    local systray_widget = wibox.widget {
-        space,
         vert_sep,
         space,
         {
@@ -1175,30 +1320,33 @@ function theme.at_screen_connect(s)
         },
         space,
         vert_sep,
+
         visible = false,
         layout = wibox.layout.fixed.horizontal,
     }
-    -- util.show_on_mouse(s._wibox, systray_widget)
 
     local systray_activator = wibox.widget {
         space, space,
         layout = wibox.layout.fixed.horizontal,
         buttons = gears.table.join(
             awful.button({ }, 1, function()
-                systray_widget.visible = not systray_widget.visible
+                s._hidden_widget.visible = not s._hidden_widget.visible
             end)
         )
     }
+    -- }}}
 
     -- Add widgets to the wibox
     s._wibox:setup {
         {
             {
-                { -- Left widgets
+                {
+                    -- Left
                     space,
                     space,
 
-                    { -- Layoutbox
+                    {
+                        -- Layoutbox
                         {
                             s._layoutbox,
                             left = 4,
@@ -1212,10 +1360,12 @@ function theme.at_screen_connect(s)
 
                     space,
                     space,
+                    space,
                     vert_sep,
                     space,
 
-                    { -- Taglist
+                    {
+                        -- Taglist
                         {
                             s._taglist,
                             left = 2,
@@ -1229,7 +1379,8 @@ function theme.at_screen_connect(s)
                     space,
                     vert_sep,
 
-                    { -- Prompt box
+                    {
+                        -- Prompt box
                         {
                             s._promptbox,
                             left = 6,
@@ -1245,8 +1396,8 @@ function theme.at_screen_connect(s)
                     layout = wibox.layout.fixed.horizontal,
                 },
 
-                -- Middle widget
-                { -- Tasklist
+                {
+                    -- Middle
                     {
                         s._tasklist,
                         left = 2,
@@ -1257,7 +1408,8 @@ function theme.at_screen_connect(s)
                     widget = wibox.container.background,
                 },
 
-                { -- Right widgets
+                {
+                    -- Right
                     vert_sep,
 
                     lock_widget,
@@ -1283,7 +1435,7 @@ function theme.at_screen_connect(s)
 
                     clock_widget,
 
-                    systray_widget,
+                    s._hidden_widget,
                     systray_activator,
 
                     layout = wibox.layout.fixed.horizontal,
@@ -1292,7 +1444,8 @@ function theme.at_screen_connect(s)
             },
             layout = wibox.layout.flex.vertical,
         },
-        bottom = theme.border,
+        bottom = s._wibox.position == "top" and theme.border or 0,
+        top = s._wibox.position == "bottom" and theme.border or 0,
         color = colors.bw_2,
         widget = wibox.container.margin,
     }

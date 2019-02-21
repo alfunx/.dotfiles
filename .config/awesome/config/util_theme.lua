@@ -71,9 +71,9 @@ function _config.init()
         args.size = args.size or 11
 
         local font_string = args.name
-        if args.bold then font_string = font_string .. " Bold" end
-        if args.italic then font_string = font_string .. " Italic" end
-        font_string = font_string .. " " .. args.size
+        if args.bold then font_string = table.concat { font_string, " Bold" } end
+        if args.italic then font_string = table.concat { font_string, " Italic" } end
+        font_string = table.concat { font_string, " ", args.size }
 
         return font_string
     end
@@ -95,6 +95,33 @@ function _config.init()
     -- Generate symbol markup function
     _config.symbol_markup_function = function(size, color)
         return _config.markup_function({ name = "Font Awesome", size = size }, color)
+    end
+
+    do
+        local default = ""
+        local icons = {
+            ["01d"] = "",
+            ["01n"] = "",
+            ["02d"] = "",
+            ["02n"] = "",
+            ["03d"] = "",
+            ["03n"] = "",
+            ["04d"] = "",
+            ["04n"] = "",
+            ["09d"] = "",
+            ["09n"] = "",
+            ["10d"] = "",
+            ["10n"] = "",
+            ["11d"] = "",
+            ["11n"] = "",
+            ["13d"] = "",
+            ["13n"] = "",
+            ["50d"] = "",
+            ["50n"] = "",
+        }
+        _config.get_icon = function(icon_code)
+            return icons[icon_code] or default
+        end
     end
 
 end

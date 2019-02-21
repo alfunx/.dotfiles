@@ -18,77 +18,101 @@ function _config.init()
 
     -- Updates
     _config.pacman = yaawl.updates {
-        command = "checkupdates | sed 's/->/→/' | sort | column -t -c 70 -T 2,4",
-        notify = true,
+        command = "checkupdates | sed -E 's/->/→/;s/\\.g[^.-]+-/-/g' | sort | column -t -c 70 -T 2,4",
+        notify  = true,
     }
-    _config.pacman:add_timer { timeout = 911 }
+    _config.pacman:add_timer {
+        timeout = 911,
+    }
 
     -- Active users
     _config.users = yaawl.users {
     }
-    _config.users:add_timer { timeout = 181 }
+    _config.users:add_timer {
+        timeout = 181,
+    }
 
     -- Brightness
     _config.brightness = yaawl.brightness {
     }
-    _config.brightness:add_timer { timeout = 191 }
+    _config.brightness:add_timer {
+        timeout = 191,
+    }
 
     -- Audio
     _config.audio = yaawl.audio {
     }
-    _config.audio:add_timer { timeout = 193 }
+    _config.audio:add_timer {
+        timeout = 193,
+    }
 
     -- Battery
     _config.battery = yaawl.battery {
         battery = "BAT0",
-        ac = "AC",
+        ac      = "AC",
     }
-    _config.battery:add_timer { timeout = 31 }
+    _config.battery:add_timer {
+        timeout = 31,
+    }
 
     -- Loadavg
     _config.loadavg = yaawl.loadavg {
     }
-    _config.loadavg:add_timer { timeout = 13 }
+    _config.loadavg:add_timer {
+        timeout = 13,
+    }
 
     -- CPU
     _config.cpu = yaawl.cpu {
     }
-    _config.cpu:add_timer { timeout = 17 }
+    _config.cpu:add_timer {
+        timeout = 17,
+    }
 
     -- Memory
     _config.memory = yaawl.memory {
     }
-    _config.memory:add_timer { timeout = 19 }
+    _config.memory:add_timer {
+        timeout = 19,
+    }
 
     -- Temperature
     _config.temperature = yaawl.temperature {
         temp_path = "/sys/class/thermal/thermal_zone8/temp",
     }
-    _config.temperature:add_timer { timeout = 23 }
+    _config.temperature:add_timer {
+        timeout = 23,
+    }
 
     -- Drive
     _config.drive = yaawl.drive {
         partition = "/",
         threshold = 95,
     }
-    _config.drive:add_timer { timeout = 997 }
+    _config.drive:add_timer {
+        timeout = 997,
+    }
 
     -- Lock
     _config.lock = yaawl.lock {
         signals = true,
     }
-    _config.lock:add_timer { timeout = 401 }
+    _config.lock:add_timer {
+        timeout = 401,
+    }
 
     -- Weather
     _config.weather = yaawl.weather {
-        APPID = file.first_line(context.vars.secrets_dir .. "/openweathermap"),
+        APPID = file.first_line(table.concat { context.vars.secrets_dir, "/openweathermap" }),
         query = "Zurich,CH",
     }
-    _config.weather:add_timer { timeout = 3607 }
+    _config.weather:add_timer {
+        timeout = 3607,
+    }
 
     -- Net
     _config.net = yaawl.net {
-        iface = "wlp58s0",
+        iface   = "wlp58s0",
         timeout = 2,
     }
 
@@ -98,15 +122,17 @@ function _config.init()
 
     local battery_notification
     _config.battery:add_callback(function(x)
-        if x.percent > 7 or x.charging then return end
+        if x.percent > 5 or x.charging then return end
 
         naughty.destroy(battery_notification)
         battery_notification = naughty.notify {
-            title = "Battery",
-            text = "Your battery is running low.\n"
-                .. "You should plug in your PC.",
-            preset = naughty.config.presets.critical,
+            preset  = naughty.config.presets.critical,
             timeout = 0,
+            title   = "Battery",
+            text    = table.concat {
+                "Your battery is running low.\n",
+                "You should plug in your PC.",
+            },
         }
     end)
 

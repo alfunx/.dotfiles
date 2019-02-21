@@ -7,6 +7,7 @@
 --]]
 
 local wibox = require("wibox")
+local unpack = unpack or table.unpack
 
 local function factory(args)
 
@@ -41,7 +42,7 @@ local function factory(args)
         layout       = wibox.layout.ratio.horizontal,
     }
 
-    widget:ajust_ratio(table.unpack(args.ratio))
+    widget:ajust_ratio(unpack(args.ratio))
 
     return widget
 

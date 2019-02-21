@@ -9,9 +9,9 @@
 local gears = require("gears")
 local awful = require("awful")
 local naughty = require("naughty")
-local lain = require("lain")
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
+local markup = require("lain.util.markup")
 
 local context = require("config.context")
 local brokers = require("config.brokers")
@@ -33,7 +33,7 @@ function _config.init()
         -- Awesome Hotkeys
         awful.key({ k.m, k.c           }, "s", hotkeys_popup.show_help,
                   { description = "show help", group = "awesome" }),
-        awful.key({ k.m, k.c           }, "w", function() menu.main:show() end,
+        awful.key({ k.m, k.c           }, "o", function() menu.main:show() end,
                   { description = "show main menu", group = "awesome" }),
         awful.key({ k.m, k.c           }, "r", awesome.restart,
                   { description = "reload awesome", group = "awesome" }),
@@ -63,31 +63,31 @@ function _config.init()
 
         -- Screenshot
         awful.key({                    }, "Print", function()
-            awful.spawn(context.vars.scripts_dir .. "/make-screenshot")
+            awful.spawn(table.concat { context.vars.scripts_dir, "/make-screenshot" })
         end,
                   { description = "take screenshot", group = "screenshot" }),
         awful.key({ k.s                }, "Print", function()
-            awful.spawn(context.vars.scripts_dir .. "/make-screenshot -s")
+            awful.spawn(table.concat { context.vars.scripts_dir, "/make-screenshot -s" })
         end,
                   { description = "take screenshot, select area", group = "screenshot" }),
         awful.key({ k.c                }, "Print", function()
-            awful.spawn(context.vars.scripts_dir .. "/make-screenshot -C")
+            awful.spawn(table.concat { context.vars.scripts_dir, "/make-screenshot -C" })
         end,
                   { description = "take screenshot, hide mouse", group = "screenshot" }),
         awful.key({ k.c, k.s           }, "Print", function()
-            awful.spawn(context.vars.scripts_dir .. "/make-screenshot -sC")
+            awful.spawn(table.concat { context.vars.scripts_dir, "/make-screenshot -sC" })
         end,
                   { description = "take screenshot, hide mouse, select area", group = "screenshot" }),
         awful.key({ k.m                }, "Print", function()
-            awful.spawn(context.vars.scripts_dir .. "/make-screenshot -t")
+            awful.spawn(table.concat { context.vars.scripts_dir, "/make-screenshot -t" })
         end,
                   { description = "wait 5s, take screenshot", group = "screenshot" }),
         awful.key({ k.m, k.c           }, "Print", function()
-            awful.spawn(context.vars.scripts_dir .. "/make-screenshot -tH")
+            awful.spawn(table.concat { context.vars.scripts_dir, "/make-screenshot -tH" })
         end,
                   { description = "wait 5s, take screenshot, hide mouse", group = "screenshot" }),
         awful.key({ k.a                }, "Print", function()
-            awful.spawn(context.vars.scripts_dir .. "/upload-to-imgur")
+            awful.spawn(table.concat { context.vars.scripts_dir, "/upload-to-imgur" })
         end,
                   { description = "upload last screenshot to Imgur", group = "screenshot" }),
 
@@ -114,7 +114,7 @@ function _config.init()
         end,
                   { description = "show commands menu (rofi)", group = "launcher" }),
         awful.key({ k.m                }, "$", function()
-            awful.spawn.easy_async(context.vars.scripts_dir .. "/rofi-session", function() end)
+            awful.spawn.easy_async(table.concat { context.vars.scripts_dir, "/rofi-session" }, function() end)
         end,
                   { description = "show session menu (rofi)", group = "launcher" }),
         awful.key({ k.m                }, "x", function()
@@ -122,7 +122,7 @@ function _config.init()
                 prompt       = "Run (Lua): ",
                 textbox      = awful.screen.focused()._promptbox.widget,
                 exe_callback = awful.util.eval,
-                history_path = gears.filesystem.get_cache_dir() .. "/history_eval",
+                history_path = table.concat { gears.filesystem.get_cache_dir(), "/history_eval" },
             }
         end,
                   { description = "lua execute prompt", group = "awesome" }),
@@ -187,12 +187,12 @@ function _config.init()
 
         -- Non-empty tag browsing
         awful.key({ k.m, k.c           }, k.l, function()
-            lain.util.tag_view_nonempty(-1)
+            util.tag_view_nonempty(-1)
             -- awful.screen.focused()._taglist_popup:show()
         end,
                   { description = "view previous nonempty", group = "tag" }),
         awful.key({ k.m, k.c           }, k.r, function()
-            lain.util.tag_view_nonempty(1)
+            util.tag_view_nonempty(1)
             -- awful.screen.focused()._taglist_popup:show()
         end,
                   { description = "view next nonempty", group = "tag" }),
@@ -278,9 +278,9 @@ function _config.init()
                   { description = "restore minimized", group = "client" }),
 
         -- Layout manipulation
-        awful.key({ k.m, k.s           }, k.r, function() awful.tag.incmwfact(0.01) end,
+        awful.key({ k.m, k.s           }, k.r, function() util.resize_horizontal(0.01) end,
                   { description = "increase master width factor", group = "layout" }),
-        awful.key({ k.m, k.s           }, k.l, function() awful.tag.incmwfact(-0.01) end,
+        awful.key({ k.m, k.s           }, k.l, function() util.resize_horizontal(-0.01) end,
                   { description = "decrease master width factor", group = "layout" }),
         awful.key({ k.m, k.a, k.s      }, k.u, function() awful.tag.incnmaster(1, nil, true) end,
                   { description = "increase the number of master clients", group = "layout" }),
@@ -318,7 +318,21 @@ function _config.init()
                 brokers.mpd.update()
             end
         end,
-                  { description = "update widgets", group = "client" }),
+                  { description = "update widgets", group = "widget" }),
+
+        -- Toggle hidden widget
+        awful.key({ k.m, k.c           }, "i", function()
+            local s = awful.screen.focused()
+            if not s._hidden_widget then return end
+            s._hidden_widget.visible = not s._hidden_widget.visible
+        end,
+                  { description = "toggle hidden widget", group = "widget" }),
+
+        -- Show weather notification
+        awful.key({ k.m, k.c           }, "w", function()
+            brokers.weather:show()
+        end,
+                  { description = "show weather notification", group = "widget" }),
 
         -- ALSA volume control
         awful.key({                    }, "XF86AudioRaiseVolume", function()
@@ -375,10 +389,10 @@ function _config.init()
             local common = { text = "MPD widget ", position = "top_middle", timeout = 2 }
             if brokers.mpd.timer.started then
                 brokers.mpd.timer:stop()
-                common.text = common.text .. lain.util.markup.bold("OFF")
+                common.text = table.concat { common.text, markup.bold("OFF") }
             else
                 brokers.mpd.timer:start()
-                common.text = common.text .. lain.util.markup.bold("ON")
+                common.text = table.concat { common.text, markup.bold("ON") }
             end
             naughty.notify(common)
         end)
@@ -421,11 +435,11 @@ function _config.init()
 
     -- View tag only
     util.fake_key({ k.m                }, "1..9", nil,
-              { description = "view tag", group = "numeric keys" })
+                  { description = "view tag", group = "numeric keys" })
 
     -- Toggle tag display
     util.fake_key({ k.m, k.c           }, "1..9", nil,
-              { description = "toggle tag", group = "numeric keys" })
+                  { description = "toggle tag", group = "numeric keys" })
 
     -- }}}
 

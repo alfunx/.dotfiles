@@ -23,15 +23,16 @@ function _config.init()
         {
             rule = { },
             properties = {
-                border_width = beautiful.border_width,
-                border_color = beautiful.border_normal,
-                focus = awful.client.focus.filter,
-                raise = true,
-                keys = bindings.keys,
-                buttons = bindings.buttons,
-                screen = awful.screen.preferred,
-                placement = awful.placement.no_offscreen+awful.placement.no_overlap,
-                size_hints_honor = false,
+                border_width      = beautiful.border_width,
+                border_color      = beautiful.border_normal,
+                focus             = awful.client.focus.filter,
+                raise             = true,
+                keys              = bindings.keys,
+                buttons           = bindings.buttons,
+                screen            = awful.screen.preferred,
+                placement         = awful.placement.no_offscreen
+                                  + awful.placement.no_overlap,
+                size_hints_honor  = false,
                 titlebars_enabled = true,
             },
         },
@@ -55,7 +56,7 @@ function _config.init()
             },
             properties = {
                 screen = 1,
-                tag = tags.names[6],
+                tag    = tags.names[6],
             },
         },
 
@@ -65,7 +66,7 @@ function _config.init()
             },
             properties = {
                 screen = 1,
-                tag = tags.names[7],
+                tag    = tags.names[7],
             },
         },
 
@@ -75,14 +76,14 @@ function _config.init()
             },
             properties = {
                 screen = 1,
-                tag = tags.names[8],
+                tag    = tags.names[8],
             },
         },
 
         {
             rule = {
                 class = "Firefox",
-                role = "toolbox",
+                role  = "toolbox",
             },
             properties = {
                 floating = true,
@@ -92,7 +93,7 @@ function _config.init()
         {
             rule = {
                 class = "Chromium",
-                role = "pop-up",
+                role  = "pop-up",
             },
             properties = {
                 floating = true,
@@ -102,7 +103,7 @@ function _config.init()
         {
             rule = {
                 class = "Chrome",
-                role = "pop-up",
+                role  = "pop-up",
             },
             properties = {
                 floating = true,
@@ -114,7 +115,7 @@ function _config.init()
                 class = "Arandr",
             },
             properties = {
-                width = 500,
+                width  = 500,
                 height = 400,
             },
         },
@@ -142,7 +143,7 @@ function _config.init()
                 },
             },
             properties = {
-                floating = true,
+                floating          = true,
                 delayed_placement = awful.placement.centered,
             },
         },
@@ -150,7 +151,7 @@ function _config.init()
     }
 
     -- placement, that should be applied after setting x/y/width/height/geometry
-    function awful.rules.delayed_properties.delayed_placement(c, value, props)
+    function awful.rules.delayed_properties.delayed_placement(c, value, props) --luacheck: no unused
         if props.delayed_placement then
             awful.rules.extra_properties.placement(c, props.delayed_placement, props)
         end

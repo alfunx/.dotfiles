@@ -63,8 +63,7 @@ function _config.init()
             return
         end
 
-        -- Default
-        -- buttons for the titlebar
+        -- Default buttons for the titlebar
         local buttons = gears.table.join(
             awful.button({ }, 1, function()
                 if c.focusable then client.focus = c end
@@ -81,17 +80,21 @@ function _config.init()
         awful.titlebar(c, { size = 20, position = "top" }):setup {
             { -- Left
                 awful.titlebar.widget.iconwidget(c),
-                right = 5,
-                widget = wibox.container.margin,
                 buttons = buttons,
+                layout  = wibox.layout.fixed.horizontal,
             },
             { -- Middle
                 { -- Title
-                    align = "left",
-                    widget = awful.titlebar.widget.titlewidget(c),
+                    {
+                        align  = "left",
+                        widget = awful.titlebar.widget.titlewidget(c),
+                    },
+                    left   = 5,
+                    right  = 5,
+                    widget = wibox.container.margin,
                 },
                 buttons = buttons,
-                layout = wibox.layout.flex.horizontal,
+                layout  = wibox.layout.flex.horizontal,
             },
             { -- Right
                 awful.titlebar.widget.stickybutton(c),
@@ -104,26 +107,16 @@ function _config.init()
             layout = wibox.layout.align.horizontal,
         }
 
-        -- Hide the titlebar if not floating
-        if not util.client_floats(c) then
-            util.hide_titlebar(c)
-        end
-
-        -- Hide the titlebar if maximized or fullscreen
-        if c.maximized or c.fullscreen then
-            util.hide_titlebar(c)
-        end
+        util.hide_unneeded_titlebars(c)
     end)
 
-    client.connect_signal("property::size", function(c)
-        if beautiful.titlebar_fn_after then
-            beautiful.titlebar_fn_after(c)
-        end
-    end)
+    if not beautiful.titlebar_fn then
+        util.hide_all_unneeded_titlebars()
+    end
 
     client.connect_signal("property::fullscreen", function(c)
         if c.fullscreen then
-            util.hide_titlebar(c)
+            c.border_width = 0
             c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 0) end
         else
             c.border_width = beautiful.border_width
@@ -133,19 +126,11 @@ function _config.init()
 
     client.connect_signal("property::maximized", function(c)
         if c.maximized then
-            util.hide_titlebar(c)
+            c.border_width = 0
             c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, 0) end
         else
             c.border_width = beautiful.border_width
             c.shape = function(cr, w, h) gears.shape.rounded_rect(cr, w, h, beautiful.border_radius or 0) end
-        end
-    end)
-
-    client.connect_signal("property::floating", function(c)
-        if c.floating and not c.maximized and not c.fullscreen then
-            util.show_titlebar(c)
-        else
-            util.hide_titlebar(c)
         end
     end)
 
