@@ -65,7 +65,9 @@ case $cmd in
             ~/.config/awesome/rc.lua \
             ~/.config/awesome/themes/blackout/theme.lua \
             ~/.config/awesome/themes/whiteout/theme.lua \
-            ~/.config/awesome/config/* \
+            ~/.config/awesome/config/**/* \
+            ~/.config/awesome/widgets/**/* \
+            ~/.config/awesome/yaawl/**/* \
             "$@"
         ;;
 
