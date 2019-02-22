@@ -1,4 +1,5 @@
-awesome-git
+aurutils-git
+awesome-luajit-git
 commitmsgfmt
 dmenu-git
 dotfiles.sh
@@ -12,6 +13,4 @@ ranger-git
 rstudio-desktop-bin
 st-git
 tmux-git
-ttf-fantasque-sans-mono
 ttf-iosevka-custom-git
-ttf-iosevka-slab-custom-git
