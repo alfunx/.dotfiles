@@ -41,7 +41,7 @@ amixer -c PCH cset 'name=Headphone Mic Boost Volume' 1 &
 # unclutter -root -reset &
 redshift -c .config/redshift.conf &
 # xcompmgr &
-compton --config .config/compton.conf &
+compton --config .config/compton/compton.conf &
 
 # select wm/de with: startx ~/.xinitrc session
 session=${1:-awesome}
@@ -49,6 +49,8 @@ session=${1:-awesome}
 case "$session" in
     awesome)
         exec awesome ;;
+    awesome-git)
+        exec "$HOME"/build/awesome/install.d/bin/awesome ;;
     termite|term)
         exec termite --geometry='1920x1080' ;;
     alacritty)
