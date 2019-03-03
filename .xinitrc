@@ -42,9 +42,6 @@ fi
 # select wm/de with: startx ~/.xinitrc session
 session=${1:-awesome}
 
-# I don't know where else to put it
-xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
-
 case "$session" in
     awesome)
         exec awesome ;;
