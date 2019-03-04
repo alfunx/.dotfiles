@@ -24,27 +24,35 @@ if [ -f "$usermodmap" ]; then
     xmodmap "$usermodmap"
 fi
 
-if [ -d /etc/X11/xinit/xinitrc.d ] ; then
+if [ -d /etc/X11/xinit/xinitrc.d ]; then
     for f in /etc/X11/xinit/xinitrc.d/?*.sh ; do
         [ -x "$f" ] && . "$f"
     done
     unset f
 fi
 
+# select wm/de with: startx ~/.xinitrc session
+session=${1:-awesome}
+
+# AwesomeWM handles this in rc.lua
+if [ "$session" != 'awesome' ]; then
+    notifier_cmd="notify-send -t 18000 -u critical 'Lock' 'Locking screen in 20 seconds.'"
+else
+    notifier_cmd="awesome-client \"n=require('naughty');n.notify{title='Lock',text='Locking screen in 20 seconds.',timeout=18,preset=n.config.presets.critical}\""
+fi
+
 xautolock -detectsleep \
     -time 9 -notify 20 \
-    -notifier "notify-send -t 18000 -u critical 'Lock' 'Locking screen in 20 seconds.'" \
+    -notifier "$notifier_cmd" \
     -locker /usr/local/bin/lock &
+
 dropbox &
 amixer -c PCH set "Master" mute &
 amixer -c PCH cset 'name=Headphone Mic Boost Volume' 1 &
-# unclutter -root -reset &
+# unclutter &
 redshift -c .config/redshift.conf &
 # xcompmgr &
 compton --config .config/compton/compton.conf &
-
-# select wm/de with: startx ~/.xinitrc session
-session=${1:-awesome}
 
 case "$session" in
     awesome)

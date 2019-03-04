@@ -137,8 +137,9 @@ config.screens.init()
 -- }}}
 
 -- {{{ Spawn
--- util.run_once {
---     "redshift -c .config/redshift.conf &",
+
+-- awful.spawn {
+--     config.context.vars.scripts_dir .. "/autolock"
 -- }
 
 -- util.spawn_once {
@@ -155,6 +156,7 @@ config.screens.init()
 -- util.spawn_once("thunar", "Thunar", tags[1][4])
 -- util.spawn_once("xchat", "Xchat", tags[1][5])
 -- util.spawn_once("kitty", "kitty", awful.tag.find_by_name(awful.screen.focused(), "2"))
+
 -- }}}
 
 -- naughty.dbus.config.mapping = {

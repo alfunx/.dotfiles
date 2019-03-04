@@ -1,0 +1,6 @@
+#!/bin/sh
+
+exec xautolock -detectsleep \
+    -time 9 -notify 20 \
+    -notifier "awesome-client \"n=require('naughty');n.notify{title='Lock',text='Locking screen in 20 seconds.',timeout=18,preset=n.config.presets.critical}\"" \
+    -locker /usr/local/bin/lock
