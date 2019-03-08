@@ -1,0 +1,408 @@
+[user]
+	name = toaster192
+	email = toastercz@gmail.com
+	signingkey = toastercz@gmail.com
+[core]
+	editor = vim
+	whitespace = fix,trailing-space,cr-at-eol
+	hooksPath = ~/.config/git/hooks
+	excludesfile = ~/.ignore
+	commitGraph = true
+
+[credential]
+	helper = cache --timeout=3600
+
+[color]
+	advice = true
+	branch = true
+	diff = true
+	grep = true
+	interactive = true
+	pager = true
+	push = true
+	showBranch = true
+	status = true
+	transport = true
+	ui = true
+
+[color "diff"]
+	context = 15
+	meta = 4 bold reverse
+	frag = 3 bold reverse
+	commit = 3 bold
+	old = 9
+	new = 10
+	oldMoved = 8
+	newMoved = 14
+	oldMovedAlternative = 8
+	newMovedAlternative = 14
+	whitespace = 1 reverse
+
+[color "diff-highlight"]
+	oldHighlight = reverse
+	oldReset = noreverse
+
+[color "decorate"]
+	branch = 2 bold
+	remoteBranch = 1 bold
+	tag = 3 bold
+	stash = 5 bold
+	HEAD = 6 bold
+
+[color "interactive"]
+	prompt = 4 bold
+	header = 15 bold
+	help = 15
+	error = 1
+
+[color "push"]
+	error = 1 bold
+
+[color "transport"]
+	rejected = 1 bold
+
+[color "status"]
+	header = 15 bold
+	added = 14 bold
+	changed = 11 bold
+	untracked = 9 bold
+	branch = 15 bold
+	nobranch = 9 bold reverse
+	localBranch = 2 bold
+	remoteBranch = 1 bold
+	unmerged = 1 bold reverse
+
+[commit]
+	gpgSign = true
+	status = true
+
+[diff]
+	algorithm = histogram
+	tool = vimdiff
+	colorMoved = default
+	renames = copy
+	mnemonicPrefix = true
+	wsErrorHighlight = all
+
+[difftool]
+	prompt = false
+
+[merge]
+	ff = false
+	tool = diffconflicts
+
+[mergetool]
+	prompt = false
+	keepBackup = false
+	writeToTemp = true
+
+[mergetool "vim-diffconflicts"]
+	cmd = vim -c DiffConflicts "$MERGED" "$BASE" "$LOCAL" "$REMOTE"
+	trustExitCode = true
+
+[mergetool "diffconflicts"]
+	cmd = diffconflicts vim "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
+	trustExitCode = true
+
+[mergetool "fugitive"]
+	cmd = vim -f -c "Gvdiff" "$MERGED"
+	trustExitCode = true
+
+[rebase]
+	missingCommitsCheck = warn
+	abbreviateCommands = false
+	autoSquash = true
+	stat = true
+
+[fetch]
+	prune = true
+
+[pull]
+	rebase = interactive
+
+[push]
+	default = simple
+	gpgSign = if-asked
+	followTags = true
+
+[submodule]
+	fetchJobs = 0
+
+[grep]
+	lineNumber = true
+	patternType = perl
+
+[interactive]
+	singlekey = true
+	diffFilter = "/usr/share/git/diff-highlight/diff-highlight | less"
+
+[branch]
+	autoSetupMerge = true
+	autoSetupRebase = always
+
+[status]
+	short = true
+	branch = true
+	showStash = true
+	submoduleSummary = true
+
+[log]
+	abbrevCommit = true
+	decorate = short
+	date = format:%a, %Y-%m-%d %R (%z)
+	graphColors = 1,2,3,4,5,6,8,166,9,10,11,12,13,14,15,208
+	showRoot = true
+	mailmap = true
+
+
+[pager]
+	log = "/usr/share/git/diff-highlight/diff-highlight | less"
+	show = "/usr/share/git/diff-highlight/diff-highlight | less"
+	diff = "/usr/share/git/diff-highlight/diff-highlight | less"
+
+[rerere]
+	enabled = true
+
+[protocol]
+	version = 2
+
+[column]
+	ui = auto,column
+
+[web]
+	browser = chromium
+
+[advice]
+	pushUpdateRejected = false
+	statusHints = false
+	statusUoption = false
+	commitBeforeMerge = false
+	resolveConflict = false
+	implicitIdentity = false
+	detachedHead = false
+	amWorkDir = true
+	rmHints = true
+	addEmbeddedRepo = false
+	ignoredHook = true
+	waitingForEditor = false
+
+[url "git@github.com:"]
+	insteadOf = @gh:
+
+[url "git@gitlab.com:"]
+	insteadOf = @gl:
+
+[url "git@bitbucket.org:"]
+	insteadOf = @bb:
+
+[url "aur@aur.archlinux.org"]
+	insteadOf = @aur:
+
+[url "https://github.com/"]
+	insteadOf = gh://
+
+[url "https://gitlab.com/"]
+	insteadOf = gl://
+
+[url "https://bitbucket.org/"]
+	insteadOf = bb://
+
+[url "https://aur.archlinux.org/"]
+	insteadOf = aur://
+
+[pretty]
+	lo = tformat:%C(auto)%h%C(reset)%C(auto)%d%C(reset) %s %C(italic blue)%ad%C(reset) %C(241)%aN%C(reset)
+	lt =  format:%C(auto)%h%C(reset) %C(white)-%C(reset) %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n %C(white)⤷%C(reset) %s %C(241)- %aN <%aE>%C(reset)%n
+	lf =  format:%C(auto)%h%C(reset)%C(auto)%d%C(reset)%n%C(white)SHA-1:%C(reset)    %C(italic)%H%C(reset)%n%C(white)Author:%C(reset)   %aN %C(241)<%aE>%C(reset)%n          %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%n%C(white)Commit:%C(reset)   %cN %C(241)<%cE>%C(reset)%n          %C(italic blue)%cd%C(reset) %C(italic cyan)(%cr)%C(reset)%w(0,4,4)%n%+C(bold)%s%C(reset)%n%+b%n
+	rlo = tformat:%C(auto)%h%C(reset) %C(bold yellow)(%C(red)%gd%C(bold yellow))%C(reset)%C(auto)%d%C(reset) %s %C(italic blue)%ad%C(reset) %C(241)%aN%C(reset)
+	rlt =  format:%C(auto)%h%C(reset) %C(white)-%C(reset) %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n %C(white)⤷%C(reset) %s %C(241)- %aN <%aE>%C(reset)%n %C(white)⤷%C(reset) %C(bold yellow)(%C(red)%gd%C(bold yellow))%C(reset) %gs %C(241)- %gN <%gE>%C(reset)%n
+	rlf =  format:%C(auto)%h%C(reset)%C(auto)%d%C(reset)%n%C(white)SHA-1:%C(reset)    %C(italic)%H%C(reset)%n%C(white)Author:%C(reset)   %aN %C(241)<%aE>%C(reset)%n          %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%n%C(white)Commit:%C(reset)   %cN %C(241)<%cE>%C(reset)%n          %C(italic blue)%cd%C(reset) %C(italic cyan)(%cr)%C(reset)%n%C(white)Reflog:%C(reset)   %gN %C(241)<%gE>%C(reset)%n          %C(italic)%gs%C(reset)%w(0,4,4)%n%+C(bold)%s%C(reset)%n%+b%n
+
+[alias]
+	ec = "!f() { [ -f \"${XDG_CONFIG_HOME:-$HOME/.config}\"/dotfiles.conf ] && . \"${XDG_CONFIG_HOME:-$HOME/.config}\"/dotfiles.conf; git --git-dir=\"$dotfiles_dir\" config --global --edit; }; f"
+	squash = "!f(){ git reset --soft HEAD~${1} && git commit --edit -m\"$(git log --format=%B --reverse HEAD..HEAD@{1})\";  };f"
+
+	# log, current branch
+	l = log --pretty=lt --graph --color
+	lo = log --pretty=lo --graph --color --date=short
+	lf = log --pretty=lf --graph --color
+	lff = log --pretty=fuller --graph --color --stat --summary
+	lp = log --pretty=lt --graph --color --patch -c -M -C
+	ld = log --pretty=lt --graph --color --stat --summary
+
+	# log, all branches+tags on all remotes
+	#    added: --all
+	la = log --pretty=lt --graph --color --all
+	lao = log --pretty=lo --graph --color --date=short --all
+	laf = log --pretty=lf --graph --color --all
+	laff = log --pretty=fuller --graph --color --stat --summary --all
+	lap = log --pretty=lt --graph --color --patch -c -M -C --all
+	lad = log --pretty=lt --graph --color --stat --summary --all
+
+	# log, all branches+tags on remotes 'origin' and 'upstream'
+	#    added: --branches='*' --tags='*' --remotes=origin --remotes=upstream
+	lg = log --pretty=lt --graph --color --branches='*' --tags='*' --remotes=origin --remotes=upstream
+	lgo = log --pretty=lo --graph --color --date=short --branches='*' --tags='*' --remotes=origin --remotes=upstream
+	lgf = log --pretty=lf --graph --color --branches='*' --tags='*' --remotes=origin --remotes=upstream
+	lgff = log --pretty=fuller --graph --color --stat --summary --branches='*' --tags='*' --remotes=origin --remotes=upstream
+	lgp = log --pretty=lt --graph --color --patch -c -M -C --branches='*' --tags='*' --remotes=origin --remotes=upstream
+	lgd = log --pretty=lt --graph --color --stat --summary --branches='*' --tags='*' --remotes=origin --remotes=upstream
+
+	# log, simplified by decoration
+	#    added: --all --simplify-by-decoration
+	ls = log --pretty=lt --graph --color --all --simplify-by-decoration
+	lso = log --pretty=lo --graph --color --date=short --all --simplify-by-decoration
+	lsf = log --pretty=lf --graph --color --all --simplify-by-decoration
+	lsff = log --pretty=fuller --graph --color --stat --summary --all --simplify-by-decoration
+	lsp = log --pretty=lt --graph --color --patch -c -M -C --all --simplify-by-decoration
+	lsd = log --pretty=lt --graph --color --stat --summary --all --simplify-by-decoration
+
+	sh = show --format=lf --stat --summary --patch
+	w = "!f() { watch -ctn 2 git \"${@:-l}\"; }; f"
+	rl = reflog --pretty=rlt --color
+	rlo = reflog --pretty=rlo --color
+	rlf = reflog --pretty=rlf --color
+	sl = stash list --pretty=rlt --color
+	slo = stash list --pretty=rlo --color
+	slf = stash list --pretty=rlf --color
+
+	d = diff -c
+	ds = diff --find-renames --stat -c
+	dc = diff --cached -c
+	dl = diff --cached -c HEAD~
+	du = diff --cached -c @{u}
+	dr = "!f() { git diff -c \"${1:-HEAD}\"~..\"${1:-HEAD}\"; }; f"
+	grep = grep -Ii
+
+	s = status
+	si = status --ignored
+	sa = status --ignored --untracked-files
+
+	a = add
+	au = add --update
+	ai = add --interactive
+	ap = add --patch
+	u = reset HEAD --
+	up = reset --patch HEAD --
+
+	c = commit --verbose
+	cc = commit --verbose -c
+	cf = commit --verbose --fixup
+	cs = commit --verbose --squash
+	ca = commit --verbose --amend
+	can = commit --verbose --amend --no-edit
+	car = commit --verbose --amend -a
+
+	co = checkout
+	com = checkout master
+	cod = checkout develop
+	cob = checkout -b
+	b = branch
+	bv = branch --all -vv
+	bc = branch --contains
+	bd = branch --delete --force
+
+	cl = clone
+	p = pull
+	f = fetch --tags
+	fa = fetch --all --tags
+	pfa = "!f() { git remote | xargs -I@ -P0 git fetch --tags \"$@\" @; }; f"
+	pu = push
+	puu = "!f() { REMOTE=${1:-origin}; shift; git push \"$@\" -u \"$REMOTE\" \"$(git rev-parse --short --abbrev-ref HEAD)\"; }; f"
+	puf = push --force-with-lease
+
+	sub = submodule
+	subu = submodule update --init --recursive
+
+	m = merge
+	ma = merge --abort
+	mc = merge --continue
+	mff = merge --ff-only
+	mnc = "!f() { git merge --no-commit --no-ff \"$@\"; EC=$?; git merge --abort; exit $EC; }; f"
+
+	r = rebase
+	ra = rebase --abort
+	rc = rebase --continue
+	rq = rebase --quit
+	rs = rebase --skip
+	ret = rebase --edit-todo
+	rsh = rebase --show-current-patch
+
+	ri = rebase --interactive
+	riu = rebase --interactive @{u}
+	rim = rebase --interactive master
+	rid = rebase --interactive develop
+
+	cp = cherry-pick
+	cpa = cherry-pick --abort
+	cpc = cherry-pick --continue
+	cpq = cherry-pick --quit
+
+	rv = revert
+	rva = revert --abort
+	rvc = revert --continue
+	rvq = revert --quit
+
+	re = reset
+	res = reset --soft
+	reh = reset --hard
+	cln = clean
+
+	mt = mergetool
+	dt = difftool
+
+	which = branch --contains
+	who = shortlog --summary --numbered --no-merges
+	whoami = !"git config --get user.name && git config --get user.email"
+
+	# list branches sorted by last modified
+	bls = "!git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's@refs/heads/@@'"
+
+	# initialize repository in current directory
+	this = "!git init && git commit --message='Initialize' --allow-empty"
+
+	# regex checkout
+	#    git rco <regex> [<options>]
+	rco = "!f() { REGEX=$1; shift; git checkout \"$@\" \"$(git branch --all | cut -c 3- | sed 's|^remotes/.*/||' | grep -m 1 -iEe \"$REGEX\" )\"; }; f"
+
+	# open Github repository in browser
+	#    git open [<remote>]
+	open = "!f() { URL=$(git config remote.\"${1:-origin}\".url); xdg-open \"${URL%%.git}\"; }; f"
+
+	# fetch and checkout a Github pull request
+	#    git pr [[<remote>] <number>]
+	pr = "!f() { git config remote.upstream.url > /dev/null 2>&1 && REMOTE=upstream || REMOTE=origin; [ \"$#\" -gt 1 ] && REMOTE=$1 && shift; git fetch \"${REMOTE:-origin}\" \"pull/$1/head\" && git checkout FETCH_HEAD; }; f"
+
+	# hard reset with commit before (use reflog to recover)
+	#    git wipe [<commit>]
+	wipe = "!f() { git add --all && git commit --quiet --message='WIPE-SAVEPOINT' && git reset \"${1:-HEAD~}\" --hard && git clean -fd; }; f"
+
+	# hard reset and clean (unrecoverable)
+	nuke = !"git reset --hard HEAD && git clean -fd"
+
+	# set up remotes for fork
+	#    git fork [<old-remote> [<new-remote>]]
+	fork = "!f() { URL=$(git config remote.\"${1:-origin}\".url); git remote set-url \"${1:-origin}\" \"$(echo \"$URL\" | perl -pe 's/(?<=[:\\/])[^:\\/]+(?=\\/[^\\/]+$)/alfunx/')\"; git remote add \"${2:-upstream}\" \"$URL\"; }; f"
+
+	# get gitignore from github/gitignore.git
+	#    git gitignore <type>
+	gitignore = "!f() { curl -sf \"https://raw.githubusercontent.com/github/gitignore/master/$1.gitignore\" -o \"$1.gitignore\"; }; f"
+
+	# generate tags file
+	ctags = "!$HOME/.config/git/hooks/ctags"
+
+	# fzf commands
+	fbr = fzf-branch
+	fco = fzf-checkout
+	fcoc = fzf-checkout-commit
+	fsha = fzf-print-sha
+	fshow = fzf-show-commit
+	fstash = fzf-show-stash
+
+[svn]
+	rmdir = true
+
+[include]
+	path = .gitconfig-local
+[gpg]
+	program = gpg2
