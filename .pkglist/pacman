@@ -3,6 +3,7 @@ acpi
 acpid
 adobe-source-han-sans-otc-fonts
 aic94xx-firmware
+alsa-firmware
 alsa-utils
 alsaplayer
 android-tools
@@ -21,14 +22,12 @@ bluez
 bluez-plugins
 bluez-utils
 bzip2
+camlp4
 chromium
-clion
-clion-cmake
-clion-gdb
-clion-jre
 cmake
 compton
 coreutils
+cppcheck
 cryptsetup
 deluge
 device-mapper
@@ -37,10 +36,13 @@ dialog
 diffutils
 discord
 dmenu-git
+docker
 dosfstools
 dotfiles.sh
 dpkg
 e2fsprogs
+elfutils
+emacs
 fakeroot
 fd
 feh
@@ -67,7 +69,7 @@ groff
 gvim
 gwakeonlan
 gzip
-hedgewars
+hashlink-git
 htop
 i3lock-color-git
 ifenslave
@@ -80,6 +82,7 @@ jfsutils
 jq
 kitty
 laptop-mode-tools
+lcov
 less
 lhasa
 lib32-mpg123
@@ -92,6 +95,7 @@ lightdm-gtk-greeter
 linux
 logrotate
 lolcat
+lsof
 lvm2
 m4
 maim
@@ -114,6 +118,7 @@ obexftp
 octave
 octave-control
 oomox
+opam
 open-iscsi
 openssh
 otfcc
@@ -123,6 +128,7 @@ pacman
 pacman-contrib
 parcellite
 patch
+pavucontrol
 pciutils
 perl
 php
@@ -131,7 +137,9 @@ pkgconf
 playerctl
 procps-ng
 psmisc
+pulseaudio-alsa
 pulseaudio-bluetooth
+pulseeffects
 pv
 pygtk
 python
@@ -159,6 +167,7 @@ shadow
 shellcheck
 simplescreenrecorder
 sl
+solvitaire-git
 spotify
 steam
 sudo
@@ -170,7 +179,6 @@ teamviewer
 texinfo
 texlive-bibtexextra
 texlive-core
-texlive-fontsextra
 texlive-formatsextra
 texlive-games
 texlive-humanities
@@ -191,6 +199,7 @@ ttf-fantasque-sans-mono
 ttf-iosevka
 ttf-iosevka-custom-git
 ttf-liberation
+ttf-ms-fonts
 ttfautohint
 unzip
 upower
@@ -229,6 +238,8 @@ xorg-xinit
 xorg-xinput
 xterm
 yay
+youtube-dl
 zathura
+zathura-pdf-mupdf
 zsh
 zsh-completions

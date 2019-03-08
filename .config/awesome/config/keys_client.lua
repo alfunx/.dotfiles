@@ -23,6 +23,11 @@ function config.init(context)
 
     context.keys.client = gears.table.join(
 
+        -- Keyboard layout
+        awful.key({ k.m                }, "c", function()
+                    awful.spawn("keymap_toggle") end,
+                  { description = "close", group = "client" }),
+
         -- Client manipulation
         awful.key({ k.m                }, "z", function(c) c:kill() end,
                   { description = "close", group = "client" }),

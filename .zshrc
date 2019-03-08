@@ -183,6 +183,11 @@ precmd_functions+=echo_blank
 # Kitty completion
 source <(kitty + complete setup zsh)
 
+# bonsai
+if [ $(tput lines) -gt 40 ] && [ $(tput cols) -gt 200 ]; then
+    bonsai -T
+fi
+
 ##########################################################################################
 
 # Debug
