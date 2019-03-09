@@ -1,7 +1,7 @@
 aic94xx-firmware
 apulse
 aurutils
-awesome-git
+awesome-luajit-git
 discord
 dmenu-git
 dotfiles.sh
@@ -12,6 +12,9 @@ laptop-mode-tools
 lcov
 libc++
 libc++abi
+lua-argparse
+luacheck
+luajit-lgi
 ncurses5-compat-libs
 noto-fonts-alpha
 obexftp

@@ -67,7 +67,7 @@ function _config.init()
     end
 
     -- Show only tags of current row (taggrid feature)
-   _config.rowfilter = function(t)
+    _config.rowfilter = function(t)
         local index = t.index
         local selected = awful.screen.focused().selected_tag.index
         if not index or not selected then return false end

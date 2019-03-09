@@ -63,11 +63,7 @@ echo '.dotfiles' >> "$HOME/.gitignore"
 dotfiles add "$HOME/.gitignore"
 dotfiles commit -m 'Git: Add gitignore'
 
-<<<<<<< HEAD
 dotfiles remote add origin https://github.com/toaster192/.dotfiles
-=======
-dotfiles remote add origin https://github.com/alfunx/.dotfiles
->>>>>>> upstream/master
 dotfiles push --set-upstream origin master
 dotfiles config --local status.showUntrackedFiles no
 ```
@@ -104,11 +100,7 @@ submodules and again hide untracked files when querying the status.
 git clone https://github.com/robbyrussell/oh-my-zsh \
     "$HOME/.oh-my-zsh"
 
-<<<<<<< HEAD
 git clone --bare --recursive https://github.com/toaster192/.dotfiles \
-=======
-git clone --bare --recursive https://github.com/alfunx/.dotfiles \
->>>>>>> upstream/master
     "$HOME/.dotfiles"
 
 function dotfiles() {

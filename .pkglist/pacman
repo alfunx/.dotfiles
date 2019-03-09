@@ -13,7 +13,7 @@ arandr
 aurutils
 autoconf
 automake
-awesome-git
+awesome-luajit-git
 bash
 bc
 binutils
@@ -96,6 +96,8 @@ linux
 logrotate
 lolcat
 lsof
+luacheck
+luajit-lgi
 lvm2
 m4
 maim

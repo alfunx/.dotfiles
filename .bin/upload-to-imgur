@@ -2,11 +2,11 @@
 
 client_id='9a6fd61088e51d4'
 pictures_dir="$(xdg-user-dir PICTURES 2> /dev/null)"
-input_dir="${pictures_dir:-$HOME/Pictures}/screenshots"
+input_dir="${pictures_dir:-$HOME/pictures}/screenshots"
 input_file=$(find "$input_dir" -print0 \
     | xargs -0 ls -1 -t 2> /dev/null \
     | head -1)
-output_dir="${pictures_dir:-$HOME/Pictures}/imgur"
+output_dir="${pictures_dir:-$HOME/pictures}/imgur"
 
 readonly argv0="$0"
 
