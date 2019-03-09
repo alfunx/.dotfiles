@@ -471,11 +471,6 @@ lain.widget.cal {
 -- })
 -- --]]
 
--- MPD
---luacheck: push ignore widget mpd_now artist title
--- local musicplr = context.vars.terminal .. " -title Music -g 130x34-320+16 ncmpcpp"
-local mpd_icon = wibox.widget.imagebox(theme.widget_music)
-
 -- -- }}}
 
 -- {{{ MPD

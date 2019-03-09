@@ -78,7 +78,7 @@ function _config.init()
 
     -- Temperature
     _config.temperature = yaawl.temperature {
-        temp_path = "/sys/class/thermal/thermal_zone8/temp",
+        temp_path = "/sys/class/thermal/thermal_zone0/temp",
     }
     _config.temperature:add_timer {
         timeout = 23,
@@ -104,7 +104,7 @@ function _config.init()
     -- Weather
     _config.weather = yaawl.weather {
         APPID = file.first_line(table.concat { context.vars.secrets_dir, "/openweathermap" }),
-        query = "Zurich,CH",
+        query = "Brno,CZ",
     }
     _config.weather:add_timer {
         timeout = 3607,
@@ -112,7 +112,7 @@ function _config.init()
 
     -- Net
     _config.net = yaawl.net {
-        iface   = "wlp58s0",
+        iface   = "wlp2s0",
         timeout = 2,
     }
 

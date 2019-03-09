@@ -2,7 +2,7 @@
 
 _pkgname=awesome
 pkgname=$_pkgname-luajit-git
-pkgver=4.3.r97.g36d7535cd
+pkgver=4.3.r143.gf7c20b38
 pkgrel=1
 pkgdesc="Highly configurable framework window manager, built with luajit"
 arch=('i686' 'x86_64')
@@ -22,7 +22,7 @@ backup=('etc/xdg/awesome/rc.lua')
 
 _patches=()
 
-source=("$_pkgname::git+file:///home/amariya/projects/awesome"
+source=("$_pkgname::git+https://github.com/alfunx/awesome"
         awesome.desktop
         awesomeksm.desktop)
 
