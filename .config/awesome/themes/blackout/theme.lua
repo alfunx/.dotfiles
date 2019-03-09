@@ -149,7 +149,7 @@ theme.hotkeys_group_margin                      = 50
 
 theme.prompt_bg                                 = colors.bw_0
 theme.prompt_fg                                 = theme.fg_normal
-theme.bg_systray                                = theme.tasklist_bg_normal
+theme.bg_systray                                = colors.bw_0
 
 theme.border                                    = 4
 theme.border_width                              = 4
@@ -988,8 +988,8 @@ local function title_markup(client, color, bold)
         "<span color='", color, "'>",
 
         "<small><small><i>",
-        gears.string.xml_escape(client.class or "N/A"),
-        ":</i></small></small> ",
+        client.class and gears.string.xml_escape(client.class .. ":") or "",
+        "</i></small></small> ",
 
         (bold and "<b>" or ""),
         gears.string.xml_escape(client.name or awful.titlebar.fallback_name or "N/A"),
@@ -1244,30 +1244,38 @@ function theme.at_screen_connect(s)
                                 },
                                 id = "_scroll",
                                 step_function = wibox.container.scroll.step_functions.linear_increase,
-                                speed = 100,
+                                speed = 80,
                                 extra_space = 50,
                                 widget = wibox.container.scroll.horizontal,
                             },
                             widget = wibox.container.place,
                         },
-                        widgets.fade {
-                            width = 20,
-                            color = theme.tasklist_bg_normal,
+                        {
+                            widgets.fade {
+                                width = 30,
+                                color = theme.tasklist_bg_normal,
+                            },
+                            id = "_fade",
+                            visible = false,
+                            layout = wibox.layout.flex.horizontal,
                         },
                         layout = wibox.layout.stack,
                     },
-                    left = 6,
-                    right = 6,
+                    left = 3,
+                    right = 3,
                     widget = wibox.container.margin,
                 },
                 id = "background_role",
                 widget = wibox.container.background,
                 create_callback = function(self, c, index, objects)
                     local scroll = self:get_children_by_id("_scroll")[1]
+                    local fade = self:get_children_by_id("_fade")[1]
                     self:connect_signal("mouse::enter", function()
+                        fade.visible = true
                         scroll:continue()
                     end)
                     self:connect_signal("mouse::leave", function()
+                        fade.visible = false
                         scroll:pause()
                         scroll:reset_scrolling()
                     end)
