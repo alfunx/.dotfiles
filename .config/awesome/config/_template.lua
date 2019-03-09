@@ -9,12 +9,12 @@
 local awful = require("awful")
 local beautiful = require("beautiful")
 
-local config = { }
+local _config = { }
 
-function config.init(context)
+function _config.init()
 
     -- do something
 
 end
 
-return config
+return _config

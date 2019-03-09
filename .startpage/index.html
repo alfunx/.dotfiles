@@ -1,0 +1,95 @@
+<html>
+  <head>
+
+    <title>Home</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=Pacifico|Roboto+Mono" rel="stylesheet">
+
+  </head>
+  <body onload='setFocusToTextBox()'>
+
+    <br>
+
+    <script>
+    function setFocusToTextBox(){
+        document.getElementById("google").focus();
+    }
+    </script>
+
+    <script language="javascript">
+      var text = new Array ();
+      text[0] = "Hello";
+      text[1] = "Hi";
+      text[2] = "Welcome";
+      text[3] = "Howdy";
+      text[4] = "Hey";
+      text[5] = "Yo";
+      text[6] = "What's up";
+
+      var i = Math.floor(text.length * Math.random());
+
+      document.write("<h1>" +  text[i] + "</h1>");
+    </script>
+
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <div class="all">
+      <div class="title general"><h3>general</h3></div>
+      <div class="links">
+        <a href="https://www.google.ch/" autofocus><p>google</p></a>
+        <a href="https://www.youtube.com/"><p>youtube</p></a>
+        <a href="https://www.google.ch/maps/"><p>maps</p></a>
+        <a href="https://www.sbb.ch/de/fahrplan.html"><p>sbb</p></a>
+      </div>
+    </div>
+
+    <div class="all">
+      <div class="title school"><h3>school</h3></div>
+      <div class="links">
+        <a href="https://www.launchpad.uzh.ch/"><p>uzh</p></a>
+        <a href="https://www.dict.cc/"><p>dict.cc</p></a>
+        <a href="https://de.wikipedia.org/"><p>wikipedia</p></a>
+      </div>
+    </div>
+
+    <div class="all">
+      <div class="title social"><h3>social</h3></div>
+      <div class="links">
+        <a href="https://www.facebook.com/"><p>facebook</p></a>
+        <a href="https://www.reddit.com/"><p>reddit</p></a>
+        <a href="https://www.9gag.com/"><p>9gag</p></a>
+      </div>
+    </div>
+
+    <div class="all">
+      <div class="title programming"><h3>programming</h3></div>
+      <div class="links">
+        <a href="https://github.com/"><p>github</p></a>
+        <a href="https://stackoverflow.com/"><p>stack overflow</p></a>
+        <a href="https://www.hackerrank.com/"><p>hackerrank</p></a>
+        <a href="https://projecteuler.net/"><p>project euler</p></a>
+      </div>
+    </div>
+
+    <div class="all">
+      <div class="title news"><h3>news</h3></div>
+      <div class="links">
+        <a href="https://www.nzz.ch/"><p>nzz</p></a>
+        <a href="https://www.watson.ch/"><p>watson</p></a>
+        <a href="https://www.20min.ch/"><p>20min</p></a>
+      </div>
+    </div>
+
+    <div class="all">
+      <div class="title linux"><h3>linux</h3></div>
+      <div class="links">
+        <a href="https://wiki.archlinux.org/"><p>archwiki</p></a>
+        <a href="https://aur.archlinux.org/"><p>aur</p></a>
+      </div>
+    </div>
+
+  </body>
+</html>

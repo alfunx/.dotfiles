@@ -9,7 +9,7 @@ url="https://github.com/belluzj/fantasque-sans"
 license=('custom:OFL')
 depends=('fontconfig' 'xorg-font-utils')
 conflicts=('otf-fantasque-sans-mono' 'ttf-fantasque-sans-mono')
-source=("${pkgbase}-${pkgver}.tar.gz::https://github.com/belluzj/fantasque-sans/releases/download/v${pkgver}/FantasqueSansMono-NoLoopK.tar.gz")
+source=("${pkgbase}-${pkgver}.tar.gz::https://github.com/belluzj/fantasque-sans/releases/download/v${pkgver}/FantasqueSansMono.tar.gz")
 sha512sums=('07fdb568b25f8d8d8b34c1d9573a37821b301de3733dd72664c9c04c61499d72fb5bf6be3afeb4fbd40c81b6b9cddfaaa2efc2a29d61ff57804e9ccda86d1828')
 
 package_otf-fantasque-sans-mono() {

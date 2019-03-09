@@ -162,11 +162,11 @@ tre() {
 
 # switch from/to project/package dir
 pkg() {
-    current=$(pwd | sed "s@$HOME/@@" | sed 's@/.*@@')
-    if [[ "$current" == 'projects' ]]; then
-        cd "$(pwd | sed 's/projects/packages/')"
+    if [ "$#" -eq 2 ]; then
+        ln -s "$(readlink -f $1)" "$(readlink -f $2)"/._pkg
+        ln -s "$(readlink -f $2)" "$(readlink -f $1)"/._pkg
     else
-        cd "$(pwd | sed 's/packages/projects/')"
+        cd "$(readlink -f ./._pkg)"
     fi
 }
 

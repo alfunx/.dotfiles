@@ -1,0 +1,116 @@
+/* Hide .twisty and adjust margins so favicons have 7px on left. */
+.tab .twisty {
+    visibility: hidden;
+    margin-left: -12px;
+}
+
+/* Push tab labels slightly to the right so they're completely hidden in collapsed state */
+.tab .label {
+    margin-left: 7px;
+}
+
+/* Hide close buttons on tabs. */
+.tab .closebox {
+    visibility: collapse;
+}
+
+/* Hide sound playing/muted button. */
+.sound-button::before {
+    display: none !important;
+}
+
+/* Hide 'new tab' button. */
+.newtab-button {
+    display: none;
+}
+
+/* ################################################ */
+/* ##### COLOR THEME ############################## */
+/* ################################################ */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+@keyframes pulse {
+    0% {
+        width: 0px;
+        height: 0px;
+        opacity: 1;
+    }
+    100% {
+        width: 350px;
+        height: 350px;
+        opacity: 0;
+        top: calc(50% - 175px);
+        left: calc(50% - 175px);
+    }
+}
+:root {
+    background-color: #504945 !important;
+}
+#tabbar {
+    background-color: #504945 !important;
+    border-right: 0px solid #504945 !important;
+    box-shadow: none !important;
+}
+.tab {
+    background-color: #504945 !important;
+    box-shadow: none !important;
+}
+.tab .label {
+    color: #ebdbb2 !important;
+}
+.tab:hover {
+    background-color: #bdae93 !important;
+}
+.tab:hover .label {
+    color: #282828 !important;
+}
+.tab.discarded {
+    background-color: #504945;
+}
+.tab.discarded .label {
+    color: #282828 !important;
+}
+.tab.discarded:hover {
+    background-color: #504945 !important;
+}
+.tab.discarded:hover .label {
+    color: #282828 !important;
+}
+
+.tab.active {
+    background-color: #7c6f64 !important;
+}
+.tab.active .label {
+    color: #fbf1c7 !important;
+}
+.tab.active:hover {
+    background-color: #bdae93 !important;
+}
+.tab.active:hover .label {
+    color: #282828 !important;
+}
+
+
+/* Adjust style for tab that has sound playing. */
+.tab.sound-playing .favicon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    background: #ebdbb2;
+    animation: pulse 2s ease-out 0s infinite;
+    z-index: -1;
+    opacity: 0;
+}
+
+/* Adjust style for tab that is muted. */
+.tab.muted {
+    opacity: 0.5;
+}

@@ -1,0 +1,75 @@
+# Maintainer: alfunx <alphonse.mariya@hotmail.com>
+
+_pkgname=st
+pkgname=$_pkgname-git
+pkgver=0.8.1.r3.g041912a
+pkgrel=1
+pkgdesc='A simple virtual terminal emulator for X. (Including patches and colorschemes)'
+arch=('i686' 'x86_64')
+url='https://st.suckless.org/'
+license=('MIT')
+options=('zipman')
+depends=('libxft')
+makedepends=('ncurses' 'libxext' 'git')
+provides=('st')
+conflicts=('st')
+
+_patches=('https://st.suckless.org/patches/hidecursor/st-hidecursor-20170404-745c40f.diff'
+          'https://st.suckless.org/patches/scrollback/st-scrollback-20180311-c5ba9c0.diff'
+          'https://st.suckless.org/patches/scrollback/st-scrollback-mouse-20180311-c5ba9c0.diff'
+          'https://st.suckless.org/patches/clipboard/st-clipboard-20180309-c5ba9c0.diff'
+          'st-config-20180314-8ab6290.diff'
+          'st-gruvbox-colorscheme-20180314-8ab6290.diff'
+          'st-font-iosevka-custom-20180314-8ab6290.diff'
+          'st-worddelimiters-20180314-8ab6290.diff')
+
+source=("$_pkgname::git+file:///home/amariya/projects/st"
+        "${_patches[@]}"
+        "simple-terminal.desktop")
+
+sha512sums=('SKIP'
+            '35a533e66069439cbca9c1c0eee4d73eaca527b011f4a1fdc09d7130f8f44711410117fed1fc9ac0a8666217228992b2edfa70284859bcf2ec740b37d3fc7de7'
+            '83e5d257db642eb403ca44d45119f294d5df7ebcec34a4f26ee214a8c87fbdcb5ae7c714f95859d8f5eafdfc282a8582c8419f8883c67990a2136c7cb0fa4009'
+            'b0f7c8716019313299dc0cd008e127bd2d7838e1f31cbf8b6945d62c48472e0cd3f691d590354c0df6c16f108b4d944613aa0ca0662dc6fabe438f34aca23b2e'
+            '02cd4d03d35f18b8d419d6bd5cd13fe4db994a5b9e83886d99cf53d5015f5e4ef0856e4a05f624f2e2a7a1e4d5ef4fa038f4eed0d140bc4db06d9e8d2f2062cd'
+            'fee353e53aaa3936e614df472d9ab5c7258e3d898878cc2a611d8aa027d5ee74fc6e9c6727015ca747ff8994756d4076f0e3178f63a316533a230cfc9d41175e'
+            '3626b61d82425ec0afad1a5a727401f836b071b66f5074ab88a86e2a50bcc8189e71eee0eaaea3767b3f3df27181a05b47c349649c7a1c7760fd509a6f2b26f7'
+            'd0c1ac5338432c33c5292b379a5ef99f577c52f9ef8a08f6b25ccc3ce3ef58baa7608bb6af0e683d5e9946df7c24ebfc8fbe2744757e2b662364f45cdff14cbf'
+            '95b211b9c6a69263a8201cc4462d8f7c2c6b62fca53598b7aa6fc8c3dfc849e4a4c551ec649d71425d90064e1f45128fcfc575fb3997429c3acaa1ea30d200da'
+            '717dd4134ca8c39b8f950fe3c88e728656f2d08c537b8df0aeaae98023861ccf3802fe6c9ebc92cb79b2182fd528a3c0c7278fc6f31a7c3b05d07f2842ee0cd1')
+
+pkgver() {
+    cd "$_pkgname"
+    git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+    local file
+    cd "$_pkgname"
+
+    # skip terminfo which conflicts with nsurses
+    # sed -i '/tic /,+1d' Makefile
+    sed -i '/tic /d' Makefile
+
+    for file in "${_patches[@]}"; do
+        if [[ "$file" == *.h ]]; then
+            cp "$srcdir/$file" .
+        elif [[ "$file" == *.diff || "$file" == *.patch ]]; then
+            echo -e "\e[1mApplying patch: $(basename "$file")\e[0m"
+            patch -Np1 <"$srcdir/$(basename "$file")"
+        fi
+    done
+}
+
+build() {
+    cd "$_pkgname"
+    make X11INC=/usr/include/X11 X11LIB=/usr/lib/X11
+}
+
+package() {
+    cd "$_pkgname"
+    make PREFIX=/usr DESTDIR="$pkgdir" TERMINFO="$pkgdir/usr/share/terminfo" install
+    install -Dm644 "$srcdir/simple-terminal.desktop" "$pkgdir/usr/share/applications/simple-terminal.desktop"
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$_pkgname/LICENSE"
+    install -Dm644 README "$pkgdir/usr/share/doc/$_pkgname/README"
+}

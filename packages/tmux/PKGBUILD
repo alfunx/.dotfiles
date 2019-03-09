@@ -2,7 +2,7 @@
 
 _pkgname=tmux
 pkgname=$_pkgname-git
-pkgver=2.8.r141.g1c5093c1
+pkgver=2.8.r155.g9768091e
 pkgrel=1
 pkgdesc="A terminal multiplexer"
 url="https://github.com/tmux/tmux/wiki"

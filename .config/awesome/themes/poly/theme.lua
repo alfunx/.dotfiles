@@ -15,10 +15,13 @@ local widgets          = require("widgets")
 local awful            = require("awful")
 local wibox            = require("wibox")
 local naughty          = require("naughty")
-local xresources       = require("beautiful.xresources")
-local context          = require("config").context
-local dpi              = xresources.apply_dpi
 local os, math, string = os, math, string
+
+local context          = require("config.context")
+local util             = require("config.util")
+local tags             = require("config.tags")
+local taglist_binds    = require("config.bindings_taglist")
+local tasklist_binds   = require("config.bindings_tasklist")
 
 local colors = { }
 
@@ -55,8 +58,7 @@ colors.bw_8             = "#d5c4a1"
 colors.bw_9             = "#ebdbb2"
 colors.bw_10            = "#fbf1c7"
 
-context.util.set_colors(colors)
-colors = context.colors
+colors = util.set_colors(colors)
 
 local bar_fg            = colors.bw_5
 local bar_bg            = colors.bw_0
@@ -126,27 +128,27 @@ theme.titlebar_bg_normal                        = theme.border_normal
 theme.titlebar_bg_focus                         = theme.border_focus
 theme.titlebar_bg_marked                        = theme.border_marked
 
-theme.hotkeys_border_width                      = dpi(30)
+theme.hotkeys_border_width                      = 30
 theme.hotkeys_border_color                      = colors.bw_0
-theme.hotkeys_group_margin                      = dpi(30)
+theme.hotkeys_group_margin                      = 30
 theme.hotkeys_shape                             = function(cr, width, height)
-                                                      gears.shape.rounded_rect(cr, width, height, dpi(20))
+                                                      gears.shape.rounded_rect(cr, width, height, 20)
                                                   end
 
 theme.prompt_bg                                 = colors.bw_0
 theme.prompt_fg                                 = theme.fg_normal
 theme.bg_systray                                = theme.tasklist_bg_normal
 
-theme.border_width                              = dpi(4)
--- theme.border_radius                             = dpi(8)
-theme.border_radius                             = dpi(0)
-theme.menu_height                               = dpi(20)
-theme.menu_width                                = dpi(250)
+theme.border_width                              = 4
+-- theme.border_radius                             = 8
+theme.border_radius                             = 0
+theme.menu_height                               = 20
+theme.menu_width                                = 250
 theme.tasklist_plain_task_name                  = true
 theme.tasklist_disable_icon                     = true
-theme.tasklist_spacing                          = dpi(3)
-theme.useless_gap                               = dpi(16)
-theme.systray_icon_spacing                      = dpi(4)
+theme.tasklist_spacing                          = 3
+theme.useless_gap                               = 16
+theme.systray_icon_spacing                      = 4
 
 theme.snap_bg                                   = theme.border_focus
 theme.snap_shape                                = function(cr, w, h)
@@ -236,17 +238,17 @@ theme.notification_fg                           = theme.fg_normal
 theme.notification_bg                           = theme.bg_normal
 theme.notification_border_color                 = theme.border_normal
 theme.notification_border_width                 = theme.border_width
-theme.notification_icon_size                    = dpi(80)
+theme.notification_icon_size                    = 80
 theme.notification_opacity                      = 1
-theme.notification_max_width                    = dpi(600)
-theme.notification_max_height                   = dpi(400)
-theme.notification_margin                       = dpi(20)
+theme.notification_max_width                    = 600
+theme.notification_max_height                   = 400
+theme.notification_margin                       = 20
 theme.notification_shape                        = function(cr, width, height)
                                                       gears.shape.rounded_rect(cr, width, height, theme.border_radius or 0)
                                                   end
 
-naughty.config.padding                          = dpi(15)
-naughty.config.spacing                          = dpi(10)
+naughty.config.padding                          = 15
+naughty.config.spacing                          = 10
 naughty.config.defaults.timeout                 = 5
 naughty.config.defaults.margin                  = theme.notification_margin
 naughty.config.defaults.border_width            = theme.notification_border_width
@@ -334,7 +336,7 @@ local clock_widget = wibox.widget {
 }
 
 -- Calendar
-theme.cal = lain.widget.calendar {
+theme.cal = lain.widget.cal {
     cal = "cal --color=always --monday",
     attach_to = { clock_widget },
     icons = "",
@@ -907,8 +909,6 @@ net_widget:buttons(awful.button({ }, 1, function()
 end))
 --luacheck: pop
 
--- NOTE: This will be called after fully initializing the context-object, so
---       context.util etc. can be used here.
 function theme.at_screen_connect(s)
     -- Quake application
     s.quake = lain.util.quake {
@@ -925,7 +925,7 @@ function theme.at_screen_connect(s)
 
     -- Add tags if there are none
     if #s.tags == 0 then
-        awful.tag(awful.util.tagnames, s, awful.util.layouts)
+        awful.tag(tags.names, s, tags.layouts)
     end
 
     -- Create a promptbox for each screen
@@ -942,20 +942,20 @@ function theme.at_screen_connect(s)
     )
 
     -- Create a taglist widget
-    s._taglist = awful.widget.taglist(s, context.util.rowfilter, awful.util.taglist_buttons)
+    s._taglist = awful.widget.taglist(s, util.rowfilter, taglist_binds.buttons)
 
     local gen_tasklist = function()
         -- Create a tasklist widget
         s._tasklist = awful.widget.tasklist {
             screen = s,
             filter = awful.widget.tasklist.filter.currenttags,
-            buttons = awful.util.tasklist_buttons,
+            buttons = tasklist_binds.buttons,
             bg_focus = theme.tasklist_bg_focus,
             style = {
                 shape = function(cr, width, height)
                     gears.shape.rounded_rect(cr, width, height, theme.border_radius or 0)
                 end,
-                shape_border_width = dpi(0),
+                shape_border_width = 0,
                 shape_border_color = theme.tasklist_bg_normal,
             },
             widget_template = {
@@ -1009,12 +1009,12 @@ function theme.at_screen_connect(s)
         -- Create a tasklist widget
         s._tasklist = awful.widget.tasklist(s,
         awful.widget.tasklist.filter.currenttags,
-        awful.util.tasklist_buttons, {
+        tasklist_binds.buttons, {
             bg_focus = theme.tasklist_bg_focus,
             shape = function(cr, width, height)
                         gears.shape.rounded_rect(cr, width, height, theme.border_radius or 0)
                     end,
-            shape_border_width = dpi(0),
+            shape_border_width = 0,
             shape_border_color = theme.tasklist_bg_normal,
             align = "center" })
     end
@@ -1023,7 +1023,7 @@ function theme.at_screen_connect(s)
     s._wibox = awful.wibar {
         position = "top",
         screen = s,
-        height = dpi(30) + theme.useless_gap * 1.5,
+        height = 30 + theme.useless_gap * 1.5,
         fg = bar_fg,
         bg = "#00000000",
     }
@@ -1035,14 +1035,14 @@ function theme.at_screen_connect(s)
                 layout = wibox.layout.align.horizontal,
                 wibox.widget.systray(),
             },
-            right = dpi(12),
-            top = dpi(6),
-            bottom = dpi(6),
+            right = 12,
+            top = 6,
+            bottom = 6,
             widget = wibox.container.margin,
         },
         visible = false,
     }
-    context.util.show_on_mouse(s._wibox, systray_widget)
+    util.show_on_mouse(s._wibox, systray_widget)
 
     -- Add widgets to the wibox
     s._wibox:setup {
@@ -1057,7 +1057,7 @@ function theme.at_screen_connect(s)
                         {
                             {
                                 s._layoutbox,
-                                margins = dpi(3),
+                                margins = 3,
                                 widget = wibox.container.margin,
                             },
                             bg = colors.bw_0,
@@ -1077,8 +1077,8 @@ function theme.at_screen_connect(s)
                         {
                             {
                                 s._taglist,
-                                left = dpi(5),
-                                right = dpi(5),
+                                left = 5,
+                                right = 5,
                                 widget = wibox.container.margin,
                             },
                             bg = colors.bw_0,
@@ -1097,8 +1097,8 @@ function theme.at_screen_connect(s)
                     { -- Prompt box
                         {
                             s._promptbox,
-                            left = dpi(5),
-                            right = dpi(5),
+                            left = 5,
+                            right = 5,
                             widget = wibox.container.margin,
                         },
                         top = theme.border_width,

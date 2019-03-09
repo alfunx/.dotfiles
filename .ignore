@@ -82,3 +82,6 @@ tags
 
 # os
 .DS_Store*
+
+# packaging
+._pkg

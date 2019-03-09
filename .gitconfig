@@ -2,6 +2,7 @@
 	name = toaster192
 	email = toastercz@gmail.com
 	signingkey = toastercz@gmail.com
+
 [core]
 	editor = vim
 	whitespace = fix,trailing-space,cr-at-eol
@@ -10,7 +11,7 @@
 	commitGraph = true
 
 [credential]
-	helper = cache --timeout=3600
+	helper = cache
 
 [color]
 	advice = true
@@ -83,6 +84,9 @@
 	renames = copy
 	mnemonicPrefix = true
 	wsErrorHighlight = all
+
+[diff "bin"]
+	textconv = hexdump -v -C
 
 [difftool]
 	prompt = false
@@ -159,6 +163,7 @@
 	log = "/usr/share/git/diff-highlight/diff-highlight | less"
 	show = "/usr/share/git/diff-highlight/diff-highlight | less"
 	diff = "/usr/share/git/diff-highlight/diff-highlight | less"
+	# diff = "/usr/share/git/diff-highlight/diff-highlight | less --pattern='^diff.*'"
 
 [rerere]
 	enabled = true
@@ -220,7 +225,6 @@
 
 [alias]
 	ec = "!f() { [ -f \"${XDG_CONFIG_HOME:-$HOME/.config}\"/dotfiles.conf ] && . \"${XDG_CONFIG_HOME:-$HOME/.config}\"/dotfiles.conf; git --git-dir=\"$dotfiles_dir\" config --global --edit; }; f"
-	squash = "!f(){ git reset --soft HEAD~${1} && git commit --edit -m\"$(git log --format=%B --reverse HEAD..HEAD@{1})\";  };f"
 
 	# log, current branch
 	l = log --pretty=lt --graph --color
@@ -279,6 +283,7 @@
 	sa = status --ignored --untracked-files
 
 	a = add
+	aa = add --all
 	au = add --update
 	ai = add --interactive
 	ap = add --patch
@@ -291,7 +296,7 @@
 	cs = commit --verbose --squash
 	ca = commit --verbose --amend
 	can = commit --verbose --amend --no-edit
-	car = commit --verbose --amend -a
+	car = commit --verbose --amend --all
 
 	co = checkout
 	com = checkout master
@@ -308,8 +313,9 @@
 	fa = fetch --all --tags
 	pfa = "!f() { git remote | xargs -I@ -P0 git fetch --tags \"$@\" @; }; f"
 	pu = push
-	puu = "!f() { REMOTE=${1:-origin}; shift; git push \"$@\" -u \"$REMOTE\" \"$(git rev-parse --short --abbrev-ref HEAD)\"; }; f"
+	puu = "!f() { [ \"$#\" -gt 1 ] && REMOTE=$1 && shift; git push \"$@\" -u \"${REMOTE:-origin}\" \"$(git rev-parse --short --abbrev-ref HEAD)\"; }; f"
 	puf = push --force-with-lease
+	puff = push --force
 
 	sub = submodule
 	subu = submodule update --init --recursive
@@ -346,12 +352,12 @@
 	re = reset
 	res = reset --soft
 	reh = reset --hard
-	cln = clean
 
 	mt = mergetool
 	dt = difftool
 
-	which = branch --contains
+	which = branch --all --contains
+	which-tag = describe --always --contains
 	who = shortlog --summary --numbered --no-merges
 	whoami = !"git config --get user.name && git config --get user.email"
 
@@ -363,7 +369,7 @@
 
 	# regex checkout
 	#    git rco <regex> [<options>]
-	rco = "!f() { REGEX=$1; shift; git checkout \"$@\" \"$(git branch --all | cut -c 3- | sed 's|^remotes/.*/||' | grep -m 1 -iEe \"$REGEX\" )\"; }; f"
+	rco = "!f() { [ \"$#\" -gt 1 ] && REGEX=$1 && shift; git checkout \"$@\" \"$(git branch --all | cut -c 3- | sed 's|^remotes/.*/||' | grep -m 1 -iEe \"$REGEX\" )\"; }; f"
 
 	# open Github repository in browser
 	#    git open [<remote>]
@@ -404,5 +410,6 @@
 
 [include]
 	path = .gitconfig-local
+
 [gpg]
 	program = gpg2

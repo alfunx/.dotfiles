@@ -1,0 +1,13 @@
+diff --git a/config.def.h b/config.def.h
+index 877afab..67aa615 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -32,7 +32,7 @@ float chscale = 1.0;
+  *
+  * More advanced example: " `'\"()[]{}"
+  */
+-static char worddelimiters[] = " ";
++static char worddelimiters[] = " '`\"()[]{}<>|";
+ 
+ /* selection timeouts (in milliseconds) */
+ unsigned int doubleclicktimeout = 300;

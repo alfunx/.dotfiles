@@ -2,7 +2,7 @@
 
 _pkgname=awesome
 pkgname=$_pkgname-git
-pkgver=4.2.449.gc21e8b980
+pkgver=4.3.62.g698fce9b4
 pkgrel=1
 pkgdesc='Highly configurable framework window manager'
 arch=('i686' 'x86_64')
@@ -29,7 +29,7 @@ sha512sums=('SKIP')
 
 pkgver() {
     cd "$_pkgname"
-    git describe | sed 's/^v//;s/-/./g'
+    git describe | sed 's/^v//;s/-/.r/;s/-/./g'
 }
 
 prepare() {

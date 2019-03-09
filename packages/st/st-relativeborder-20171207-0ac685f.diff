@@ -1,0 +1,51 @@
+diff --git a/config.def.h b/config.def.h
+index 877afab..7adc94b 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -4,9 +4,11 @@
+  * appearance
+  *
+  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
++ * borderperc: percentage of cell width to use as a border
++ *		0 = no border, 100 = border width is same as cell width
+  */
+ char font[] = "Liberation Mono:pixelsize=12:antialias=true:autohint=true";
+-int borderpx = 2;
++int borderperc = 20;
+ 
+ /*
+  * What program is execed by st depends of these precedence rules:
+diff --git a/st.h b/st.h
+index 44d4938..3c625e9 100644
+--- a/st.h
++++ b/st.h
+@@ -231,6 +231,7 @@ extern char *opt_line;
+ extern char *opt_name;
+ extern char *opt_title;
+ extern int oldbutton;
++int borderpx;
+ 
+ extern char *usedfont;
+ extern double usedfontsize;
+@@ -238,7 +239,7 @@ extern double defaultfontsize;
+ 
+ /* config.h globals */
+ extern char font[];
+-extern int borderpx;
++extern int borderperc;
+ extern float cwscale;
+ extern float chscale;
+ extern unsigned int doubleclicktimeout;
+diff --git a/x.c b/x.c
+index 191e5dc..f500dd4 100644
+--- a/x.c
++++ b/x.c
+@@ -827,6 +827,8 @@ xloadfonts(char *fontstr, double fontsize)
+ 	win.cw = ceilf(dc.font.width * cwscale);
+ 	win.ch = ceilf(dc.font.height * chscale);
+ 
++	borderpx = ceilf(((float)borderperc / 100) * win.cw);
++
+ 	FcPatternDel(pattern, FC_SLANT);
+ 	FcPatternAddInteger(pattern, FC_SLANT, FC_SLANT_ITALIC);
+ 	if (xloadfont(&dc.ifont, pattern))

@@ -1,15 +1,21 @@
 #!/usr/bin/env bash
 
+line=$(printf %"$(tput cols)"s | sed 's/ /─/g')
+export line
+
 git-one() {
-    pushd "$1" >/dev/null || exit 1
-    shift;
-    if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
-        output=$(git "$@" 2>&1 | awk 'NF')
-        message="Done: [1m$(pwd)[0m"
-        line=$(printf %"$(tput cols)"s | sed 's/ /─/g')
-        echo -e "$output\\n$message\\n$line"
+    path=$1
+    shift
+
+    if ! git -C "$path" rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+        echo "[1;91mError:[0m $path is not a Git repository." 1>&2
+        return 1
     fi
-    popd >/dev/null || exit 1
+
+    printf '%s\n%s\n%s' \
+        "$(git -C "$path" "$@" 2>&1 | awk 'NF')" \
+        "Done: [1m$path[0m" \
+        "$line"
 }
 export -f git-one
 

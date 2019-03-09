@@ -9,9 +9,12 @@
 local awful = require("awful")
 local beautiful = require("beautiful")
 
-local config = { }
+local bindings = require("config.bindings_client")
+local tags = require("config.tags")
 
-function config.init(context)
+local _config = { }
+
+function _config.init()
 
     -- Rules to apply to new clients (through the "manage" signal)
     awful.rules.rules = {
@@ -20,15 +23,16 @@ function config.init(context)
         {
             rule = { },
             properties = {
-                border_width = beautiful.border_width,
-                border_color = beautiful.border_normal,
-                focus = awful.client.focus.filter,
-                raise = true,
-                keys = context.keys.client,
-                buttons = context.mouse.client,
-                screen = awful.screen.preferred,
-                placement = awful.placement.no_offscreen+awful.placement.no_overlap,
-                size_hints_honor = false,
+                border_width      = beautiful.border_width,
+                border_color      = beautiful.border_normal,
+                focus             = awful.client.focus.filter,
+                raise             = true,
+                keys              = bindings.keys,
+                buttons           = bindings.buttons,
+                screen            = awful.screen.preferred,
+                placement         = awful.placement.no_offscreen
+                                  + awful.placement.no_overlap,
+                size_hints_honor  = false,
                 titlebars_enabled = true,
             },
         },
@@ -52,7 +56,7 @@ function config.init(context)
             },
             properties = {
                 screen = 1,
-                tag = awful.util.tagnames[6],
+                tag    = tags.names[6],
             },
         },
 
@@ -62,7 +66,7 @@ function config.init(context)
             },
             properties = {
                 screen = 1,
-                tag = awful.util.tagnames[7],
+                tag    = tags.names[7],
             },
         },
 
@@ -72,14 +76,14 @@ function config.init(context)
             },
             properties = {
                 screen = 1,
-                tag = awful.util.tagnames[8],
+                tag    = tags.names[8],
             },
         },
 
         {
             rule = {
                 class = "Firefox",
-                role = "toolbox",
+                role  = "toolbox",
             },
             properties = {
                 floating = true,
@@ -89,7 +93,7 @@ function config.init(context)
         {
             rule = {
                 class = "Chromium",
-                role = "pop-up",
+                role  = "pop-up",
             },
             properties = {
                 floating = true,
@@ -99,7 +103,7 @@ function config.init(context)
         {
             rule = {
                 class = "Chrome",
-                role = "pop-up",
+                role  = "pop-up",
             },
             properties = {
                 floating = true,
@@ -111,7 +115,7 @@ function config.init(context)
                 class = "Arandr",
             },
             properties = {
-                width = 500,
+                width  = 500,
                 height = 400,
             },
         },
@@ -139,7 +143,7 @@ function config.init(context)
                 },
             },
             properties = {
-                floating = true,
+                floating          = true,
                 delayed_placement = awful.placement.centered,
             },
         },
@@ -147,7 +151,7 @@ function config.init(context)
     }
 
     -- placement, that should be applied after setting x/y/width/height/geometry
-    function awful.rules.delayed_properties.delayed_placement(c, value, props)
+    function awful.rules.delayed_properties.delayed_placement(c, value, props) --luacheck: no unused
         if props.delayed_placement then
             awful.rules.extra_properties.placement(c, props.delayed_placement, props)
         end
@@ -155,4 +159,4 @@ function config.init(context)
 
 end
 
-return config
+return _config

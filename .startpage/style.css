@@ -1,0 +1,81 @@
+body {
+  background-color: #504945;
+  text-align: center;
+}
+
+h3 {
+  color: #ebdbb2;
+  font-family: 'Roboto Mono', monospace;
+}
+
+h1 {
+  font-family: 'Pacifico', cursive;
+  text-align: center;
+  color: #ebdbb2;
+  font-size: 90;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+list {
+  text-align: center;
+  text-decoration: none;
+}
+
+.all {
+  display: inline-block;
+  vertical-align: top;
+  align-self: center;
+  margin-left: 1em;
+}
+
+.all:nth-child(1) {
+  margin-left: 0;
+}
+
+.title {
+  text-align: center;
+  width: 12em;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  margin-bottom: 1em;
+}
+
+.general {
+  background-color: #cc241d;
+}
+
+.school {
+  background-color: #b16286;
+}
+
+.social {
+  background-color: #458588;
+}
+
+.programming {
+  background-color: #689d6a;
+}
+
+.news {
+  background-color: #d65d0e;
+}
+
+.linux {
+  background-color: #98971a;
+}
+
+.links {
+  text-align: center;
+  color: #504945;
+  font-family: 'Roboto Mono', monospace;
+  text-decoration: none;
+  font-weight: bold;
+  background-color: #ebdbb2;
+  width: 12em;
+  padding-top: 1px;
+  padding-bottom: 1px;
+}

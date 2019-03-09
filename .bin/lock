@@ -27,7 +27,7 @@ i3lock \
     --indpos='x+100:y+720' \
     --timepos='x+210:y+732' \
     --timestr='%H:%M' \
-    --time-font='Iosevka Custom' \
+    --time-font='monospace' \
     --force-clock \
     --refresh-rate=30 \
     --radius=32 \

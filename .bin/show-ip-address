@@ -31,4 +31,3 @@ echo "Internal: $(ip address show "$netName" | grep -Po 'inet \K[\d.]+')"
 
 if ((full)); then
     echo "External: $(curl -s "$url")"
-fi

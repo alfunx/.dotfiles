@@ -1,7 +1,15 @@
 #!/usr/bin/env bash
 
 choice_by_rofi() {
-    choice=$(echo -e "1: Lock\\n2: Suspend\\n3: Logout\\n4: Reboot\\n5: Poweroff" \
+    output=(
+        '0: Lock'
+        '1: Suspend'
+        '2: Logout'
+        '3: Reboot'
+        '4: Poweroff'
+    )
+
+    choice=$(printf '%s\n' "${output[@]}" \
         | rofi -i -lines 5 -dmenu -p 'session' \
         | cut -d ':' -f 1)
 }
@@ -9,14 +17,13 @@ choice_by_rofi() {
 [[ -z "$DISPLAY" ]] && exit 1
 
 choice_by_rofi
-sleep 0.5
 
 [[ -z "$choice" ]] && exit 1
 
 case "$choice" in
-    1) ~/.bin/lock & ;;
-    2) systemctl suspend & ;;
-    3) kill -9 -1 & ;;
-    4) systemctl reboot & ;;
-    5) systemctl poweroff & ;;
+    0) ~/.bin/lock & ;;
+    1) systemctl suspend & ;;
+    2) systemctl kill "$(pgrep X)" & ;;
+    3) systemctl reboot & ;;
+    4) systemctl poweroff & ;;
 esac

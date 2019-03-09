@@ -8,7 +8,7 @@ readonly PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 
 # default arguments
 maim_args=()
-pictures_dir="$(xdg-user-dir PICTURES 2> /dev/stderr)"
+pictures_dir="$(xdg-user-dir PICTURES 2> /dev/null)"
 output_dir="${pictures_dir:-$HOME/Pictures}/screenshots"
 output_file="$output_dir/$(date +%Y-%m-%d_%T).png"
 
@@ -32,8 +32,8 @@ if [[ -t 2 && ! -o xtrace ]]; then
 fi
 
 opt_short='cCsStTo:h'
-opt_long=('cursor' 'no-cursor' 'select' 'no-select' 'timeout'
-          'no-timeout' 'output:' 'output-file:' 'help')
+opt_long=('cursor' 'no-cursor' 'select' 'no-select' 'timeout' 'no-timeout'
+          'output:' 'output-file:' 'help')
 
 if ! parseopts "$opt_short" "${opt_long[@]}" -- "$@"; then
     usage
@@ -80,4 +80,5 @@ if maim "${maim_args[@]}" "$output_file"; then
         "Saved as $(basename "$output_file")\\nunder $("$HOME/.bin/show-short-dir" "$output_dir")"
     xclip -selection clipboard -t image/png -i "$output_file"
 fi
+
 # vim: set et sw=4 sts=4 ft=sh:

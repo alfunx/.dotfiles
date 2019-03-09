@@ -14,7 +14,7 @@ theme.useless_gap                               = 8
 theme.systray_icon_spacing                      = 4
 
 -- {{{ Glass borders (experimental)
-function theme.titlebar_fun(c)
+function theme.titlebar_fn(c)
     -- if c.floating then return end
 
     local b_string_color = gears.color(theme.border_focus .. "55")
@@ -117,7 +117,7 @@ function theme.titlebar_fun(c)
     }) : setup { layout = wibox.layout.align.horizontal, }
 end
 
-function theme.titlebar_fun_after(c)
+local function titlebar_after(c)
     -- if c.floating then return end
 
     local b_string_color = gears.color(theme.border_focus .. "55")
@@ -219,6 +219,8 @@ function theme.titlebar_fun_after(c)
         bgimage_focus = imgBot,
     }) : setup { layout = wibox.layout.align.horizontal, }
 end
+
+client.connect_signal("property::size", titlebar_after)
 -- }}}
 
 return theme

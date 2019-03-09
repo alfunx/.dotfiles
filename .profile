@@ -5,8 +5,12 @@
 # Discurses, coverage etc.
 export PATH="$PATH:$HOME/.local/bin"
 
+# lua
+export PATH="$HOME/.luarocks/bin:$PATH"
+
 # ruby
 export PATH="$HOME/.gem/ruby/2.5.0/bin:$PATH"
+export PATH="$HOME/.gem/ruby/2.6.0/bin:$PATH"
 
 # java
 export JAVA_HOME="/usr/lib/jvm/java-8-openjdk"

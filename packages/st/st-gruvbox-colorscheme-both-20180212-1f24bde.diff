@@ -1,0 +1,216 @@
+diff --git a/config.def.h b/config.def.h
+index 877afab..7305ec9 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -84,42 +84,54 @@ static unsigned int tabspaces = 8;
+ 
+ /* Terminal colors (16 first used in escape sequence) */
+ const char *colorname[] = {
+-	/* 8 normal colors */
+-	"black",
+-	"red3",
+-	"green3",
+-	"yellow3",
+-	"blue2",
+-	"magenta3",
+-	"cyan3",
+-	"gray90",
+-
+-	/* 8 bright colors */
+-	"gray50",
+-	"red",
+-	"green",
+-	"yellow",
+-	"#5c5cff",
+-	"magenta",
+-	"cyan",
+-	"white",
+-
+-	[255] = 0,
+-
+-	/* more colors can be added after 255 to use with DefaultXX */
+-	"#cccccc",
+-	"#555555",
++	/* gruvbox dark */
++	"#282828",  /*  0: black    */
++	"#cc241d",  /*  1: red      */
++	"#98971a",  /*  2: green    */
++	"#d79921",  /*  3: yellow   */
++	"#458588",  /*  4: blue     */
++	"#b16286",  /*  5: magenta  */
++	"#689d6a",  /*  6: cyan     */
++	"#a89984",  /*  7: white    */
++	"#928374",  /*  8: brblack  */
++	"#fb4934",  /*  9: brred    */
++	"#b8bb26",  /* 10: brgreen  */
++	"#fabd2f",  /* 11: bryellow */
++	"#83a598",  /* 12: brblue   */
++	"#d3869b",  /* 13: brmagenta*/
++	"#8ec07c",  /* 14: brcyan   */
++	"#ebdbb2",  /* 15: brwhite  */
+ };
+-
++ 
++/* Terminal colors for alternate (light) palette */
++const char *altcolorname[] = {
++	/* gruvbox light */
++	"#fbf1c7",  /*  0: black    */
++	"#cc241d",  /*  1: red      */
++	"#98971a",  /*  2: green    */
++	"#d79921",  /*  3: yellow   */
++	"#458588",  /*  4: blue     */
++	"#b16286",  /*  5: magenta  */
++	"#689d6a",  /*  6: cyan     */
++	"#7c6f64",  /*  7: white    */
++	"#928374",  /*  8: brblack  */
++	"#9d0006",  /*  9: brred    */
++	"#79740e",  /* 10: brgreen  */
++	"#b57614",  /* 11: bryellow */
++	"#076678",  /* 12: brblue   */
++	"#8f3f71",  /* 13: brmagenta*/
++	"#427b58",  /* 14: brcyan   */
++	"#3c3836",  /* 15: brwhite  */
++ };
+ 
+ /*
+  * Default colors (colorname index)
+  * foreground, background, cursor, reverse cursor
+  */
+-unsigned int defaultfg = 7;
+-unsigned int defaultbg = 0;
+-unsigned int defaultcs = 256;
+-unsigned int defaultrcs = 257;
++unsigned int defaultfg = 15;
++unsigned int defaultbg = 0;
++unsigned int defaultcs = 15;
++unsigned int defaultrcs = 15;
+ 
+ /*
+  * Default shape of cursor
+@@ -178,6 +190,7 @@ Shortcut shortcuts[] = {
+ 	{ TERMMOD,              XK_Y,           selpaste,       {.i =  0} },
+ 	{ TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
+ 	{ TERMMOD,              XK_I,           iso14755,       {.i =  0} },
++	{ TERMMOD,              XK_F6,          swapcolors,     {.i =  0} },
+ 	{ ShiftMask,            XK_Page_Up,     kscrollup,      {.i = -1} },
+ 	{ ShiftMask,            XK_Page_Down,   kscrolldown,    {.i = -1} },
+ };
+diff --git a/st.c b/st.c
+index 8d4a9f2..fc7d9a6 100644
+--- a/st.c
++++ b/st.c
+@@ -129,6 +129,7 @@ typedef struct {
+ static void clipcopy(const Arg *);
+ static void clippaste(const Arg *);
+ static void numlock(const Arg *);
++static void swapcolors(const Arg *);
+ static void selpaste(const Arg *);
+ static void zoom(const Arg *);
+ static void zoomabs(const Arg *);
+@@ -219,6 +220,8 @@ char *opt_name  = NULL;
+ char *opt_title = NULL;
+ int oldbutton   = 3; /* button event on startup: 3 = release */
+ 
++int usealtcolors = 0; /* 1 to use alternate palette */
++
+ static CSIEscape csiescseq;
+ static STREscape strescseq;
+ static int iofd = 1;
+@@ -233,7 +236,7 @@ static Rune utfmin[UTF_SIZ + 1] = {       0,    0,  0x80,  0x800,  0x10000};
+ static Rune utfmax[UTF_SIZ + 1] = {0x10FFFF, 0x7F, 0x7FF, 0xFFFF, 0x10FFFF};
+ 
+ /* config.h array lengths */
+-size_t colornamelen = LEN(colorname);
++size_t colornamelen = MAX(LEN(colorname), LEN(altcolorname));
+ size_t mshortcutslen = LEN(mshortcuts);
+ size_t shortcutslen = LEN(shortcuts);
+ size_t selmaskslen = LEN(selmasks);
+@@ -2631,6 +2634,14 @@ numlock(const Arg *dummy)
+ 	term.numlock ^= 1;
+ }
+ 
++void
++swapcolors(const Arg *dummy)
++{
++	usealtcolors = !usealtcolors;
++	xloadcols();
++	redraw();
++}
++
+ char*
+ kmap(KeySym k, uint state)
+ {
+diff --git a/st.h b/st.h
+index 44d4938..c464dd3 100644
+--- a/st.h
++++ b/st.h
+@@ -250,7 +250,9 @@ extern unsigned int cursorthickness;
+ extern unsigned int blinktimeout;
+ extern char termname[];
+ extern const char *colorname[];
++extern const char *altcolorname[];
+ extern size_t colornamelen;
++extern int usealtcolors;
+ extern unsigned int defaultfg;
+ extern unsigned int defaultbg;
+ extern unsigned int defaultcs;
+diff --git a/x.c b/x.c
+index fbfd350..886918b 100644
+--- a/x.c
++++ b/x.c
+@@ -138,6 +138,7 @@ static void (*handler[LASTEvent])(XEvent *) = {
+ /* Globals */
+ static DC dc;
+ static XWindow xw;
++
+ static XSelection xsel;
+ 
+ /* Font Ring Cache */
+@@ -573,6 +574,11 @@ sixd_to_16bit(int x)
+ 	return x == 0 ? 0 : 0x3737 + 0x2828 * x;
+ }
+ 
++const char* getcolorname(int i)
++{
++    return (usealtcolors) ?  altcolorname[i] : colorname[i];
++}
++
+ int
+ xloadcolor(int i, const char *name, Color *ncolor)
+ {
+@@ -591,7 +597,7 @@ xloadcolor(int i, const char *name, Color *ncolor)
+ 			return XftColorAllocValue(xw.dpy, xw.vis,
+ 			                          xw.cmap, &color, ncolor);
+ 		} else
+-			name = colorname[i];
++			name = getcolorname(i);
+ 	}
+ 
+ 	return XftColorAllocName(xw.dpy, xw.vis, xw.cmap, name, ncolor);
+@@ -614,8 +620,8 @@ xloadcols(void)
+ 
+ 	for (i = 0; i < dc.collen; i++)
+ 		if (!xloadcolor(i, NULL, &dc.col[i])) {
+-			if (colorname[i])
+-				die("Could not allocate color '%s'\n", colorname[i]);
++			if (getcolorname(i))
++				die("Could not allocate color '%s'\n", getcolorname(i));
+ 			else
+ 				die("Could not allocate color %d\n", i);
+ 		}
+@@ -950,13 +956,13 @@ xinit(void)
+ 	cursor = XCreateFontCursor(xw.dpy, mouseshape);
+ 	XDefineCursor(xw.dpy, xw.win, cursor);
+ 
+-	if (XParseColor(xw.dpy, xw.cmap, colorname[mousefg], &xmousefg) == 0) {
++	if (XParseColor(xw.dpy, xw.cmap, getcolorname(mousefg), &xmousefg) == 0) {
+ 		xmousefg.red   = 0xffff;
+ 		xmousefg.green = 0xffff;
+ 		xmousefg.blue  = 0xffff;
+ 	}
+ 
+-	if (XParseColor(xw.dpy, xw.cmap, colorname[mousebg], &xmousebg) == 0) {
++	if (XParseColor(xw.dpy, xw.cmap, getcolorname(mousebg), &xmousebg) == 0) {
+ 		xmousebg.red   = 0x0000;
+ 		xmousebg.green = 0x0000;
+ 		xmousebg.blue  = 0x0000;

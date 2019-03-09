@@ -7,8 +7,7 @@
 
 --]]
 
-local gears            = require("gears")
-local context          = require("config").context
+local t_util           = require("config.util_theme")
 local os, math, string = os, math, string
 
 local colors = { }
@@ -46,8 +45,7 @@ colors.bw_8             = "#504945"
 colors.bw_9             = "#3c3836"
 colors.bw_10            = "#282828"
 
-context.util.set_colors(colors)
-colors = context.colors
+colors = t_util.set_colors(colors)
 
 -- Use _dir to preserve parent theme.dir
 local theme = require("themes.blackout.theme")
@@ -55,8 +53,9 @@ theme.name = "whiteout"
 theme.alternative = "blackout"
 theme._dir = string.format("%s/.config/awesome/themes/%s", os.getenv("HOME"), theme.name)
 
-theme.wallpaper                                 = theme._dir .. "/wallpapers/wall.png"
--- theme.wallpaper                                 = theme._dir .. "/wallpapers/escheresque.png"
+-- theme.wallpaper                                 = theme._dir .. "/wallpapers/wall.png"
+theme.wallpaper                                 = theme._dir .. "/wallpapers/escheresque.png"
+-- theme.wallpaper_offset                          = 5
 
 theme.titlebar_close_button_focus               = theme._dir .. "/icons/titlebar/close_focus.png"
 theme.titlebar_close_button_normal              = theme._dir .. "/icons/titlebar/close_normal.png"
@@ -72,10 +71,8 @@ theme.titlebar_floating_button_focus_active     = theme._dir .. "/icons/titlebar
 theme.titlebar_floating_button_normal_active    = theme._dir .. "/icons/titlebar/floating_normal_active.png"
 theme.titlebar_floating_button_focus_inactive   = theme._dir .. "/icons/titlebar/floating_focus_inactive.png"
 theme.titlebar_floating_button_normal_inactive  = theme._dir .. "/icons/titlebar/floating_normal_inactive.png"
-theme.titlebar_minimize_button_focus_active     = theme._dir .. "/icons/titlebar/minimized_focus_active.png"
-theme.titlebar_minimize_button_normal_active    = theme._dir .. "/icons/titlebar/minimized_normal_active.png"
-theme.titlebar_minimize_button_focus_inactive   = theme._dir .. "/icons/titlebar/minimized_focus_inactive.png"
-theme.titlebar_minimize_button_normal_inactive  = theme._dir .. "/icons/titlebar/minimized_normal_inactive.png"
+theme.titlebar_minimize_button_focus            = theme._dir .. "/icons/titlebar/minimized_focus.png"
+theme.titlebar_minimize_button_normal           = theme._dir .. "/icons/titlebar/minimized_normal.png"
 theme.titlebar_maximized_button_focus_active    = theme._dir .. "/icons/titlebar/maximized_focus_active.png"
 theme.titlebar_maximized_button_normal_active   = theme._dir .. "/icons/titlebar/maximized_normal_active.png"
 theme.titlebar_maximized_button_focus_inactive  = theme._dir .. "/icons/titlebar/maximized_focus_inactive.png"

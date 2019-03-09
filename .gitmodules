@@ -1,21 +1,24 @@
-[submodule ".config/awesome/freedesktop"]
-	path = .config/awesome/freedesktop
-	url = https://github.com/lcpz/awesome-freedesktop.git
 [submodule ".config/awesome/lain"]
 	path = .config/awesome/lain
-	url = https://github.com/lcpz/lain.git
-[submodule ".config/ranger/colorschemes"]
-	path = .config/ranger/colorschemes
-	url = https://github.com/alfunx/ranger-colorschemes.git
+	url = https://github.com/copycat-killer/lain
+[submodule ".config/awesome/freedesktop"]
+	path = .config/awesome/freedesktop
+	url = https://github.com/copycat-killer/awesome-freedesktop
 [submodule ".config/zsh/custom/plugins/zsh-autosuggestions"]
 	path = .config/zsh/custom/plugins/zsh-autosuggestions
-	url = https://github.com/zsh-users/zsh-autosuggestions.git
+	url = https://github.com/zsh-users/zsh-autosuggestions
 [submodule ".config/zsh/custom/plugins/zsh-completions"]
 	path = .config/zsh/custom/plugins/zsh-completions
-	url = https://github.com/zsh-users/zsh-completions.git
+	url = https://github.com/zsh-users/zsh-completions
 [submodule ".config/zsh/custom/plugins/zsh-syntax-highlighting"]
 	path = .config/zsh/custom/plugins/zsh-syntax-highlighting
-	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
-[submodule "build/gdb-dashboard"]
-	path = build/gdb-dashboard
+	url = https://github.com/zsh-users/zsh-syntax-highlighting
+[submodule "projects/gdb-dashboard"]
+	path = projects/gdb-dashboard
 	url = https://github.com/alfunx/gdb-dashboard
+[submodule ".config/ranger/colorschemes"]
+	path = .config/ranger/colorschemes
+	url = https://github.com/alfunx/ranger-colorschemes
+[submodule ".config/awesome/yaawl"]
+	path = .config/awesome/yaawl
+	url = https://github.com/alfunx/yaawl

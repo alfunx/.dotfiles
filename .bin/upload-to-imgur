@@ -40,7 +40,7 @@ if [[ -z $delete_hash_file ]]; then
     echo "$link" | tee >(xclip -i -selection clipboard -rmlastnl > /dev/null 2>&1)
 
     notify-send \
-        --expire-time=5000 \
+        --expire-time=0 \
         --icon="$input_file" \
         'Upload to Imgur' \
         "Uploaded screenshot to\\n$link)"

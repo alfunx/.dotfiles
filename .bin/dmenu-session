@@ -25,6 +25,6 @@ case "$choice" in
     0) ~/.bin/lock & ;;
     1) systemctl suspend & ;;
     2) systemctl kill "$(pgrep X)" & ;;
-    3) systemctl /sbin/reboot & ;;
-    4) systemctl /sbin/poweroff & ;;
+    3) systemctl reboot & ;;
+    4) systemctl poweroff & ;;
 esac

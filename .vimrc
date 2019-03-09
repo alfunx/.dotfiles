@@ -88,7 +88,7 @@ Plug 'roxma/vim-hug-neovim-rpc'
 Plug 'roxma/nvim-yarp'
 Plug 'ncm2/ncm2'
 Plug 'ncm2/ncm2-bufword'
-Plug 'Shougo/echodoc.vim'
+"Plug 'Shougo/echodoc.vim'
 
 " Language specific
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
@@ -96,6 +96,9 @@ Plug 'lervag/vimtex', { 'for': ['latex', 'tex'] }
 Plug 'racer-rust/vim-racer', { 'for': 'rust' }
 Plug 'zchee/deoplete-clang', { 'for': ['c', 'cpp'] }
 Plug 'Shougo/neco-vim', { 'for': 'vim' }
+
+" Syntax
+Plug 'cespare/vim-toml'
 
 " Themes
 Plug 'alfunx/gruvbox'  " fork of 'morhetz/gruvbox'
@@ -106,9 +109,6 @@ Plug 'nvie/vim-flake8'
 
 " Custom - regular session saving
 Plug 'tpope/vim-obsession'
-
-" Custom - Automatic relative numbers
-Plug 'jeffkreeftmeijer/vim-numbertoggle'
 
 " Don't load in console
 if &term !=? 'linux' || has('gui_running')
@@ -205,6 +205,10 @@ nnoremap <silent> <leader>l :lopen<CR>
 inoremap <silent> <C-u> <C-g>u<C-u>
 inoremap <silent> àà <C-o>O
 inoremap <silent> éé <C-o>o
+
+"" Entire text-object
+xnoremap <silent> ie :<C-u>normal! G$Vgg0<CR>
+onoremap <silent> ie :<C-u>normal! G$Vgg0<CR>
 
 " Select last inserted text
 nnoremap gV `[v`]
@@ -491,7 +495,7 @@ map / <Plug>(incsearch-forward)
 map ? <Plug>(incsearch-backward)
 map g/ <Plug>(incsearch-stay)
 
-let g:incsearch#magic='\v'
+"let g:incsearch#magic='\v'
 let g:incsearch#smart_backward_word=1
 let g:incsearch#consistent_n_direction=1
 let g:incsearch#auto_nohlsearch=0
@@ -501,14 +505,15 @@ let g:incsearch#no_inc_hlsearch=1
 
 "" TComment
 let g:tcomment_mapleader1='<c-,>'
-nnoremap <leader>c V:TCommentInline<cr>
-xnoremap <leader>c :TCommentInline<cr>
+nnoremap <leader>c V:TCommentInline<CR>
+xnoremap <leader>c :TCommentInline<CR>
 
 "" Netrw
 let g:netrw_liststyle=0
 let g:netrw_preview=1
 
 "" EasyAlign
+xmap <CR> <Plug>(EasyAlign)
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
@@ -604,7 +609,7 @@ endfunction
 nnoremap <silent> _ mv:set opfunc=SendToTmuxSplit<CR>g@
 xnoremap <silent> _ mv:<C-U>call SendToTmuxSplit(visualmode(), 1)<CR>
 
-"" Ale
+"" ALE
 " Use special space: ( ) U+2000 (EN QUAD)
 let g:ale_set_loclist=1
 let g:ale_sign_error='●'
@@ -616,6 +621,7 @@ let g:ale_lint_on_save=1
 let g:ale_lint_on_filetype_changed=1
 let g:ale_set_highlights=1
 let g:ale_set_signs=1
+let g:ale_completion_enabled=1
 
 nmap [w <plug>(ale_previous_wrap)
 nmap ]w <plug>(ale_next_wrap)
@@ -628,9 +634,11 @@ augroup END
 
 "" AutoPairs
 execute "set <M-p>=\<Esc>p"
+execute "set <M-e>=\<Esc>e"
 execute "set <M-z>=\<Esc>z"
 let g:AutoPairsShortcutBackInsert='<M-z>'
-"let g:AutoPairs={'(':')', '[':']', '{':'}',"'":"'",'"':'"', '`':'`', '<':'>'}
+let g:AutoPairsMultilineClose=0
+let g:AutoPairs={'(':')', '[':']', '{':'}', "'":"'", '"':'"', "`":"`", '```':'```', '"""':'"""', "'''":"'''"}
 
 "" RustRacer
 let g:racer_cmd="/usr/bin/racer"
@@ -778,7 +786,6 @@ let g:rsi_no_meta=1
 
 set synmaxcol=800
 set number
-set relativenumber
 set showcmd
 set hidden
 set wildmenu
