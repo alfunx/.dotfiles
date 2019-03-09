@@ -48,8 +48,7 @@ uninstall-root:
 install-user:
 	cp -fs '$(HOME)'/.config/awesome/themes/blackout/wallpapers/wall.png '$(HOME)'/pictures/wall.png
 	cp -fs '$(HOME)'/.config/awesome/themes/blackout/wallpapers/lock.png '$(HOME)'/pictures/lock.png
-	cp -fs '$(HOME)'/projects/gdb-dashboard/.gdbinit '$(HOME)'/.gdbinit
-	cp -fs '$(HOME)'/projects/aurutils/contrib/vercmp-devel '$(HOME)'/.bin/aur-vercmp-devel
+	cp -fs '$(HOME)'/build/gdb-dashboard/.gdbinit '$(HOME)'/.gdbinit
 
 uninstall-user:
 	rm -f '$(HOME)'/pictures/wall.png
