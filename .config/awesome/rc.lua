@@ -98,8 +98,25 @@ awesome.connect_signal("debug::deprecation", function(hint, see, args) --luachec
 end)
 -- }}}
 
+-- {{{ Debug hints
+awesome.connect_signal("debug::index::miss", function(c, k) --luacheck: no unused
+    naughty.notify {
+        preset = naughty.config.presets.warn,
+        title = "Debug: Index miss",
+        text = table.concat { c, ".", k },
+    }
+end)
+awesome.connect_signal("debug::newindex::miss", function(c, k, v) --luacheck: no unused
+    naughty.notify {
+        preset = naughty.config.presets.warn,
+        title = "Debug: New index miss",
+        text = table.concat { c, ".", k, " = ", v },
+    }
+end)
+-- }}}
+
 -- {{{ Auto DPI
-awful.screen.set_auto_dpi_enabled(true)
+-- awful.screen.set_auto_dpi_enabled(true)
 -- }}}
 
 -- {{{ Utils

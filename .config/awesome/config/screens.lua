@@ -42,7 +42,7 @@ function _config.init()
         if xshift == 0 and yshift == 0 then
             return
         end
-        for _, c in ipairs(client.get(s)) do
+        for _, c in pairs(client.get(s)) do
             local cgeom = c:geometry()
             c:geometry{ x = cgeom.x + xshift, y = cgeom.y + yshift }
         end

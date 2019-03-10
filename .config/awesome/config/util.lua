@@ -80,9 +80,11 @@ function _config.init()
     function _config.tag_view_nonempty(direction, s)
        s = s or awful.screen.focused()
 
-       for _ = 1, #s.tags do
-           awful.tag.viewidx(direction, s)
-           if #s.clients > 0 then
+       local idx = s.selected_tag.index
+       for i = 1, #s.tags do
+           local t = s.tags[(idx + i * direction) % #s.tags]
+           if t and #t:clients() > 0 then
+               t:view_only()
                return
            end
        end
@@ -121,11 +123,11 @@ function _config.init()
     -- Move current tag
     -- pos in {-1, 1} <-> {previous, next} tag position
     function _config.move_tag(pos)
-        local tag = awful.screen.focused().selected_tag
+        local t = awful.screen.focused().selected_tag
         if tonumber(pos) <= -1 then
-            awful.tag.move(tag.index - 1, tag)
+            t.index = t.index - 1
         else
-            awful.tag.move(tag.index + 1, tag)
+            t.index = t.index + 1
         end
     end
 
@@ -144,7 +146,7 @@ function _config.init()
         -- Set titlebar visibility
         local set_titlebar = function(c, f)
             if beautiful.titlebar_positions then
-                for _, p in ipairs(beautiful.titlebar_positions) do
+                for _, p in pairs(beautiful.titlebar_positions) do
                     f(c, p)
                 end
             else
@@ -512,6 +514,37 @@ function _config.init()
         table.insert(awful.key.hotkeys, data)
 
         return { }
+    end
+
+    _config.global_history_get = function(s, idx, filter)
+        -- When this counter is equal to idx, we return the client
+        local counter = 0
+        for _, c in ipairs(awful.client.focus.history.list) do
+            if c.screen == s then
+                if not filter or filter(c) then
+                    for _, vcc in ipairs(s.all_clients) do
+                        if vcc == c then
+                            if counter == idx then
+                                return c
+                            end
+                            -- We found one, increment the counter only.
+                            counter = counter + 1
+                            break
+                        end
+                    end
+                end
+            end
+        end
+        -- Argh nobody found in history, give the first one visible if there is one
+        -- that passes the filter.
+        filter = filter or awful.client.focus.filter
+        if counter == 0 then
+            for _, v in ipairs(s.all_clients) do
+                if filter(v) then
+                    return v
+                end
+            end
+        end
     end
 
 end

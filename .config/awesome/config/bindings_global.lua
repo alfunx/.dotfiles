@@ -41,6 +41,8 @@ function _config.init()
                   { description = "quit awesome", group = "awesome" }),
         awful.key({ k.m, k.c           }, "z", function() brokers.lock:lock() end,
                   { description = "lock screen", group = "awesome" }),
+        awful.key({ k.m                }, "Escape", naughty.destroy_all_notifications,
+                  { description = "dismiss all notifications", group = "awesome" }),
 
         -- Switch to alternative theme
         awful.key({ k.m, k.a           }, "z", util.alternate_theme,
@@ -251,7 +253,7 @@ function _config.init()
             awful.client.cycle(false)
             awful.client.focus.byidx(1)
         end,
-                  { description = "counterclockwise cycle", group = "client" }),
+                  { description = "counter-clockwise cycle", group = "client" }),
         awful.key({ k.m, k.a           }, k.d, function()
             awful.client.cycle(true)
             awful.client.focus.byidx(-1)
@@ -265,7 +267,15 @@ function _config.init()
                 client.focus:raise()
             end
         end,
-                  { description = "go back", group = "client" }),
+                  { description = "toggle client", group = "client" }),
+        awful.key({ k.m, k.c           }, "Tab", function()
+            local c = util.global_history_get(awful.screen.focused(), 1)
+            if c then
+                c.first_tag:view_only()
+                c:emit_signal("request::activate", "ewmh", {raise=true})
+            end
+        end,
+                  { description = "toggle client (global)", group = "client" }),
 
         -- Restore minimized client
         awful.key({ k.m, k.c           }, "n", function()
@@ -276,6 +286,22 @@ function _config.init()
             end
         end,
                   { description = "restore minimized", group = "client" }),
+
+        -- Toggle all titlebars
+        awful.key({ k.m, k.c           }, "i", function()
+            for _, c in pairs(awful.screen.focused().clients) do
+                if not c.floating then util.toggle_titlebar(c) end
+            end
+        end,
+                  { description = "toggle all titlebars", group = "client" }),
+
+        -- Hide all titlebars
+        awful.key({ k.m, k.c, k.s      }, "i", function()
+            for _, c in pairs(awful.screen.focused().clients) do
+                if not c.floating then util.hide_titlebar(c) end
+            end
+        end,
+                  { description = "hide all titlebars", group = "client" }),
 
         -- Layout manipulation
         awful.key({ k.m, k.s           }, k.r, function() util.resize_horizontal(0.01) end,
@@ -321,7 +347,7 @@ function _config.init()
                   { description = "update widgets", group = "widget" }),
 
         -- Toggle hidden widget
-        awful.key({ k.m, k.c           }, "i", function()
+        awful.key({ k.m, k.a           }, "i", function()
             local s = awful.screen.focused()
             if not s._hidden_widget then return end
             s._hidden_widget.visible = not s._hidden_widget.visible

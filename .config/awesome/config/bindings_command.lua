@@ -24,13 +24,13 @@ function _config.init()
     awful.keygrabber {
         stop_key           = 'Escape',
         start_callback     = function()
-            -- for _, c in ipairs(awful.tag.selected():clients()) do
+            -- for _, c in pairs(awful.screen.focused().clients) do
             --     util.show_shade(c)
             -- end
         end,
         stop_callback      = function()
             util.set_mode()
-            -- for _, c in ipairs(awful.tag.selected():clients()) do
+            -- for _, c in pairs(awful.screen.focused().clients) do
             --     util.hide_shade(c)
             -- end
         end,
@@ -41,33 +41,43 @@ function _config.init()
         keybindings = {
 
             -- Focus / Move (by index)
-            { { k.m                }, k.u, function() awful.client.focus.byidx(-1) end,
-              { description = "focus previous client by index", group = "client" } },
-            { { k.m                }, k.d, function() awful.client.focus.byidx(1) end,
-              { description = "focus next client by index", group = "client" } },
-            { { k.m, k.s           }, string.upper(k.u), function() awful.client.swap.byidx(-1) end,
-              { description = "swap with previous client by index", group = "client" } },
-            { { k.m, k.s           }, string.upper(k.d), function() awful.client.swap.byidx(1) end,
-              { description = "swap with next client by index", group = "client" } },
+            -- { {                    }, k.u, function() awful.client.focus.byidx(-1) end,
+            --   { description = "focus previous client by index", group = "client" } },
+            -- { {                    }, k.d, function() awful.client.focus.byidx(1) end,
+            --   { description = "focus next client by index", group = "client" } },
+            -- { { k.s                }, string.upper(k.u), function() awful.client.swap.byidx(-1) end,
+            --   { description = "swap with previous client by index", group = "client" } },
+            -- { { k.s                }, string.upper(k.d), function() awful.client.swap.byidx(1) end,
+            --   { description = "swap with next client by index", group = "client" } },
+
+            -- Focus (by direction)
+            { {                    }, k.u, function() awful.client.focus.bydirection("up") end,
+              { description = "focus client above", group = "client" } },
+            { {                    }, k.d, function() awful.client.focus.bydirection("down") end,
+              { description = "focus client below", group = "client" } },
+            { {                    }, k.l, function() awful.client.focus.bydirection("left") end,
+              { description = "focus client left", group = "client" } },
+            { {                    }, k.r, function() awful.client.focus.bydirection("right") end,
+              { description = "focus client right", group = "client" } },
 
             -- Move
-            { {                    }, k.l, util.get_move_function("l"),
+            { { k.m                }, k.l, util.get_move_function("l"),
               { description = "move window left", group = "command mode" } },
-            { {                    }, k.d, util.get_move_function("d"),
+            { { k.m                }, k.d, util.get_move_function("d"),
               { description = "move window down", group = "command mode" } },
-            { {                    }, k.u, util.get_move_function("u"),
+            { { k.m                }, k.u, util.get_move_function("u"),
               { description = "move window up", group = "command mode" } },
-            { {                    }, k.r, util.get_move_function("r"),
+            { { k.m                }, k.r, util.get_move_function("r"),
               { description = "move window right", group = "command mode" } },
 
             -- Move (precise)
-            { { k.c                }, k.l, util.get_move_function("l", 1),
+            { { k.m, k.c           }, k.l, util.get_move_function("l", 1),
               { description = "move window left (precise)", group = "command mode" } },
-            { { k.c                }, k.d, util.get_move_function("d", 1),
+            { { k.m, k.c           }, k.d, util.get_move_function("d", 1),
               { description = "move window down (precise)", group = "command mode" } },
-            { { k.c                }, k.u, util.get_move_function("u", 1),
+            { { k.m, k.c           }, k.u, util.get_move_function("u", 1),
               { description = "move window up (precise)", group = "command mode" } },
-            { { k.c                }, k.r, util.get_move_function("r", 1),
+            { { k.m, k.c           }, k.r, util.get_move_function("r", 1),
               { description = "move window right (precise)", group = "command mode" } },
 
             -- Resize
@@ -159,6 +169,7 @@ function _config.init()
             { {                    }, "7", function() set_width_factor((7 / 2 + 2.5) / 10) end, },
             { {                    }, "8", function() set_width_factor((8 / 2 + 2.5) / 10) end, },
             { {                    }, "9", function() set_width_factor((9 / 2 + 2.5) / 10) end, },
+
         },
     }
 

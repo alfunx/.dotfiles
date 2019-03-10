@@ -270,8 +270,11 @@ theme.notification_shape                        = function(cr, w, h)
 naughty.config.padding                          = 15
 naughty.config.spacing                          = 10
 naughty.config.defaults.timeout                 = 5
-naughty.config.defaults.margin                  = theme.notification_margin
+naughty.config.defaults.font                    = theme.font
+naughty.config.defaults.fg                      = theme.notification_fg
+naughty.config.defaults.bg                      = theme.notification_bg
 naughty.config.defaults.border_width            = theme.notification_border_width
+naughty.config.defaults.margin                  = theme.notification_margin
 
 naughty.config.presets.normal                   = {
                                                       font         = theme.font,
@@ -281,9 +284,31 @@ naughty.config.presets.normal                   = {
                                                       margin       = theme.notification_margin,
                                                   }
 
-naughty.config.presets.low                      = naughty.config.presets.normal
-naughty.config.presets.ok                       = naughty.config.presets.normal
-naughty.config.presets.info                     = naughty.config.presets.normal
+naughty.config.presets.low                      = {
+                                                      font         = theme.font,
+                                                      fg           = theme.notification_fg,
+                                                      bg           = theme.notification_bg,
+                                                      border_width = theme.notification_border_width,
+                                                      margin       = theme.notification_margin,
+                                                  }
+
+naughty.config.presets.ok                       = {
+                                                      font         = theme.font,
+                                                      fg           = colors.aqua_2,
+                                                      bg           = theme.notification_bg,
+                                                      border_width = theme.notification_border_width,
+                                                      margin       = theme.notification_margin,
+                                                      timeout      = 0,
+                                                  }
+
+naughty.config.presets.info                     = {
+                                                      font         = theme.font,
+                                                      fg           = colors.blue_2,
+                                                      bg           = theme.notification_bg,
+                                                      border_width = theme.notification_border_width,
+                                                      margin       = theme.notification_margin,
+                                                      timeout      = 0,
+                                                  }
 
 naughty.config.presets.warn                     = {
                                                       font         = theme.font,
@@ -968,7 +993,8 @@ net_widget:buttons(awful.button({ }, 1, function()
     awful.spawn.with_line_callback(context.vars.scripts_dir .. "/show-ip-address -f", {
         stdout = function(line)
             net_text = net_text and table.concat { net_text, '\n', line } or line
-            naughty.replace_text(net_widget_notification, "Network", net_text)
+            -- naughty.replace_text(net_widget_notification, "Network", net_text)
+            net_widget_notification.text = net_text
         end,
     })
 end))
@@ -1066,46 +1092,47 @@ theme.titlebar_fn = function(c)
     local t = awful.titlebar(c, { size = 20, position = "top" })
     t:setup {
         {
-            -- Left
-            awful.titlebar.widget.stickybutton(c),
-            awful.titlebar.widget.ontopbutton(c),
             {
-                iconwidget(c),
-                buttons = buttons,
-                margins = 2,
-                widget = wibox.container.margin,
+                awful.titlebar.widget.stickybutton(c),
+                awful.titlebar.widget.ontopbutton(c),
+                {
+                    iconwidget(c),
+                    buttons = buttons,
+                    margins = 2,
+                    widget = wibox.container.margin,
+                },
+                layout = wibox.layout.fixed.horizontal,
             },
-            layout = wibox.layout.fixed.horizontal,
-        },
-        {
-            -- Middle
             {
                 {
                     {
-                        align = "center",
-                        widget = titlewidget(c),
+                        {
+                            align = "center",
+                            widget = titlewidget(c),
+                        },
+                        id = "_scroll",
+                        step_function = wibox.container.scroll.step_functions.linear_increase,
+                        speed = 80,
+                        extra_space = 50,
+                        widget = wibox.container.scroll.horizontal,
                     },
-                    id = "_scroll",
-                    step_function = wibox.container.scroll.step_functions.linear_increase,
-                    speed = 100,
-                    extra_space = 50,
-                    widget = wibox.container.scroll.horizontal,
+                    widget = wibox.container.place,
                 },
-                widget = wibox.container.place,
+                left = 6,
+                right = 6,
+                buttons = buttons,
+                widget = wibox.container.margin,
             },
-            left = 6,
-            right = 6,
-            buttons = buttons,
-            widget = wibox.container.margin,
+            {
+                awful.titlebar.widget.minimizebutton(c),
+                awful.titlebar.widget.maximizedbutton(c),
+                awful.titlebar.widget.closebutton(c),
+                layout = wibox.layout.fixed.horizontal,
+            },
+            layout = wibox.layout.align.horizontal,
         },
-        {
-            -- Right
-            awful.titlebar.widget.minimizebutton(c),
-            awful.titlebar.widget.maximizedbutton(c),
-            awful.titlebar.widget.closebutton(c),
-            layout = wibox.layout.fixed.horizontal,
-        },
-        layout = wibox.layout.align.horizontal,
+        bottom = theme.border_width / 2,
+        widget = wibox.container.margin,
     }
 
     local scroll = t:get_children_by_id("_scroll")[1]
