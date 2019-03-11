@@ -30,6 +30,8 @@ local _config = {
     signals = require("config.signals"),
     screens = require("config.screens"),
 
+    fix_startup_id = require("config.fix_startup_id"),
+
 }
 
 return _config

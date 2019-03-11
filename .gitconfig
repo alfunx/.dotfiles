@@ -1,7 +1,7 @@
 [user]
-	name = Alphonse Mariya
-	email = alphonse.mariya@hotmail.com
-	signingkey = alphonse.mariya@hotmail.com
+	name = toaster192
+	email = toastercz@gmail.com
+	signingkey = toastercz@gmail.com
 
 [core]
 	editor = vim
@@ -410,3 +410,6 @@
 
 [include]
 	path = .gitconfig-local
+
+[gpg]
+	program = gpg2

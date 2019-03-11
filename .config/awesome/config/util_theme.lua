@@ -45,7 +45,7 @@ function _config.init()
         screens.init()
 
         -- Reload border and titlebar colors
-        for _, c in ipairs(client.get()) do
+        for _, c in pairs(client.get()) do
             c:emit_signal("unfocus")
         end
         if client.focus then

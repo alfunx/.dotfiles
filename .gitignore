@@ -1,12 +1,12 @@
 # XDG user dirs
-Desktop/
-Documents/
-Downloads/
-Music/
+desktop/
+documents/
+downloads/
+music/
 #pictures/
-Public/
-Templates/
-Videos/
+public/
+templates/
+videos/
 # Security
 .gnupg/*
 !.gnupg/*.conf
