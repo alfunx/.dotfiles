@@ -27,9 +27,7 @@ install-root:
 	install -Dm755 aur-remove '$(DESTDIR)$(BINDIR)'/aur-remove
 	install -Dm755 aur-tmpfs '$(DESTDIR)$(BINDIR)'/aur-tmpfs
 	install -Dm755 aur-update '$(DESTDIR)$(BINDIR)'/aur-update
-	sudo cp -fs /usr/share/aurutils/contrib/vercmp-devel '$(DESTDIR)$(BINDIR)'/aur-vercmp-devel
-	# install -Dm755 pacman '$(DESTDIR)$(BINDIR)'/pacman
-	# install -Dm755 pacman '$(DESTDIR)$(BINDIR)'/update-pacman-widget
+	install -Dm755 update-pacman-widget '$(DESTDIR)$(BINDIR)'/update-pacman-widget
 
 uninstall-root:
 	rm -f '$(DESTDIR)$(BINDIR)'/lock
@@ -41,9 +39,7 @@ uninstall-root:
 	rm -f '$(DESTDIR)$(BINDIR)'/aur-remove
 	rm -f '$(DESTDIR)$(BINDIR)'/aur-tmpfs
 	rm -f '$(DESTDIR)$(BINDIR)'/aur-update
-	rm -f '$(DESTDIR)$(BINDIR)'/aur-vercmp-devel
-	# rm '$(DESTDIR)$(BINDIR)'/pacman
-	# rm '$(DESTDIR)$(BINDIR)'/update-pacman-widget
+	rm -f '$(DESTDIR)$(BINDIR)'/update-pacman-widget
 
 install-user:
 	cp -fs '$(HOME)'/.config/awesome/themes/blackout/wallpapers/wall.png '$(HOME)'/pictures/wall.png

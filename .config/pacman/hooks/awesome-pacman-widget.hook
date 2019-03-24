@@ -1,0 +1,11 @@
+[Trigger]
+Type = Package
+Operation = Install
+Operation = Upgrade
+Operation = Remove
+Target = *
+
+[Action]
+Description = Updating AwesomeWM pacman widget...
+When = PostTransaction
+Exec = /usr/local/bin/update-pacman-widget
