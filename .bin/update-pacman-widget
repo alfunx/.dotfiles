@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-dbus-send --dest=org.awesomewm.awful --type=method_call \
-    / org.awesomewm.awful.Remote.Eval \
-    string:'pacman = require("config.brokers").pacman; if pacman then pacman:update() end' \
-    &> /dev/null
+for userid in $(loginctl list-users | tail -n +2 | head -n -2 | cut -d' ' -f1); do
+    sudo -u "#$userid" \
+        env DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/"$userid"/bus \
+        awesome-client 'require("config.brokers").pacman:update()'
+done

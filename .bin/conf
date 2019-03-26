@@ -36,12 +36,6 @@ case $cmd in
             "$@"
         ;;
 
-    aur|aurutils)
-        vim \
-            ~/.bin/aur-* \
-            "$@"
-        ;;
-
     zsh)
         vim \
             ~/.zshrc \
@@ -67,7 +61,9 @@ case $cmd in
             ~/.config/awesome/themes/whiteout/theme.lua \
             ~/.config/awesome/config/**/* \
             ~/.config/awesome/widgets/**/* \
-            ~/.config/awesome/yaawl/**/* \
+            ~/.config/awesome/yaawl/* \
+            ~/.config/awesome/yaawl/brokers/* \
+            ~/.config/awesome/yaawl/util/* \
             "$@"
         ;;
 
