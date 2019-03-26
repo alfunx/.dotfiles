@@ -101,14 +101,14 @@ function _config.init()
         timeout = 401,
     }
 
-    -- Weather
-    _config.weather = yaawl.weather {
-        APPID = file.first_line(table.concat { context.vars.secrets_dir, "/openweathermap" }),
-        query = "Brno,CZ",
-    }
-    _config.weather:add_timer {
-        timeout = 3607,
-    }
+    -- -- Weather
+    -- _config.weather = yaawl.weather {
+    --     APPID = file.first_line(table.concat { context.vars.secrets_dir, "/openweathermap" }),
+    --     query = "Brno,CZ",
+    -- }
+    -- _config.weather:add_timer {
+    --     timeout = 3607,
+    -- }
 
     -- Net
     _config.net = yaawl.net {
@@ -177,7 +177,7 @@ function _config:update()
     self.temperature:update()
     self.drive:update()
     self.lock:update()
-    self.weather:update()
+    -- self.weather:update()
 end
 
 --------------------

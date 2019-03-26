@@ -15,7 +15,7 @@ local _config = { }
 function _config.init()
 
     _config.widget = widgets.sidebar {
-        mouse_toggle = true,
+        mouse_toggle = false,
         colors       = context.colors,
         vars         = context.vars,
     }

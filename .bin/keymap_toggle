@@ -2,7 +2,7 @@ CURRENT=`setxkbmap -query | awk '/layout:/ {print $2}'`
 
 if [[ $CURRENT == "us" ]]; then
 	notify-send "cz"
-	setxkbmap cz
+	setxkbmap cz -variant qwerty
 	xmodmap ~/.Xmodmap
 else
 	notify-send "us"

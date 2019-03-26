@@ -253,15 +253,15 @@ local function factory(args)
     -- m_symbol(daylight.arrow, "")
     m_symbol(daylight.arrow, "-")
 
-    brokers.weather:add_callback(function(x)
-        m_symbol(weather.icon, t_util.get_icon(x.data.weather[1].icon))
-        m_weather_text(weather.text, string.format("%s, %s°C", x.data.weather[1].description, x.data.main.temp))
-        m_weather_text(daylight.sun_text, os.date("%H:%M", x.data.sys.sunrise))
-        m_weather_text(daylight.moon_text, os.date("%H:%M", x.data.sys.sunset))
-    end)
-
-    weather:buttons(brokers.weather.buttons)
-    daylight:buttons(brokers.weather.buttons)
+    -- brokers.weather:add_callback(function(x)
+    --     m_symbol(weather.icon, t_util.get_icon(x.data.weather[1].icon))
+    --     m_weather_text(weather.text, string.format("%s, %s°C", x.data.weather[1].description, x.data.main.temp))
+    --     m_weather_text(daylight.sun_text, os.date("%H:%M", x.data.sys.sunrise))
+    --     m_weather_text(daylight.moon_text, os.date("%H:%M", x.data.sys.sunset))
+    -- end)
+    --
+    -- weather:buttons(brokers.weather.buttons)
+    -- daylight:buttons(brokers.weather.buttons)
     -- }}}
 
     -- {{{ AUDIO

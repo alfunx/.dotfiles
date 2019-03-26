@@ -34,10 +34,10 @@ fi
 # these get ingnored for whatever reason
 # amixer -c PCH set "Master" mute &
 # unclutter -root -reset &
-# redshift -c .config/redshift.conf &
+redshift -c .config/redshift.conf &
 # xcompmgr &
-# compton --config .config/compton.conf &
-# syndaemon -i 0.5 -t -K -R &
+compton --config .config/compton.conf &
+syndaemon -i 0.5 -K -R -d
 
 # select wm/de with: startx ~/.xinitrc session
 session=${1:-awesome}

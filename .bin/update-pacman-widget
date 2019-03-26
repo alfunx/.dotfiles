@@ -2,5 +2,5 @@
 
 dbus-send --dest=org.awesomewm.awful --type=method_call \
     / org.awesomewm.awful.Remote.Eval \
-    string:'pacman = require("beautiful").pacman; if pacman then pacman.update() end' \
+    string:'pacman = require("config.brokers").pacman; if pacman then pacman:update() end' \
     &> /dev/null

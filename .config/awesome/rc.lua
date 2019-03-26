@@ -154,26 +154,31 @@ config.screens.init()
 -- }}}
 
 -- {{{ Spawn
-context.util.run_once {
-    "redshift -c .config/redshift.conf &",
-}
-
-context.util.run_once {
-    "syndaemon -i 0.4 -K -R -d",
-}
-
-context.util.run_once {
-    "compton --config ~/.config/compton.conf &",
-}
-
--- util.spawn_once {
---     command = "kitty --class='kitty-main'",
---     class = "kitty-main",
---     tag = awful.screen.focused().tags[2],
---     callback = function(c)
---         c.maximized = true
---     end,
+-- context.util.run_once {
+--     "redshift -c .config/redshift.conf &",
 -- }
+--
+-- context.util.run_once {
+--     "syndaemon -i 0.4 -K -R -d",
+-- }
+--
+-- context.util.run_once {
+--     "compton --config ~/.config/compton.conf &",
+-- }
+--
+do
+  local cmds =
+  {
+    "redshift -c .config/redshift.conf",
+    "syndaemon -i 0.6 -K -R -d",
+    "compton --config ~/.config/compton.conf",
+    "kitty --class='kitty-main'",
+  }
+
+  for _,i in pairs(cmds) do
+    awful.spawn.with_shell(i)
+  end
+end
 
 -- util.spawn_once("subl", "Sublime_text", tags[1][2])
 -- util.spawn_once("chromium", "Chromium", tags[1][3])

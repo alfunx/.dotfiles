@@ -24,6 +24,9 @@ alias ssh='TERM=xterm-color ssh'
 alias eva='TERM=xterm-color ssh eva.fit.vutbr.cz'
 alias merlin='TERM=xterm-color ssh merlin.fit.vutbr.cz'
 
+alias cb='cd -'
+alias cl='clear'
+
 # show type,show almost all
 alias la='ls -FA'
 # long list,size,show type,human readable

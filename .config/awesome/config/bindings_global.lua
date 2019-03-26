@@ -39,7 +39,7 @@ function _config.init()
                   { description = "reload awesome", group = "awesome" }),
         awful.key({ k.m, k.c           }, "q", awesome.quit,
                   { description = "quit awesome", group = "awesome" }),
-        awful.key({ k.m, k.c           }, "z", function() brokers.lock:lock() end,
+        awful.key({ k.m, k.c           }, "z", function() awful.spawn("sync"); awful.spawn("lock") end,
                   { description = "lock screen", group = "awesome" }),
         awful.key({ k.m                }, "Escape", naughty.destroy_all_notifications,
                   { description = "dismiss all notifications", group = "awesome" }),
@@ -56,12 +56,13 @@ function _config.init()
                   { description = "open a floating terminal", group = "launcher" }),
         awful.key({ k.m                }, "b", function() awful.spawn(context.vars.browser) end,
                   { description = "open browser", group = "launcher" }),
-        awful.key({ k.m                }, "e", function() awful.spawn("thunderbird") end,
-                  { description = "open email client", group = "launcher" }),
-        awful.key({ k.m                }, "w", function() awful.spawn("Whatsapp") end,
-                  { description = "open whatsapp", group = "launcher" }),
-        awful.key({ k.m                }, "p", function() awful.spawn("arandr") end,
-                  { description = "open arandr", group = "launcher" }),
+        awful.key({ k.m                }, "d", function() awful.spawn("discord") end,
+                  { description = "open discord", group = "launcher" }),
+        awful.key({ k.m                }, "e", function() awful.spawn("spotify") end,
+                  { description = "open spotify", group = "launcher" }),
+        awful.key({ k.m,               }, "w", function() awful.spawn("kitty -e sudo wifi-menu",
+                  { floating = true, placement = awful.placement.centered }) end,
+                  { description = "open wifi-menu", group = "launcher" }),
 
         -- Screenshot
         awful.key({                    }, "Print", function()
@@ -99,7 +100,7 @@ function _config.init()
         -- awful.key({ k.m                }, "v", function() awful.spawn("xsel -b | xsel") end),
 
         -- Sidebar
-        awful.key({ k.m, k.c           }, "^", function() sidebar.widget:toggle() end,
+        awful.key({ k.m, k.c           }, "/", function() sidebar.widget:toggle() end,
                   { description = "toggle sidebar", group = "awesome" }),
 
         -- Prompt
@@ -107,7 +108,7 @@ function _config.init()
                   { description = "run prompt", group = "launcher" }),
         awful.key({ k.m, k.a           }, "p", function() menubar.show() end,
                   { description = "show the menubar", group = "launcher" }),
-        awful.key({ k.m                }, "-", function()
+        awful.key({ k.m                }, ",", function()
             awful.spawn.easy_async("rofi -show drun", function() end)
         end,
                   { description = "show application menu (rofi)", group = "launcher" }),
@@ -115,7 +116,7 @@ function _config.init()
             awful.spawn.easy_async("rofi -show run", function() end)
         end,
                   { description = "show commands menu (rofi)", group = "launcher" }),
-        awful.key({ k.m                }, "$", function()
+        awful.key({ k.m                }, "/", function()
             awful.spawn.easy_async(table.concat { context.vars.scripts_dir, "/rofi-session" }, function() end)
         end,
                   { description = "show session menu (rofi)", group = "launcher" }),
@@ -303,6 +304,11 @@ function _config.init()
         end,
                   { description = "hide all titlebars", group = "client" }),
 
+        -- Keyboard layout
+        awful.key({ k.m                }, "c", function()
+                    awful.spawn("keymap_toggle") end,
+                  { description = "Switch keyboard layout", group = "client" }),
+
         -- Layout manipulation
         awful.key({ k.m, k.s           }, k.r, function() util.resize_horizontal(0.01) end,
                   { description = "increase master width factor", group = "layout" }),
@@ -392,36 +398,36 @@ function _config.init()
         end),
         awful.key({ k.c                }, "XF86MonBrightnessDown", function()
             brokers.brightness:set_min()
-        end),
-
-        -- MPD control
-        awful.key({                    }, "XF86AudioPlay", function()
-            awful.spawn.with_shell("mpc toggle")
-            brokers.mpd.update()
-        end),
-        awful.key({ k.c                }, "XF86AudioPlay", function()
-            awful.spawn.with_shell("mpc stop")
-            brokers.mpd.update()
-        end),
-        awful.key({                    }, "XF86AudioPrev", function()
-            awful.spawn.with_shell("mpc prev")
-            brokers.mpd.update()
-        end),
-        awful.key({                    }, "XF86AudioNext", function()
-            awful.spawn.with_shell("mpc next")
-            brokers.mpd.update()
-        end),
-        awful.key({ k.a                }, "0", function()
-            local common = { text = "MPD widget ", position = "top_middle", timeout = 2 }
-            if brokers.mpd.timer.started then
-                brokers.mpd.timer:stop()
-                common.text = table.concat { common.text, markup.bold("OFF") }
-            else
-                brokers.mpd.timer:start()
-                common.text = table.concat { common.text, markup.bold("ON") }
-            end
-            naughty.notify(common)
         end)
+
+        -- -- MPD control
+        -- awful.key({                    }, "XF86AudioPlay", function()
+        --     awful.spawn.with_shell("mpc toggle")
+        --     brokers.mpd.update()
+        -- end),
+        -- awful.key({ k.c                }, "XF86AudioPlay", function()
+        --     awful.spawn.with_shell("mpc stop")
+        --     brokers.mpd.update()
+        -- end),
+        -- awful.key({                    }, "XF86AudioPrev", function()
+        --     awful.spawn.with_shell("mpc prev")
+        --     brokers.mpd.update()
+        -- end),
+        -- awful.key({                    }, "XF86AudioNext", function()
+        --     awful.spawn.with_shell("mpc next")
+        --     brokers.mpd.update()
+        -- end),
+        -- awful.key({ k.a                }, "0", function()
+        --     local common = { text = "MPD widget ", position = "top_middle", timeout = 2 }
+        --     if brokers.mpd.timer.started then
+        --         brokers.mpd.timer:stop()
+        --         common.text = table.concat { common.text, markup.bold("OFF") }
+        --     else
+        --         brokers.mpd.timer:start()
+        --         common.text = table.concat { common.text, markup.bold("ON") }
+        --     end
+        --     naughty.notify(common)
+        -- end)
     )
 
     -- Bind number keys

@@ -372,7 +372,7 @@ local clock_widget = wibox.widget {
 
 -- {{{ CALENDAR
 lain.widget.cal {
-    cal = "cal --color=always --monday",
+    cal = "/usr/bin/env TERM=linux /usr/bin/cal --color=always --monday",
     attach_to = { clock_widget },
     icons = "",
     notification_preset = naughty.config.presets.normal,
@@ -790,28 +790,28 @@ end)
 drive_widget:buttons(brokers.drive.buttons)
 -- }}}
 
--- {{{ LOCK
-local lock_widget = wibox.widget {
-    space,
-    {
-        id = "icon",
-        image = theme.widget_lock,
-        widget = wibox.widget.imagebox,
-    },
-    space,
-    layout = wibox.layout.fixed.horizontal,
-}
-
-brokers.lock:add_callback(function(x)
-    if x.enabled then
-        lock_widget.icon:set_image(theme.widget_lock)
-    else
-        lock_widget.icon:set_image(theme.widget_unlock)
-    end
-end)
-
-lock_widget:buttons(brokers.lock.buttons)
--- }}}
+-- -- {{{ LOCK
+-- local lock_widget = wibox.widget {
+--     space,
+--     {
+--         id = "icon",
+--         image = theme.widget_lock,
+--         widget = wibox.widget.imagebox,
+--     },
+--     space,
+--     layout = wibox.layout.fixed.horizontal,
+-- }
+--
+-- brokers.lock:add_callback(function(x)
+--     if x.enabled then
+--         lock_widget.icon:set_image(theme.widget_lock)
+--     else
+--         lock_widget.icon:set_image(theme.widget_unlock)
+--     end
+-- end)
+--
+-- lock_widget:buttons(brokers.lock.buttons)
+-- -- }}}
 
 -- {{{ AUDIO
 local audio_widget = wibox.widget {
@@ -902,29 +902,29 @@ battery_widget:buttons(brokers.battery.buttons)
 -- }}}
 
 -- {{{ WEATHER
-local weather_widget = wibox.widget {
-    space,
-    {
-        id = "icon",
-        align = "center",
-        widget = wibox.widget.textbox,
-    },
-    space, space,
-    {
-        id = "text",
-        align = "center",
-        widget = wibox.widget.textbox,
-    },
-    space,
-    layout = wibox.layout.fixed.horizontal,
-}
-
-brokers.weather:add_callback(function(x)
-    m_symbol(weather_widget.icon, t_util.get_icon(x.data.weather[1].icon))
-    m_text(weather_widget.text, x.data.main.temp)
-end)
-
-weather_widget:buttons(brokers.weather.buttons)
+-- local weather_widget = wibox.widget {
+--     space,
+--     {
+--         id = "icon",
+--         align = "center",
+--         widget = wibox.widget.textbox,
+--     },
+--     space, space,
+--     {
+--         id = "text",
+--         align = "center",
+--         widget = wibox.widget.textbox,
+--     },
+--     space,
+--     layout = wibox.layout.fixed.horizontal,
+-- }
+--
+-- brokers.weather:add_callback(function(x)
+--     m_symbol(weather_widget.icon, t_util.get_icon(x.data.weather[1].icon))
+--     m_text(weather_widget.text, x.data.main.temp)
+-- end)
+--
+-- weather_widget:buttons(brokers.weather.buttons)
 -- }}}
 
 -- {{{ NET
@@ -1341,7 +1341,7 @@ function theme.at_screen_connect(s)
     -- {{{ HIDDEN WIDGET
     s._hidden_widget = wibox.widget {
         space, vert_sep, vert_sep,
-        space, weather_widget, space,
+        -- space, weather_widget, space,
 
         vert_sep,
         space,
@@ -1447,9 +1447,9 @@ function theme.at_screen_connect(s)
                     -- Right
                     vert_sep,
 
-                    lock_widget,
-
-                    vert_sep,
+                    -- lock_widget,
+                    --
+                    -- vert_sep,
 
                     pacman_widget,
                     users_widget,
