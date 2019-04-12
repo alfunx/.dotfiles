@@ -22,7 +22,7 @@ case $cmd in
     tmux)
         vim \
             ~/.tmux.conf \
-            ~/.tmux.minimal.conf \
+            ~/.config/tmux/**/* \
             "$@"
         ;;
 
