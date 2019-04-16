@@ -10,13 +10,11 @@ if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
     exit 1
 fi
 
-# --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"
+ctrl_m="echo {} \
+    | grep -o '[a-f0-9]\\{7,\\}' \
+    | xargs git show --color=always"
 
-git log --format=oneline --abbrev-commit --all --decorate --color=always \
-    --graph "$@" \
-    | fzf +s +m -e --ansi --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
-    --bind "ctrl-m:execute:
-(grep -o '[a-f0-9]\\{7\\}' | head -1 |
-    xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
-{}
-FZF-EOF"
+git log --pretty=lo --graph --color --date=human "$@" \
+    | fzf +s +m +e --ansi --reverse --tiebreak=index \
+    --bind "ctrl-s:toggle-sort" \
+    --bind "ctrl-m:execute:(${ctrl_m})"

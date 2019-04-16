@@ -393,14 +393,16 @@
 	# generate tags file
 	ctags = "!$HOME/.config/git/hooks/ctags"
 
+	# create/extend gitignore file
+	gitignore = gitignore
+
 	# fzf commands
 	fbr = fzf-branch
 	fco = fzf-checkout
-	fcoc = fzf-checkout-commit
+	fcoc = "!f() { git fzf-print-sha | xargs git checkout; }; f"
 	fsha = fzf-print-sha
 	fshow = fzf-show-commit
 	fstash = fzf-show-stash
-	gitignore = gitignore
 
 [svn]
 	rmdir = true
