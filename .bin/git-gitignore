@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+fzf() {
+    fzf-tmux -d 30% -- "$@"
+}
+
+fd --print0 '.gitignore$' "$HOME/projects/gitignore" \
+    | sed --null-data 's/\.gitignore$//' \
+    | fzf --read0 --print0 +s -m -d '/' --with-nth=-1 \
+    | xargs --null -I@ -r cat '@.gitignore' \
+    >> .gitignore
