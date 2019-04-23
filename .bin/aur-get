@@ -10,4 +10,6 @@ aur sync \
     -M "$HOME"/.config/pacman/makepkg.conf \
     "$@"
 
+awesome-client 'require("config.brokers").pacman:update()'
+
 # vim: set et sw=4 sts=4 ft=sh:
