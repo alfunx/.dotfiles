@@ -7,6 +7,7 @@ alacritty-terminfo
 alsa-utils
 arandr
 arch-wiki-lite
+asciidoctor
 asciinema
 asp
 audacity
@@ -15,10 +16,12 @@ automake
 avahi
 bash
 bash-completion
+bash-language-server
 binutils
 bison
 bluez
 bluez-utils
+bolt
 boost
 bzip2
 chromium
@@ -57,6 +60,7 @@ firefox
 firewalld
 flex
 fontconfig
+freetype2
 freetype2-docs
 fzf
 gawk
@@ -73,6 +77,7 @@ git-lfs
 glances
 glibc
 gnome-keyring
+go-ethereum
 gpick
 grep
 groff
@@ -171,6 +176,10 @@ powertop
 procps-ng
 proselint
 psmisc
+pulseaudio
+pulseaudio-alsa
+pulseaudio-bluetooth
+pulsemixer
 pygmentize
 python
 python-jedi
@@ -180,8 +189,14 @@ python-matplotlib
 python-neovim
 python-pandas
 python-pip
+python-pycodestyle
+python-pydocstyle
 python-pyflakes
 python-pylint
+python-rangehttpserver
+python-rope
+python-scikit-learn
+python-seaborn
 python2-jedi
 python2-neovim
 qt5ct
@@ -201,6 +216,7 @@ sed
 shadow
 shellcheck
 smartmontools
+solidity
 speedtest-cli
 sshfs
 stack
@@ -240,6 +256,7 @@ ttf-freefont
 ufw
 unclutter
 unzip
+upower
 usbutils
 util-linux
 valgrind
@@ -268,14 +285,16 @@ xorg-twm
 xorg-xbacklight
 xorg-xclock
 xorg-xev
+xorg-xeyes
 xorg-xhost
 xorg-xinit
 xorg-xinput
 xorg-xlsfonts
 xorg-xprop
 xorg-xrandr
+xorg-xwininfo
 xterm
 youtube-dl
 zathura
-zathura-pdf-mupdf
+zathura-pdf-poppler
 zsh

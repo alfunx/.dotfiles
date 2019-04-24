@@ -2,7 +2,7 @@
 
 _pkgname=awesome
 pkgname=$_pkgname-luajit-git
-pkgver=4.3.r97.g36d7535cd
+pkgver=4.3.r218.g755c44ca5
 pkgrel=1
 pkgdesc="Highly configurable framework window manager, built with luajit"
 arch=('i686' 'x86_64')
