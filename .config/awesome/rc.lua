@@ -148,6 +148,7 @@ config.sidebar.init()
 -- }}}
 
 -- {{{ Configs
+config.wallpaper.init()
 config.rules.init()
 config.signals.init()
 config.screens.init()

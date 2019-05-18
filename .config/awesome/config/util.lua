@@ -379,43 +379,6 @@ function _config.init()
         end
     end
 
-    -- Blur wallpaper (only set if theme has blurred wallpaper)
-    if beautiful.wallpaper_blur or beautiful.wallpaper_offset then
-        _config.set_wallpaper = function(clients)
-            local w
-            if clients > 0 and beautiful.wallpaper_blur then
-                w = beautiful.wallpaper_blur
-            elseif beautiful.wallpaper then
-                w = beautiful.wallpaper
-            end
-
-            -- If 'w' is a function, call it with the screen
-            if type(w) == "function" then
-                w = w(client.screen)
-            end
-
-            local offset = - (tonumber(awful.screen.focused().selected_tag.index) - 1)
-                           * (beautiful.wallpaper_offset or 0)
-            gears.wallpaper.tiled(w, client.screen, {x = offset})
-        end
-
-        screen.connect_signal("tag::history::update", function(s)
-            _config.set_wallpaper(#s.clients)
-        end)
-
-        client.connect_signal("tagged", function(c)
-            _config.set_wallpaper(#c.screen.clients)
-        end)
-
-        client.connect_signal("untagged", function(c)
-            _config.set_wallpaper(#c.screen.clients)
-        end)
-
-        client.connect_signal("property::minimized", function(c)
-            _config.set_wallpaper(#c.screen.clients)
-        end)
-    end
-
     -- Show widget on mouse::enter on parent, hide after mouse::leave + timeout
     _config.show_on_mouse = function(parent, widget, timeout)
         local t = gears.timer {
