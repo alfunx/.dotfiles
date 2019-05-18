@@ -27,12 +27,14 @@ function _config.init()
 
     -- Signal function to execute when a new client appears
     client.connect_signal("manage", function(c)
-        -- Set the windows at the slave
-        -- if not awesome.startup then awful.client.setslave(c) end
+        -- Set the windows as slave
+        if context.vars.start_as_slave and not awesome.startup then
+            awful.client.setslave(c)
+        end
 
-        if awesome.startup and
-            not c.size_hints.user_position
-            and not c.size_hints.program_position then
+        if awesome.startup
+                and not c.size_hints.user_position
+                and not c.size_hints.program_position then
             -- Prevent clients from being unreachable after screen count changes
             awful.placement.no_offscreen(c)
         end
@@ -152,23 +154,48 @@ function _config.init()
     end)
 
     tag.connect_signal("request::screen", function(t)
-        local fallback_tag
-
-        -- Find tag with same name on any other screen
-        for s in screen do
-            if s ~= t.screen then
-                fallback_tag = awful.tag.find_by_name(s, t.name)
-                if fallback_tag then break end
-            end
+        -- Delete empty tags (with numeric name)
+        if not next(t:clients()) and tonumber(t.name) then
+            t:delete(nil, true)
+            return
         end
 
-        -- No tag with same name exists, chose random one
+        -- Find fallback tag
+        local fallback_tag
+
+        if context.vars.merge_tags then
+            -- Find tag with same name on any other screen
+            for s in screen do
+                if s ~= t.screen then
+                    fallback_tag = awful.tag.find_by_name(s, t.name)
+                    if fallback_tag then break end
+                end
+            end
+        else
+            -- Create volatile tag with same name on primary screen
+            fallback_tag = awful.tag.add(t.name, {
+                screen = screen.primary,
+                layout = t.layout,
+                volatile = true,
+            })
+        end
+
+        -- No fallback tag, chose random one
         if not fallback_tag then
             fallback_tag = awful.tag.find_fallback()
         end
 
         -- Delete the tag and move it to other screen
         t:delete(fallback_tag, true)
+
+        -- Move floating clients into screen
+        for _, c in pairs(fallback_tag:clients()) do
+            if c.floating then
+                awful.placement.no_offscreen(c, {
+                    screen = fallback_tag.screen,
+                })
+            end
+        end
     end)
 
     -- Enable sloppy focus, so that focus follows mouse

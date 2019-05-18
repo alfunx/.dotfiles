@@ -21,6 +21,13 @@ local _config = { }
 
 function _config.init()
 
+    -- placement, that should be applied after setting x/y/width/height/geometry
+    function awful.rules.delayed_properties.delayed_placement(c, value, props) --luacheck: no unused
+        if props.delayed_placement then
+            awful.rules.extra_properties.placement(c, props.delayed_placement, props)
+        end
+    end
+
     -- Rules to apply to new clients (through the "manage" signal)
     awful.rules.rules = {
 
@@ -37,6 +44,7 @@ function _config.init()
                 screen            = awful.screen.preferred,
                 placement         = awful.placement.no_offscreen
                                   + awful.placement.no_overlap,
+                delayed_placement = awful.placement.centered,
                 size_hints_honor  = false,
                 titlebars_enabled = true,
             },
@@ -60,7 +68,6 @@ function _config.init()
                 class = "Thunderbird",
             },
             properties = {
-                screen = 1,
                 tag    = tags.names[6],
             },
         },
@@ -70,7 +77,6 @@ function _config.init()
                 class = "Gimp-2.10",
             },
             properties = {
-                screen = 1,
                 tag    = tags.names[7],
             },
         },
@@ -80,38 +86,7 @@ function _config.init()
                 class = "VirtualBox",
             },
             properties = {
-                screen = 1,
                 tag    = tags.names[8],
-            },
-        },
-
-        {
-            rule = {
-                class = "Firefox",
-                role  = "toolbox",
-            },
-            properties = {
-                floating = true,
-            },
-        },
-
-        {
-            rule = {
-                class = "Chromium",
-                role  = "pop-up",
-            },
-            properties = {
-                floating = true,
-            },
-        },
-
-        {
-            rule = {
-                class = "Chrome",
-                role  = "pop-up",
-            },
-            properties = {
-                floating = true,
             },
         },
 
@@ -120,7 +95,7 @@ function _config.init()
                 class = "Arandr",
             },
             properties = {
-                width  = 500,
+                width  = 600,
                 height = 400,
             },
         },
@@ -140,11 +115,23 @@ function _config.init()
                     "Pinentry",
                     "Event Tester",
                     "alsamixer",
+                    "pulsemixer",
                     "Arandr",
                 },
                 name = {
                     "Event Tester",
                     "Page Unresponsive",
+                },
+                role = {
+                    "AlarmWindow",
+                    "ConfigManager",
+                    "toolbox",
+                    "pop-up",
+                },
+                instance = {
+                    "DTA",
+                    "copyq",
+                    "pinentry",
                 },
             },
             properties = {
@@ -154,13 +141,6 @@ function _config.init()
         },
 
     }
-
-    -- placement, that should be applied after setting x/y/width/height/geometry
-    function awful.rules.delayed_properties.delayed_placement(c, value, props) --luacheck: no unused
-        if props.delayed_placement then
-            awful.rules.extra_properties.placement(c, props.delayed_placement, props)
-        end
-    end
 
 end
 

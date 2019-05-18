@@ -13,6 +13,7 @@ local pairs, ipairs, string, os, table, math, tostring, tonumber, type = pairs, 
 
 local awful = require("awful")
 local lain = require("lain")
+local treetile = require("treetile")
 
 local _config = { }
 
@@ -78,10 +79,10 @@ function _config.init()
         --awful.layout.suit.max.fullscreen,
         awful.layout.suit.tile,
         awful.layout.suit.tile.left,
-        -- awful.layout.suit.tile.bottom,
-        -- awful.layout.suit.tile.top,
+        --awful.layout.suit.tile.bottom,
+        --awful.layout.suit.tile.top,
         awful.layout.suit.fair,
-        -- awful.layout.suit.fair.horizontal,
+        --awful.layout.suit.fair.horizontal,
         --awful.layout.suit.spiral,
         --awful.layout.suit.spiral.dwindle,
         awful.layout.suit.magnifier,
@@ -89,13 +90,14 @@ function _config.init()
         --awful.layout.suit.corner.ne,
         --awful.layout.suit.corner.sw,
         --awful.layout.suit.corner.se,
-        -- lain.layout.cascade,
+        --lain.layout.cascade,
         lain.layout.cascade.tile,
         lain.layout.centerwork,
         --lain.layout.centerwork.horizontal,
         --lain.layout.termfair,
         --lain.layout.termfair.center,
         awful.layout.suit.floating,
+        treetile,
     }
 
     _config.layouts = {
@@ -110,6 +112,8 @@ function _config.init()
         awful.layout.suit.floating,
     }
 
+    _config.main_layout = awful.layout.suit.tile
+
     lain.layout.termfair.nmaster           = 3
     lain.layout.termfair.ncol              = 1
     lain.layout.termfair.center.nmaster    = 3
@@ -119,6 +123,8 @@ function _config.init()
     lain.layout.cascade.tile.extra_padding = 5
     lain.layout.cascade.tile.nmaster       = 3
     lain.layout.cascade.tile.ncol          = 2
+
+    treetile.debug = true
 
 end
 

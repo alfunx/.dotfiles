@@ -38,8 +38,6 @@ function _config.init()
         -- Awesome Hotkeys
         awful.key({ k.m, k.c           }, "s", hotkeys_popup.show_help,
                   { description = "show help", group = "awesome" }),
-        awful.key({ k.m, k.c           }, "o", function() menu.main:show() end,
-                  { description = "show main menu", group = "awesome" }),
         awful.key({ k.m, k.c           }, "r", awesome.restart,
                   { description = "reload awesome", group = "awesome" }),
         awful.key({ k.m, k.c           }, "q", awesome.quit,
@@ -143,6 +141,8 @@ function _config.init()
                   { description = "focus the previous screen", group = "screen" }),
         awful.key({ k.c, k.a           }, k.r, function() awful.screen.focus_relative(1) end,
                   { description = "focus the next screen", group = "screen" }),
+        awful.key({ k.m                }, "g", function() awful.screen.focus_relative(1) end,
+                  { description = "focus the next screen", group = "screen" }),
 
         -- -- Tag browsing
         -- awful.key({ k.c, k.a           }, k.l, awful.tag.viewprev,
@@ -180,7 +180,7 @@ function _config.init()
             for i = 1, tags.columns or #tags.names do
                 awful.tag.add(tostring(i), {
                     screen = awful.screen.focused(),
-                    layout = awful.layout.suit.tile,
+                    layout = tags.main_layout,
                 })
             end
             -- awful.screen.focused()._taglist_popup:show()
@@ -258,12 +258,12 @@ function _config.init()
             awful.client.cycle(false)
             awful.client.focus.byidx(1)
         end,
-                  { description = "counter-clockwise cycle", group = "client" }),
+                  { description = "counter-clockwise cycle", group = "tag" }),
         awful.key({ k.m, k.a           }, k.d, function()
             awful.client.cycle(true)
             awful.client.focus.byidx(-1)
         end,
-                  { description = "clockwise cycle", group = "client" }),
+                  { description = "clockwise cycle", group = "tag" }),
 
         -- Toggle between clients
         awful.key({ k.m                }, "Tab", function()
@@ -277,7 +277,7 @@ function _config.init()
             local c = util.global_history_get(awful.screen.focused(), 1)
             if c then
                 c.first_tag:view_only()
-                c:emit_signal("request::activate", "ewmh", {raise=true})
+                c:emit_signal("request::activate", "ewmh", { raise = true })
             end
         end,
                   { description = "toggle client (global)", group = "client" }),
@@ -365,7 +365,7 @@ function _config.init()
         end,
                   { description = "show weather notification", group = "widget" }),
 
-        -- ALSA volume control
+        -- Volume
         awful.key({                    }, "XF86AudioRaiseVolume", function()
             brokers.audio:increase()
         end),
@@ -385,7 +385,7 @@ function _config.init()
             brokers.audio:off()
         end),
 
-        -- Backlight / Brightness
+        -- Brightness
         awful.key({                    }, "XF86MonBrightnessUp", function()
             brokers.brightness:increase()
         end),
@@ -416,7 +416,7 @@ function _config.init()
             awful.spawn.with_shell("mpc next")
             brokers.mpd.update()
         end),
-        awful.key({ k.a                }, "0", function()
+        awful.key({ k.m                }, "0", function()
             local common = { text = "MPD widget ", position = "top_middle", timeout = 2 }
             if brokers.mpd.timer.started then
                 brokers.mpd.timer:stop()

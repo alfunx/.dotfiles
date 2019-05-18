@@ -7,6 +7,8 @@
 
 --]]
 
+local gears            = require("gears")
+
 local t_util           = require("config.util_theme")
 local os, math, string = os, math, string
 
@@ -53,9 +55,9 @@ theme.name = "whiteout"
 theme.alternative = "blackout"
 theme._dir = string.format("%s/.config/awesome/themes/%s", os.getenv("HOME"), theme.name)
 
--- theme.wallpaper                                 = theme._dir .. "/wallpapers/wall.png"
-theme.wallpaper                                 = theme._dir .. "/wallpapers/escheresque.png"
--- theme.wallpaper_offset                          = 5
+-- theme.wallpaper                                 = theme.dir .. "/wallpapers/wall.png"
+theme.wallpaper                                 = theme.dir .. "/wallpapers/escheresque.png"
+theme.wallpaper_fn                              = gears.wallpaper.tiled
 
 theme.titlebar_close_button_focus               = theme._dir .. "/icons/titlebar/close_focus.png"
 theme.titlebar_close_button_normal              = theme._dir .. "/icons/titlebar/close_normal.png"

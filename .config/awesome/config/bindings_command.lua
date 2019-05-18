@@ -40,7 +40,7 @@ function _config.init()
             -- end
         end,
         root_keybindings = {
-            { { k.m                }, "g", function() util.set_mode("Command Mode") end,
+            { { k.m                }, "c", function() util.set_mode("Command Mode") end,
               { description = "<b><span color=\"#ff0000\">command mode</span></b>", group = "awesome" } },
         },
         keybindings = {
@@ -138,7 +138,7 @@ function _config.init()
             { {                    }, "z", function()
                 if client.focus then client.focus:kill() end
             end },
-            { {                    }, "o", function()
+            { {                    }, "g", function()
                 if client.focus then client.focus:move_to_screen() end
             end },
             { {                    }, "t", function()
@@ -162,6 +162,15 @@ function _config.init()
                     client.focus = c
                     c:raise()
                 end
+            end },
+            { { k.c                }, "c", function()
+                if client.focus then util.if_client_floats(awful.placement.centered)(client.focus) end
+            end },
+            { { k.c                }, "o", function()
+                if client.focus then util.if_client_floats(awful.placement.no_overlap)(client.focus) end
+            end },
+            { { k.c                }, "s", function()
+                if client.focus then util.if_client_floats(awful.placement.no_offscreen)(client.focus) end
             end },
 
             -- Resize (ratio)

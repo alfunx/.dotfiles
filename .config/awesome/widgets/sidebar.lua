@@ -19,90 +19,77 @@ local debug = false
 
 local function factory(args)
 
-    local _x = args.x or beautiful.sidebar_x or awful.screen.focused().geometry.x
-    local _y = args.y or beautiful.sidebar_y or awful.screen.focused().geometry.y
-    local bg = args.bg or beautiful.sidebar_bg or beautiful.tasklist_bg_normal or "#000000"
-    local fg = args.fg or beautiful.sidebar_fg or beautiful.tasklist_fg_normal or "#FFFFFF"
-    local opacity = args.opacity or beautiful.sidebar_opacity or 1
-    local height = args.height or beautiful.sidebar_height or awful.screen.focused().geometry.height
-    local width = args.width or beautiful.sidebar_width or 400
     local radius = args.radius or beautiful.border_radius or 0
     local mouse_toggle = args.mouse_toggle or beautiful.sidebar_mouse_toggle
     local position = args.position or "left"
     local colors = args.colors or { }
     local vars = args.vars or { }
 
+    -- Reset position of a widget (sidebar)
+    local function reset_position(widget)
+        widget.height = screen.primary.geometry.height
+        widget.y = screen.primary.geometry.y
+        if position == "right" then
+            widget.x = screen.primary.geometry.width - widget.width
+        else
+            widget.x = screen.primary.geometry.x
+        end
+    end
+
+    -- Position a widget (sidebar) and connect to signals
+    local function setup(widget)
+        reset_position(widget)
+        screen.connect_signal("primary_changed", function()
+            reset_position(widget)
+        end)
+        screen.connect_signal("property::geometry", function()
+            reset_position(widget)
+        end)
+    end
+
     local sidebar = wibox {
-        x = _x,
-        y = _y,
-        bg = bg,
-        fg = fg,
-        opacity = opacity,
-        height = height,
-        width = width,
+        bg = args.bg or beautiful.sidebar_bg or beautiful.tasklist_bg_normal or "#000000",
+        fg = args.fg or beautiful.sidebar_fg or beautiful.tasklist_fg_normal or "#FFFFFF",
+        opacity = args.opacity or beautiful.sidebar_opacity or 1,
+        width = args.width or beautiful.sidebar_width or 400,
         visible = false,
         ontop = true,
         type = "dock",
     }
+    setup(sidebar)
 
     if position == "right" then
-        sidebar.x = awful.screen.focused().geometry.width - sidebar.width
         sidebar.shape = function(cr, width, height)
             gears.shape.partially_rounded_rect(cr, width, height, true, false, false, true, radius)
         end
     else
-        sidebar.x = 0
         sidebar.shape = function(cr, width, height)
             gears.shape.partially_rounded_rect(cr, width, height, false, true, true, false, radius)
         end
     end
 
-    sidebar:buttons(gears.table.join(
-        awful.button({ }, 2, function ()
-            sidebar:hide()
-        end)
-    ))
-
-    -- Hide sidebar when mouse leaves
-    if mouse_toggle then
-        sidebar:connect_signal("mouse::leave", function ()
-            sidebar:hide()
-        end)
-    end
-
-    -- Activate sidebar by moving the mouse at the edge of the screen
     if mouse_toggle then
         local sidebar_activator = wibox {
-            y = 0,
+            x = screen.primary.geometry.x,
+            y = screen.primary.geometry.y,
+            height = screen.primary.geometry.height,
             width = 1,
-            height = awful.screen.focused().geometry.height,
             visible = true,
             ontop = true,
             opacity = 0,
             below = true,
         }
+        setup(sidebar_activator)
 
+        -- Activate sidebar by moving the mouse at the edge of the screen
         sidebar_activator:connect_signal("mouse::enter", function ()
             sidebar:show()
         end)
 
-        if position == "right" then
-            sidebar_activator.x = awful.screen.focused().geometry.width - sidebar_activator.width
-        else
-            sidebar_activator.x = 0
-        end
-
-        sidebar_activator:buttons(gears.table.join(
-            awful.button({ }, 2, function ()
-                sidebar:toggle()
-            end),
-            awful.button({ }, 4, function ()
-                awful.tag.viewprev()
-            end),
-            awful.button({ }, 5, function ()
-                awful.tag.viewnext()
-            end)
-        ))
+        -- Hide sidebar when mouse leaves
+        sidebar:connect_signal("mouse::leave", function ()
+            sidebar:hide()
+        end)
     end
 
     -- {{{ SHOW / HIDE
@@ -138,7 +125,7 @@ local function factory(args)
     local bar_args = { }
     bar_args.height = 30
     bar_args.width = 200
-    bar_args.total_width = width
+    bar_args.total_width = sidebar.width
     bar_args.border_width = beautiful.border
     bar_args.border_color = beautiful.border_normal
     bar_args.inner_color = beautiful.border_focus
@@ -268,27 +255,38 @@ local function factory(args)
     local audio = bar(bar_args)
 
     brokers.audio:add_callback(function(x)
+        local color
         local icon
 
         if x.muted then
             icon = ""
         elseif x.percent <= 20 then
             icon = ""
-        elseif x.percent <= 50 then
+        elseif x.percent <= 40 then
             icon = ""
         else
             icon = ""
         end
 
+        if x.percent >= 100 then
+            color = colors.red_2
+        elseif x.percent >= 90 then
+            color = colors.orange_2
+        elseif x.percent >= 80 then
+            color = colors.yellow_2
+        else
+            color = text_fg
+        end
+
         audio.bar.value = x.percent
         m_symbol(audio.icon, icon)
-        m_text(audio.text, x.percent .. "%")
+        m_text(audio.text, x.percent .. "%", color)
     end)
 
-    timers.audio = brokers.audio:add_timer {
-        timeout = 29,
-        autostart = false,
-    }
+    -- timers.audio = brokers.audio:add_timer {
+    --     timeout = 29,
+    --     autostart = false,
+    -- }
     audio:buttons(brokers.audio.buttons)
     -- }}}
 
@@ -332,7 +330,7 @@ local function factory(args)
             icon = ""
         end
 
-        if x.charging or x.ac then
+        if x.charging or x.full or x.ac then
             icon = ""
             if x.percent >= 95 then
                 color = colors.green_2
@@ -344,10 +342,10 @@ local function factory(args)
         m_text(battery.text, x.percent .. "%", color)
     end)
 
-    timers.battery = brokers.battery:add_timer {
-        timeout = 23,
-        autostart = false,
-    }
+    -- timers.battery = brokers.battery:add_timer {
+    --     timeout = 23,
+    --     autostart = false,
+    -- }
     battery:buttons(brokers.battery.buttons)
     -- }}}
 
@@ -556,7 +554,8 @@ local function factory(args)
             },
             layout = wibox.layout.flex.vertical,
         },
-        right = beautiful.border,
+        right = position == "left" and beautiful.border or nil,
+        left = position == "right" and beautiful.border or nil,
         color = beautiful.border_focus,
         widget = wibox.container.margin,
     }

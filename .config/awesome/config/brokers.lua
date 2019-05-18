@@ -11,6 +11,8 @@ local awesome, client, mouse, screen, tag = awesome, client, mouse, screen, tag
 local pairs, ipairs, string, os, table, math, tostring, tonumber, type = pairs, ipairs, string, os, table, math, tostring, tonumber, type
 --luacheck: pop
 
+local awful = require("awful")
+local gears = require("gears")
 local naughty = require("naughty")
 local yaawl = require("yaawl")
 local file = require("yaawl.util.file")
@@ -47,18 +49,45 @@ function _config.init()
     -- Audio
     _config.audio = yaawl.audio {
     }
-    _config.audio:add_timer {
-        timeout = 193,
-    }
+    -- _config.audio:add_timer {
+    --     timeout = 193,
+    -- }
+    _config.audio.buttons = gears.table.join(
+        _config.audio.buttons,
+        awful.button({ context.keys.modkey }, 1, function()
+            awful.spawn(table.concat {
+                context.vars.terminal, "zsh -lic 'pulsemixer'"
+            }, {
+                floating = true,
+                ontop = true,
+                placement = awful.placement.centered,
+            })
+        end),
+        awful.button({ context.keys.altkey }, 1, function()
+            awful.spawn(table.concat {
+                context.vars.scripts_dir, "/connect-headphones"
+            })
+        end)
+    )
 
     -- Battery
     _config.battery = yaawl.battery {
         battery = "BAT0",
         ac      = "AC",
     }
-    _config.battery:add_timer {
-        timeout = 31,
-    }
+    -- _config.battery:add_timer {
+    --     timeout = 31,
+    -- }
+
+    local htop_fn = function()
+        awful.spawn(table.concat {
+            context.vars.terminal, "zsh -lic 'htop'"
+        }, {
+            floating = true,
+            ontop = true,
+            placement = awful.placement.centered,
+        })
+    end
 
     -- Loadavg
     _config.loadavg = yaawl.loadavg {
@@ -66,6 +95,10 @@ function _config.init()
     _config.loadavg:add_timer {
         timeout = 13,
     }
+    _config.loadavg.buttons = gears.table.join(
+        _config.loadavg.buttons,
+        awful.button({ context.keys.modkey }, 1, htop_fn)
+    )
 
     -- CPU
     _config.cpu = yaawl.cpu {
@@ -73,6 +106,10 @@ function _config.init()
     _config.cpu:add_timer {
         timeout = 17,
     }
+    _config.cpu.buttons = gears.table.join(
+        _config.cpu.buttons,
+        awful.button({ context.keys.modkey }, 1, htop_fn)
+    )
 
     -- Memory
     _config.memory = yaawl.memory {
@@ -80,6 +117,10 @@ function _config.init()
     _config.memory:add_timer {
         timeout = 19,
     }
+    _config.memory.buttons = gears.table.join(
+        _config.memory.buttons,
+        awful.button({ context.keys.modkey }, 1, htop_fn)
+    )
 
     -- Temperature
     _config.temperature = yaawl.temperature {
@@ -88,6 +129,10 @@ function _config.init()
     _config.temperature:add_timer {
         timeout = 23,
     }
+    _config.temperature.buttons = gears.table.join(
+        _config.temperature.buttons,
+        awful.button({ context.keys.modkey }, 1, htop_fn)
+    )
 
     -- Drive
     _config.drive = yaawl.drive {
@@ -97,6 +142,18 @@ function _config.init()
     _config.drive:add_timer {
         timeout = 997,
     }
+    _config.drive.buttons = gears.table.join(
+        _config.drive.buttons,
+        awful.button({ context.keys.modkey }, 1, function()
+            awful.spawn(table.concat {
+                context.vars.terminal, "zsh -lic 'ncdu /'"
+            }, {
+                floating = true,
+                ontop = true,
+                placement = awful.placement.centered,
+            })
+        end)
+    )
 
     -- Lock
     _config.lock = yaawl.lock {
@@ -114,12 +171,63 @@ function _config.init()
     _config.weather:add_timer {
         timeout = 3607,
     }
+    _config.weather.buttons = gears.table.join(
+        _config.weather.buttons,
+        awful.button({ context.keys.modkey }, 1, function()
+            awful.spawn(table.concat {
+                context.vars.terminal, "zsh -lic 'curl -s wttr.in | less'"
+            }, {
+                floating = true,
+                ontop = true,
+                width = 1136,
+                height = 797,
+                delayed_placement = awful.placement.centered,
+            })
+        end)
+    )
 
     -- Net
+    local net_widget_notification
     _config.net = yaawl.net {
-        iface   = "wlp58s0",
-        timeout = 2,
+        iface    = context.vars.net_iface,
+        ping_cmd = table.concat { "ping -c1 -w5 ", context.vars.ping_ip },
+        timeout  = 2,
     }
+    _config.net.buttons = gears.table.join(
+        _config.net.buttons,
+        awful.button({ context.keys.modkey }, 1, function()
+            awful.spawn(table.concat {
+                context.vars.terminal, "zsh -lic 'sudo wifi-menu'"
+            }, {
+                floating = true,
+                ontop = true,
+                placement = awful.placement.centered,
+            })
+        end),
+        awful.button({ context.keys.altkey }, 1, function()
+            awful.spawn(table.concat {
+                "sh -c 'ping -c1 -w10 ",
+                context.vars.ping_ip,
+                " || sudo dhcpcd -1 ",
+                context.vars.net_iface,
+                "'"
+            })
+        end),
+        awful.button({ }, 1, function()
+            naughty.destroy(net_widget_notification)
+            net_widget_notification = naughty.notify {
+                title = "Network",
+                timeout = 15,
+            }
+            local net_text
+            awful.spawn.with_line_callback(context.vars.scripts_dir .. "/show-ip-address -f", {
+                stdout = function(line)
+                    net_text = net_text and table.concat { net_text, '\n', line } or line
+                    net_widget_notification.text = net_text
+                end,
+            })
+        end)
+    )
 
     ---------------------
     --  Notifications  --
@@ -127,8 +235,10 @@ function _config.init()
 
     local battery_notification
     _config.battery:add_callback(function(x)
-        if x.percent > 5 or x.charging then return end
-
+        if x.percent > 5 or x.charging then
+            naughty.destroy(battery_notification)
+            return
+        end
         naughty.destroy(battery_notification)
         battery_notification = naughty.notify {
             preset  = naughty.config.presets.critical,
