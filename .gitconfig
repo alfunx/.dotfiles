@@ -91,17 +91,25 @@
 [difftool]
 	prompt = false
 
+[difftool "vimdiff"]
+	cmd = vimdiff "$LOCAL" "$REMOTE"
+
 [merge]
 	ff = false
-	tool = diffconflicts
+	conflictStyle = merge
+	tool = vimmerge
 
 [mergetool]
 	prompt = false
 	keepBackup = false
 	writeToTemp = true
 
+[mergetool "vimmerge"]
+	cmd = vimmerge "$MERGED" "$BASE" "$LOCAL" "$REMOTE"
+	trustExitCode = true
+
 [mergetool "vim-diffconflicts"]
-	cmd = vim -c DiffConflicts "$MERGED" "$BASE" "$LOCAL" "$REMOTE"
+	cmd = vim -c DiffConflictsWithHistory "$MERGED" "$BASE" "$LOCAL" "$REMOTE"
 	trustExitCode = true
 
 [mergetool "diffconflicts"]
@@ -119,7 +127,7 @@
 	stat = true
 
 [fetch]
-	prune = true
+	prune = false
 
 [pull]
 	rebase = interactive
