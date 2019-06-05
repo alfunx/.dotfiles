@@ -68,7 +68,7 @@ case $cmd in
             ~/.config/awesome/config/**/* \
             ~/.config/awesome/widgets/**/* \
             ~/.config/awesome/yaawl/* \
-            ~/.config/awesome/yaawl/brokers/* \
+            ~/.config/awesome/yaawl/subject/* \
             ~/.config/awesome/yaawl/util/* \
             "$@"
         ;;

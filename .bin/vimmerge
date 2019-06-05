@@ -1,0 +1,29 @@
+#!/bin/sh
+
+if [ $# -lt 4 ]; then
+    echo "Usage: $0 \$MERGED \$LOCAL \$BASE \$REMOTE"
+    exit 1
+fi
+
+readonly MERGED=$1 BASE=$2 LOCAL=$3 REMOTE=$4
+readonly RCONFL="RCONFL.${REMOTE##*.}" ORIGINAL="ORIGINAL.${MERGED##*.}"
+
+if [ -e "$RCONFL" ] || [ -e "$ORIGINAL" ]; then
+    exit 2
+fi
+
+trap 'rm -f "$RCONFL" "$ORIGINAL"' INT TERM EXIT
+cp "$REMOTE" "$RCONFL"
+cp "$MERGED" "$ORIGINAL"
+
+vim \
+    -c 'file RCONFL | setlocal nomodifiable readonly buftype=nofile bufhidden=delete nobuflisted' \
+    -c "difft | lefta vsp $MERGED | difft" \
+    -c 'g/^||||||| \?\|^=======\r\?$/,/^>>>>>>> /d' \
+    -c 'g/^<<<<<<< /d' \
+    -c "w | tabe $REMOTE | file REMOTE | setlocal nomodifiable readonly buftype=nofile bufhidden=delete nobuflisted" \
+    -c "vert diffs $LOCAL | file LOCAL | setlocal nomodifiable readonly buftype=nofile bufhidden=delete nobuflisted" \
+    -c "rightb vert diffs $BASE | file BASE | setlocal nomodifiable readonly buftype=nofile bufhidden=delete nobuflisted" \
+    -c "tabe $ORIGINAL | file ORIGINAL | setlocal nomodifiable readonly buftype=nofile bufhidden=delete nobuflisted" \
+    -c 'tabfirst' \
+    "$RCONFL"

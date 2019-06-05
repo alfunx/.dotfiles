@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+bluetoothctl power on &&
+    bluetoothctl connect 94:BF:2D:92:61:52

@@ -20,4 +20,4 @@ git-one() {
 export -f git-one
 
 find . -mindepth 1 -maxdepth 1 -type d \
-    | xargs -I@ -P0 bash -c "git-one @ $*"
+    | xargs -r -I@ -P0 bash -c "git-one @ $*"

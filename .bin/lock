@@ -1,13 +1,42 @@
 #!/usr/bin/env bash
 
 pictures_dir="$(xdg-user-dir PICTURES 2> /dev/null)"
-lock="${pictures_dir:-$HOME/Pictures}/lock.png"
-image=$(mktemp --suffix=.png)
+slice="${pictures_dir:-$HOME/Pictures}/slice.png"
+# lock="${pictures_dir:-$HOME/Pictures}/lock.png"
+image=$(mktemp --suffix=.png --tmpdir lock.XXXXXXXXXX)
 trap 'rm -f "$image"' SIGINT SIGTERM EXIT
 
-maim -u \
+screens=$(xrandr | grep -Eo '[0-9]+x[0-9]+\+[0-9]+\+[0-9]+')
+declare -a lines
+
+for screen in $screens; do
+    read -r W H X Y < <(sed 's/[^0-9]/ /g' <<< "$screen")
+    lines+=(\( "$slice"
+        -resize "${W}x1080!"
+        -geometry "+${X}+${Y}" \)
+        -composite -matte)
+done
+
+maim -u -m 1 \
     | convert png:- -scale 10% -scale 1000% \
-    "$lock" -gravity center -composite -matte "$image"
+    -fill "#282828" -colorize 10% \
+    ${lines[*]} "$image"
+
+# maim -u \
+#     | convert png:- -scale 10% -scale 1000% \
+#     "$lock" -gravity NorthWest -composite -matte "$image"
+
+# for screen in $screens; do
+#     mapfile -t coords < <(grep -Eo '[0-9]+' <<< "$screen")
+#     coords[0]=$(( ${coords[0]} + ${coords[2]} ))
+#     coords[1]=$(( ${coords[1]} + ${coords[3]} ))
+#
+#     outer=($(( ${coords[3]} + 669 )) $(( ${coords[3]} + 771 )))
+#     inner=($(( ${coords[3]} + 677 )) $(( ${coords[3]} + 763 )))
+#
+#     convert "$image" -fill '#504945' -draw "rectangle ${coords[2]},${outer[0]} ${coords[0]},${outer[1]}" \
+#         -fill '#282828' -draw "rectangle ${coords[2]},${inner[0]} ${coords[0]},${inner[1]}" "$image"
+# done
 
 i3lock \
     --image="$image" \
@@ -25,11 +54,10 @@ i3lock \
     --datecolor=00000000 \
     --layoutcolor=00000000 \
     --indpos='x+100:y+720' \
-    --timepos='x+210:y+732' \
-    --timestr='%H:%M' \
+    --timepos='x+230:y+732' \
+    --timestr='%H:%M:%S' \
     --time-font='monospace' \
     --force-clock \
-    --refresh-rate=30 \
     --radius=32 \
     --ring-width=4 \
     --veriftext='' \

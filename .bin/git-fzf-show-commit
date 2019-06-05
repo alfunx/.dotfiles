@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 fzf() {
-    fzf-tmux -d 30% -- "$@"
+    fzf-tmux -d 80% -- "$@"
 }
 
 # git commit browser
@@ -10,11 +10,22 @@ if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
     exit 1
 fi
 
-ctrl_m="echo {} \
-    | grep -o '[a-f0-9]\\{7,\\}' \
-    | xargs git show --color=always"
+while out=$(
+    git log --pretty=lo --graph --color --date=human "$@" \
+        | fzf +s +m +e --ansi -q "$q" --reverse --tiebreak=index \
+        --print-query --expect=ctrl-m,ctrl-l);
+do
+    mapfile -t out <<< "$out"
+    q="${out[0]}"
+    k="${out[1]}"
+    sha="$(grep -o '[a-f0-9]\{7,\}' <<< "${out[-1]}")"
+    [[ -z "$sha" ]] && continue
 
-git log --pretty=lo --graph --color --date=human "$@" \
-    | fzf +s +m +e --ansi --reverse --tiebreak=index \
-    --bind "ctrl-s:toggle-sort" \
-    --bind "ctrl-m:execute:(${ctrl_m})"
+    if [[ "$k" == 'ctrl-m' ]]; then
+        git show --pretty=lf --stat --summary --patch "$sha" --
+    elif [[ "$k" == 'ctrl-l' ]]; then
+        git log --pretty=lt --graph --color --date=human "$sha" --
+    else
+        git show --pretty=lf --stat --summary --patch "$sha" --
+    fi
+done

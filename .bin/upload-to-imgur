@@ -3,8 +3,8 @@
 client_id='14ca7602d739667'
 pictures_dir="$(xdg-user-dir PICTURES 2> /dev/null)"
 input_dir="${pictures_dir:-$HOME/Pictures}/screenshots"
-input_file=$(find "$input_dir" -print0 \
-    | xargs -0 ls -1 -t 2> /dev/null \
+input_file=$(find "$input_dir" -type f -print0 \
+    | xargs -r -0 ls -1 -t 2> /dev/null \
     | head -1)
 output_dir="$HOME/.secrets/imgur"
 
