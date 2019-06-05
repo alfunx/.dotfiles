@@ -6,24 +6,22 @@ if [ $# -lt 4 ]; then
 fi
 
 readonly MERGED=$1 BASE=$2 LOCAL=$3 REMOTE=$4
-readonly RCONFL="RCONFL.${REMOTE##*.}" ORIGINAL="ORIGINAL.${MERGED##*.}"
+readonly TMPDIR=$(mktemp --tmpdir --directory vimmerge.XXXXXXXXXX)
+trap 'rm -rf "$TMPDIR"' INT TERM EXIT
 
-if [ -e "$RCONFL" ] || [ -e "$ORIGINAL" ]; then
-    exit 2
-fi
-
-trap 'rm -f "$RCONFL" "$ORIGINAL"' INT TERM EXIT
+readonly RCONFL="$TMPDIR/RCONFL.${REMOTE##*.}"
+readonly ORIGINAL="$TMPDIR/ORIGINAL.${MERGED##*.}"
 cp "$REMOTE" "$RCONFL"
 cp "$MERGED" "$ORIGINAL"
 
 vim \
-    -c 'file RCONFL | setlocal nomodifiable readonly buftype=nofile bufhidden=delete nobuflisted' \
-    -c "difft | lefta vsp $MERGED | difft" \
+    -c 'file RCONFL | setlocal nomodifiable readonly' \
+    -c "lefta vert diffs $MERGED" \
     -c 'g/^||||||| \?\|^=======\r\?$/,/^>>>>>>> /d' \
     -c 'g/^<<<<<<< /d' \
-    -c "w | tabe $REMOTE | file REMOTE | setlocal nomodifiable readonly buftype=nofile bufhidden=delete nobuflisted" \
-    -c "vert diffs $LOCAL | file LOCAL | setlocal nomodifiable readonly buftype=nofile bufhidden=delete nobuflisted" \
-    -c "rightb vert diffs $BASE | file BASE | setlocal nomodifiable readonly buftype=nofile bufhidden=delete nobuflisted" \
-    -c "tabe $ORIGINAL | file ORIGINAL | setlocal nomodifiable readonly buftype=nofile bufhidden=delete nobuflisted" \
+    -c "w | tabe $REMOTE | file REMOTE | setlocal nomodifiable readonly" \
+    -c "vert diffs $LOCAL | file LOCAL | setlocal nomodifiable readonly" \
+    -c "rightb vert diffs $BASE | file BASE | setlocal nomodifiable readonly" \
+    -c "tabe $ORIGINAL | file ORIGINAL | setlocal nomodifiable readonly" \
     -c 'tabfirst' \
     "$RCONFL"

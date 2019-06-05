@@ -3,7 +3,7 @@
 pictures_dir="$(xdg-user-dir PICTURES 2> /dev/null)"
 slice="${pictures_dir:-$HOME/Pictures}/slice.png"
 # lock="${pictures_dir:-$HOME/Pictures}/lock.png"
-image=$(mktemp --suffix=.png --tmpdir lock.XXXXXXXXXX)
+image=$(mktemp --tmpdir --suffix=.png lock.XXXXXXXXXX)
 trap 'rm -f "$image"' SIGINT SIGTERM EXIT
 
 screens=$(xrandr | grep -Eo '[0-9]+x[0-9]+\+[0-9]+\+[0-9]+')
