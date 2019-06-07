@@ -19,7 +19,6 @@ install-root:
 	install -Dm755 edit-in-vim          '$(DESTDIR)$(BINDIR)'/edit-in-vim
 	install -Dm755 update-pkglist       '$(DESTDIR)$(BINDIR)'/update-pkglist
 	install -Dm755 vimmerge             '$(DESTDIR)$(BINDIR)'/vimmerge
-	install -Dm755 diffconflicts        '$(DESTDIR)$(BINDIR)'/diffconflicts
 	install -Dm755 aur-checkupdates     '$(DESTDIR)$(BINDIR)'/aur-checkupdates
 	install -Dm755 aur-clean            '$(DESTDIR)$(BINDIR)'/aur-clean
 	install -Dm755 aur-manual           '$(DESTDIR)$(BINDIR)'/aur-manual
@@ -35,7 +34,6 @@ uninstall-root:
 	rm -f '$(DESTDIR)$(BINDIR)'/edit-in-vim
 	rm -f '$(DESTDIR)$(BINDIR)'/update-pkglist
 	rm -f '$(DESTDIR)$(BINDIR)'/vimmerge
-	rm -f '$(DESTDIR)$(BINDIR)'/diffconflicts
 	rm -f '$(DESTDIR)$(BINDIR)'/aur-checkupdates
 	rm -f '$(DESTDIR)$(BINDIR)'/aur-clean
 	rm -f '$(DESTDIR)$(BINDIR)'/aur-manual

@@ -112,14 +112,6 @@
 	cmd = vim -c DiffConflictsWithHistory "$MERGED" "$BASE" "$LOCAL" "$REMOTE"
 	trustExitCode = true
 
-[mergetool "diffconflicts"]
-	cmd = diffconflicts vim "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
-	trustExitCode = true
-
-[mergetool "fugitive"]
-	cmd = vim -f -c "Gvdiff" "$MERGED"
-	trustExitCode = true
-
 [rebase]
 	missingCommitsCheck = warn
 	abbreviateCommands = false
