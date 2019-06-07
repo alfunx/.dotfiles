@@ -84,37 +84,25 @@ if [[ -z $* || $# != "5" ]] ; then
     exit 1
 fi
 
-cmd=$1
+cmd="$1"
 BASE="$2"
 LOCAL="$3"
 REMOTE="$4"
 MERGED="$5"
-printf -v QBASE '%q' "${BASE}"
-printf -v QLOCAL '%q' "${LOCAL}"
-printf -v QREMOTE '%q' "${REMOTE}"
-printf -v QMERGED '%q' "${MERGED}"
+LCONFL="LCONFL.$$.${MERGED}"
+RCONFL="RCONFL.$$.${MERGED}"
 
-# Use gnu sed if on OSX for better portability (brew install gnu-sed)
-GNU_SED="gsed"
-type $GNU_SED > /dev/null 2>&1 || GNU_SED="sed"
-
-# Temporary files for left and right side, keeping file extensions for syntax highlighting
-MERGED_PATH="$(dirname "${MERGED}")"
-MERGED_FILE="$(basename "${MERGED}")"
-LCONFL="${MERGED_PATH}/.REMOTE.$$.${MERGED_FILE}"
-RCONFL="${MERGED_PATH}/.LOCAL.$$.${MERGED_FILE}"
-
-# Always delete our temp files; Git will handle it's own temp files
+# Always delete our temp files; Git will handle it's own temp files.
 trap 'rm -f "'"${LCONFL}"'" "'"${RCONFL}"'"' SIGINT SIGTERM EXIT
 
 # Remove the conflict markers for each 'side' and put each into a temp file
-$GNU_SED -r -e '/^<<<<<<< /,/^=======\r?$/d' -e '/^>>>>>>> /d' "${MERGED}" > "${LCONFL}"
-$GNU_SED -r -e '/^=======\r?$/,/^>>>>>>> /d' -e '/^<<<<<<< /d' "${MERGED}" > "${RCONFL}"
+sed -E -e '/^=======\r?$/,/^>>>>>>> /d' -e '/^<<<<<<< /d' "${MERGED}" > "${LCONFL}"
+sed -E -e '/^<<<<<<< /,/^=======\r?$/d' -e '/^>>>>>>> /d' "${MERGED}" > "${RCONFL}"
 
 # Fire up vimdiff
 $cmd -f -R -d "${LCONFL}" "${RCONFL}" \
-    -c ":set noro" \
-    -c ":nmap <leader>D :tabe $QLOCAL<CR>:vert diffs $QBASE<CR>:vert diffs $QREMOTE<CR>:winc t<CR>:tabe $QMERGED<CR>:tabfir<CR>"
+     -c "set noro" \
+     -c "nmap <leader>D :tabe $REMOTE<BAR>vert diffs $BASE<BAR>vert diffs $LOCAL<BAR>winc t<BAR>tabe $MERGED<BAR>tabfir<CR>"
 
 EC=$?
 
