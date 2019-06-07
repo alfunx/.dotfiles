@@ -1,0 +1,10 @@
+# GDB config
+# - use with: https://github.com/cyrus-and/gdb-dashboard
+
+dashboard -layout assembly expressions !history memory registers source stack threads
+
+dashboard source -style context 5
+
+dashboard stack -style compact True
+
+dashboard threads -style skip-running True
