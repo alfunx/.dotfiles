@@ -41,17 +41,15 @@ else
     notifier_cmd="awesome-client \"n=require('naughty');n.notify{title='Lock',text='Locking screen in 20 seconds.',timeout=18,preset=n.config.presets.critical}\""
 fi
 
+# xset s off &
 xautolock -detectsleep \
     -time 9 -notify 20 \
+    -corners 000- \
     -notifier "$notifier_cmd" \
     -locker /usr/local/bin/lock &
 
 dropbox &
-amixer -c PCH set "Master" mute &
-amixer -c PCH cset 'name=Headphone Mic Boost Volume' 1 &
-# unclutter &
 redshift -c .config/redshift.conf &
-# xcompmgr &
 compton --config .config/compton/compton.conf &
 
 case "$session" in
