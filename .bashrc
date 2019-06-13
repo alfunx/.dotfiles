@@ -12,7 +12,8 @@ export BASH_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/bash"
 #  PROFILE  #
 #############
 
-[[ -f ~/.bash_profile ]] && source ~/.bash_profile
+[[ -f "$HOME/.bash_profile" ]] \
+    && source "$HOME/.bash_profile"
 
 
 ###############
@@ -20,7 +21,8 @@ export BASH_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/bash"
 ###############
 
 # eval dircolors
-eval "$(dircolors "$HOME/.dircolors")"
+[[ -f "$HOME/.dircolors" ]] \
+    && eval "$(dircolors "$HOME/.dircolors")"
 
 
 ############
@@ -32,4 +34,5 @@ alias ls='ls --color=tty'
 PS1='[\[\033[1;31m\]\u\[\033[0m\]@\H \w]$ '
 
 # FZF
-source "$BASH_CONFIG/fzf.bash"
+[[ -f "$BASH_CONFIG/fzf.bash" ]] \
+    && source "$BASH_CONFIG/fzf.bash"

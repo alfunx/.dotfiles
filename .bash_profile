@@ -3,4 +3,5 @@
 ##################
 
 # profile
-[[ -f ~/.profile ]] && source ~/.profile
+[[ -f ~/.profile ]] \
+    && source ~/.profile
