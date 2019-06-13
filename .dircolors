@@ -178,8 +178,8 @@ LINK 35
 ### By file attributes
 
 # orphaned symlinks
-ORPHAN 7;91
-MISSING 7;91
+ORPHAN 01;07;91
+MISSING 01
 
 # files with execute permission
 EXEC 91  # Unix
@@ -195,11 +195,11 @@ EXEC 91  # Unix
 ### By file type
 
 # pipe, socket, block device, character device
-FIFO 4;94
-SOCK 4;95
-DOOR 4;95
-BLK 4;93
-CHR 4;97
+FIFO 04;01;94
+SOCK 04;01;95
+DOOR 04;01;95
+BLK 04;01;93
+CHR 04;01;97
 
 
 #############################################################################
@@ -379,32 +379,44 @@ CHR 4;97
 
 # Archives, compressed
 .7z 95
+.ace 95
 .apk 95
 .arj 95
 .bin 95
 .bz 95
 .bz2 95
 .cab 95  # Win
+.cpio 95
 .deb 95
 .dmg 95  # OSX
+.dz 95
 .gem 95
 .gz 95
 .iso 95
 .jar 95
+.lz 95
+.lzh 95
+.lzma 95
 .msi 95  # Win
 .rar 95
 .rpm 95
+.rz 95
 .tar 95
+.taz 95
 .tbz 95
 .tbz2 95
 .tgz 95
+.tlz 95
 .tx 95
+.txz 95
+.tz 95
 .war 95
 .xpi 95
 .xz 95
 .z 95
 .Z 95
 .zip 95
+.zoo 95
 
 # For testing
 .ANSI-30-black 30
@@ -433,33 +445,10 @@ CHR 4;97
 .log 92
 *~ 92
 *# 92
-#.log 94
-#*~ 94
-#*# 94
 
 # Unimportant non-text files
 # For universal scheme, use brightcyan 96
 # For optimal on dark bg (but too prominent on light bg), change to 93
-#.bak 96
-#.BAK 96
-#.old 96
-#.OLD 96
-#.org_archive 96
-#.off 96
-#.OFF 96
-#.dist 96
-#.DIST 96
-#.orig 96
-#.ORIG 96
-#.rej 96
-#.REJ 96
-#.swp 96
-#.swo 96
-#.swn 96
-#.swm 96
-#*,v 96
-#.pacnew 96
-#.pacsave 96
 .bak 93
 .BAK 93
 .old 93
