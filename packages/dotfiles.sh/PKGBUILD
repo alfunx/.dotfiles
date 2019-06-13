@@ -1,7 +1,7 @@
 # Maintainer: alfunx <alphonse.mariya@hotmail.com>
 
 pkgname=dotfiles.sh
-pkgver=r8.a506e22
+pkgver=r17.7a8a565
 pkgrel=1
 pkgdesc="A simple wrapper around Git to manage dotfiles."
 arch=('any')

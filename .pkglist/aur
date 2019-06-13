@@ -1,9 +1,9 @@
 awmtt
 bash-pipes
 ccls
+compiledb
 dropbox
 grabc
-haskell-ide-engine-git
 jdtls
 kakoune-git
 lua-argparse
@@ -13,9 +13,11 @@ modprobed-db
 netctl-dispatcher-chrony
 nvme-cli
 oomox-git
+otf-san-francisco
 overdue
 postman-bin
 powerline-fonts-git
+python-bashlex
 python-pystache
 quicklisp
 resvg-git
