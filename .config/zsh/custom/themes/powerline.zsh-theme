@@ -249,7 +249,7 @@ prompt_svn() {
 
 # Dir: current working directory
 prompt_dir() {
-    prompt_segment "${PROMPT_2_BG}" "${PROMPT_2_FG}" '%(5~|%-1~/…/%3~|%4~)'
+    prompt_segment "${PROMPT_2_BG}" "${PROMPT_2_FG}" '%(6~|%-1~/…/%4~|%5~)'
 }
 
 # Virtualenv: current working virtualenv

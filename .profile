@@ -1,9 +1,20 @@
+###########
+#  LOCAL  #
+###########
+
+[[ -f ~/.local.profile ]] && \
+    source ~/.local.profile
+
+
 ###################
 #  ENV VARIABLES  #
 ###################
 
 # lua
 export PATH="$HOME/.luarocks/bin:$PATH"
+
+# python
+#export PYTHONSTARTUP="$HOME/.pythonrc.py"
 
 # ruby
 export PATH="$HOME/.gem/ruby/2.5.0/bin:$PATH"
@@ -59,6 +70,11 @@ export SYSTEMD_LESS="$LESS"
 # export LESS_TERMCAP_mh=$(tput dim)
 # export MANROFFOPT='-c'
 # export LESS='-iMRj.3'
+
+# # man width
+# MAN_MAX_WIDTH='105'
+# export MANWIDTH=$(tput cols)
+# [ "$MANWIDTH" -gt "$MAN_MAX_WIDTH" ] && export MANWIDTH=$MAN_MAX_WIDTH
 
 # gpg (for Github)
 export GPG_TTY=$(tty)

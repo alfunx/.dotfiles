@@ -55,3 +55,10 @@ ZSH_HIGHLIGHT_STYLES[cursor-matchingbracket]='fg=0,bg=208,bold'
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=241'
 ZSH_AUTOSUGGEST_STRATEGY='match_prev_cmd'
+
+
+############################
+#  DISABLE FOR LONG INPUT  #
+############################
+
+ZSH_HIGHLIGHT_MAXLENGTH=200
