@@ -15,19 +15,19 @@ help:
 default: help
 
 install-root:
-	install -Dm755 lock                 '$(DESTDIR)$(BINDIR)'/lock
-	install -Dm755 edit-in-vim          '$(DESTDIR)$(BINDIR)'/edit-in-vim
-	install -Dm755 update-pkglist       '$(DESTDIR)$(BINDIR)'/update-pkglist
-	install -Dm755 vimmerge             '$(DESTDIR)$(BINDIR)'/vimmerge
-	install -Dm755 aur-checkupdates     '$(DESTDIR)$(BINDIR)'/aur-checkupdates
-	install -Dm755 aur-clean            '$(DESTDIR)$(BINDIR)'/aur-clean
-	install -Dm755 aur-manual           '$(DESTDIR)$(BINDIR)'/aur-manual
-	install -Dm755 aur-remove           '$(DESTDIR)$(BINDIR)'/aur-remove
-	install -Dm755 aur-tmpfs            '$(DESTDIR)$(BINDIR)'/aur-tmpfs
-	install -Dm755 aur-update           '$(DESTDIR)$(BINDIR)'/aur-update
-	install -Dm755 update-pacman-widget '$(DESTDIR)$(BINDIR)'/update-pacman-widget
+	sudo install -Dm755 lock                 '$(DESTDIR)$(BINDIR)'/lock
+	sudo install -Dm755 edit-in-vim          '$(DESTDIR)$(BINDIR)'/edit-in-vim
+	sudo install -Dm755 update-pkglist       '$(DESTDIR)$(BINDIR)'/update-pkglist
+	sudo install -Dm755 vimmerge             '$(DESTDIR)$(BINDIR)'/vimmerge
+	sudo install -Dm755 aur-checkupdates     '$(DESTDIR)$(BINDIR)'/aur-checkupdates
+	sudo install -Dm755 aur-clean            '$(DESTDIR)$(BINDIR)'/aur-clean
+	sudo install -Dm755 aur-manual           '$(DESTDIR)$(BINDIR)'/aur-manual
+	sudo install -Dm755 aur-remove           '$(DESTDIR)$(BINDIR)'/aur-remove
+	sudo install -Dm755 aur-tmpfs            '$(DESTDIR)$(BINDIR)'/aur-tmpfs
+	sudo install -Dm755 aur-update           '$(DESTDIR)$(BINDIR)'/aur-update
+	sudo install -Dm755 update-pacman-widget '$(DESTDIR)$(BINDIR)'/update-pacman-widget
 	
-	install -Dm755 '$(HOMEDIR)'/.config/pacman/hooks/awesome-pacman-widget.hook '$(DESTDIR)$(CONFDIR)'/pacman.d/hooks/awesome-pacman-widget.hook
+	sudo install -Dm755 '$(HOMEDIR)'/.config/pacman/hooks/awesome-pacman-widget.hook '$(DESTDIR)$(CONFDIR)'/pacman.d/hooks/awesome-pacman-widget.hook
 
 uninstall-root:
 	rm -f '$(DESTDIR)$(BINDIR)'/lock
