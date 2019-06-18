@@ -1,0 +1,12 @@
+#!/bin/sh
+
+git --no-pager diff --cached --check
+EC=$?
+
+if [ $EC -ne 0 ]; then
+    echo 1>&2
+    echo "[1;33mwarning:[0m Above files may contain conflict markers or whitespace errors." 1>&2
+    echo "         Pass [1m--no-verify[0m / [1m-n[0m to git-commit to bypass this check." 1>&2
+fi
+
+exit $EC
