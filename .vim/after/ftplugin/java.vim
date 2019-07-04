@@ -1,5 +1,5 @@
 setlocal tabstop=4
 setlocal shiftwidth=4
-setlocal noexpandtab
+setlocal expandtab
 setlocal autoindent
 setlocal smarttab

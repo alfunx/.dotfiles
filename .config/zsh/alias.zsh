@@ -69,7 +69,7 @@ alias cp='cp -i --reflink=auto'
 alias mv='mv -i'
 
 alias :q='exit'
-alias pg='ping -c 1 www.google.ch'
+alias pg='ping -c 1 www.google.com'
 alias bcl='bc -l'
 alias neofetch='echo "\\n\\n" && neofetch'
 alias si='sudo -i zsh'
