@@ -1,0 +1,29 @@
+#!/bin/sh
+
+if [ $# -lt 4 ]; then
+    echo "Usage: $0 <merged> <local> <base> <remote>" 2>&1
+    exit 1
+fi
+
+readonly MERGED=$1 BASE=$2 LOCAL=$3 REMOTE=$4
+readonly TMPDIR=$(mktemp --tmpdir --directory vimmerge.XXXXXXXXXX)
+trap 'rm -rf "$TMPDIR"' INT TERM EXIT
+
+readonly THEIRS=$TMPDIR/THEIRS.${REMOTE##*.}
+readonly ORIGINAL=$TMPDIR/ORIGINAL.${MERGED##*.}
+cp "$REMOTE" "$THEIRS"
+cp "$MERGED" "$ORIGINAL"
+
+vim -f \
+    -c "file THEIRS | setlocal nomodifiable readonly" \
+    -c "lefta vert diffs $MERGED" \
+    -c "g/^||||||| \\?\\|^=======\\r\\?$/,/^>>>>>>> /d" \
+    -c "g/^<<<<<<< /d" \
+    -c "w | tabe $REMOTE | file REMOTE | setlocal nomodifiable readonly" \
+    -c "lefta vert diffs $LOCAL | file LOCAL | setlocal nomodifiable readonly" \
+    -c "rightb vert diffs $BASE | file BASE | setlocal nomodifiable readonly" \
+    -c "tabe $ORIGINAL | file ORIGINAL | setlocal nomodifiable readonly" \
+    -c "tabfirst" \
+    "$THEIRS"
+
+exit $?

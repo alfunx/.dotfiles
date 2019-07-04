@@ -68,8 +68,8 @@ theme.name = "poly"
 theme.dir = string.format("%s/.config/awesome/themes/%s", os.getenv("HOME"), theme.name)
 
 -- theme.wallpaper                                 = theme.dir .. "/wallpapers/wall.png"
-theme.wallpaper                                 = theme.dir .. "/wallpapers/escheresque.png"
--- theme.wallpaper_offset                          = 5
+-- theme.wallpaper                                 = theme.dir .. "/wallpapers/escheresque.png"
+-- theme.wallpaper_fn                              = gears.wallpaper.tiled
 
 -- theme.wallpaper_original                        = theme.dir .. "/wallpapers/matterhorn.jpg"
 -- theme.wallpaper                                 = theme.dir .. "/wallpapers/matterhorn_base.jpg"
@@ -690,20 +690,20 @@ local vol_widget = wibox.widget {
 vol_widget:buttons(gears.table.join(
     awful.button({ }, 1, function()
         awful.spawn.easy_async(string.format("amixer -q set %s toggle", theme.volume.channel),
-        function(stdout, stderr, reason, exit_code) --luacheck: no unused args
+        function(stdout, stderr, reason, exit_code) --luacheck: no unused
             theme.volume.manual = true
             theme.volume.update()
         end)
     end),
     awful.button({ }, 4, function()
         awful.spawn.easy_async(string.format("amixer -q set %s 1%%-", theme.volume.channel),
-        function(stdout, stderr, reason, exit_code) --luacheck: no unused args
+        function(stdout, stderr, reason, exit_code) --luacheck: no unused
             theme.volume.update()
         end)
     end),
     awful.button({ }, 5, function()
         awful.spawn.easy_async(string.format("amixer -q set %s 1%%+", theme.volume.channel),
-        function(stdout, stderr, reason, exit_code) --luacheck: no unused args
+        function(stdout, stderr, reason, exit_code) --luacheck: no unused
             theme.volume.update()
         end)
     end)
@@ -976,7 +976,7 @@ function theme.at_screen_connect(s)
                     right = 5,
                     widget = wibox.container.margin,
                 },
-                create_callback = function(self, c, index, objects) --luacheck: no unused args
+                create_callback = function(self, c, index, objects) --luacheck: no unused
                     local tooltip = awful.tooltip { --luacheck: no unused
                         objects = { self },
                         delay_show = 1,

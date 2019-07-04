@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+fzf() {
+    fzf-tmux -d 50% -- "$@"
+}
+
+# filter git gitignore files and extend local .gitignore
+
+fd --print0 '.gitignore$' "$HOME/projects/gitignore" \
+    | sed --null-data 's/\.gitignore$//' \
+    | fzf +s -m +e -d '/' --with-nth -1 --read0 --print0 \
+    --preview 'cat {}.gitignore' --preview-window 'right:70%' \
+    | xargs -r -0 -I@ cat '@.gitignore' \
+    >> .gitignore

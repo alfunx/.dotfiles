@@ -7,16 +7,39 @@
 --]]
 
 -- {{{ Libraries
+--luacheck: push ignore
+
 local awesome, client, mouse, screen, tag = awesome, client, mouse, screen, tag
 local pairs, ipairs, string, os, table, math, tostring, tonumber, type = pairs, ipairs, string, os, table, math, tostring, tonumber, type
 
-local awful = require("awful")
-local beautiful = require("beautiful")
-local naughty = require("naughty")
-local config = require("config")
+-- If LuaRocks is installed, make sure that packages installed through it are
+-- found (e.g. lgi). If LuaRocks is not installed, do nothing.
+pcall(require, "luarocks.loader")
+
+-- Global (for awesome-client)
+awful = require("awful")
+beautiful = require("beautiful")
+gears = require("gears")
+gtable = require("gears.table")
+gdebug = require("gears.debug")
+naughty = require("naughty")
+config = require("config")
+
+-- yaawl libs (for awesome-client)
+inspect = require("yaawl.util").inspect
+json = require("yaawl.util").json
+
+-- Local
+local awful = awful
+local beautiful = beautiful
+local gears = gears
+local naughty = naughty
+local config = config
 
 require("awful.autofocus")
 require("awful.remote")
+
+--luacheck: pop
 -- }}}
 
 -- Localization
@@ -46,11 +69,12 @@ config.context.init {
 
     vars = {
 
+        merge_tags       = false,
         sloppy_focus     = false,
-        update_apps      = false,
-        terminal         = "kitty",
-        browser          = "chromium",
---        net_iface        = "wlp2s0",
+        start_as_slave   = false,
+        terminal         = "kitty ",
+        browser          = "chromium ",
+        ping_ip          = "8.8.8.8",
         cores            = 4,
         batteries        = { "BAT0" },
         ac               = "AC",
@@ -103,14 +127,14 @@ awesome.connect_signal("debug::index::miss", function(c, k) --luacheck: no unuse
     naughty.notify {
         preset = naughty.config.presets.warn,
         title = "Debug: Index miss",
-        text = table.concat { c, ".", k },
+        text = c .. "." .. k,
     }
 end)
 awesome.connect_signal("debug::newindex::miss", function(c, k, v) --luacheck: no unused
     naughty.notify {
         preset = naughty.config.presets.warn,
         title = "Debug: New index miss",
-        text = table.concat { c, ".", k, " = ", v },
+        text = c .. "." .. k .. " = " .. v,
     }
 end)
 -- }}}
@@ -133,6 +157,7 @@ config.bindings_client.init()
 config.bindings_command.init()
 config.bindings_taglist.init()
 config.bindings_tasklist.init()
+require("treetile.bindings").init()
 -- }}}
 
 -- {{{ Theme
@@ -148,6 +173,7 @@ config.sidebar.init()
 -- }}}
 
 -- {{{ Configs
+config.wallpaper.init()
 config.rules.init()
 config.signals.init()
 config.screens.init()

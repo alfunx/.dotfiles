@@ -26,6 +26,7 @@ local _config = {
     popups = require("config.popups"),
     sidebar = require("config.sidebar"),
 
+    wallpaper = require("config.wallpaper"),
     rules = require("config.rules"),
     signals = require("config.signals"),
     screens = require("config.screens"),

@@ -6,6 +6,11 @@
 
 --]]
 
+--luacheck: push ignore
+local awesome, client, mouse, screen, tag = awesome, client, mouse, screen, tag
+local pairs, ipairs, string, os, table, math, tostring, tonumber, type = pairs, ipairs, string, os, table, math, tostring, tonumber, type
+--luacheck: pop
+
 local beautiful = require("beautiful")
 local menubar = require("menubar")
 local freedesktop = require("freedesktop")

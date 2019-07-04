@@ -242,6 +242,6 @@ xterm
 yay
 youtube-dl
 zathura
-zathura-pdf-mupdf
+zathura-pdf-poppler
 zsh
 zsh-completions

@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
-for userid in $(loginctl list-users | tail -n +2 | head -n -2 | cut -d' ' -f1); do
-    sudo -u "#$userid" \
-        env DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/"$userid"/bus \
+loginctl list-users \
+    | tail -n +2 \
+    | head -n -2 \
+    | cut -d' ' -f1 \
+    | xargs -r -I{} \
+        sudo -u '#{}' \
+        env DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/{}/bus \
         awesome-client 'require("config.brokers").pacman:update()'
-done

@@ -16,7 +16,7 @@ fi
 
 while out=$(
     git stash list --pretty="%C(yellow)%h %>(14)%Cgreen%cr %C(blue)%gs" \
-        | fzf +s +m -e --ansi -q "$q" --print-query \
+        | fzf +s +m +e --ansi -q "$q" --print-query \
         --expect=ctrl-d,ctrl-b);
 do
     mapfile -t out <<< "$out"

@@ -35,11 +35,14 @@ Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-sleuth'
-"Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-abolish'
-"Plug 'tpope/vim-commentary'
-Plug 'tomtom/tcomment_vim'
-Plug 'whiteinge/diffconflicts'
+Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-jdaddy'
+Plug 'tpope/vim-dispatch'
+Plug 'tpope/vim-commentary'
+"Plug 'tomtom/tcomment_vim'
+Plug 'alfunx/diffconflicts'  " fork of 'whiteinge/diffconflicts'
 Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/vim-easy-align'
@@ -49,7 +52,8 @@ Plug 'justinmk/vim-sneak'
 Plug 'mhinz/vim-grepper'
 Plug 'terryma/vim-multiple-cursors'
 "Plug 'terryma/vim-expand-region'
-Plug 'jiangmiao/auto-pairs'
+"Plug 'jiangmiao/auto-pairs'
+Plug 'tmsvg/pear-tree'
 Plug 'mbbill/undotree'
 Plug 'ap/vim-css-color'
 Plug 'xtal8/traces.vim'
@@ -58,6 +62,7 @@ Plug 'w0rp/ale'
 Plug 'majutsushi/tagbar'
 "Plug 'ludovicchabant/vim-gutentags'
 Plug 'editorconfig/editorconfig-vim'
+Plug 'romainl/vim-qf'
 
 " Text objects
 Plug 'wellle/targets.vim'
@@ -84,21 +89,27 @@ Plug 'autozimu/LanguageClient-neovim', {
             \ }
 
 " Completion
-Plug 'roxma/vim-hug-neovim-rpc'
-Plug 'roxma/nvim-yarp'
-Plug 'ncm2/ncm2'
-Plug 'ncm2/ncm2-bufword'
-"Plug 'Shougo/echodoc.vim'
+"Plug 'roxma/vim-hug-neovim-rpc'
+"Plug 'roxma/nvim-yarp'
+"Plug 'ncm2/ncm2'
+"Plug 'ncm2/ncm2-bufword'
+"Plug 'ncm2/ncm2-syntax'
+"Plug 'ncm2/ncm2-tagprefix'
+"Plug 'fgrsnau/ncm2-otherbuf', { 'branch': 'ncm2' }
+"Plug 'filipekiss/ncm2-look.vim'
+"Plug 'Shougo/neco-syntax'
 
 " Language specific
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 Plug 'lervag/vimtex', { 'for': ['latex', 'tex'] }
 Plug 'racer-rust/vim-racer', { 'for': 'rust' }
-Plug 'zchee/deoplete-clang', { 'for': ['c', 'cpp'] }
-Plug 'Shougo/neco-vim', { 'for': 'vim' }
+" No longer used by alfunx, will try to leave commented out for now
+" Plug 'zchee/deoplete-clang', { 'for': ['c', 'cpp'] }
+" Plug 'Shougo/neco-vim', { 'for': 'vim' }
 
 " Syntax
 Plug 'cespare/vim-toml'
+Plug 'tomlion/vim-solidity'
 
 " Themes
 Plug 'alfunx/gruvbox'  " fork of 'morhetz/gruvbox'
@@ -127,19 +138,43 @@ runtime macros/matchit.vim
 "  KEY MAPPINGS  "
 """"""""""""""""""
 
-"" Leader key
+" Alt key mappings
+if !has('nvim')
+    execute "set <M-1>=\<Esc>1"
+    execute "set <M-2>=\<Esc>2"
+    execute "set <M-3>=\<Esc>3"
+    execute "set <M-4>=\<Esc>4"
+    execute "set <M-5>=\<Esc>5"
+    execute "set <M-6>=\<Esc>6"
+    execute "set <M-7>=\<Esc>7"
+    execute "set <M-8>=\<Esc>8"
+    execute "set <M-9>=\<Esc>9"
+    execute "set <M-b>=\<Esc>b"
+    execute "set <M-e>=\<Esc>e"
+    execute "set <M-h>=\<Esc>h"
+    execute "set <M-j>=\<Esc>j"
+    execute "set <M-k>=\<Esc>k"
+    execute "set <M-l>=\<Esc>l"
+    execute "set <M-n>=\<Esc>n"
+    execute "set <M-p>=\<Esc>p"
+    execute "set <M-u>=\<Esc>u"
+    execute "set <M-w>=\<Esc>w"
+    execute "set <M-z>=\<Esc>z"
+endif
+
+" Leader key
 nnoremap <Space> <Nop>
 nnoremap <CR> <Nop>
 let mapleader=' '
 let maplocalleader=''
 
-"" Split navigation
-"nnoremap <silent> <C-h> <C-w><C-h>
-"nnoremap <silent> <C-j> <C-w><C-j>
-"nnoremap <silent> <C-k> <C-w><C-k>
-"nnoremap <silent> <C-l> <C-w><C-l>
+" " Split navigation
+" nnoremap <silent> <C-h> <C-w><C-h>
+" nnoremap <silent> <C-j> <C-w><C-j>
+" nnoremap <silent> <C-k> <C-w><C-k>
+" nnoremap <silent> <C-l> <C-w><C-l>
 
-"" Split navigation (vim-tmux-navigator)
+" Split navigation (vim-tmux-navigator)
 let g:tmux_navigator_no_mappings=1
 nnoremap <silent> <C-h> :TmuxNavigateLeft<CR>
 nnoremap <silent> <C-j> :TmuxNavigateDown<CR>
@@ -147,26 +182,27 @@ nnoremap <silent> <C-k> :TmuxNavigateUp<CR>
 nnoremap <silent> <C-l> :TmuxNavigateRight<CR>
 nnoremap <silent> <C-BS> :TmuxNavigatePrevious<CR>
 
-"" Split resize
+" Split resize
 nnoremap <silent> <C-w>h 5<C-w><
 nnoremap <silent> <C-w>j 5<C-w>-
 nnoremap <silent> <C-w>k 5<C-w>+
 nnoremap <silent> <C-w>l 5<C-w>>
 
+" Split resize
 "nnoremap <silent> <Home> <C-w><
 "nnoremap <silent> <PageDown> <C-w>-
 "nnoremap <silent> <PageUp> <C-w>+
 "nnoremap <silent> <End> <C-w>>
 
-"" New tab
+" New tab
 nnoremap <silent> <C-w>t :tabnew<CR>
 nnoremap <silent> <C-w><C-t> :tabnew<CR>
 
-"" Tab navigation
+" Tab navigation
 nnoremap <silent> <C-w><C-h> gT
 nnoremap <silent> <C-w><C-l> gt
 
-"" Fullscreen
+" Fullscreen
 nnoremap <silent> <C-w>F <C-w>_<C-w><Bar>
 
 " Make Y behave like other commands
@@ -197,18 +233,21 @@ nnoremap <silent> <C-s> :write<CR>
 xnoremap <silent> <C-s> <Esc>:write<CR>
 inoremap <silent> <C-s> <C-o>:write<CR><Esc>
 
-"" Quickfix & Loclist
-nnoremap <silent> <leader>q :copen<CR>
-nnoremap <silent> <leader>l :lopen<CR>
-
-"" Insert mode mappings
+" Insert mode mappings
 inoremap <silent> <C-u> <C-g>u<C-u>
 inoremap <silent> àà <C-o>O
 inoremap <silent> éé <C-o>o
+inoremap <silent> <M-b> <C-o>b
+inoremap <silent> <M-w> <C-o>w
+inoremap <silent> <M-e> <C-o>e<Right>
+inoremap <silent> <M-n> <Right>
+inoremap <silent> <M-p> <Left>
 
-"" Entire text-object
+" Entire text-object
 xnoremap <silent> ie :<C-u>normal! G$Vgg0<CR>
 onoremap <silent> ie :<C-u>normal! G$Vgg0<CR>
+xnoremap <silent> ae :<C-u>normal! G$Vgg0<CR>
+onoremap <silent> ae :<C-u>normal! G$Vgg0<CR>
 
 " Select last inserted text
 nnoremap gV `[v`]
@@ -220,15 +259,6 @@ xnoremap <expr> j v:count ? 'j' : 'gj'
 xnoremap <expr> k v:count ? 'k' : 'gk'
 
 " Go to tab
-execute "set <M-1>=\<Esc>1"
-execute "set <M-2>=\<Esc>2"
-execute "set <M-3>=\<Esc>3"
-execute "set <M-4>=\<Esc>4"
-execute "set <M-5>=\<Esc>5"
-execute "set <M-6>=\<Esc>6"
-execute "set <M-7>=\<Esc>7"
-execute "set <M-8>=\<Esc>8"
-execute "set <M-9>=\<Esc>9"
 nnoremap <silent> <M-1> 1gt
 nnoremap <silent> <M-2> 2gt
 nnoremap <silent> <M-3> 3gt
@@ -255,14 +285,7 @@ command! W execute 'silent! w !sudo /usr/bin/tee % >/dev/null' <Bar> edit!
 command! -bang -nargs=* Cd  cd %:p:h
 
 " No highlight
-execute "set <M-b>=\<Esc>b"
 nnoremap <silent> <M-b> :<C-u>nohlsearch<CR>
-
-" augroup incsearch_highlight
-"     autocmd!
-"     autocmd CmdlineEnter [/\?] :set hlsearch
-"     autocmd CmdlineLeave [/\?] :set nohlsearch
-" augroup END
 
 " Run last macro
 nnoremap Q @@
@@ -274,12 +297,12 @@ function! ExecuteMacroOverVisualRange()
 endfunction
 xnoremap <silent> @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
 
-" Change register
-function! ChangeReg() abort
-    let x = nr2char(getchar())
-    call feedkeys("q:ilet @" . x . " = \<C-r>\<C-r>=string(@" . x . ")\<CR>\<Esc>$", 'n')
-endfunction
-nnoremap <silent> cx :call ChangeReg()<CR>
+" " Change register
+" function! ChangeReg() abort
+"     let x = nr2char(getchar())
+"     call feedkeys("q:ilet @" . x . " = \<C-r>\<C-r>=string(@" . x . ")\<CR>\<Esc>$", 'n')
+" endfunction
+" nnoremap <silent> cx :call ChangeReg()<CR>
 
 " Diff update
 nnoremap <silent> du :diffupdate<CR>
@@ -287,6 +310,38 @@ nnoremap <silent> du :diffupdate<CR>
 " Scroll
 map <silent> <ScrollWheelUp> <C-y>
 map <silent> <ScrollWheelDown> <C-e>
+
+" German keyboard mappings
+nmap <silent> ä ^
+xmap <silent> ä ^
+omap <silent> ä ^
+nmap <silent> ö "
+xmap <silent> ö "
+omap <silent> ö "
+
+nmap <silent> ü [
+xmap <silent> ü [
+omap <silent> ü [
+nmap <silent> ¨ ]
+xmap <silent> ¨ ]
+omap <silent> ¨ ]
+
+nnoremap <silent> è <C-]>
+xnoremap <silent> è <C-]>
+
+nnoremap <silent> <CR> <C-]>
+xnoremap <silent> <CR> <C-]>
+
+nnoremap <silent> <M-j> }
+xnoremap <silent> <M-j> }
+onoremap <silent> <M-j> }
+nnoremap <silent> <M-k> {
+xnoremap <silent> <M-k> {
+onoremap <silent> <M-k> {
+
+map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
+            \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
+            \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
 
 """""""""""""""""""""
@@ -313,6 +368,9 @@ nnoremap <leader>f :Files<CR>
 nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>w :Windows<CR>
 nnoremap <leader>t :Tags<CR>
+nnoremap <leader>o :History<CR>
+nnoremap <leader>: :History:<CR>
+nnoremap <leader>/ :History/<CR>
 
 " Mapping selecting mappings
 nmap <leader><Tab> <plug>(fzf-maps-n)
@@ -370,7 +428,7 @@ elseif executable('ag')
 endif
 let g:grepper.tools+=['git', 'grep']
 let g:grepper.rg = {
-            \ 'grepprg':    'rg --vimgrep',
+            \ 'grepprg':    'rg --smart-case --vimgrep',
             \ 'grepformat': '%f:%l:%c:%m',
             \ 'escape':     '\^$.*+?()[]{}|'
             \ }
@@ -386,6 +444,17 @@ xmap gs <plug>(GrepperOperator)
 
 command! Todo :Grepper -tool rg -query '(TODO|FIXME|BUG)'
 command! Note :Grepper -tool rg -query '(NOTE)'
+
+" Open the location/quickfix window automatically if there are valid entries in the list.
+augroup quickfix
+	autocmd!
+	autocmd QuickFixCmdPost cgetexpr cwindow
+	autocmd QuickFixCmdPost lgetexpr lwindow
+augroup END
+
+" Use :Grep instead of :grep! and :LGrep instead of :lgrep!.
+command! -nargs=+ -complete=file_in_path -bar Grep  cgetexpr system(&grepprg . ' ' . shellescape(<q-args>))
+command! -nargs=+ -complete=file_in_path -bar LGrep lgetexpr system(&grepprg . ' ' . shellescape(<q-args>))
 
 "" Airline
 if !exists('g:airline_symbols')
@@ -428,6 +497,8 @@ let g:airline_symbols.branch=''
 let g:airline_symbols.readonly=''
 let g:airline_symbols.linenr='☰'
 let g:airline_symbols.maxlinenr=''
+let g:airline_symbols.notexists=' ∄'
+let g:airline_symbols.dirty=' ✘'
 
 """ Airline settings
 let g:airline_theme='gruvbox'
@@ -437,6 +508,9 @@ let g:airline_skip_empty_sections=0
 let g:airline#extensions#tabline#enabled=1
 let g:airline#extensions#tabline#buffer_idx_mode=1
 let g:airline#extensions#tabline#tab_nr_type=1
+let g:airline#extensions#tabline#show_buffers=1
+let g:airline#extensions#tabline#show_tabs=1
+let g:airline#extensions#tabline#show_tab_count=0
 let g:airline#extensions#tabline#show_tab_nr=0
 let g:airline#extensions#tabline#show_close_button=0
 let g:airline#extensions#tabline#exclude_preview=1
@@ -470,11 +544,15 @@ let g:airline#extensions#hunks#enabled=0
 
 "" GitGutter
 let g:gitgutter_map_keys=0
-nmap <leader>hp <Plug>GitGutterPrevHunk
 nmap <leader>ha <Plug>GitGutterStageHunk
 nmap <leader>hu <Plug>GitGutterUndoHunk
 nmap ]c <Plug>GitGutterNextHunk
 nmap [c <Plug>GitGutterPrevHunk
+
+omap ih <Plug>GitGutterTextObjectInnerPending
+omap ah <Plug>GitGutterTextObjectOuterPending
+xmap ih <Plug>GitGutterTextObjectInnerVisual
+xmap ah <Plug>GitGutterTextObjectOuterVisual
 
 let g:gitgutter_sign_added='┃'
 let g:gitgutter_sign_modified='┃'
@@ -503,25 +581,24 @@ let g:incsearch#no_inc_hlsearch=1
 let g:incsearch#separate_highlight=1
 let g:incsearch#no_inc_hlsearch=1
 
-"" TComment
-let g:tcomment_mapleader1='<c-,>'
-nnoremap <leader>c V:TCommentInline<CR>
-xnoremap <leader>c :TCommentInline<CR>
+" "" TComment
+" let g:tcomment_mapleader1='<C-,>'
+" nnoremap <leader>c V:TCommentInline<CR>
+" xnoremap <leader>c :TCommentInline<CR>
 
 "" Netrw
 let g:netrw_liststyle=0
 let g:netrw_preview=1
 
 "" EasyAlign
-xmap <CR> <Plug>(EasyAlign)
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
 "" Undotree
-nnoremap <silent> <F4> :UndotreeToggle<CR>
+nnoremap <silent> <F12> :UndotreeToggle<CR>
 
 "" Tagbar
-nnoremap <silent> <F5> :TagbarToggle<CR>
+nnoremap <silent> <F11> :TagbarToggle<CR>
 
 "" After text object
 augroup AfterTextObject
@@ -534,8 +611,8 @@ let g:vimtex_view_method='zathura'
 
 "" UltiSnips
 let g:UltiSnipsExpandTrigger='<Tab>'
-let g:UltiSnipsJumpForwardTrigger='<C-k>'
-let g:UltiSnipsJumpBackwardTrigger='<C-j>'
+let g:UltiSnipsJumpForwardTrigger='<C-l>'
+let g:UltiSnipsJumpBackwardTrigger='<C-h>'
 let g:UltiSnipsEditSplit="vertical"
 
 "" Multiple-Cursors
@@ -615,14 +692,14 @@ let g:ale_set_loclist=1
 let g:ale_sign_error='●'
 let g:ale_sign_warning='●'
 let g:ale_sign_info='●'
-let g:ale_lint_on_text_changed='never'
+let g:ale_lint_on_text_changed='normal'
+let g:ale_lint_on_insert_leave=1
 let g:ale_lint_on_enter=1
 let g:ale_lint_on_save=1
 let g:ale_lint_on_filetype_changed=1
 let g:ale_set_highlights=1
 let g:ale_set_signs=1
-
-let g:ale_completion_enabled=1
+let g:ale_completion_enabled=0
 
 nmap [w <plug>(ale_previous_wrap)
 nmap ]w <plug>(ale_next_wrap)
@@ -633,42 +710,48 @@ augroup ALE
     autocmd VimEnter * ALEDisable
 augroup END
 
-"" AutoPairs
-execute "set <M-p>=\<Esc>p"
-execute "set <M-e>=\<Esc>e"
-execute "set <M-z>=\<Esc>z"
-let g:AutoPairsShortcutBackInsert='<M-z>'
-let g:AutoPairsMultilineClose=0
-let g:AutoPairs={'(':')', '[':']', '{':'}', "'":"'", '"':'"', "`":"`", '```':'```', '"""':'"""', "'''":"'''"}
+let g:ale_linters = {
+            \ 'rust': ['cargo', 'rls', 'rustc'],
+            \ }
+
+" "" AutoPairs
+" let g:AutoPairsShortcutBackInsert='<M-z>'
+" let g:AutoPairsMultilineClose=0
+" let g:AutoPairs={'(':')', '[':']', '{':'}', "'":"'", '"':'"', "`":"`", '```':'```', '"""':'"""', "'''":"'''"}
+
+"" Pear-Tree
+let g:pear_tree_smart_openers=0
+let g:pear_tree_smart_closers=0
+let g:pear_tree_smart_backspace=0
+imap <M-z> <Plug>(PearTreeJump)
 
 "" RustRacer
 let g:racer_cmd="/usr/bin/racer"
 let g:racer_experimental_completer=0
 
-"" NCM2
-let g:ncm2#complete_delay=60
-let g:ncm2#popup_delay=300
-let g:ncm2#auto_popup=1
-
-imap <C-n> <plug>(ncm2_manual_trigger)
-imap <silent><expr> <CR> pumvisible() ? "\<C-y>\<CR>" : "\<CR>"
-imap <silent><expr> <Tab> pumvisible() ? "\<C-y>" : "\<Tab>"
-
-augroup NCM2
-    autocmd!
-    autocmd BufEnter * call ncm2#enable_for_buffer()
-    autocmd User Ncm2PopupOpen set completeopt=menuone,noinsert,noselect
-    autocmd User Ncm2PopupClose set completeopt=menuone
-    autocmd TextChangedI * call ncm2#auto_trigger()
-augroup END
-
-"" EchoDoc
-let g:echodoc#enable_at_startup=1
+" "" NCM2
+" let g:ncm2#complete_delay=60
+" let g:ncm2#popup_delay=300
+" let g:ncm2#auto_popup=1
+" let g:ncm2#complete_length=[[1,3],[7,2],[9,1]]
+"
+" imap <C-n> <plug>(ncm2_manual_trigger)
+" inoremap <silent><expr> <Tab> ncm2_ultisnips#expand_or("\<Tab>", 'n')
+" "inoremap <expr> <CR> (pumvisible() ? "\<C-y>\<CR>" : "\<CR>")
+"
+" augroup NCM2
+"     autocmd!
+"     autocmd BufEnter * call ncm2#enable_for_buffer()
+"     autocmd TextChangedI * call ncm2#auto_trigger()
+"     " autocmd User Ncm2PopupOpen set completeopt=menuone,noinsert,noselect
+"     " autocmd User Ncm2PopupClose set completeopt=menuone
+" augroup END
 
 "" LanguageClient
 let g:LanguageClient_autoStart=1
 let g:LanguageClient_diagnosticsList="Location"
-let g:LanguageClient_hoverPreview="Never"
+let g:LanguageClient_hoverPreview="Always"
+let g:LanguageClient_hasSnippetSupport=1
 
 let g:LanguageClient_serverCommands = {
             \ 'rust':   ['rustup', 'run', 'stable', 'rls'],
@@ -676,6 +759,8 @@ let g:LanguageClient_serverCommands = {
             \ 'c':      ['ccls'],
             \ 'cpp':    ['ccls'],
             \ 'python': ['pyls'],
+            \ 'lua':    ['lua-lsp'],
+            \ 'sh':     ['bash-language-server', 'start'],
             \ }
 
 let g:LanguageClient_diagnosticsDisplay = {
@@ -710,6 +795,7 @@ function! LanguageClient_settings()
         return
     endif
 
+    " setlocal completefunc=LanguageClient#complete
     " setlocal formatexpr=LanguageClient#textDocument_rangeFormatting_sync()
 
     nnoremap <buffer><silent> K :call LanguageClient_contextMenu()<CR>
@@ -717,14 +803,14 @@ function! LanguageClient_settings()
     nnoremap <buffer><silent> <leader>d :call LanguageClient_textDocument_definition()<CR>
     nnoremap <buffer><silent> <leader>x :call LanguageClient_textDocument_typeDefinition()<CR>
     nnoremap <buffer><silent> <leader>y :call LanguageClient_textDocument_documentSymbol()<CR>
-    nnoremap <buffer><silent> <leader>r :call LanguageClient_textDocument_references()<CR>
+    nnoremap <buffer><silent> <leader>u :call LanguageClient_textDocument_references()<CR>
 
-    nnoremap <buffer><silent> <leader>gr :call LanguageClient_textDocument_rename()<CR>
-    nnoremap <buffer><silent> <leader>gc :call LanguageClient#textDocument_rename(
+    nnoremap <buffer><silent> <leader>rn :call LanguageClient_textDocument_rename()<CR>
+    nnoremap <buffer><silent> <leader>rc :call LanguageClient#textDocument_rename(
                 \ {'newName': Abolish.camelcase(expand('<cword>'))})<CR>
-    nnoremap <buffer><silent> <leader>gs :call LanguageClient#textDocument_rename(
+    nnoremap <buffer><silent> <leader>rs :call LanguageClient#textDocument_rename(
                 \ {'newName': Abolish.snakecase(expand('<cword>'))})<CR>
-    nnoremap <buffer><silent> <leader>gu :call LanguageClient#textDocument_rename(
+    nnoremap <buffer><silent> <leader>ru :call LanguageClient#textDocument_rename(
                 \ {'newName': Abolish.uppercase(expand('<cword>'))})<CR>
 endfunction
 
@@ -739,39 +825,6 @@ augroup LanguageClient_settings
     autocmd FileType * call LanguageClient_settings()
 augroup END
 
-function! ExpandLspSnippet()
-    call UltiSnips#ExpandSnippetOrJump()
-    if !pumvisible() || empty(v:completed_item)
-        return ''
-    endif
-
-    " Only expand Lsp if UltiSnips#ExpandSnippetOrJump not effect
-    let l:value = v:completed_item['word']
-    let l:matched = len(l:value)
-    if l:matched <= 0
-        return ''
-    endif
-
-    " Remove inserted chars before expand snippet
-    if col('.') == col('$')
-        let l:matched -= 1
-        exec 'normal! ' . l:matched . 'Xx'
-    else
-        exec 'normal! ' . l:matched . 'X'
-    endif
-
-    if col('.') == col('$') - 1
-        " Move to $ if at the end of line
-        call cursor(line('.'), col('$'))
-    endif
-
-    " Expand snippet
-    call UltiSnips#Anon(l:value)
-    return ''
-endfunction
-
-inoremap <silent> <C-k> <C-r>=ExpandLspSnippet()<CR>
-
 "" Unimpaired
 let g:nremap={"[": "ü", "]": "¨"}
 let g:xremap={"[": "ü", "]": "¨"}
@@ -780,6 +833,104 @@ let g:oremap={"[": "ü", "]": "¨"}
 "" Vim RSI
 let g:rsi_no_meta=1
 
+"" vim-qf
+nmap <silent> <leader>q <Plug>(qf_qf_toggle)
+nmap <silent> <leader>l <Plug>(qf_loc_toggle)
+nmap <silent> <leader><leader> <Plug>(qf_qf_switch)
+let g:qf_mapping_ack_style = 1
+let g:qf_max_height = 10
+
+"" vim-dispatch
+nnoremap <F5> :Make<CR>
+
+
+"""""""""""""""
+"  FUNCTIONS  "
+"""""""""""""""
+
+function! s:ulti_complete() abort
+    if empty(UltiSnips#SnippetsInCurrentScope(1))
+        return ''
+    endif
+
+    let word_to_complete = matchstr(strpart(getline('.'), 0, col('.') - 1), '\S\+$')
+    let contain_word = 'stridx(v:val, word_to_complete)>=0'
+    let candidates = map(filter(keys(g:current_ulti_dict_info), contain_word),
+                   \  "{
+                   \      'word': v:val,
+                   \      'menu': '[snip] '. g:current_ulti_dict_info[v:val]['description'],
+                   \      'dup' : 1,
+                   \   }")
+    let from_where = col('.') - len(word_to_complete)
+
+    if !empty(candidates)
+        call complete(from_where, candidates)
+    endif
+
+    return ''
+endfunction
+
+inoremap <silent> <C-x><C-z> <C-r>=<SID>ulti_complete()<CR>
+
+function! ExpandLspSnippet()
+    call UltiSnips#ExpandSnippetOrJump()
+    if !pumvisible() || empty(v:completed_item)
+        return ''
+    endif
+
+    " only expand Lsp if UltiSnips#ExpandSnippetOrJump not effect.
+    let l:value = v:completed_item['word']
+    let l:matched = len(l:value)
+    if l:matched <= 0
+        return ''
+    endif
+
+    " remove inserted chars before expand snippet
+    if col('.') == col('$')
+        let l:matched -= 1
+        exec 'normal! ' . l:matched . 'Xx'
+    else
+        exec 'normal! ' . l:matched . 'X'
+    endif
+
+    if col('.') == col('$') - 1
+        " move to $ if at the end of line.
+        call cursor(line('.'), col('$'))
+    endif
+
+    " expand snippet now.
+    call UltiSnips#Anon(l:value)
+    return ''
+endfunction
+
+inoremap <silent> <C-k> <C-r>=ExpandLspSnippet()<CR>
+
+" function! CompleteSnippet()
+"     if empty(v:completed_item)
+"         return
+"     endif
+"
+"     call UltiSnips#ExpandSnippet()
+"     if g:ulti_expand_res > 0
+"         return
+"     endif
+"
+"     let l:complete = type(v:completed_item) == v:t_dict ? v:completed_item.word : v:completed_item
+"     let l:comp_len = len(l:complete)
+"
+"     let l:cur_col = mode() == 'i' ? col('.') - 2 : col('.') - 1
+"     let l:cur_line = getline('.')
+"
+"     let l:start = l:comp_len <= l:cur_col ? l:cur_line[:l:cur_col - l:comp_len] : ''
+"     let l:end = l:cur_col < len(l:cur_line) ? l:cur_line[l:cur_col + 1 :] : ''
+"
+"     call setline('.', l:start . l:end)
+"     call cursor('.', l:cur_col - l:comp_len + 2)
+"
+"     call UltiSnips#Anon(l:complete)
+" endfunction
+"
+" autocmd CompleteDone * call CompleteSnippet()
 
 """"""""""""""
 "  SETTINGS  "
@@ -791,6 +942,8 @@ set showcmd
 set hidden
 set wildmenu
 set wildmode=longest:full,full
+set complete-=t
+set complete-=i
 set completeopt=menuone,noinsert,noselect
 set shortmess+=atIc
 set lazyredraw
@@ -807,10 +960,12 @@ set list
 
 set novisualbell
 set noerrorbells
+set belloff=all
 set display=lastline
 set laststatus=2
 set showtabline=2
 set noshowmode
+set previewheight=5
 
 set notimeout
 set ttimeout
@@ -865,8 +1020,8 @@ set ignorecase
 set smartcase
 
 set foldenable
-set foldmethod=indent
 set foldnestmax=100
+"set foldmethod=indent
 
 set guifont=monospace
 set guioptions-=mTrl
@@ -879,6 +1034,12 @@ set guioptions-=mTrl
 " augroup TransparentBackground
 "     autocmd!
 "     autocmd ColorScheme * highlight Normal guibg=NONE ctermbg=NONE
+" augroup END
+
+" augroup IncSearchHighlight
+"     autocmd!
+"     autocmd CmdlineEnter [/\?] :set hlsearch
+"     autocmd CmdlineLeave [/\?] :set nohlsearch
 " augroup END
 
 augroup LighterCursorLine
@@ -937,12 +1098,6 @@ augroup SpellBadUnderline
     autocmd BufEnter,WinEnter * highlight SpellBad gui=underline term=underline cterm=underline
 augroup END
 
-augroup AutoRead
-    autocmd!
-    autocmd FocusGained,BufEnter,CursorHold,CursorHoldI ?* if getcmdwintype() == '' | checktime | endif
-    autocmd FileChangedShellPost * echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
-augroup END
-
 if &term !=? 'linux' || has('gui_running')
     set listchars=tab:›\ ,extends:>,precedes:<,nbsp:˷,eol:⤶,trail:~
     set fillchars=vert:│,fold:─,diff:-
@@ -963,7 +1118,8 @@ endif
 
 augroup CustomFolding
     autocmd!
-    autocmd BufWinEnter * let &foldlevel=max(add(map(range(1, line('$')), 'foldlevel(v:val)'), 10))  " with this, everything is unfolded at start
+    " with this, everything is unfolded at start
+    autocmd BufWinEnter * let &foldlevel=max(add(map(range(1, line('$')), 'foldlevel(v:val)'), 10))
 augroup End
 
 function! NeatFoldText()
@@ -971,18 +1127,29 @@ function! NeatFoldText()
     let lines_count = v:foldend - v:foldstart + 1
     let lines_count_text = '┤ ' . printf("%10s", lines_count . ' lines') . ' ├'
     let foldchar = matchstr(&fillchars, 'fold:\zs.')
-    let foldtextstart = strpart('+ ' . repeat(foldchar, v:foldlevel*2) . line, 0, (winwidth(0)*2)/3)
+    let foldtextstart = strpart(' + ' . repeat(foldchar, v:foldlevel*2) . line, 0, (winwidth(0)*2)/3)
     let foldtextend = lines_count_text . repeat(foldchar, 8)
     let foldtextlength = strlen(substitute(foldtextstart . foldtextend, '.', 'x', 'g')) + &foldcolumn
     return foldtextstart . repeat(foldchar, winwidth(0)-foldtextlength) . foldtextend
 endfunction
 set foldtext=NeatFoldText()
 
-set viminfo='10,\"100,:20,%,n~/.viminfo
-augroup SavePosition
+augroup PreviewAutocmds
     autocmd!
-    autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | execute 'normal! g`"zvzz' | endif
+    autocmd WinEnter * if &previewwindow |
+                \ setlocal nonumber |
+                \ nnoremap <buffer><silent> q :q<CR>
+                \ |
+                \ endif
 augroup END
+
+if !has('nvim')
+    set viminfo=%,\"800,'10,/50,:100,h,f0,n~/.vim/.viminfo
+    augroup SavePosition
+        autocmd!
+        autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | execute 'normal! g`"zvzz' | endif
+    augroup END
+endif
 
 
 """""""""""
@@ -1059,68 +1226,18 @@ if exists('+undofile')
 endif
 
 
-"""""""""""""""""""
-"  VIMRC FOLDING  "
-"""""""""""""""""""
+"""""""""""""""""
+"  LOCAL VIMRC  "
+"""""""""""""""""
 
-"" Autofolding .vimrc
-" see http://vimcasts.org/episodes/writing-a-custom-fold-expression/
+" function! SourceLocalVimrc()
+"     if filereadable(".local.vimrc") && confirm("Source '.local.vimrc?'", "&Yes\nNo", 1)
+"         silent! source .local.vimrc
+"     endif
+" endfunction
+" autocmd VimEnter * call SourceLocalVimrc()
 
-""" Defines a foldlevel for each line of code
-function! VimFolds(lnum)
-    let s:thisline = getline(a:lnum)
-    if match(s:thisline, '^"" ') >= 0
-        return '>2'
-    endif
-    if match(s:thisline, '^""" ') >= 0
-        return '>3'
-    endif
-    let s:two_following_lines = 0
-    if line(a:lnum) + 2 <= line('$')
-        let s:line_1_after = getline(a:lnum+1)
-        let s:line_2_after = getline(a:lnum+2)
-        let s:two_following_lines = 1
-    endif
-    if !s:two_following_lines
-        return '='
-    else
-        if (match(s:thisline, '^"""""') >= 0) &&
-                    \ (match(s:line_1_after, '^"  ') >= 0) &&
-                    \ (match(s:line_2_after, '^""""') >= 0)
-            return '>1'
-        else
-            return '='
-        endif
-    endif
-endfunction
-
-""" Defines a foldtext
-function! VimFoldText()
-    " handle special case of normal comment first
-    let s:info = '('.string(v:foldend-v:foldstart).' l)'
-    if v:foldlevel == 1
-        let s:line = ' ◇ '.getline(v:foldstart+1)[3:-2]
-    elseif v:foldlevel == 2
-        let s:line = '   ●  '.getline(v:foldstart)[3:]
-    elseif v:foldlevel == 3
-        let s:line = '       ▪ '.getline(v:foldstart)[4:]
-    endif
-    if strwidth(s:line) > 80 - len(s:info) - 3
-        return s:line[:79-len(s:info)-3+len(s:line)-strwidth(s:line)].'...'.s:info
-    else
-        return s:line.repeat(' ', 80 - strwidth(s:line) - len(s:info)).s:info
-    endif
-endfunction
-
-""" Set foldsettings automatically for vim files
-augroup VimFolding
-    autocmd!
-    autocmd FileType vim
-                \ setlocal foldmethod=expr |
-                \ setlocal foldexpr=VimFolds(v:lnum) |
-                \ setlocal foldtext=VimFoldText() |
-                " \ set foldcolumn=2 foldminlines=2
-augroup END
+silent! source .local.vimrc
 
 
 """""""""""

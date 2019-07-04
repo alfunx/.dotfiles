@@ -6,10 +6,16 @@
 
 --]]
 
+--luacheck: push ignore
+local awesome, client, mouse, screen, tag = awesome, client, mouse, screen, tag
+local pairs, ipairs, string, os, table, math, tostring, tonumber, type = pairs, ipairs, string, os, table, math, tostring, tonumber, type
+--luacheck: pop
+
 local gears = require("gears")
 local awful = require("awful")
 local beautiful = require("beautiful")
 local wibox = require("wibox")
+local treetile = require("treetile")
 local markup = require("lain.util.markup")
 
 local tags = require("config.tags")
@@ -20,7 +26,17 @@ function _config.init()
 
     -- Check if client floats
     _config.client_floats = function(c)
-        return awful.layout.get(c.screen) == awful.layout.suit.floating or c.floating
+        return c.floating or awful.layout.get(c.screen) == awful.layout.suit.floating
+    end
+
+    -- Check if client floats and is not maximized of fullscreen
+    _config.if_client_floats = function(fn)
+        return function(c)
+            if (c.floating or awful.layout.get(c.screen) == awful.layout.suit.floating)
+                    and not (c.maximized or c.fullscreen) then
+                fn(c)
+            end
+        end
     end
 
     -- Spawn process and adjust border color current client until process exits
@@ -226,12 +242,14 @@ function _config.init()
         end
     end
 
+    -- Get resize functions (horizontal / vertical)
     do
         local resize_horizontal_by_layout = {
             tile       = function(r) return awful.tag.incmwfact( r) end,
             tileleft   = function(r) return awful.tag.incmwfact(-r) end,
             tiletop    = function(r) return awful.client.incwfact(r) end,
             tilebottom = function(r) return awful.client.incwfact(r) end,
+            treetile   = function(r) return treetile.resize_horizontal(r) end,
         }
 
         local resize_vertical_by_layout = {
@@ -239,21 +257,24 @@ function _config.init()
             tileleft   = function(r) return awful.client.incwfact(r) end,
             tiletop    = function(r) return awful.tag.incmwfact( r) end,
             tilebottom = function(r) return awful.tag.incmwfact(-r) end,
+            treetile   = function(r) return treetile.resize_vertical(-r) end,
         }
 
         _config.resize_horizontal = function(r)
             local l = awful.layout.getname(awful.layout.get(awful.screen.focused()))
-            resize_horizontal_by_layout[l](r)
+            local fn = resize_horizontal_by_layout[l] or resize_horizontal_by_layout.tile
+            fn(r)
         end
 
         _config.resize_vertical = function(r)
             local l = awful.layout.getname(awful.layout.get(awful.screen.focused()))
-            resize_vertical_by_layout[l](r)
+            local fn = resize_vertical_by_layout[l] or resize_horizontal_by_layout.tile
+            fn(r)
         end
     end
 
-    -- Resize/Move constants
     do
+        -- Resize/Move constants
         local RESIZE_STEP = 30
         local RESIZE_FACTOR = 0.05
 
@@ -374,43 +395,6 @@ function _config.init()
         end
     end
 
-    -- Blur wallpaper (only set if theme has blurred wallpaper)
-    if beautiful.wallpaper_blur or beautiful.wallpaper_offset then
-        _config.set_wallpaper = function(clients)
-            local w
-            if clients > 0 and beautiful.wallpaper_blur then
-                w = beautiful.wallpaper_blur
-            elseif beautiful.wallpaper then
-                w = beautiful.wallpaper
-            end
-
-            -- If 'w' is a function, call it with the screen
-            if type(w) == "function" then
-                w = w(client.screen)
-            end
-
-            local offset = - (tonumber(awful.screen.focused().selected_tag.index) - 1)
-                           * (beautiful.wallpaper_offset or 0)
-            gears.wallpaper.tiled(w, client.screen, {x = offset})
-        end
-
-        screen.connect_signal("tag::history::update", function(s)
-            _config.set_wallpaper(#s.clients)
-        end)
-
-        client.connect_signal("tagged", function(c)
-            _config.set_wallpaper(#c.screen.clients)
-        end)
-
-        client.connect_signal("untagged", function(c)
-            _config.set_wallpaper(#c.screen.clients)
-        end)
-
-        client.connect_signal("property::minimized", function(c)
-            _config.set_wallpaper(#c.screen.clients)
-        end)
-    end
-
     -- Show widget on mouse::enter on parent, hide after mouse::leave + timeout
     _config.show_on_mouse = function(parent, widget, timeout)
         local t = gears.timer {
@@ -432,12 +416,14 @@ function _config.init()
     end
 
     -- Create default popup
-    _config.popup = function(args)
+    _config.default_popup = function(args)
         args.width   = args.width   or 96
         args.height  = args.height  or 96
         args.timeout = args.timeout or 1
+        args.screen  = args.screen  or screen[1]
 
         local popup = awful.popup {
+            screen = args.screen,
             widget = {
                 {
                     {

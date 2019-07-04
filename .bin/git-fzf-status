@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+fzf() {
+    fzf-tmux -d 80% -- "$@"
+}
+
+# git status browser
+
+if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+    exit 1
+fi
+
+preview_cmd=$(cat << EOF
+if [[ {1} == " M" ]]; then
+    git diff -c --color $* -- {2}
+elif [[ {1} == "M " ]]; then
+    git diff -c --color --cached $* -- {2}
+fi
+EOF
+)
+
+
+while out=$(
+    git -c 'color.status=always' status --short | tail -n +2 \
+        | fzf +s +m +e --ansi -q "$q" --reverse --tiebreak=index \
+        --preview "echo $preview_cmd" \
+        --print-query --expect=ctrl-m,ctrl-s,ctrl-l);
+do
+    mapfile -t out <<< "$out"
+    q="${out[0]}"
+    k="${out[1]}"
+    file="$(sed 's/...//' <<< "${out[-1]}")"
+    [[ -z "$file" ]] && continue
+
+    if [[ "$k" == 'ctrl-m' ]]; then
+        git diff -c -- "$file"
+    elif [[ "$k" == 'ctrl-s' ]]; then
+        git diff -c --cached -- "$file"
+    elif [[ "$k" == 'ctrl-l' ]]; then
+        git log --pretty=lt --graph --color --date=human --patch -c -M -C -- "$file"
+    else
+        git diff -c -- "$file"
+    fi
+done

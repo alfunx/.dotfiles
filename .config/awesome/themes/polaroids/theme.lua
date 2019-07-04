@@ -69,13 +69,13 @@ theme.dir = string.format("%s/.config/awesome/themes/%s", os.getenv("HOME"), the
 
 theme.wallpaper                                 = theme.dir .. "/wallpapers/wall.png"
 
+-- theme.wallpaper                                 = theme.dir .. "/wallpapers/wall.png"
 -- theme.wallpaper                                 = theme.dir .. "/wallpapers/escheresque.png"
--- theme.wallpaper_offset                          = 5
+-- theme.wallpaper_fn                              = gears.wallpaper.tiled
 
 -- theme.wallpaper_original                        = theme.dir .. "/wallpapers/matterhorn.jpg"
 -- theme.wallpaper                                 = theme.dir .. "/wallpapers/matterhorn_base.jpg"
 -- theme.wallpaper_blur                            = theme.dir .. "/wallpapers/matterhorn_blur.jpg"
--- theme.wallpaper_offset                          = 0
 
 local font_name                                 = "blackjack"
 local font_size                                 = "14"

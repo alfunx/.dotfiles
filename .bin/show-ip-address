@@ -10,6 +10,10 @@ usage() {
     exit 1
 }
 
+indent() {
+    sed 's/^/          /'
+}
+
 while getopts f OPT; do
     case $OPT in
         f) full=1 ;;
