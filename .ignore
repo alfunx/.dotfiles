@@ -20,6 +20,7 @@ compile_commands.json
 
 # tools
 tags
+.local.vimrc
 .tmux
 .backup/
 .vim-backup/
