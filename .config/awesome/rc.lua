@@ -113,6 +113,14 @@ do
 end
 -- }}}
 
+-- -- {{{ Notifications
+-- naughty.connect_signal("request::display", function(n)
+--     naughty.layout.box {
+--         notification = n,
+--     }
+-- end)
+-- -- }}}
+
 -- {{{ Deprecation warnings
 awesome.connect_signal("debug::deprecation", function(hint, see, args) --luacheck: no unused
     naughty.notify {

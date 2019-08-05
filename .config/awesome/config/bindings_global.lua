@@ -65,6 +65,12 @@ function _config.init()
                   { description = "open whatsapp", group = "launcher" }),
         awful.key({ k.m                }, "p", function() awful.spawn("arandr") end,
                   { description = "open arandr", group = "launcher" }),
+        awful.key({ k.m, k.c           }, "c", function() awful.spawn(table.concat
+                  { context.vars.terminal, " python -ic 'from math import *'" },
+                  { floating = true, ontop = true, width = 410, height = 550,
+                    delayed_placement = awful.placement.bottom_right,
+                  }) end,
+                  { description = "open a floating terminal", group = "launcher" }),
 
         -- Screenshot
         awful.key({                    }, "Print", function()
@@ -295,7 +301,9 @@ function _config.init()
         -- Toggle all titlebars
         awful.key({ k.m, k.c           }, "i", function()
             for _, c in pairs(awful.screen.focused().clients) do
-                if not c.floating then util.toggle_titlebar(c) end
+                if not (c.floating or c.maximized or c.fullscreen) then
+                    util.toggle_titlebar(c)
+                end
             end
         end,
                   { description = "toggle all titlebars", group = "client" }),

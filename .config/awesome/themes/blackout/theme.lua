@@ -944,7 +944,11 @@ local net_widget = wibox.widget {
         widget = wibox.widget.imagebox,
     },
     {
-        id = "text",
+        id = "load_text",
+        widget = wibox.widget.textbox,
+    },
+    {
+        id = "ping_text",
         widget = wibox.widget.textbox,
     },
     {
@@ -992,28 +996,27 @@ brokers.net:add_callback(function(x)
         icon = theme.widget_net_0
     end
 
+    local r, s = unit.to_mb(x.received), unit.to_mb(x.sent)
     if not x.state or x.state ~= "up" then
         m_text(net_tooltip, " N/A ", colors.red_2)
         m_text(net_widget.load.text, " N/A ", colors.red_2)
-        m_text(net_widget.text, "")
+        m_symbol(net_widget.load_text, "")
     else
-        local r, s = unit.to_mb(x.received), unit.to_mb(x.sent)
         m_text(net_tooltip, string.format("%.1f ↓↑ %.1f", r, s))
         m_text(net_widget.load.text, string.format("%.1f ↓↑ %.1f", r, s))
-
-        local flags = table.concat {
-            r + s > 2.0 and "!" or "",
-            x.connected and "" or "✗",
-        }
-        m_text(net_widget.text, flags, colors.red_2)
+        m_symbol(net_widget.load_text, (r>0.5 or s>0.2) and "" or "", colors.red_2)
     end
 
     net_widget.icon:set_image(icon)
 end)
 
+brokers.ping:add_callback(function(x)
+    m_symbol(net_widget.ping_text, x.connected and "" or "", colors.red_2)
+end)
+
 net_widget:buttons(gears.table.join(
     brokers.net.buttons,
-    awful.button({ context.keys.altkey }, 1, function()
+    awful.button({ context.keys.ctrlkey }, 1, function()
         net_widget.load.visible = not net_widget.load.visible
     end)
 ))
@@ -1167,67 +1170,6 @@ theme.titlebar_fn = function(c)
         bottom = theme.border_width / 2,
         widget = wibox.container.margin,
     }
-
-    -- local t = awful.titlebar(c, { size = 20, position = "top" })
-    -- t:setup {
-    --     {
-    --         {
-    --             {
-    --                 awful.titlebar.widget.stickybutton(c),
-    --                 awful.titlebar.widget.ontopbutton(c),
-    --                 {
-    --                     iconwidget(c),
-    --                     buttons = buttons,
-    --                     margins = 2,
-    --                     widget = wibox.container.margin,
-    --                 },
-    --                 layout = wibox.layout.fixed.horizontal,
-    --             },
-    --             {
-    --                 {
-    --                     {
-    --                         {
-    --                             align = "center",
-    --                             widget = titlewidget(c),
-    --                         },
-    --                         id = "_scroll",
-    --                         step_function = wibox.container.scroll.step_functions.linear_increase,
-    --                         speed = 80,
-    --                         extra_space = 50,
-    --                         widget = wibox.container.scroll.horizontal,
-    --                     },
-    --                     widget = wibox.container.place,
-    --                 },
-    --                 left = 6,
-    --                 right = 6,
-    --                 buttons = buttons,
-    --                 widget = wibox.container.margin,
-    --             },
-    --             {
-    --                 awful.titlebar.widget.minimizebutton(c),
-    --                 awful.titlebar.widget.maximizedbutton(c),
-    --                 awful.titlebar.widget.closebutton(c),
-    --                 layout = wibox.layout.fixed.horizontal,
-    --             },
-    --             layout = wibox.layout.align.horizontal,
-    --         },
-    --         {
-    --             {
-    --                 image = "/home/amariya/pictures/wallpapers/matterhorn_sunset.jpg",
-    --                 resize = true,
-    --                 widget = wibox.widget.imagebox,
-    --             },
-    --             content_fill_vertical = true,
-    --             content_fill_horizontal = true,
-    --             fill_vertical = true,
-    --             fill_horizontal = true,
-    --             widget = wibox.container.place,
-    --         },
-    --         layout = wibox.layout.stack,
-    --     },
-    --     bottom = theme.border_width / 2,
-    --     widget = wibox.container.margin,
-    -- }
 
     local scroll = t:get_children_by_id("_scroll")[1]
     scroll:connect_signal("mouse::enter", function()

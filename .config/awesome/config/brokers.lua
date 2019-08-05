@@ -157,7 +157,7 @@ function _config.init()
 
     -- Lock
     _config.lock = yaawl.lock {
-        signals = true,
+        signals = false,
     }
     _config.lock:add_timer {
         timeout = 401,
@@ -186,15 +186,22 @@ function _config.init()
         end)
     )
 
+    -- Ping
+    _config.ping = yaawl.ping {
+        command = table.concat { "ping -c1 -w5 ", context.vars.ping_ip },
+    }
+    _config.ping:add_timer {
+        timeout = 307,
+    }
+
     -- Net
     local net_widget_notification
+    local net_dhcp_notification
     _config.net = yaawl.net {
-        iface    = context.vars.net_iface,
-        ping_cmd = table.concat { "ping -c1 -w5 ", context.vars.ping_ip },
-        timeout  = 2,
+        iface   = context.vars.net_iface,
+        timeout = 2,
     }
     _config.net.buttons = gears.table.join(
-        _config.net.buttons,
         awful.button({ context.keys.modkey }, 1, function()
             awful.spawn(table.concat {
                 context.vars.terminal, "zsh -lic 'sudo wifi-menu'"
@@ -205,25 +212,42 @@ function _config.init()
             })
         end),
         awful.button({ context.keys.altkey }, 1, function()
-            awful.spawn(table.concat {
-                "sh -c 'ping -c1 -w10 ",
-                context.vars.ping_ip,
-                " || sudo dhcpcd -1 ",
-                context.vars.net_iface,
-                "'"
+            naughty.destroy(net_dhcp_notification)
+            net_dhcp_notification = naughty.notify {
+                title = "DHCP",
+                timeout = 0,
+            }
+            local _text
+            awful.spawn.with_line_callback(table.concat {
+                "sh -c 'ping -c1 -w10 ", context.vars.ping_ip,
+                " || sudo dhcpcd -1 ", context.vars.net_iface, "'"
+            }, {
+                stderr = function(line)
+                    _text = _text and table.concat { _text, '\n', line } or line
+                    net_dhcp_notification.text = _text
+                end,
+                exit = function(reason, args)
+                    _config.net:update()
+                    _config.ping:update()
+                    if reason == "exit" and args == 0 then
+                        naughty.destroy(net_dhcp_notification)
+                    end
+                end,
             })
         end),
         awful.button({ }, 1, function()
+            _config.net:show()
+            _config.ping:show()
             naughty.destroy(net_widget_notification)
             net_widget_notification = naughty.notify {
                 title = "Network",
                 timeout = 15,
             }
-            local net_text
+            local _text
             awful.spawn.with_line_callback(context.vars.scripts_dir .. "/show-ip-address -f", {
                 stdout = function(line)
-                    net_text = net_text and table.concat { net_text, '\n', line } or line
-                    net_widget_notification.text = net_text
+                    _text = _text and table.concat { _text, '\n', line } or line
+                    net_widget_notification.text = _text
                 end,
             })
         end)
@@ -293,6 +317,7 @@ function _config:update()
     self.drive:update()
     self.lock:update()
     self.weather:update()
+    self.ping:update()
 end
 
 --------------------
