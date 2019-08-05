@@ -166,7 +166,6 @@ config.bindings_client.init()
 config.bindings_command.init()
 config.bindings_taglist.init()
 config.bindings_tasklist.init()
-require("treetile.bindings").init()
 -- }}}
 
 -- {{{ Theme

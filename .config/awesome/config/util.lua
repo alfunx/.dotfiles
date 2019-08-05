@@ -15,7 +15,6 @@ local gears = require("gears")
 local awful = require("awful")
 local beautiful = require("beautiful")
 local wibox = require("wibox")
-local treetile = require("treetile")
 local markup = require("lain.util.markup")
 
 local tags = require("config.tags")
@@ -249,7 +248,6 @@ function _config.init()
             tileleft   = function(r) return awful.tag.incmwfact(-r) end,
             tiletop    = function(r) return awful.client.incwfact(r) end,
             tilebottom = function(r) return awful.client.incwfact(r) end,
-            treetile   = function(r) return treetile.resize_horizontal(r) end,
         }
 
         local resize_vertical_by_layout = {
@@ -257,7 +255,6 @@ function _config.init()
             tileleft   = function(r) return awful.client.incwfact(r) end,
             tiletop    = function(r) return awful.tag.incmwfact( r) end,
             tilebottom = function(r) return awful.tag.incmwfact(-r) end,
-            treetile   = function(r) return treetile.resize_vertical(-r) end,
         }
 
         _config.resize_horizontal = function(r)

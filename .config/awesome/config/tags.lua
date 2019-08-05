@@ -13,7 +13,6 @@ local pairs, ipairs, string, os, table, math, tostring, tonumber, type = pairs, 
 
 local awful = require("awful")
 local lain = require("lain")
-local treetile = require("treetile")
 
 local _config = { }
 
@@ -97,7 +96,6 @@ function _config.init()
         --lain.layout.termfair,
         --lain.layout.termfair.center,
         awful.layout.suit.floating,
-        treetile,
     }
 
     _config.layouts = {
@@ -123,8 +121,6 @@ function _config.init()
     lain.layout.cascade.tile.extra_padding = 5
     lain.layout.cascade.tile.nmaster       = 3
     lain.layout.cascade.tile.ncol          = 2
-
-    treetile.debug = true
 
 end
 
