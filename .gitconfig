@@ -287,6 +287,7 @@
 	au = add --update
 	ai = add --interactive
 	ap = add --patch
+	an = add --intent-to-add
 	u = reset HEAD --
 	up = reset --patch HEAD --
 
@@ -299,21 +300,28 @@
 	car = commit --verbose --amend --all
 
 	co = checkout
-	com = checkout master
-	cod = checkout develop
+	com = checkout master --
+	cod = checkout develop --
 	cob = checkout -b
 	b = branch
 	bv = branch --all -vv
 	bc = branch --contains
 	bd = branch --delete --force
+	t = tag
+	tc = tag --contains
+	td = tag --delete
 
 	cl = clone
 	p = pull
 	f = fetch --tags
+	ff = fetch --force --tags
 	fa = fetch --all --tags
+	fp = fetch --prune --tags
+	ffp = fetch --prune --force --tags
+	fap = fetch --prune --all --tags
 	pfa = "!f() { git remote | xargs -I@ -P0 git fetch --tags \"$@\" @; }; f"
 	pu = push
-	puu = "!f() { [ \"$#\" -gt 1 ] && REMOTE=$1 && shift; git push \"$@\" -u \"${REMOTE:-origin}\" \"$(git rev-parse --short --abbrev-ref HEAD)\"; }; f"
+	puu = "!f() { [ \"$#\" -ge 1 ] && REMOTE=$1 && shift; git push -u \"${REMOTE:-origin}\" \"$(git rev-parse --short --abbrev-ref HEAD)\" \"$@\"; }; f"
 	puf = push --force-with-lease
 	puff = push --force
 
