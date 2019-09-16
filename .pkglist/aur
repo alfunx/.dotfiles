@@ -3,15 +3,14 @@ bash-pipes
 ccls
 compiledb
 dropbox
+genymotion
 grabc
 jdtls
 kakoune-git
-lua-argparse
 luacheck
 luajit-lgi
 modprobed-db
 netctl-dispatcher-chrony
-nvme-cli
 oomox-git
 otf-san-francisco
 overdue
@@ -20,6 +19,7 @@ powerline-fonts-git
 python-bashlex
 python-pystache
 quicklisp
+readline7
 resvg-git
 ruby-haste
 ruby-json

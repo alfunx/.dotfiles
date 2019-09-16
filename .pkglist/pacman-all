@@ -78,6 +78,7 @@ gawk
 gcc
 gcc-libs
 gdb
+genymotion
 gettext
 ghc
 ghostscript
@@ -88,6 +89,7 @@ git-lfs
 glances
 glibc
 gnome-keyring
+gnu-free-fonts
 go-ethereum
 gpick
 grabc
@@ -108,6 +110,7 @@ iproute2
 iputils
 irssi
 iw
+jdk-openjdk
 jdk8-openjdk
 jdtls
 jfsutils
@@ -214,7 +217,6 @@ python-jedi
 python-language-server
 python-markdown
 python-matplotlib
-python-neovim
 python-pandas
 python-pathpy
 python-pip
@@ -222,6 +224,7 @@ python-pycodestyle
 python-pydocstyle
 python-pyflakes
 python-pylint
+python-pynvim
 python-rangehttpserver
 python-rope
 python-scikit-learn
@@ -233,10 +236,13 @@ python2-neovim
 python2-numpy
 python2-pandas
 python2-pip
+python2-scipy
+qbittorrent
 qt5ct
 quicklisp
 r
 ranger-git
+readline7
 redshift
 reiserfsprogs
 ripgrep
@@ -297,7 +303,6 @@ ttf-fira-code
 ttf-fira-mono
 ttf-fira-sans
 ttf-font-awesome
-ttf-freefont
 ttf-humor-sans
 ttf-iosevka-custom-git
 ttf-monoid

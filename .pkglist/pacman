@@ -77,6 +77,7 @@ git-lfs
 glances
 glibc
 gnome-keyring
+gnu-free-fonts
 go-ethereum
 gpick
 grep
@@ -95,6 +96,7 @@ iproute2
 iputils
 irssi
 iw
+jdk-openjdk
 jdk8-openjdk
 jfsutils
 jre8-openjdk
@@ -154,6 +156,7 @@ nss-mdns
 ntfs-3g
 ntp
 numix-gtk-theme
+nvme-cli
 openconnect
 openssh
 os-prober
@@ -187,13 +190,13 @@ python-jedi
 python-language-server
 python-markdown
 python-matplotlib
-python-neovim
 python-pandas
 python-pip
 python-pycodestyle
 python-pydocstyle
 python-pyflakes
 python-pylint
+python-pynvim
 python-rangehttpserver
 python-rope
 python-scikit-learn
@@ -205,6 +208,8 @@ python2-neovim
 python2-numpy
 python2-pandas
 python2-pip
+python2-scipy
+qbittorrent
 qt5ct
 r
 redshift
@@ -257,7 +262,6 @@ ttf-fira-code
 ttf-fira-mono
 ttf-fira-sans
 ttf-font-awesome
-ttf-freefont
 ufw
 unzip
 upower
