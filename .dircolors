@@ -383,6 +383,7 @@ CHR 04;01;97
 .apk 95
 .arj 95
 .bin 95
+.br 95
 .bz 95
 .bz2 95
 .cab 95  # Win
@@ -416,6 +417,7 @@ CHR 04;01;97
 .z 95
 .Z 95
 .zip 95
+.zst 95
 .zoo 95
 
 # For testing
