@@ -1,0 +1,103 @@
+# GDB config
+# - use with: https://github.com/cyrus-and/gdb-dashboard
+
+# do for each element of list
+
+define do-list
+  set $n = $arg1->h
+  while $n != 0
+    set $e = *($arg0*)$n.data
+    eval "%s", $arg2
+    set $n = $n->next
+  end
+end
+
+define do-exps-list
+  do-list sql_exp $arg0 $arg1
+end
+
+define do-stmt-list
+  do-list stmt $arg0 $arg1
+end
+
+alias -a dlist = do-list
+alias -a dexps = do-exps-list
+alias -a dstmt = do-stmt-list
+
+# print elements of list
+
+define print-list
+  do-list $arg0 $arg1 "print $e"
+end
+
+define print-exps-list
+  do-exps-list $arg0 "print $e"
+end
+
+define print-stmt-list
+  do-stmt-list $arg0 "print $e"
+end
+
+alias -a plist = print-list
+alias -a pexps = print-exps-list
+alias -a pstmt = print-stmt-list
+
+# print relation names
+
+define print-exps-names
+  do-exps-list $arg0 "printf \"%s.%s\n\", $e.rname, $e.name"
+end
+
+alias -a pen = print-exps-names
+
+# do for element of a tree
+
+define do-tree
+  set $n = $arg1
+  set $i = 3
+  while $i < $argc
+    eval "set $n = ($arg0*)$n->$arg%d", $i
+    set $i = $i + 1
+  end
+  set $e = *($arg0*)$n
+  eval "%s", $arg2
+end
+
+define do-rel-tree-tree
+  set $n = $arg0
+  set $i = 2
+  while $i < $argc
+    eval "set $n = (sql_rel*)$n->$arg%d", $i
+    set $i = $i + 1
+  end
+  set $e = *(sql_rel*)$n
+  eval "%s", $arg1
+end
+
+alias -a dtree = do-tree
+alias -a drel = do-rel-tree
+
+# print element of tree
+
+define print-tree
+  set $n = $arg1
+  set $i = 2
+  while $i < $argc
+    eval "set $n = ($arg0*)$n->$arg%d", $i
+    set $i = $i + 1
+  end
+  print *($arg0*)$n
+end
+
+define print-rel-tree
+  set $n = $arg0
+  set $i = 1
+  while $i < $argc
+    eval "set $n = (sql_rel*)$n->$arg%d", $i
+    set $i = $i + 1
+  end
+  print *(sql_rel*)$n
+end
+
+alias -a ptree = print-tree
+alias -a prel = print-rel-tree

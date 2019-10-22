@@ -2,3 +2,4 @@
 # - use with: https://github.com/cyrus-and/gdb-dashboard
 
 set filename-display relative
+set confirm off

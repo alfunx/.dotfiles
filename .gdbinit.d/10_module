@@ -1,13 +1,27 @@
 # GDB config
 # - use with: https://github.com/cyrus-and/gdb-dashboard
 
-dashboard -layout threads assembly memory registers stack !history expressions source
+dashboard -layout \
+    threads \
+    assembly \
+    memory \
+    registers \
+    stack \
+    !history \
+    expressions \
+    !variables \
+    breakpoints \
+    source
 
-dashboard assembly -style context 3
+dashboard assembly -style height 5
 
-dashboard source -style context 5
+dashboard source -style height 11
 
 dashboard stack -style compact True
-dashboard stack -style limit 2
+dashboard stack -style limit 5
 
 dashboard threads -style skip-running False
+
+dashboard variables -style compact True
+
+dashboard breakpoints -style pending True
