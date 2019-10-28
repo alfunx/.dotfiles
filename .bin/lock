@@ -39,6 +39,7 @@ maim -u -m 1 \
 # done
 
 i3lock \
+    --color=282828 \
     --image="$image" \
     --insidecolor=282828FF \
     --insidevercolor=FABD2FFF \
