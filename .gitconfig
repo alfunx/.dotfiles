@@ -21,15 +21,32 @@
 	interactive = true
 	pager = true
 	push = true
+	remote = true
 	showBranch = true
 	status = true
 	transport = true
 	ui = true
 
+[color "branch"]
+	current = 14
+	local = 10
+	remote = 9
+	upstream = 208
+	plain = 15
+
+[color "decorate"]
+	branch = 2 bold
+	remoteBranch = 1 bold
+	tag = 3 bold
+	stash = 5 bold
+	HEAD = 6 bold
+	grafted = 4 bold
+
 [color "diff"]
 	context = 15
 	meta = 4 bold reverse
 	frag = 3 bold reverse
+	func = 166 bold reverse
 	commit = 3 bold
 	old = 9
 	new = 10
@@ -43,13 +60,6 @@
 	oldHighlight = reverse
 	oldReset = noreverse
 
-[color "decorate"]
-	branch = 2 bold
-	remoteBranch = 1 bold
-	tag = 3 bold
-	stash = 5 bold
-	HEAD = 6 bold
-
 [color "interactive"]
 	prompt = 4 bold
 	header = 15 bold
@@ -62,16 +72,22 @@
 [color "transport"]
 	rejected = 1 bold
 
+[color "remote"]
+	hint = 5 bold
+	warning = 3 bold
+	success = 2 bold
+	error = 1 bold
+
 [color "status"]
 	header = 15 bold
 	added = 14 bold
 	changed = 11 bold
 	untracked = 9 bold
-	branch = 15 bold
-	nobranch = 9 bold reverse
+	branch = 2 bold
+	nobranch = 3 bold
 	localBranch = 2 bold
 	remoteBranch = 1 bold
-	unmerged = 1 bold reverse
+	unmerged = 9 bold reverse
 
 [commit]
 	gpgSign = true
@@ -84,6 +100,7 @@
 	renames = copy
 	mnemonicPrefix = true
 	wsErrorHighlight = all
+	statGraphWidth = 40
 
 [diff "bin"]
 	textconv = hexdump -v -C
@@ -109,8 +126,11 @@
 	trustExitCode = true
 
 [mergetool "vim-diffconflicts"]
-	cmd = vim -c DiffConflictsWithHistory "$MERGED" "$BASE" "$LOCAL" "$REMOTE"
+	cmd = vim -f -c DiffConflictsWithHistory "$MERGED" "$BASE" "$LOCAL" "$REMOTE"
 	trustExitCode = true
+
+[mergetool "fugitive"]
+	cmd = vim -f -c Gvdiff "$MERGED"
 
 [rebase]
 	missingCommitsCheck = warn
@@ -154,10 +174,10 @@
 	abbrevCommit = true
 	decorate = short
 	date = format:%a, %Y-%m-%d %R (%z)
+	follow = true
 	graphColors = 1,2,3,4,5,6,8,166,9,10,11,12,13,14,15,208
 	showRoot = true
 	mailmap = true
-
 
 [pager]
 	log = "/usr/share/git/diff-highlight/diff-highlight | less"
@@ -215,68 +235,62 @@
 [url "https://aur.archlinux.org/"]
 	insteadOf = aur://
 
+[format]
+	pretty = lf
+
 [pretty]
 	lo = tformat:%C(auto)%h%C(reset)%C(auto)%d%C(reset) %s %C(italic blue)%ad%C(reset) %C(241)%aN%C(reset)
-	lt =  format:%C(auto)%h%C(reset) %C(white)-%C(reset) %C(italic blue)%aD%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n %C(white)⤷%C(reset) %s %C(241)- %aN <%aE>%C(reset)%n
-	lf =  format:%C(auto)%h%C(reset)%C(auto)%d%C(reset)%n%C(white)SHA-1:%C(reset)    %C(italic)%H%C(reset)%n%C(white)Author:%C(reset)   %aN %C(241)<%aE>%C(reset)%n          %C(italic blue)%aD%C(reset) %C(italic cyan)(%ar)%C(reset)%n%C(white)Commit:%C(reset)   %cN %C(241)<%cE>%C(reset)%n          %C(italic blue)%cD%C(reset) %C(italic cyan)(%cr)%C(reset)%w(0,4,4)%n%+C(bold)%s%C(reset)%n%+b%n
-	rlo = tformat:%C(auto)%h%C(reset) %C(bold yellow)(%C(red)%gd%C(bold yellow))%C(reset)%C(auto)%d%C(reset) %s %C(italic blue)%ad%C(reset) %C(241)%aN%C(reset)
-	rlt =  format:%C(auto)%h%C(reset) %C(white)-%C(reset) %C(italic blue)%aD%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n %C(white)⤷%C(reset) %s %C(241)- %aN <%aE>%C(reset)%n %C(white)⤷%C(reset) %C(bold yellow)(%C(red)%gd%C(bold yellow))%C(reset) %gs %C(241)- %gN <%gE>%C(reset)%n
-	rlf =  format:%C(auto)%h%C(reset) %C(bold yellow)(%C(red)%gd%C(bold yellow))%C(reset)%C(auto)%d%C(reset)%n%C(white)SHA-1:%C(reset)    %C(italic)%H%C(reset)%n%C(white)Author:%C(reset)   %aN %C(241)<%aE>%C(reset)%n          %C(italic blue)%aD%C(reset) %C(italic cyan)(%ar)%C(reset)%n%C(white)Commit:%C(reset)   %cN %C(241)<%cE>%C(reset)%n          %C(italic blue)%cD%C(reset) %C(italic cyan)(%cr)%C(reset)%n%C(white)Reflog:%C(reset)   %gN %C(241)<%gE>%C(reset)%n          %C(italic)%gs%C(reset)%w(0,4,4)%n%+C(bold)%s%C(reset)%n%+b%n
+	lt =  format:%C(auto)%h%C(reset) %C(white)-%C(reset) %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n %C(white)⤷%C(reset) %s %C(241)- %aN <%aE>%C(reset)%n
+	lf =  format:%C(auto)%h%C(reset)%C(auto)%d%C(reset)%n%C(white)Parent:%C(reset)   %C(italic)%p%C(reset)%n%C(white)Author:%C(reset)   %aN %C(241)<%aE>%C(reset)%n          %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%n%C(white)Commit:%C(reset)   %cN %C(241)<%cE>%C(reset)   %C(239)[GPG: %G?% GK]%C(reset)%n          %C(italic blue)%cd%C(reset) %C(italic cyan)(%cr)%C(reset)%w(0,4,4)%n%+C(bold)%s%C(reset)%n%+b%n
+	rlo = tformat:%C(auto)%h%C(reset) %C(bold yellow)(%C(red)%gd%C(bold yellow))%C(reset)%C(auto)%d%C(reset) %gs %C(italic blue)%ad%C(reset) %C(241)%aN%C(reset)
+	rlt =  format:%C(auto)%h%C(reset) %C(white)-%C(reset) %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n %C(white)⤷%C(reset) %s %C(241)- %aN <%aE>%C(reset)%n %C(white)⤷%C(reset) %C(bold yellow)(%C(red)%gd%C(bold yellow))%C(reset) %gs %C(241)- %gN <%gE>%C(reset)%n
+	rlf =  format:%C(auto)%h%C(reset) %C(bold yellow)(%C(red)%gd%C(bold yellow))%C(reset)%C(auto)%d%C(reset)%n%C(white)Parent:%C(reset)   %C(italic)%p%C(reset)%n%C(white)Author:%C(reset)   %aN %C(241)<%aE>%C(reset)%n          %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%n%C(white)Commit:%C(reset)   %cN %C(241)<%cE>%C(reset)   %C(239)[GPG: %G?]%C(reset)%n          %C(italic blue)%cd%C(reset) %C(italic cyan)(%cr)%C(reset)%n%C(white)Reflog:%C(reset)   %gN %C(241)<%gE>%C(reset)%n          %C(italic)%gs%C(reset)%w(0,4,4)%n%+C(bold)%s%C(reset)%n%+b%n
 
 [alias]
 	ec = "!f() { [ -f \"${XDG_CONFIG_HOME:-$HOME/.config}\"/dotfiles.conf ] && . \"${XDG_CONFIG_HOME:-$HOME/.config}\"/dotfiles.conf; git --git-dir=\"$dotfiles_dir\" config --global --edit; }; f"
 
 	# log, current branch
-	l = log --pretty=lt --graph --color
+	l  = log --pretty=lt --graph --color
 	lo = log --pretty=lo --graph --color --date=human
+	ls = log --pretty=lo --graph --color --date=human --simplify-by-decoration
 	lf = log --pretty=lf --graph --color
-	lff = log --pretty=fuller --graph --color --stat --summary
-	lp = log --pretty=lt --graph --color --patch -c -M -C
-	ld = log --pretty=lt --graph --color --stat --summary
+	lp = log --pretty=lf --graph --color --cc --patch
+	ld = log --pretty=lf --graph --color --cc --stat
 
 	# log, all branches+tags on all remotes
 	#    added: --all
-	la = log --pretty=lt --graph --color --all
+	la  = log --pretty=lt --graph --color --all
 	lao = log --pretty=lo --graph --color --date=human --all
+	las = log --pretty=lo --graph --color --date=human --simplify-by-decoration --all
 	laf = log --pretty=lf --graph --color --all
-	laff = log --pretty=fuller --graph --color --stat --summary --all
-	lap = log --pretty=lt --graph --color --patch -c -M -C --all
-	lad = log --pretty=lt --graph --color --stat --summary --all
+	lap = log --pretty=lf --graph --color --cc --patch --all
+	lad = log --pretty=lf --graph --color --cc --stat --all
 
 	# log, all branches+tags on remotes 'origin' and 'upstream'
 	#    added: --branches='*' --tags='*' --remotes=origin --remotes=upstream
-	lg = log --pretty=lt --graph --color --branches='*' --tags='*' --remotes=origin --remotes=upstream
+	lg  = log --pretty=lt --graph --color --branches='*' --tags='*' --remotes=origin --remotes=upstream
 	lgo = log --pretty=lo --graph --color --date=human --branches='*' --tags='*' --remotes=origin --remotes=upstream
+	lgs = log --pretty=lo --graph --color --date=human --simplify-by-decoration --branches='*' --tags='*' --remotes=origin --remotes=upstream
 	lgf = log --pretty=lf --graph --color --branches='*' --tags='*' --remotes=origin --remotes=upstream
-	lgff = log --pretty=fuller --graph --color --stat --summary --branches='*' --tags='*' --remotes=origin --remotes=upstream
-	lgp = log --pretty=lt --graph --color --patch -c -M -C --branches='*' --tags='*' --remotes=origin --remotes=upstream
-	lgd = log --pretty=lt --graph --color --stat --summary --branches='*' --tags='*' --remotes=origin --remotes=upstream
+	lgp = log --pretty=lf --graph --color --cc --patch --branches='*' --tags='*' --remotes=origin --remotes=upstream
+	lgd = log --pretty=lf --graph --color --cc --stat --branches='*' --tags='*' --remotes=origin --remotes=upstream
 
-	# log, simplified by decoration
-	#    added: --all --simplify-by-decoration
-	ls = log --pretty=lt --graph --color --all --simplify-by-decoration
-	lso = log --pretty=lo --graph --color --date=human --all --simplify-by-decoration
-	lsf = log --pretty=lf --graph --color --all --simplify-by-decoration
-	lsff = log --pretty=fuller --graph --color --stat --summary --all --simplify-by-decoration
-	lsp = log --pretty=lt --graph --color --patch -c -M -C --all --simplify-by-decoration
-	lsd = log --pretty=lt --graph --color --stat --summary --all --simplify-by-decoration
-
-	sh = show --format=lf --stat --summary --patch
-	w = "!f() { watch -ctn 2 git \"${@:-l}\"; }; f"
-	rl = reflog --pretty=rlt --color
+	rl  = reflog --pretty=rlt --color
 	rlo = reflog --pretty=rlo --color
 	rlf = reflog --pretty=rlf --color
-	sl = stash list --pretty=rlt --color
+	sl  = stash list --pretty=rlt --color
 	slo = stash list --pretty=rlo --color
 	slf = stash list --pretty=rlf --color
 
+	sh = show --stat --cc --summary --patch
+	grep = grep -Ii
+
 	d = diff -c
-	ds = diff --find-renames --stat -c
+	ds = diff --find-renames --stat --cc -c
 	dc = diff --cached -c
 	dl = diff --cached -c HEAD~
 	du = diff --cached -c @{u}
 	dr = "!f() { git diff -c \"${1:-HEAD}\"~..\"${1:-HEAD}\"; }; f"
-	grep = grep -Ii
 
 	s = status
 	si = status --ignored
@@ -303,10 +317,12 @@
 	com = checkout master --
 	cod = checkout develop --
 	cob = checkout -b
+
 	b = branch
-	bv = branch --all -vv
+	ba = branch --all -vv
 	bc = branch --contains
 	bd = branch --delete --force
+
 	t = tag
 	tc = tag --contains
 	td = tag --delete
@@ -367,7 +383,8 @@
 	which = branch --all --contains
 	which-tag = describe --always --contains
 	who = shortlog --summary --numbered --no-merges
-	whoami = !"git config --get user.name && git config --get user.email"
+	whoami = "!echo \"$(git config --get user.name) <$(git config --get user.email)>\""
+	watch = "!f() { watch -ctn 2 git \"${@:-l}\"; }; f"
 
 	# list branches sorted by last modified
 	bls = "!git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's@refs/heads/@@'"
@@ -416,4 +433,10 @@
 	rmdir = true
 
 [include]
-	path = .gitconfig-local
+	path = .gitconfig.local
+
+[includeIf "gitdir:~/projects/"]
+	path = ~/projects/.gitconfig
+
+[includeIf "gitdir:~/development/"]
+	path = ~/development/.gitconfig
