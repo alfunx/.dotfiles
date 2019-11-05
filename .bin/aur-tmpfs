@@ -3,8 +3,11 @@
 set -o errexit -o pipefail
 shopt -s nullglob
 shopt -s extglob
-readonly argv0=tmpfs
-readonly PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+argv0=tmpfs
+PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+
+# default options
+unmount=0
 
 usage() {
     plain "usage: $argv0 [-u]"
@@ -34,7 +37,6 @@ while true; do
     esac
     shift
 done
-unset opt_short opt_long OPTRET
 
 if ((unmount)); then
     mountpoint -q /var/lib/aurbuild \

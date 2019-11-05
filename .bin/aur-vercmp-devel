@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# aur-update-vcs - update vcs packages
+
+XDG_CACHE_HOME=${XDG_CACHE_HOME:-$HOME/.cache}
+AURDEST=${AURDEST:-$XDG_CACHE_HOME/aurutils/sync}
+AURVCS=${AURVCS:-.*-(cvs|svn|git|hg|bzr|darcs)$}
+
+filter_vcs() {
+    awk -v "mask=$AURVCS" '$1 ~ mask {print $1}' "$@"
+}
+
+# Note that valid PKGBUILDs cannot contain \n in pkgname.
+get_latest_revision() {
+    grep -Fxf - <(printf '%s\n' *) | xargs -r aur srcver
+}
+
+db_tmp=$(mktemp)
+trap 'rm -rf "$db_tmp"' EXIT
+
+# Retrieve a list of the local repository contents. The repository
+# can be specified with the usual aur-repo arguments.
+aur repo --list "$@" >"$db_tmp"
+
+# Find VCS packages that are outdated according to aur-srcver.
+# This checks out the latest revision for existing source directories,
+# assuming the PKGBUILD has been viewed priorly.
+if cd "$AURDEST"; then
+    aur vercmp -p <(filter_vcs "$db_tmp" | get_latest_revision) <"$db_tmp"
+fi
+
+# vim: set et sw=4 sts=4 ft=sh:

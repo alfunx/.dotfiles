@@ -3,15 +3,15 @@
 set -o errexit -o pipefail
 shopt -s nullglob
 shopt -s extglob
-readonly argv0=remove
-readonly PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+argv0=remove
+PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 
 # default arguments
-repo=${repo:-$AUR_REPO}
+db_name=${db_name:-$AUR_REPO}
 repo_args=()
 
 usage() {
-    plain "usage: $argv0 [-dam] [--] pkgname... [-]"
+    plain "usage: $argv0 [-dam] [--] pkgname..."
     exit 1
 }
 
@@ -24,7 +24,7 @@ if [[ -t 2 && ! -o xtrace ]]; then
 fi
 
 opt_short='d:ma'
-opt_long=('repo:' 'database:' 'root:' 'manual' 'aur')
+opt_long=('database:' 'root:' 'manual' 'aur')
 
 if ! parseopts "$opt_short" "${opt_long[@]}" -- "$@"; then
     usage
@@ -33,31 +33,27 @@ set -- "${OPTRET[@]}"
 
 while true; do
     case "$1" in
-        -d|--database|--repo) shift; repo=$1 ;;
-        -m|--manual)          repo=manual ;;
-        -a|--aur)             repo=aur ;;
-        --root)               shift; repo_args+=(--root "$1") ;;
-        --)                   shift; break ;;
+        -d|--database) shift; db_name=$1 ;;
+        -m|--manual)   db_name=manual ;;
+        -a|--aur)      db_name=aur ;;
+        --root)        shift; repo_args+=(--root "$1") ;;
+        --)            shift; break ;;
     esac
     shift
 done
-unset opt_short opt_long OPTRET
 
-repo_args+=(-d "$repo")
+repo_args+=(-d "$db_name")
 repo_path=$(aur repo "${repo_args[@]}")
+repo_path=$(readlink -e "$repo_path")
 
 if [[ -w $repo_path ]]; then
-    msg "Using [$repo] repository" >&2
+    msg "Using [$db_name] repository" >&2
 else
     error "$argv0: $repo_path: permission denied"
     exit 13
 fi
 
-for arg in "$@"; do
-    case $arg in
-        -) cat ;;
-        *) printf '%s\n' "$arg" ;;
-    esac
-done | xargs -r repo-remove "$repo_path.tar"
+repo-remove "$repo_path" "$@"
+paccache -c "${repo_path%/*}" -rvk0 "$@"
 
 # vim: set et sw=4 sts=4 ft=sh:

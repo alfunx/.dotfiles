@@ -70,5 +70,5 @@ read -r reply
 if [[ ! $reply =~ ^[Yy]$ ]]; then
     echo 'Skipped installing [1;97mroot-scripts[0m.'
 else
-    sudo make -C "$HOME/.bin" install-root
+    eval "sudo make -C \"$HOME/.bin\" HOMEDIR=\"$HOME\" install-root"
 fi
