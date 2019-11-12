@@ -2,6 +2,7 @@
 # - use with: https://github.com/cyrus-and/gdb-dashboard
 
 # do for each element of list
+#############################
 
 define do-list
   set $n = $arg1->h
@@ -25,6 +26,7 @@ alias -a dexps = do-exps-list
 alias -a dstmt = do-stmt-list
 
 # print elements of list
+########################
 
 define print-list
   do-list $arg0 $arg1 "print $e"
@@ -43,14 +45,21 @@ alias -a pexps = print-exps-list
 alias -a pstmt = print-stmt-list
 
 # print relation names
+######################
 
 define print-exps-names
   do-exps-list $arg0 "printf \"%s.%s\n\", $e.rname, $e.name"
 end
 
+define print-stmt-names
+  do-stmt-list $arg0 "printf \"%s.%s\n\", $e.tname, $e.cname"
+end
+
 alias -a pen = print-exps-names
+alias -a psn = print-stmt-names
 
 # do for element of a tree
+##########################
 
 define do-tree
   set $n = $arg1
@@ -78,6 +87,7 @@ alias -a dtree = do-tree
 alias -a drel = do-rel-tree
 
 # print element of tree
+#######################
 
 define print-tree
   set $n = $arg1
