@@ -450,9 +450,9 @@ command! Note :Grepper -tool rg -query '(NOTE)'
 
 " Open the location/quickfix window automatically if there are valid entries in the list.
 augroup quickfix
-	autocmd!
-	autocmd QuickFixCmdPost cgetexpr cwindow
-	autocmd QuickFixCmdPost lgetexpr lwindow
+    autocmd!
+    autocmd QuickFixCmdPost cgetexpr cwindow
+    autocmd QuickFixCmdPost lgetexpr lwindow
 augroup END
 
 " Use :Grep instead of :grep! and :LGrep instead of :lgrep!.
