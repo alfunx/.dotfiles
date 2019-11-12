@@ -1,0 +1,41 @@
+#!/bin/sh
+
+z40=0000000000000000000000000000000000000000
+
+while IFS=' ' read -r local_ref local_sha remote_ref remote_sha; do
+    if [ "$local_sha" = $z40 ]; then
+        continue
+    fi
+
+    if [ "$remote_sha" = $z40 ]; then
+        # new branch, examine all commits
+        range="$local_sha"
+    else
+        # update to existing branch, examine new commits
+        range="$remote_sha..$local_sha"
+    fi
+
+    # check for WIP commits
+    commits=$(git log --format='%h %s' -i --grep='^wip' "$range")
+    if [ -n "$commits" ]; then
+        warn1 "WIP commits detected."
+        warn2 "Pass [1m--no-verify[0m to git-push to bypass this check."
+        echo
+        echo "$commits"
+        echo
+        EC=1
+    fi
+
+    # check for autosquash commits
+    commits=$(git log --format='%h %s' -i --grep='^fixup!\|^squash!' "$range")
+    if [ -n "$commits" ]; then
+        warn1 "Autosquash commits detected."
+        warn2 "Pass [1m--no-verify[0m to git-push to bypass this check."
+        echo
+        echo "$commits"
+        echo
+        EC=2
+    fi
+done
+
+exit $EC

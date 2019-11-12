@@ -106,7 +106,7 @@
 	textconv = hexdump -v -C
 
 [difftool]
-	prompt = false
+	prompt = true
 
 [difftool "vimdiff"]
 	cmd = vimdiff "$LOCAL" "$REMOTE"
@@ -117,7 +117,7 @@
 	tool = vimmerge
 
 [mergetool]
-	prompt = false
+	prompt = true
 	keepBackup = false
 	writeToTemp = true
 
@@ -240,47 +240,48 @@
 
 [pretty]
 	lo = tformat:%C(auto)%h%C(reset)%C(auto)%d%C(reset) %s %C(italic blue)%ad%C(reset) %C(241)%aN%C(reset)
-	lt =  format:%C(auto)%h%C(reset) %C(white)-%C(reset) %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n %C(white)⤷%C(reset) %s %C(241)- %aN <%aE>%C(reset)%n
+	lc =  format:%C(auto)%h%C(reset) %C(white)-%C(reset) %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n %C(white)⤷%C(reset) %s %C(241)- %aN <%aE>%C(reset)%n
 	lf =  format:%C(auto)%h%C(reset)%C(auto)%d%C(reset)%n%C(white)Parent:%C(reset)   %C(italic)%p%C(reset)%n%C(white)Author:%C(reset)   %aN %C(241)<%aE>%C(reset)%n          %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%n%C(white)Commit:%C(reset)   %cN %C(241)<%cE>%C(reset)   %C(239)[GPG: %G?% GK]%C(reset)%n          %C(italic blue)%cd%C(reset) %C(italic cyan)(%cr)%C(reset)%w(0,4,4)%n%+C(bold)%s%C(reset)%n%+b%n
 	rlo = tformat:%C(auto)%h%C(reset) %C(bold yellow)(%C(red)%gd%C(bold yellow))%C(reset)%C(auto)%d%C(reset) %gs %C(italic blue)%ad%C(reset) %C(241)%aN%C(reset)
-	rlt =  format:%C(auto)%h%C(reset) %C(white)-%C(reset) %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n %C(white)⤷%C(reset) %s %C(241)- %aN <%aE>%C(reset)%n %C(white)⤷%C(reset) %C(bold yellow)(%C(red)%gd%C(bold yellow))%C(reset) %gs %C(241)- %gN <%gE>%C(reset)%n
+	rlc =  format:%C(auto)%h%C(reset) %C(white)-%C(reset) %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%C(auto)%d%C(reset)%n %C(white)⤷%C(reset) %s %C(241)- %aN <%aE>%C(reset)%n %C(white)⤷%C(reset) %C(bold yellow)(%C(red)%gd%C(bold yellow))%C(reset) %gs %C(241)- %gN <%gE>%C(reset)%n
 	rlf =  format:%C(auto)%h%C(reset) %C(bold yellow)(%C(red)%gd%C(bold yellow))%C(reset)%C(auto)%d%C(reset)%n%C(white)Parent:%C(reset)   %C(italic)%p%C(reset)%n%C(white)Author:%C(reset)   %aN %C(241)<%aE>%C(reset)%n          %C(italic blue)%ad%C(reset) %C(italic cyan)(%ar)%C(reset)%n%C(white)Commit:%C(reset)   %cN %C(241)<%cE>%C(reset)   %C(239)[GPG: %G?]%C(reset)%n          %C(italic blue)%cd%C(reset) %C(italic cyan)(%cr)%C(reset)%n%C(white)Reflog:%C(reset)   %gN %C(241)<%gE>%C(reset)%n          %C(italic)%gs%C(reset)%w(0,4,4)%n%+C(bold)%s%C(reset)%n%+b%n
 
 [alias]
 	ec = "!f() { [ -f \"${XDG_CONFIG_HOME:-$HOME/.config}\"/dotfiles.conf ] && . \"${XDG_CONFIG_HOME:-$HOME/.config}\"/dotfiles.conf; git --git-dir=\"$dotfiles_dir\" config --global --edit; }; f"
 
 	# log, current branch
-	l  = log --pretty=lt --graph --color
+	l  = log --pretty=lc --graph --color
 	lo = log --pretty=lo --graph --color --date=human
 	ls = log --pretty=lo --graph --color --date=human --simplify-by-decoration
 	lf = log --pretty=lf --graph --color
-	lp = log --pretty=lf --graph --color --cc --patch
 	ld = log --pretty=lf --graph --color --cc --stat
+	lp = log --pretty=lf --graph --color --cc --patch
 
 	# log, all branches+tags on all remotes
 	#    added: --all
-	la  = log --pretty=lt --graph --color --all
+	la  = log --pretty=lc --graph --color --all
 	lao = log --pretty=lo --graph --color --date=human --all
 	las = log --pretty=lo --graph --color --date=human --simplify-by-decoration --all
 	laf = log --pretty=lf --graph --color --all
-	lap = log --pretty=lf --graph --color --cc --patch --all
 	lad = log --pretty=lf --graph --color --cc --stat --all
+	lap = log --pretty=lf --graph --color --cc --patch --all
 
 	# log, all branches+tags on remotes 'origin' and 'upstream'
 	#    added: --branches='*' --tags='*' --remotes=origin --remotes=upstream
-	lg  = log --pretty=lt --graph --color --branches='*' --tags='*' --remotes=origin --remotes=upstream
+	lg  = log --pretty=lc --graph --color --branches='*' --tags='*' --remotes=origin --remotes=upstream
 	lgo = log --pretty=lo --graph --color --date=human --branches='*' --tags='*' --remotes=origin --remotes=upstream
 	lgs = log --pretty=lo --graph --color --date=human --simplify-by-decoration --branches='*' --tags='*' --remotes=origin --remotes=upstream
 	lgf = log --pretty=lf --graph --color --branches='*' --tags='*' --remotes=origin --remotes=upstream
-	lgp = log --pretty=lf --graph --color --cc --patch --branches='*' --tags='*' --remotes=origin --remotes=upstream
 	lgd = log --pretty=lf --graph --color --cc --stat --branches='*' --tags='*' --remotes=origin --remotes=upstream
+	lgp = log --pretty=lf --graph --color --cc --patch --branches='*' --tags='*' --remotes=origin --remotes=upstream
 
-	rl  = reflog --pretty=rlt --color
+	rl  = reflog --pretty=rlc --color
 	rlo = reflog --pretty=rlo --color
 	rlf = reflog --pretty=rlf --color
-	sl  = stash list --pretty=rlt --color
+	sl  = stash list --pretty=rlc --color
 	slo = stash list --pretty=rlo --color
-	slf = stash list --pretty=rlf --color
+	slf = stash list --pretty=rlf --color --stat
+	sls = stash show --color --patch
 
 	sh = show --stat --cc --summary --patch
 	grep = grep -Ii
@@ -336,10 +337,11 @@
 	ffp = fetch --prune --force --tags
 	fap = fetch --prune --all --tags
 	pfa = "!f() { git remote | xargs -I@ -P0 git fetch --tags \"$@\" @; }; f"
+
 	pu = push
-	puu = "!f() { [ \"$#\" -ge 1 ] && REMOTE=$1 && shift; git push -u \"${REMOTE:-origin}\" \"$(git rev-parse --short --abbrev-ref HEAD)\" \"$@\"; }; f"
 	puf = push --force-with-lease
 	puff = push --force
+	puu = "!f() { [ \"$#\" -ge 1 ] && REMOTE=$1 && shift; git push -u \"${REMOTE:-origin}\" \"$(git rev-parse --short --abbrev-ref HEAD)\" \"$@\"; }; f"
 
 	sub = submodule
 	subu = submodule update --init --recursive

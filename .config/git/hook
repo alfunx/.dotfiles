@@ -5,6 +5,15 @@
 #  $ mkdir ~/.config/git/hooks/post-checkout.d
 #  $ ln -s ~/.config/git/hook ~/.config/git/hooks/post-checkout
 
+# Formatting functions
+hint1()  { echo "[1;35mhint:[0m" "$@"; }
+hint2()  { echo "     " "$@"; }
+warn1()  { echo "[1;33mwarning:[0m" "$@"; }
+warn2()  { echo "        " "$@"; }
+error1() { echo "[1;31merror:[0m" "$@"; }
+error2() { echo "      " "$@"; }
+export -f hint1 hint2 warn1 warn2 error1 error2
+
 # Run all executable hooks in hookname.d/* hooks
 exitcodes=()
 hookname=$(basename "$0")
@@ -12,32 +21,32 @@ hookpath=$(git config core.hooksPath)
 hookpath=${hookpath/#\~/$HOME}
 
 # Run local hook
-if [[ -d '.git' ]]; then
+if [ -d '.git' ]; then
     localhook=".git/hooks/$hookname"
 else
     localhook="hooks/$hookname"
 fi
-if [[ -x $localhook ]]; then
-    $localhook "$@"
+if [ -x "$localhook" ]; then
+    $localhook "$@" 1>&2
     exitcodes+=($?)
 fi
 
 # Fallback to default hooks location
-if [[ -z $hookpath ]]; then
+if [ -z "$hookpath" ]; then
     hookpath="hooks"
 fi
 
 # Run all executable hooks
 for hook in "$hookpath/$hookname.d/"*; do
-    if [[ -x $hook ]]; then
-        $hook "$@"
+    if [ -x "$hook" ]; then
+        $hook "$@" 1>&2
         exitcodes+=($?)
     fi
 done
 
 # Exit with first non-zero exit code
 for exitcode in "${exitcodes[@]}"; do
-    if [[ $exitcode -ne 0 ]]; then
+    if [ "$exitcode" != 0 ]; then
         exit "$exitcode"
     fi
 done

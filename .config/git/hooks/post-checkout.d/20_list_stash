@@ -4,6 +4,7 @@ current_branch="$(git rev-parse --abbrev-ref HEAD)"
 stash_name="$(git stash list | grep "$current_branch:" | head -n1 | cut -d':' -f1)"
 
 if [ -n "$stash_name" ]; then
-    echo "[1;33mwarning:[0m Last stash on this branch:" 1>&2
-    git --no-pager stash show "$stash_name" --stat --color=always | sed 's/^/ /'
+    echo
+    hint1 'Last stash on this branch:'
+    git stash show "$stash_name" --stat --color=always | sed 's/^ *//'
 fi
