@@ -3,3 +3,5 @@ setlocal shiftwidth=4
 setlocal expandtab
 setlocal autoindent
 setlocal smarttab
+
+setlocal formatoptions-=t formatoptions-=c formatoptions-=o

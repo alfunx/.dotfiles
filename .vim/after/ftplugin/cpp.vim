@@ -4,5 +4,5 @@ setlocal noexpandtab
 setlocal autoindent
 setlocal smarttab
 
-setlocal formatoptions-=tc
+setlocal formatoptions-=t formatoptions-=c formatoptions-=o
 setlocal commentstring=//\ %s

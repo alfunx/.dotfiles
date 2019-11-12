@@ -1,3 +1,4 @@
-setlocal formatoptions+=t
 setlocal wrap
 setlocal spell
+
+setlocal formatoptions+=t
