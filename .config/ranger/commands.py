@@ -228,8 +228,8 @@ class mkcd(Command):
             self.fm.notify("file/directory exists!", bad=True)
 
 
-class cq(Command):
-    """:cq [error code]
+class cquit(Command):
+    """:cquit [error code]
 
     Quit ranger with error code.
     """
