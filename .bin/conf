@@ -16,6 +16,7 @@ case $cmd in
         vim \
             ~/.vimrc \
             ~/.vim/after/**/* \
+            ~/.vim/syntax/* \
             "$@"
         ;;
 
@@ -76,6 +77,13 @@ case $cmd in
     xorg)
         vim \
             ~/.xinitrc \
+            "$@"
+        ;;
+
+    gdb)
+        vim \
+            ~/.gdbinit \
+            ~/.gdbinit.d/**/* \
             "$@"
         ;;
 
