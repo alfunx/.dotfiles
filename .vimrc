@@ -62,6 +62,7 @@ Plug 'majutsushi/tagbar'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'romainl/vim-qf'
 Plug 'sheerun/vim-polyglot'
+Plug 'fszymanski/fzf-quickfix', {'on': 'Quickfix'}
 
 " Text objects
 Plug 'wellle/targets.vim'
@@ -410,7 +411,7 @@ let g:fzf_action = {
 let g:fzf_layout = { 'down': '~30%' }
 
 " Customize the options used by 'git log'
-let g:fzf_commits_log_options='--graph --color=always --format="%c(auto)%h%d %s %c(black)%c(bold)%cr"'
+let g:fzf_commits_log_options='--graph --color=always --pretty=lo'
 
 " Command to generate tags file
 let g:fzf_tags_command = 'ctags -R'

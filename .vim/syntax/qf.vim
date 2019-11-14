@@ -11,15 +11,17 @@ endif
 " A bunch of useful C keywords
 syn match qfFileName "^[^|]*" nextgroup=qfSeparator
 syn match qfSeparator "|" nextgroup=qfLineNr contained
-syn match qfLineNr "[^|]*" contained contains=qfError,qfWarning
+syn match qfLineNr "[^|]*" contained contains=qfError,qfWarning,qfInfo
 syn match qfError "error" contained
 syn match qfWarning "warning" contained
+syn match qfInfo "info" contained
 
 " The default highlighting.
 hi def link qfFileName Directory
 hi def link qfLineNr LineNr
 hi def link qfError Error
 hi def link qfWarning Warning
+hi def link qfInfo Info
 
 let b:current_syntax = "qf"
 
