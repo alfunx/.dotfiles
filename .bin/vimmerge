@@ -15,15 +15,15 @@ cp "$MERGED" "$THEIRS"
 cp "$MERGED" "$ORIGINAL"
 
 vim -f \
-    -c "g/^<<<<<<< /,/^||||||| \\?\\|^=======\\r\\?$/d" \
-    -c "g/^>>>>>>> /d" \
-    -c "w | file THEIRS | setlocal nomodifiable readonly | lefta vert diffs $MERGED" \
-    -c "g/^||||||| \\?\\|^=======\\r\\?$/,/^>>>>>>> /d" \
-    -c "g/^<<<<<<< /d" \
-    -c "w | tabe $REMOTE | file REMOTE | setlocal nomodifiable readonly" \
-    -c "lefta vert diffs $LOCAL | file LOCAL | setlocal nomodifiable readonly" \
-    -c "rightb vert diffs $BASE | file BASE | setlocal nomodifiable readonly" \
-    -c "tabe $ORIGINAL | file ORIGINAL | setlocal nomodifiable readonly | tabfirst" \
+    -c 'g/^<\{7} /,/^|\{7} \?\|^=\{7}\r\?$/d' \
+    -c 'g/^>\{7} /d' \
+    -c "w | f THEIRS | setl nomod ro | lefta vert diffs $MERGED" \
+    -c 'g/^|\{7} \?\|^=\{7}\r\?$/,/^>\{7} /d' \
+    -c 'g/^<\{7} /d' \
+    -c "w | tabe $REMOTE | f REMOTE | setl nomod ro" \
+    -c "lefta vert diffs $LOCAL | f LOCAL | setl nomod ro" \
+    -c "rightb vert diffs $BASE | f BASE | setl nomod ro" \
+    -c "tabe $ORIGINAL | f ORIGINAL | setl nomod ro | tabr" \
     "$THEIRS"
 
 exit $?
