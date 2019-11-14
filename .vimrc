@@ -50,9 +50,7 @@ Plug 'junegunn/vim-easy-align'
 Plug 'junegunn/vim-peekaboo'
 Plug 'haya14busa/incsearch.vim'
 Plug 'justinmk/vim-sneak'
-Plug 'mhinz/vim-grepper'
 Plug 'terryma/vim-multiple-cursors'
-"Plug 'terryma/vim-expand-region'
 "Plug 'jiangmiao/auto-pairs'
 Plug 'tmsvg/pear-tree'
 Plug 'mbbill/undotree'
@@ -61,7 +59,6 @@ Plug 'xtal8/traces.vim'
 Plug 'chrisbra/NrrwRgn'
 Plug 'dense-analysis/ale'
 Plug 'majutsushi/tagbar'
-"Plug 'ludovicchabant/vim-gutentags'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'romainl/vim-qf'
 Plug 'sheerun/vim-polyglot'
@@ -202,6 +199,9 @@ nnoremap <silent> <M-S-l> gt
 " Fullscreen
 nnoremap <silent> <C-w>F <C-w>_<C-w><Bar>
 
+" Equal
+nnoremap <silent> <C-w>0 <C-w>=
+
 " Make Y behave like other commands
 nnoremap <silent> Y y$
 
@@ -279,7 +279,7 @@ nnoremap <silent> <F3> mz:keepp %s/\\\@1<!\s\+$//e<CR>`z
 command! W execute 'silent! w !sudo /usr/bin/tee % >/dev/null' <Bar> edit!
 
 " Set path to current file
-command! -bang -nargs=* Cd  cd %:p:h
+command! -bang -nargs=* Cd cd<bang> %:p:h
 
 " No highlight
 nnoremap <silent> <M-b> :<C-u>nohlsearch<CR>
@@ -346,6 +346,55 @@ nnoremap <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> 
             \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
             \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
+"" RG
+command! -bang -nargs=* Rg
+            \ call fzf#vim#grep(
+            \ 'rg --hidden --line-number --column --no-heading --smart-case --follow --color=always --colors="match:none" --colors="path:fg:white" --colors="line:fg:white" '.shellescape(<q-args>), 1,
+            \ <bang>0)
+
+"" AG
+command! -bang -nargs=* Ag
+            \ call fzf#vim#ag(
+            \ <q-args>, '--color-path "0;37" --color-line-number "0;37" --color-match "" --hidden --smart-case --follow',
+            \ <bang>0)
+
+if executable('rg')
+    set grepprg=rg\ --smart-case\ --vimgrep
+    set grepformat^=%f:%l:%c:%m
+elseif executable('ag')
+    set grepprg=ag\ --smart-case\ --vimgrep
+    set grepformat^=%f:%l:%c:%m
+endif
+
+"" Grep
+function! Grep(args)
+    let args = split(a:args, ' ')
+    return system(join([&grepprg, shellescape(args[0]), len(args) > 1 ? join(args[1:-1], ' ') : ''], ' '))
+endfunction
+
+command! -nargs=+ -complete=file_in_path -bar Grep     cgetexpr Grep(<q-args>)
+command! -nargs=+ -complete=file_in_path -bar LGrep    lgetexpr Grep(<q-args>)
+command! -nargs=+ -complete=file_in_path -bar Grepadd  caddexpr Grep(<q-args>)
+command! -nargs=+ -complete=file_in_path -bar LGrepadd laddexpr Grep(<q-args>)
+
+nnoremap <leader>s :Grep<space>
+nnoremap <leader>S :Grepadd<space>
+
+" open the location/quickfix window automatically
+augroup quickfix
+    autocmd!
+    autocmd QuickFixCmdPost cgetexpr cwindow
+    autocmd QuickFixCmdPost lgetexpr lwindow
+    autocmd QuickFixCmdPost caddexpr cwindow
+    autocmd QuickFixCmdPost laddexpr lwindow
+augroup END
+
+"" GitBlame
+command! -range GB echo join(systemlist("git -C " . shellescape(expand('%:p:h')) . " blame -L <line1>,<line2> " . shellescape(expand('%:t'))), "\n")
+
+"" Countrepeat
+"nnoremap . :<C-u>exe 'norm! ' . repeat('.', v:count1)<CR>
+
 
 """""""""""""""""""""
 "  PLUGIN SETTINGS  "
@@ -388,76 +437,6 @@ imap <C-x><C-l> <plug>(fzf-complete-line)
 
 " Use custom dictionary
 inoremap <expr> <C-x><C-k> fzf#complete('cat /usr/share/dict/words-insane')
-
-"" RG
-command! -bang -nargs=* Rg
-            \ call fzf#vim#grep(
-            \ 'rg --hidden --line-number --column --no-heading --smart-case --follow --color=always --colors="match:none" --colors="path:fg:white" --colors="line:fg:white" '.shellescape(<q-args>), 1,
-            \ <bang>0)
-
-"" AG
-command! -bang -nargs=* Ag
-            \ call fzf#vim#ag(
-            \ <q-args>, '--color-path "0;37" --color-line-number "0;37" --color-match "" --hidden --smart-case --follow',
-            \ <bang>0)
-
-" if executable('rg')
-"     augroup Rg
-"         autocmd!
-"         autocmd VimEnter * nnoremap <Leader>r :Rg<CR>
-"     augroup End
-" elseif executable('ag')
-"     augroup Ag
-"         autocmd!
-"         autocmd VimEnter * nnoremap <Leader>r :Ag<CR>
-"     augroup End
-" endif
-
-if executable('rg')
-    set grepprg=rg\ --smart-case\ --vimgrep
-    set grepformat^=%f:%l:%c:%m
-elseif executable('ag')
-    set grepprg=ag\ --smart-case\ --vimgrep
-    set grepformat^=%f:%l:%c:%m
-endif
-
-"" Grepper
-let g:grepper={}
-let g:grepper.tools=[]
-if executable('rg')
-    let g:grepper.tools+=['rg']
-elseif executable('ag')
-    let g:grepper.tools+=['ag']
-endif
-let g:grepper.tools+=['git', 'grep']
-let g:grepper.rg = {
-            \ 'grepprg':    'rg --smart-case --vimgrep',
-            \ 'grepformat': '%f:%l:%c:%m',
-            \ 'escape':     '\^$.*+?()[]{}|'
-            \ }
-let g:grepper.next_tool='<C-g>'
-let g:grepper.jump=0
-let g:grepper.quickfix=1
-let g:grepper.dir='repo,cwd'
-let g:grepper.stop=500
-
-nnoremap <leader>s :Grepper -tool rg<CR>
-nmap gs <plug>(GrepperOperator)
-xmap gs <plug>(GrepperOperator)
-
-command! Todo :Grepper -tool rg -query '(TODO|FIXME|BUG)'
-command! Note :Grepper -tool rg -query '(NOTE)'
-
-" Open the location/quickfix window automatically if there are valid entries in the list.
-augroup quickfix
-    autocmd!
-    autocmd QuickFixCmdPost cgetexpr cwindow
-    autocmd QuickFixCmdPost lgetexpr lwindow
-augroup END
-
-" Use :Grep instead of :grep! and :LGrep instead of :lgrep!.
-command! -nargs=+ -complete=file_in_path -bar Grep  cgetexpr system(&grepprg . ' ' . shellescape(<q-args>))
-command! -nargs=+ -complete=file_in_path -bar LGrep lgetexpr system(&grepprg . ' ' . shellescape(<q-args>))
 
 "" Airline
 if !exists('g:airline_symbols')
@@ -1008,6 +987,7 @@ set formatoptions+=rj formatoptions-=o
 set nrformats-=octal
 set pastetoggle=<F2>
 set dictionary+=/usr/share/dict/words-insane
+set tags^=./.git/tags
 
 "set clipboard+=unnamed,unnamedplus
 set history=10000
@@ -1019,10 +999,6 @@ set nostartofline
 set nohidden
 set nojoinspaces
 set sessionoptions-=options
-
-if filereadable('/bin/zsh')
-    set shell=/bin/zsh\ --login
-endif
 
 set incsearch
 set hlsearch
