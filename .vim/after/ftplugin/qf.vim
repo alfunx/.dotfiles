@@ -8,3 +8,5 @@ nnoremap <buffer><silent> u :Restore<CR>
 nnoremap <buffer> K :Keep<space>
 nnoremap <buffer> R :Reject<space>
 nnoremap <buffer> D :Reject<space>
+
+setlocal nocursorline

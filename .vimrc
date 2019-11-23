@@ -24,8 +24,6 @@ Plug '/usr/bin/fzf'
 
 " General
 Plug 'alfunx/fzf.vim'  " fork of 'junegunn/fzf.vim'
-Plug 'junegunn/goyo.vim'
-Plug 'junegunn/limelight.vim'
 Plug 'tpope/vim-git'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
@@ -48,14 +46,13 @@ Plug 'vim-scripts/ReplaceWithRegister'
 Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/vim-easy-align'
 Plug 'junegunn/vim-peekaboo'
-Plug 'haya14busa/incsearch.vim'
 Plug 'justinmk/vim-sneak'
 Plug 'terryma/vim-multiple-cursors'
 "Plug 'jiangmiao/auto-pairs'
 Plug 'tmsvg/pear-tree'
 Plug 'mbbill/undotree'
 Plug 'ap/vim-css-color'
-Plug 'xtal8/traces.vim'
+"Plug 'markonm/traces.vim'
 Plug 'chrisbra/NrrwRgn'
 Plug 'dense-analysis/ale'
 Plug 'majutsushi/tagbar'
@@ -80,7 +77,6 @@ Plug 'tmux-plugins/vim-tmux-focus-events'
 " Snippets
 Plug 'SirVer/ultisnips'
 Plug 'alfunx/vim-snippets'  " fork of 'honza/vim-snippets'
-"Plug 'ncm2/ncm2-ultisnips'
 
 " Language server
 Plug 'autozimu/LanguageClient-neovim', {
@@ -88,16 +84,8 @@ Plug 'autozimu/LanguageClient-neovim', {
             \ 'do': 'bash install.sh',
             \ }
 
-" Completion
-"Plug 'roxma/vim-hug-neovim-rpc'
-"Plug 'roxma/nvim-yarp'
-"Plug 'ncm2/ncm2'
-"Plug 'ncm2/ncm2-bufword'
-"Plug 'ncm2/ncm2-syntax'
-"Plug 'ncm2/ncm2-tagprefix'
-"Plug 'fgrsnau/ncm2-otherbuf', { 'branch': 'ncm2' }
-"Plug 'filipekiss/ncm2-look.vim'
-"Plug 'Shougo/neco-syntax'
+"Plug 'prabirshrestha/async.vim'
+"Plug 'prabirshrestha/vim-lsp'
 
 " Language specific
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
@@ -111,18 +99,98 @@ Plug 'tomlion/vim-solidity'
 
 " Themes
 Plug 'alfunx/gruvbox'  " fork of 'morhetz/gruvbox'
+Plug 'lifepillar/vim-gruvbox8'
 
 " Don't load in console
 if &term !=? 'linux' || has('gui_running')
-    Plug 'vim-airline/vim-airline'
+    "Plug 'vim-airline/vim-airline'
+    Plug 'itchyny/lightline.vim'
 endif
 
 call plug#end()
 
-runtime ftplugin/man.vim
-runtime ftplugin/vim.vim
-runtime ftplugin/help.vim
-runtime macros/matchit.vim
+if !has('nvim')
+    unlet! skip_defaults_vim
+    source $VIMRUNTIME/defaults.vim
+    runtime ftplugin/man.vim
+    runtime macros/matchit.vim
+endif
+
+
+"""""""""""
+"  THEME  "
+"""""""""""
+
+augroup CursorLineHighlighting
+    autocmd!
+    autocmd ColorScheme * if &bg == "dark" |
+                \ hi! CursorLine guibg=#32302f | hi! CursorLineNR gui=bold guibg=#32302f |
+                \ else |
+                \ hi! CursorLine guibg=#f2e5bc | hi! CursorLineNR gui=bold guibg=#f2e5bc |
+                \ endif
+augroup END
+
+augroup QuickFixHighlighting
+    autocmd!
+    autocmd ColorScheme * hi! QuickFixLine gui=bold term=bold cterm=bold
+    autocmd ColorScheme * hi! link qfFileName Special
+augroup END
+
+augroup MarkdownFenceHighlighting
+    autocmd!
+    autocmd ColorScheme * hi! link mkdCodeStart NonText
+    autocmd ColorScheme * hi! link mkdCodeEnd NonText
+    autocmd ColorScheme * hi! link mkdCodeDelimiter NonText
+augroup END
+
+augroup ConflictMarkerHighlighting
+    autocmd!
+    autocmd ColorScheme * hi! link VcsConflict Error
+    autocmd BufEnter,WinEnter * match VcsConflict '^\(<\|=\||\|>\)\{7\}\([^=].\+\)\?$'
+augroup END
+
+"augroup SpellBadHighlighting
+"    autocmd!
+"    autocmd BufEnter,WinEnter * hi! SpellBad guisp=#fb4934 gui=undercurl term=undercurl cterm=undercurl
+"augroup END
+
+augroup StatusLineUpdate
+    autocmd!
+    if exists(':AirlineRefresh')
+        autocmd ColorScheme * :AirlineRefresh
+    endif
+    if exists('*lightline#colorscheme')
+        autocmd ColorScheme * call lightline#colorscheme()
+    endif
+    if exists('*lightline#update')
+        autocmd BufAdd,BufWritePost,VimResized * call lightline#update()
+    endif
+augroup END
+
+" Theme and colors
+set termguicolors
+set background=dark
+let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
+"set t_Co=256
+let g:gruvbox_bold=1
+let g:gruvbox_italic=1
+let g:gruvbox_underline=1
+let g:gruvbox_undercurl=1
+colorscheme gruvbox
+
+" Switch cursor according to mode
+if &term !=? 'linux' || has('gui_running')
+    let &t_SI="\<Esc>[6 q"
+    let &t_SR="\<Esc>[4 q"
+    let &t_EI="\<Esc>[2 q"
+    let &t_ue="\<Esc>[4:0m"
+    let &t_us="\<Esc>[4:2m"
+    "let &t_Ce="\<Esc>[4:0m"
+    "let &t_Cs="\<Esc>[4:3m"
+    let &t_Ce="\<Esc>[4:0;59m"
+    let &t_Cs="\e[4:3;58;5;167m"
+endif
 
 
 """"""""""""""""""
@@ -131,44 +199,45 @@ runtime macros/matchit.vim
 
 " Alt key mappings
 if !has('nvim')
-    execute "set <M-1>=\<Esc>1"
-    execute "set <M-2>=\<Esc>2"
-    execute "set <M-3>=\<Esc>3"
-    execute "set <M-4>=\<Esc>4"
-    execute "set <M-5>=\<Esc>5"
-    execute "set <M-6>=\<Esc>6"
-    execute "set <M-7>=\<Esc>7"
-    execute "set <M-8>=\<Esc>8"
-    execute "set <M-9>=\<Esc>9"
-    execute "set <M-b>=\<Esc>b"
-    execute "set <M-e>=\<Esc>e"
-    execute "set <M-S-h>=\<Esc>H"
-    execute "set <M-h>=\<Esc>h"
-    execute "set <M-j>=\<Esc>j"
-    execute "set <M-k>=\<Esc>k"
-    execute "set <M-S-l>=\<Esc>L"
-    execute "set <M-l>=\<Esc>l"
-    execute "set <M-n>=\<Esc>n"
-    execute "set <M-p>=\<Esc>p"
-    execute "set <M-u>=\<Esc>u"
-    execute "set <M-w>=\<Esc>w"
-    execute "set <M-z>=\<Esc>z"
+    exec "set <M-1>=\<Esc>1"
+    exec "set <M-2>=\<Esc>2"
+    exec "set <M-3>=\<Esc>3"
+    exec "set <M-4>=\<Esc>4"
+    exec "set <M-5>=\<Esc>5"
+    exec "set <M-6>=\<Esc>6"
+    exec "set <M-7>=\<Esc>7"
+    exec "set <M-8>=\<Esc>8"
+    exec "set <M-9>=\<Esc>9"
+    exec "set <M-0>=\<Esc>0"
+    exec "set <M-b>=\<Esc>b"
+    exec "set <M-e>=\<Esc>e"
+    exec "set <M-S-h>=\<Esc>H"
+    exec "set <M-h>=\<Esc>h"
+    exec "set <M-j>=\<Esc>j"
+    exec "set <M-k>=\<Esc>k"
+    exec "set <M-S-l>=\<Esc>L"
+    exec "set <M-l>=\<Esc>l"
+    exec "set <M-n>=\<Esc>n"
+    exec "set <M-p>=\<Esc>p"
+    exec "set <M-u>=\<Esc>u"
+    exec "set <M-w>=\<Esc>w"
+    exec "set <M-z>=\<Esc>z"
 endif
 
 " Leader key
 nnoremap <Space> <Nop>
 nnoremap <CR> <Nop>
-let mapleader=' '
-let maplocalleader=''
+let mapleader = ' '
+let maplocalleader = ''
 
-" " Split navigation
-" nnoremap <silent> <C-h> <C-w><C-h>
-" nnoremap <silent> <C-j> <C-w><C-j>
-" nnoremap <silent> <C-k> <C-w><C-k>
-" nnoremap <silent> <C-l> <C-w><C-l>
+" Split navigation
+"nnoremap <silent> <C-h> <C-w><C-h>
+"nnoremap <silent> <C-j> <C-w><C-j>
+"nnoremap <silent> <C-k> <C-w><C-k>
+"nnoremap <silent> <C-l> <C-w><C-l>
 
 " Split navigation (vim-tmux-navigator)
-let g:tmux_navigator_no_mappings=1
+let g:tmux_navigator_no_mappings = 1
 nnoremap <silent> <C-h> :TmuxNavigateLeft<CR>
 nnoremap <silent> <C-j> :TmuxNavigateDown<CR>
 nnoremap <silent> <C-k> :TmuxNavigateUp<CR>
@@ -180,12 +249,6 @@ nnoremap <silent> <C-w>h 5<C-w><
 nnoremap <silent> <C-w>j 5<C-w>-
 nnoremap <silent> <C-w>k 5<C-w>+
 nnoremap <silent> <C-w>l 5<C-w>>
-
-" Split resize
-"nnoremap <silent> <Home> <C-w><
-"nnoremap <silent> <PageDown> <C-w>-
-"nnoremap <silent> <PageUp> <C-w>+
-"nnoremap <silent> <End> <C-w>>
 
 " New tab
 nnoremap <silent> <C-w>t :tabnew<CR>
@@ -227,14 +290,14 @@ nnoremap <silent> <leader>j :m .+1<CR>
 nnoremap <silent> <leader>k :m .-2<CR>
 
 " Use CTRL-S for saving, also in Insert mode
-nnoremap <silent> <C-s> :write<CR>
+nnoremap <silent> <C-s>      :write<CR>
 xnoremap <silent> <C-s> <Esc>:write<CR>
 inoremap <silent> <C-s> <C-o>:write<CR><Esc>
 
 " Insert mode mappings
 inoremap <silent> <C-u> <C-g>u<C-u>
-inoremap <silent> àà <C-o>O
-inoremap <silent> éé <C-o>o
+inoremap <silent> àà    <C-o>O
+inoremap <silent> éé    <C-o>o
 inoremap <silent> <M-b> <C-o>b
 inoremap <silent> <M-w> <C-o>w
 inoremap <silent> <M-e> <C-o>e<Right>
@@ -265,19 +328,20 @@ nnoremap <silent> <M-5> 5gt
 nnoremap <silent> <M-6> 6gt
 nnoremap <silent> <M-7> 7gt
 nnoremap <silent> <M-8> 8gt
-nnoremap <silent> <M-9> :tablast<CR>
+nnoremap <silent> <M-9> 9gt
+nnoremap <silent> <M-0> :tablast<CR>
 
 " Wildmenu
 set wildchar=<Tab>
 set wildcharm=<Tab>
-cnoremap <expr> <Tab> getcmdtype() =~ '[?/]' ? '<C-g>' : '<Tab>'
-cnoremap <expr> <S-Tab> getcmdtype() =~ '[?/]' ? '<C-t>' : feedkeys('<S-Tab>', 'int')[1]
+cnoremap <expr> <Tab>   getcmdtype() =~ '[?/]' ? '<C-g>' : '<Tab>'
+cnoremap <expr> <S-Tab> getcmdtype() =~ '[?/]' ? '<C-t>' : '<S-Tab>'
 
 " Remove trailing whitespaces
-nnoremap <silent> <F3> mz:keepp %s/\\\@1<!\s\+$//e<CR>`z
+nnoremap <silent> <F3> mz:keeppatterns %s/\\\@1<!\s\+$//e<CR>`z
 
 " Allow saving of files as sudo
-command! W execute 'silent! w !sudo /usr/bin/tee % >/dev/null' <Bar> edit!
+command! W exec 'silent! w !sudo /usr/bin/tee % >/dev/null' <Bar> edit!
 
 " Set path to current file
 command! -bang -nargs=* Cd cd<bang> %:p:h
@@ -289,18 +353,11 @@ nnoremap <silent> <M-b> :<C-u>nohlsearch<CR>
 nnoremap Q @@
 
 " Run macro on visual selection
-function! ExecuteMacroOverVisualRange()
-    echo "@".getcmdline()
-    execute ":'<,'>normal @".nr2char(getchar())
-endfunction
-xnoremap <silent> @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
+nnoremap <silent> <leader>@ :set opfunc=functions#visual_macro<CR>g@
+xnoremap <silent>         @ :<C-u>call functions#visual_macro(visualmode(), 1)<CR>
 
-" " Change register
-" function! ChangeReg() abort
-"     let x = nr2char(getchar())
-"     call feedkeys("q:ilet @" . x . " = \<C-r>\<C-r>=string(@" . x . ")\<CR>\<Esc>$", 'n')
-" endfunction
-" nnoremap <silent> cx :call ChangeReg()<CR>
+" Change register
+nnoremap <silent> cx :<C-u>call functions#change_register()<CR>
 
 " Diff update
 nnoremap <silent> du :diffupdate<CR>
@@ -338,7 +395,7 @@ xnoremap <silent> <M-k> {
 onoremap <silent> <M-k> {
 
 " Copy path:line
-"nnoremap <silent> <F4> :<C-U>exe "!tmux send -t " . v:count . " 'b " . expand("%:p") . ":" . line(".") . "' C-m"<CR>
+"nnoremap <silent> <F4> :<C-u>exe "!tmux send -t " . v:count . " 'b " . expand("%:p") . ":" . line(".") . "' C-m"<CR>
 "nnoremap <silent> <F4> :call system("tmux send -t monetDB:server 'b " . expand("%:p") . ":" . line(".") . "' C-m")<CR>
 nnoremap <silent> <F4> :<C-u>let @+ = expand("%:p") . ":" . line(".")<CR>
 
@@ -347,41 +404,42 @@ nnoremap <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> 
             \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
             \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
-"" RG
+" RG
 command! -bang -nargs=* Rg
             \ call fzf#vim#grep(
             \ 'rg --hidden --line-number --column --no-heading --smart-case --follow --color=always --colors="match:none" --colors="path:fg:white" --colors="line:fg:white" '.shellescape(<q-args>), 1,
             \ <bang>0)
 
-"" AG
+" AG
 command! -bang -nargs=* Ag
             \ call fzf#vim#ag(
             \ <q-args>, '--color-path "0;37" --color-line-number "0;37" --color-match "" --hidden --smart-case --follow',
             \ <bang>0)
 
 if executable('rg')
-    set grepprg=rg\ --smart-case\ --vimgrep
+    set grepprg=rg\ --vimgrep
     set grepformat^=%f:%l:%c:%m
 elseif executable('ag')
-    set grepprg=ag\ --smart-case\ --vimgrep
+    set grepprg=ag\ --vimgrep
     set grepformat^=%f:%l:%c:%m
 endif
 
-"" Grep
-function! Grep(args)
-    let args = split(a:args, ' ')
-    return system(join([&grepprg, shellescape(args[0]), len(args) > 1 ? join(args[1:-1], ' ') : ''], ' '))
-endfunction
-
-command! -nargs=+ -complete=file_in_path -bar Grep     cgetexpr Grep(<q-args>)
-command! -nargs=+ -complete=file_in_path -bar LGrep    lgetexpr Grep(<q-args>)
-command! -nargs=+ -complete=file_in_path -bar Grepadd  caddexpr Grep(<q-args>)
-command! -nargs=+ -complete=file_in_path -bar LGrepadd laddexpr Grep(<q-args>)
+" Grep
+command! -nargs=+ -complete=file_in_path -bar Grep     call grep#qf(<q-args>)
+command! -nargs=+ -complete=file_in_path -bar Grepadd  call grep#qfadd(<q-args>)
+command! -nargs=+ -complete=file_in_path -bar LGrep    call grep#ll(<q-args>)
+command! -nargs=+ -complete=file_in_path -bar LGrepadd call grep#lladd(<q-args>)
 
 nnoremap <leader>s :Grep<space>
 nnoremap <leader>S :Grepadd<space>
 
-" open the location/quickfix window automatically
+nnoremap <silent> gs :set opfunc=grep#qf_opfunc<CR>g@
+xnoremap <silent> gs :<C-u>call grep#qf_opfunc(visualmode(), 1)<CR>
+
+nnoremap <silent> gS :set opfunc=grep#qfadd_opfunc<CR>g@
+xnoremap <silent> gS :<C-u>call grep#qfadd_opfunc(visualmode(), 1)<CR>
+
+" Open the location/quickfix window automatically
 augroup quickfix
     autocmd!
     autocmd QuickFixCmdPost cgetexpr cwindow
@@ -390,11 +448,15 @@ augroup quickfix
     autocmd QuickFixCmdPost laddexpr lwindow
 augroup END
 
-"" GitBlame
-command! -range GB echo join(systemlist("git -C " . shellescape(expand('%:p:h')) . " blame -L <line1>,<line2> " . shellescape(expand('%:t'))), "\n")
+" GitBlame
+command! -range GB echo functions#gitblame('<line1>,<line2>')
 
-"" Countrepeat
+" Countrepeat
 "nnoremap . :<C-u>exe 'norm! ' . repeat('.', v:count1)<CR>
+
+" Retab
+"nnoremap <silent> <leader>i :set opfunc=functions#fix_space_tabstop<CR>g@
+"xnoremap <silent> <leader>i :<C-u>call functions#fix_space_tabstop(visualmode(), 1)<CR>
 
 
 """""""""""""""""""""
@@ -410,20 +472,36 @@ let g:fzf_action = {
 " Default fzf layout
 let g:fzf_layout = { 'down': '~30%' }
 
+" Customize fzf colors to match your color scheme
+let g:fzf_colors = { 
+            \ 'fg':      ['fg', 'Normal'],
+            \ 'bg':      ['bg', 'Normal'],
+            \ 'hl':      ['fg', 'Special'],
+            \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+            \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+            \ 'hl+':     ['fg', 'Statement'],
+            \ 'info':    ['fg', 'Comment'],
+            \ 'border':  ['bg', 'Ignore'],
+            \ 'prompt':  ['fg', 'Type'],
+            \ 'pointer': ['fg', 'Type'],
+            \ 'marker':  ['fg', 'Statement'],
+            \ 'spinner': ['fg', 'Comment'],
+            \ 'header':  ['fg', 'Type'] }
+
 " Customize the options used by 'git log'
-let g:fzf_commits_log_options='--graph --color=always --pretty=lo'
+let g:fzf_commits_log_options = '--graph --color=always --pretty=lo'
 
 " Command to generate tags file
 let g:fzf_tags_command = 'ctags -R'
 
 " FZF
-nnoremap <leader>f :Files<CR>
-nnoremap <leader>b :Buffers<CR>
-nnoremap <leader>w :Windows<CR>
-nnoremap <leader>t :Tags<CR>
-nnoremap <leader>o :History<CR>
-nnoremap <leader>: :History:<CR>
-nnoremap <leader>/ :History/<CR>
+nnoremap <silent> <leader>f :Files<CR>
+nnoremap <silent> <leader>b :Buffers<CR>
+nnoremap <silent> <leader>w :Windows<CR>
+nnoremap <silent> <leader>t :Tags<CR>
+nnoremap <silent> <leader>o :History<CR>
+nnoremap <silent> <leader>: :History:<CR>
+nnoremap <silent> <leader>/ :History/<CR>
 
 " Mapping selecting mappings
 nmap <leader><Tab> <plug>(fzf-maps-n)
@@ -439,253 +517,332 @@ imap <C-x><C-l> <plug>(fzf-complete-line)
 " Use custom dictionary
 inoremap <expr> <C-x><C-k> fzf#complete('cat /usr/share/dict/words-insane')
 
-"" Airline
-if !exists('g:airline_symbols')
-    let g:airline_symbols={}
-endif
+" Lightline
+let g:lightline = {}
+let g:lightline.colorscheme = 'gruvbox'
 
-""" Unicode symbols
-let g:airline_left_alt_sep='»'
-let g:airline_left_sep='▶'
-let g:airline_right_alt_sep='«'
-let g:airline_right_sep='◀'
-let g:airline_symbols.crypt='🔒'
-let g:airline_symbols.linenr='☰'
-let g:airline_symbols.linenr='␊'
-let g:airline_symbols.linenr='␤'
-let g:airline_symbols.linenr='¶'
-let g:airline_symbols.maxlinenr='␤'
-let g:airline_symbols.branch='⎇'
-let g:airline_symbols.paste='ρ'
-let g:airline_symbols.paste='Þ'
-let g:airline_symbols.paste='∥'
-let g:airline_symbols.spell='Ꞩ'
-let g:airline_symbols.notexists='∄'
-let g:airline_symbols.whitespace='Ξ'
+"" Powerline    
+let g:lightline.separator = { 'left': '', 'right': '' }
+let g:lightline.subseparator = { 'left': '', 'right': '' }
 
-""" Powerline    
-let g:airline_left_sep=''
-let g:airline_left_alt_sep=''
-let g:airline_right_sep=''
-let g:airline_right_alt_sep=''
+"" Straight ▌ │ ▐ │ or ▌ ▏ ▐ ▕
+"let g:lightline.separator = { 'left': '▌', 'right': '▐' }
+"let g:lightline.subseparator = { 'left': '│', 'right': '│' }
 
-" """ Straight ▌ │ ▐ │ or ▌ ▏ ▐ ▕
-" let g:airline_left_sep='▌'
-" let g:airline_left_alt_sep='│'
-" let g:airline_right_sep='▐'
-" let g:airline_right_alt_sep='│'
+let g:lightline.active = {
+            \ 'left': [ [ 'filename', 'paste' ],
+            \           [ 'gitbranch' ],
+            \           [ 'spell', 'readonly', 'modified' ] ],
+            \ 'right': [ [ 'lsp_error', 'lsp_warning', 'lsp_info', 'lsp_hint', 'filetype' ],
+            \            [ 'percent', 'lineinfo' ],
+            \            [ 'longline', 'mixedindent', 'trailing' ] ]
+            \ }
 
-""" Powerline symbols
-let g:airline_symbols.branch=''
-let g:airline_symbols.readonly=''
-let g:airline_symbols.linenr='☰'
-let g:airline_symbols.maxlinenr=''
-let g:airline_symbols.notexists=' ∄'
-let g:airline_symbols.dirty=' ✘'
+let g:lightline.inactive = {
+            \ 'left': [ [ 'filename' ] ],
+            \ 'right': [ [ 'lineinfo' ],
+            \            [ 'percent' ] ]
+            \ }
 
-""" Airline settings
-let g:airline_theme='gruvbox'
-let g:airline#extensions#whitespace#mixed_indent_algo=1
-let g:airline_powerline_fonts=1
-let g:airline_skip_empty_sections=0
-let g:airline#extensions#tabline#enabled=1
-let g:airline#extensions#tabline#buffer_idx_mode=1
-let g:airline#extensions#tabline#tab_nr_type=1
-let g:airline#extensions#tabline#show_buffers=1
-let g:airline#extensions#tabline#show_tabs=1
-let g:airline#extensions#tabline#show_tab_count=0
-let g:airline#extensions#tabline#show_tab_nr=0
-let g:airline#extensions#tabline#show_close_button=0
-let g:airline#extensions#tabline#exclude_preview=1
-let g:airline#extensions#tabline#fnamecollapse=1
-let g:airline#extensions#tabline#fnamemod=':~:.'
-let g:airline#extensions#tabline#buffers_label='buffers'
-let g:airline#extensions#tabline#tabs_label='tabs'
-let g:airline#extensions#tabline#overflow_marker='…'
-let g:airline_section_z='%3p%% %3l:%-2v'
+let g:lightline.tabline = {
+            \ 'left': [ [ 'tabs' ] ],
+            \ 'right': [ [ 'relativepath' ],
+            \            [ 'wordcount', 'fileformat', 'fileencoding' ] ]
+            \ }
 
-" let g:airline_mode_map = {
-"             \ '__' : ' - ',
-"             \ 'n'  : ' N ',
-"             \ 'i'  : ' I ',
-"             \ 'R'  : ' R ',
-"             \ 'c'  : ' C ',
-"             \ 'v'  : ' V ',
-"             \ 'V'  : 'V-L',
-"             \ '' : 'V-B',
-"             \ 's'  : ' S ',
-"             \ 'S'  : ' S ',
-"             \ '' : ' S ',
-"             \ }
+let g:lightline.tab = {
+            \ 'active': [ 'tabnum', 'filename', 'modified' ],
+            \ 'inactive': [ 'tabnum', 'filename', 'modified' ]
+            \ }
 
-""" Airline extensions
-let g:airline#extensions#ale#error_symbol=''
-let g:airline#extensions#ale#warning_symbol=''
-let g:airline#extensions#ale#show_line_numbers=0
-let g:airline#extensions#whitespace#show_message=1
-let g:airline#extensions#hunks#enabled=0
+let g:lightline.component = {
+            \ }
 
-"" GitGutter
-let g:gitgutter_map_keys=0
+let g:lightline.component_visible_condition = {
+            \ }
+
+let g:lightline.component_function = {
+            \ 'trailing': 'status#trailing',
+            \ 'mixedindent': 'status#mixedindent',
+            \ 'longline': 'status#longline',
+            \ 'readonly': 'status#readonly',
+            \ 'modified': 'status#modified',
+            \ 'wordcount': 'status#wordcount',
+            \ 'gitbranch': 'status#gitbranch',
+            \ }
+
+let g:lightline.component_expand = {
+            \ 'lsp_hint': 'languageclient#hints',
+            \ 'lsp_info': 'languageclient#infos',
+            \ 'lsp_warning': 'languageclient#warnings',
+            \ 'lsp_error': 'languageclient#errors'
+            \ }
+
+let g:lightline.component_type = {
+            \ 'lsp_hint': 'hint',
+            \ 'lsp_info': 'info',
+            \ 'lsp_warning': 'warning',
+            \ 'lsp_error': 'error'
+            \ }
+
+let g:languageclient#indicator_error = '✘'
+let g:languageclient#indicator_warning = '↯'
+let g:languageclient#indicator_info = 'ℹ'
+let g:languageclient#indicator_hint = '♥'
+let g:languageclient#open_linenr = '['
+let g:languageclient#close_linenr = ']'
+let g:languageclient#show_linenr = 1
+
+" " Airline
+" if !exists('g:airline_symbols')
+"     let g:airline_symbols = {}
+" endif
+"
+" "" Unicode symbols
+" let g:airline_left_alt_sep = '»'
+" let g:airline_left_sep = '▶'
+" let g:airline_right_alt_sep = '«'
+" let g:airline_right_sep = '◀'
+" let g:airline_symbols.crypt = '🔒'
+" let g:airline_symbols.linenr = '☰'
+" let g:airline_symbols.linenr = '␊'
+" let g:airline_symbols.linenr = '␤'
+" let g:airline_symbols.linenr = '¶'
+" let g:airline_symbols.maxlinenr = '␤'
+" let g:airline_symbols.branch = '⎇'
+" let g:airline_symbols.paste = 'ρ'
+" let g:airline_symbols.paste = 'Þ'
+" let g:airline_symbols.paste = '∥'
+" let g:airline_symbols.spell = 'Ꞩ'
+" let g:airline_symbols.notexists = '∄'
+" let g:airline_symbols.whitespace = 'Ξ'
+"
+" "" Powerline    
+" let g:airline_left_sep = ''
+" let g:airline_left_alt_sep = ''
+" let g:airline_right_sep = ''
+" let g:airline_right_alt_sep = ''
+"
+" " "" Straight ▌ │ ▐ │ or ▌ ▏ ▐ ▕
+" " let g:airline_left_sep = '▌'
+" " let g:airline_left_alt_sep = '│'
+" " let g:airline_right_sep = '▐'
+" " let g:airline_right_alt_sep = '│'
+"
+" "" Powerline symbols
+" let g:airline_symbols.branch = ''
+" let g:airline_symbols.readonly = ''
+" let g:airline_symbols.linenr = '☰'
+" let g:airline_symbols.maxlinenr = ''
+" let g:airline_symbols.notexists = ' ∄'
+" let g:airline_symbols.dirty = ' ✘'
+"
+" "" Airline settings
+" let g:airline_theme = 'gruvbox'
+" let g:airline#extensions#whitespace#mixed_indent_algo = 1
+" let g:airline_powerline_fonts = 1
+" let g:airline_skip_empty_sections = 0
+" let g:airline#extensions#tabline#enabled = 1
+" let g:airline#extensions#tabline#buffer_idx_mode = 1
+" let g:airline#extensions#tabline#tab_nr_type = 1
+" let g:airline#extensions#tabline#show_buffers = 1
+" let g:airline#extensions#tabline#show_tabs = 1
+" let g:airline#extensions#tabline#show_tab_count = 0
+" let g:airline#extensions#tabline#show_tab_nr = 0
+" let g:airline#extensions#tabline#show_close_button = 0
+" let g:airline#extensions#tabline#exclude_preview = 1
+" let g:airline#extensions#tabline#fnamecollapse = 1
+" let g:airline#extensions#tabline#fnamemod = ':~:.'
+" let g:airline#extensions#tabline#buffers_label = 'buffers'
+" let g:airline#extensions#tabline#tabs_label = 'tabs'
+" let g:airline#extensions#tabline#overflow_marker = '…'
+" let g:airline_section_z = '%3p%% %3l:%-2v'
+"
+" " let g:airline_mode_map = {
+" "             \ '__' : ' - ',
+" "             \ 'n'  : ' N ',
+" "             \ 'i'  : ' I ',
+" "             \ 'R'  : ' R ',
+" "             \ 'c'  : ' C ',
+" "             \ 'v'  : ' V ',
+" "             \ 'V'  : 'V-L',
+" "             \ '' : 'V-B',
+" "             \ 's'  : ' S ',
+" "             \ 'S'  : ' S ',
+" "             \ '' : ' S ',
+" "             \ }
+"
+" "" Airline extensions
+" let g:airline#extensions#ale#error_symbol = ''
+" let g:airline#extensions#ale#warning_symbol = ''
+" let g:airline#extensions#ale#show_line_numbers = 0
+" let g:airline#extensions#whitespace#show_message = 1
+" let g:airline#extensions#hunks#enabled = 0
+
+" " Statusline
+" set statusline=
+"
+" " display a warning if fileformat isnt unix
+" set statusline+=%#warningmsg#
+" set statusline+=%{&ff!='unix'?'['.&ff.']':''}
+" set statusline+=%*
+"
+" " display a warning if file encoding isnt utf-8
+" set statusline+=%#warningmsg#
+" set statusline+=%{(&fenc!='utf-8'&&&fenc!='')?'['.&fenc.']':''}
+" set statusline+=%*
+"
+" set statusline+=%h      "help file flag
+" set statusline+=%y      "filetype
+" set statusline+=%r      "read only flag
+" set statusline+=%m      "modified flag
+"
+" " display current git branch
+" set statusline+=%{fugitive#statusline()}
+"
+" " display a warning if &et is wrong, or we have mixed-indenting
+" set statusline+=%#error#
+" set statusline+=%{status#tabWarning()}
+" set statusline+=%{status#longLineWarning()}
+" set statusline+=%*
+"
+" set statusline+=%{status#trailingSpaceWarning()}
+"
+" "set statusline+=%#warningmsg#
+" "set statusline+=%{SyntasticStatuslineFlag()}
+" "set statusline+=%*
+"
+" " display a warning if &paste is set
+" set statusline+=%#error#
+" set statusline+=%{&paste?'[paste]':''}
+" set statusline+=%*
+"
+" set statusline+=%=      "left/right separator
+" set statusline+=%-020.{status#currentHighlight()}\ \    "current highlight
+" set statusline+=%c,     "cursor column
+" set statusline+=%l/%L   "cursor line/total lines
+" set statusline+=\ %P    "percent through file
+" set laststatus=2        " Always show status line
+"
+" " recalculate the trailing whitespace warning when idle, and after saving
+" augroup ReloadVars
+"     autocmd!
+"     autocmd cursorhold,bufwritepost * unlet! b:statusline_trailing_space_warning
+"     autocmd cursorhold,bufwritepost * unlet! b:statusline_tab_warning
+"     autocmd cursorhold,bufwritepost * unlet! b:statusline_long_line_warning
+" augroup END
+
+" GitGutter
+let g:gitgutter_sign_added = '┃'
+let g:gitgutter_sign_modified = '┃'
+let g:gitgutter_sign_removed = '◢'
+let g:gitgutter_sign_removed_first_line = '◥'
+let g:gitgutter_sign_modified_removed = '┻'
+let g:gitgutter_map_keys = 0
+nmap <leader>hp <Plug>(GitGutterPreviewHunk)
 nmap <leader>ha <Plug>(GitGutterStageHunk)
 nmap <leader>hu <Plug>(GitGutterUndoHunk)
 nmap ]c <Plug>(GitGutterNextHunk)
 nmap [c <Plug>(GitGutterPrevHunk)
-
 omap ih <Plug>(GitGutterTextObjectInnerPending)
 omap ah <Plug>(GitGutterTextObjectOuterPending)
 xmap ih <Plug>(GitGutterTextObjectInnerVisual)
 xmap ah <Plug>(GitGutterTextObjectOuterVisual)
 
-let g:gitgutter_sign_added='┃'
-let g:gitgutter_sign_modified='┃'
-let g:gitgutter_sign_removed='◢'
-let g:gitgutter_sign_removed_first_line='◥'
-let g:gitgutter_sign_modified_removed='◢'
-
-"" Sneak
-let g:sneak#label=1
-let g:sneak#use_ic_scs=1
+" Sneak
+let g:sneak#label = 1
+let g:sneak#use_ic_scs = 1
 map f <Plug>Sneak_f
 map F <Plug>Sneak_F
 map t <Plug>Sneak_t
 map T <Plug>Sneak_T
 
-"" Incsearch
-map / <Plug>(incsearch-forward)
-map ? <Plug>(incsearch-backward)
-map g/ <Plug>(incsearch-stay)
-
-"let g:incsearch#magic='\v'
-let g:incsearch#smart_backward_word=1
-let g:incsearch#consistent_n_direction=1
-let g:incsearch#auto_nohlsearch=0
-let g:incsearch#no_inc_hlsearch=1
-let g:incsearch#separate_highlight=1
-let g:incsearch#no_inc_hlsearch=1
-
-"" TComment
-let g:tcomment_mapleader1='<C-,>'
+" TComment
+let g:tcomment_mapleader1 = '<C-,>'
 nnoremap <leader>c V:TCommentInline<CR>
 xnoremap <leader>c :TCommentInline<CR>
 
-"" Netrw
-let g:netrw_liststyle=0
-let g:netrw_preview=1
+" Netrw
+let g:netrw_liststyle = 0
+let g:netrw_preview = 1
 
-"" EasyAlign
+" EasyAlign
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
-"" Undotree
+" Undotree
 nnoremap <silent> <F11> :UndotreeToggle<CR>
 
-"" Tagbar
+" Tagbar
 nnoremap <silent> <F12> :TagbarToggle<CR>
 
-"" After text object
+" After text object
 augroup AfterTextObject
     autocmd!
     autocmd VimEnter * call after_object#enable(['n', 'nn'], '=', ':', '+', '-', '*', '/', '#', ' ')
 augroup End
 
-"" Vimtex
-let g:vimtex_view_method='zathura'
+" Vimtex
+let g:vimtex_view_method = 'zathura'
 
-"" UltiSnips
-let g:UltiSnipsExpandTrigger='<Tab>'
-let g:UltiSnipsJumpForwardTrigger='<C-l>'
-let g:UltiSnipsJumpBackwardTrigger='<C-h>'
-let g:UltiSnipsEditSplit="vertical"
+" UltiSnips
+let g:UltiSnipsExpandTrigger = '<Tab>'
+let g:UltiSnipsJumpForwardTrigger = '<C-l>'
+let g:UltiSnipsJumpBackwardTrigger = '<C-h>'
+let g:UltiSnipsEditSplit = "vertical"
 
-"" Multiple-Cursors
-let g:multi_cursor_use_default_mapping=0
-let g:multi_cursor_start_key='<C-n>'
-let g:multi_cursor_select_all_key='<A-n>'
-let g:multi_cursor_start_word_key='g<C-n>'
-let g:multi_cursor_select_all_word_key='g<A-n>'
-let g:multi_cursor_next_key='<C-n>'
-let g:multi_cursor_prev_key='<C-p>'
-let g:multi_cursor_skip_key='<C-x>'
-let g:multi_cursor_quit_key='<Esc>'
-let g:multi_cursor_exit_from_visual_mode=0
-let g:multi_cursor_exit_from_insert_mode=0
+let g:snips_author = "Alphonse Mariya"
+let g:snips_email = "alphonse.mariya@hotmail.com"
+let g:snips_github = "https://github.com/alfunx"
 
-"" Goyo + Limelight
-let g:goyo_width=83
+"" Auto
+"augroup UltiSnipsExpand
+"    autocmd!
+"    autocmd CompleteDone * call functions#expand_snippet()
+"augroup End
 
-function! s:goyo_enter()
-    set nolist
-    set noshowmode
-    set noshowcmd
-    set scrolloff=999
-    set sidescrolloff=0
-    "Limelight
-endfunction
+"" Manual
+inoremap <silent> <C-k> <C-r>=functions#expand_snippet()<CR>
 
-function! s:goyo_leave()
-    set list
-    set noshowmode
-    set showcmd
-    set scrolloff=3
-    set sidescrolloff=5
-    "Limelight!
-endfunction
+"" Completion for snippets
+inoremap <silent> <C-x><C-z> <C-r>=functions#ulti_complete()<CR>
 
-augroup Goyo
-    autocmd!
-    autocmd User GoyoEnter nested call <SID>goyo_enter()
-    autocmd User GoyoLeave nested call <SID>goyo_leave()
-augroup END
+" Multiple-Cursors
+let g:multi_cursor_use_default_mapping = 0
+let g:multi_cursor_start_key = '<C-n>'
+let g:multi_cursor_select_all_key = '<A-n>'
+let g:multi_cursor_start_word_key = 'g<C-n>'
+let g:multi_cursor_select_all_word_key = 'g<A-n>'
+let g:multi_cursor_next_key = '<C-n>'
+let g:multi_cursor_prev_key = '<C-p>'
+let g:multi_cursor_skip_key = '<C-x>'
+let g:multi_cursor_quit_key = '<Esc>'
+let g:multi_cursor_exit_from_visual_mode = 0
+let g:multi_cursor_exit_from_insert_mode = 0
 
-"" Vimux
-let g:VimuxUseNearest=1
+" Vimux
+let g:VimuxUseNearest = 1
 
-function! VimuxSlime()
-    call VimuxOpenRunner()
-    call VimuxSendText(@v)
-endfunction
+nnoremap <silent> _ mv:set opfunc=functions#send_to_tmux_split<CR>g@
+xnoremap <silent> _ mv:<C-u>call functions#send_to_tmux_split(visualmode(), 1)<CR>
 
-function! SendToTmuxSplit(type, ...)
-    let sel_save = &selection
-    let &selection = "inclusive"
-    let reg_save = @@
+" ALE
+"" Use special space: ( ) U+2000 (EN QUAD)
+let g:ale_set_loclist = 1
+let g:ale_sign_error = '●'
+let g:ale_sign_warning = '●'
+let g:ale_sign_info = '●'
+let g:ale_lint_on_text_changed = 'normal'
+let g:ale_lint_on_insert_leave = 1
+let g:ale_lint_on_enter = 1
+let g:ale_lint_on_save = 1
+let g:ale_lint_on_filetype_changed = 1
+let g:ale_set_highlights = 1
+let g:ale_set_signs = 1
+let g:ale_completion_enabled = 0
 
-    if a:0  " Invoked from Visual mode, use gv command.
-        silent exe "normal! gv\"vy"
-    elseif a:type == 'line'
-        silent exe "normal! '[V']\"vy"
-    else
-        silent exe "normal! `[v`]\"vy"
-    endif
-
-    call VimuxSlime()
-    silent exe "normal! `v"
-
-    let &selection = sel_save
-    let @@ = reg_save
-endfunction
-
-nnoremap <silent> _ mv:set opfunc=SendToTmuxSplit<CR>g@
-xnoremap <silent> _ mv:<C-U>call SendToTmuxSplit(visualmode(), 1)<CR>
-
-"" ALE
-" Use special space: ( ) U+2000 (EN QUAD)
-let g:ale_set_loclist=1
-let g:ale_sign_error='●'
-let g:ale_sign_warning='●'
-let g:ale_sign_info='●'
-let g:ale_lint_on_text_changed='normal'
-let g:ale_lint_on_insert_leave=1
-let g:ale_lint_on_enter=1
-let g:ale_lint_on_save=1
-let g:ale_lint_on_filetype_changed=1
-let g:ale_set_highlights=1
-let g:ale_set_signs=1
-let g:ale_completion_enabled=0
-
-nmap [w <plug>(ale_previous_wrap)
-nmap ]w <plug>(ale_next_wrap)
+nmap [r <plug>(ale_previous_wrap)
+nmap ]r <plug>(ale_next_wrap)
 nnoremap <silent> <leader>a :ALEToggle <Bar> echo g:ale_enabled ? 'ALE enabled' : 'ALE disabled' <CR>
 
 augroup ALE
@@ -697,44 +854,28 @@ let g:ale_linters = {
             \ 'rust': ['cargo', 'rls', 'rustc'],
             \ }
 
-" "" AutoPairs
-" let g:AutoPairsShortcutBackInsert='<M-z>'
-" let g:AutoPairsMultilineClose=0
-" let g:AutoPairs={'(':')', '[':']', '{':'}', "'":"'", '"':'"', "`":"`", '```':'```', '"""':'"""', "'''":"'''"}
+" AutoPairs
+"let g:AutoPairsShortcutBackInsert = '<M-z>'
+"let g:AutoPairsMultilineClose = 0
+"let g:AutoPairs = {'(':')', '[':']', '{':'}', "'":"'", '"':'"', "`":"`", '```':'```', '"""':'"""', "'''":"'''"}
 
-"" Pear-Tree
-let g:pear_tree_smart_openers=0
-let g:pear_tree_smart_closers=0
-let g:pear_tree_smart_backspace=0
+" Pear-Tree
+let g:pear_tree_smart_openers = 0
+let g:pear_tree_smart_closers = 0
+let g:pear_tree_smart_backspace = 0
 imap <M-z> <Plug>(PearTreeJump)
 
-"" RustRacer
-let g:racer_cmd="/usr/bin/racer"
-let g:racer_experimental_completer=0
+" RustRacer
+let g:racer_cmd = "/usr/bin/racer"
+let g:racer_experimental_completer = 0
 
-" "" NCM2
-" let g:ncm2#complete_delay=60
-" let g:ncm2#popup_delay=300
-" let g:ncm2#auto_popup=1
-" let g:ncm2#complete_length=[[1,3],[7,2],[9,1]]
-"
-" imap <C-n> <plug>(ncm2_manual_trigger)
-" inoremap <silent><expr> <Tab> ncm2_ultisnips#expand_or("\<Tab>", 'n')
-" "inoremap <expr> <CR> (pumvisible() ? "\<C-y>\<CR>" : "\<CR>")
-"
-" augroup NCM2
-"     autocmd!
-"     autocmd BufEnter * call ncm2#enable_for_buffer()
-"     autocmd TextChangedI * call ncm2#auto_trigger()
-"     " autocmd User Ncm2PopupOpen set completeopt=menuone,noinsert,noselect
-"     " autocmd User Ncm2PopupClose set completeopt=menuone
-" augroup END
-
-"" LanguageClient
-let g:LanguageClient_autoStart=1
-let g:LanguageClient_diagnosticsList="Location"
-let g:LanguageClient_hoverPreview="Always"
-let g:LanguageClient_hasSnippetSupport=1
+" LanguageClient
+let g:LanguageClient_autoStart = 1
+let g:LanguageClient_diagnosticsList = 'Location'
+let g:LanguageClient_diagnosticsMaxSeverity = 'Hint'
+let g:LanguageClient_hoverPreview = 'Always'
+let g:LanguageClient_virtualTextPrefix = '   ← '
+let g:LanguageClient_hasSnippetSupport = 1
 
 let g:LanguageClient_serverCommands = {
             \ 'haskell': ['hie-wrapper'],
@@ -753,24 +894,28 @@ let g:LanguageClient_diagnosticsDisplay = {
             \         "texthl": "ALEError",
             \         "signText": "●",
             \         "signTexthl": "ALEErrorSign",
+            \         "virtualTexthl": "VirtualTextError",
             \     },
             \     2: {
             \         "name": "Warning",
             \         "texthl": "ALEWarning",
             \         "signText": "●",
             \         "signTexthl": "ALEWarningSign",
+            \         "virtualTexthl": "VirtualTextWarning",
             \     },
             \     3: {
             \         "name": "Information",
             \         "texthl": "ALEInfo",
             \         "signText": "●",
             \         "signTexthl": "ALEInfoSign",
+            \         "virtualTexthl": "VirtualTextInfo",
             \     },
             \     4: {
             \         "name": "Hint",
-            \         "texthl": "ALEInfo",
+            \         "texthl": "ALEHint",
             \         "signText": "●",
-            \         "signTexthl": "ALEInfoSign",
+            \         "signTexthl": "ALEHintSign",
+            \         "virtualTexthl": "VirtualTextHint",
             \     },
             \ }
 
@@ -778,10 +923,6 @@ function! LanguageClient_settings()
     if !has_key(g:LanguageClient_serverCommands, &filetype)
         return
     endif
-
-    " setlocal completefunc=LanguageClient#complete
-    " setlocal formatexpr=LanguageClient#textDocument_rangeFormatting_sync()
-
     nnoremap <buffer><silent> K :call LanguageClient_contextMenu()<CR>
     nnoremap <buffer><silent> <F1> :call LanguageClient_textDocument_hover()<CR>
     nnoremap <buffer><silent> <leader>d :call LanguageClient_textDocument_definition()<CR>
@@ -789,7 +930,6 @@ function! LanguageClient_settings()
     nnoremap <buffer><silent> <leader>x :call LanguageClient_textDocument_typeDefinition()<CR>
     nnoremap <buffer><silent> <leader>y :call LanguageClient_textDocument_documentSymbol()<CR>
     nnoremap <buffer><silent> <leader>u :call LanguageClient_textDocument_references()<CR>
-
     nnoremap <buffer><silent> <leader>rn :call LanguageClient_textDocument_rename()<CR>
     nnoremap <buffer><silent> <leader>rc :call LanguageClient#textDocument_rename(
                 \ {'newName': Abolish.camelcase(expand('<cword>'))})<CR>
@@ -803,313 +943,159 @@ augroup LanguageClient_config
     autocmd!
     autocmd User LanguageClientStarted set signcolumn=yes
     autocmd User LanguageClientStopped set signcolumn=auto
-augroup END
-
-augroup LanguageClient_settings
-    autocmd!
     autocmd FileType * call LanguageClient_settings()
+    autocmd BufEnter __LanguageClient__ nnoremap <silent> <F1> :q<CR>
 augroup END
 
-"" Speeddating
+" " vim-lsp
+" let g:lsp_signs_error = {'text': '●'}
+" let g:lsp_signs_warning = {'text': '●'}
+" let g:lsp_signs_information = {'text': '●'}
+" let g:lsp_signs_hint = {'text': '●'}
+" let g:lsp_highlight_references_enabled = 1
+"
+" hi! link LspErrorHighlight ALEError
+" hi! link LspWarningHighlight ALEWarning
+" hi! link LspInformationHighlight ALEInfo
+" hi! link LspHintHighlight ALEHint
+"
+" hi! link LspErrorText VirtualTextError
+" hi! link LspWarningText VirtualTextWarning
+" hi! link LspInformationText VirtualTextInfo
+" hi! link LspHintText VirtualTextHint
+"
+" hi! link LspError ALEErrorSign
+" hi! link LspWarning ALEWarningSign
+" hi! link LspInformation ALEInfoSign
+" hi! link LspHint ALEHintSign
+"
+" if executable('ccls')
+"     au User lsp_setup call lsp#register_server({
+"         \ 'name': 'ccls',
+"         \ 'cmd': ['ccls'],
+"         \ 'whitelist': ['c', 'cpp'],
+"         \ })
+" endif
+"
+" if executable('ccls')
+"     au User lsp_setup call lsp#register_server({
+"         \ 'name': 'rls',
+"         \ 'cmd': ['rustup', 'run', 'stable', 'rls'],
+"         \ 'whitelist': ['rust'],
+"         \ })
+" endif
+
+" vim-speeddating
 nmap <Plug>SpeedDatingFallbackUp   <Plug>(CtrlXA-CtrlA)
 nmap <Plug>SpeedDatingFallbackDown <Plug>(CtrlXA-CtrlX)
 
-"" Unimpaired
-let g:nremap={"[": "ü", "]": "¨"}
-let g:xremap={"[": "ü", "]": "¨"}
-let g:oremap={"[": "ü", "]": "¨"}
+" vim-rsi
+let g:rsi_no_meta = 1
 
-"" Vim RSI
-let g:rsi_no_meta=1
-
-"" vim-qf
-nmap <silent> <leader>q <Plug>(qf_qf_toggle)
-nmap <silent> <leader>l <Plug>(qf_loc_toggle)
-nmap <silent> <leader><leader> <Plug>(qf_qf_switch)
-let g:qf_mapping_ack_style = 1
-let g:qf_max_height = 10
-
-"" vim-dispatch
+" vim-dispatch
 nnoremap <F5> :Make<CR>
 
+" vim-qf
+let g:qf_mapping_ack_style = 1
+nmap <silent> [q <Plug>(qf_qf_previous)
+nmap <silent> ]q <Plug>(qf_qf_next)
+nmap <silent> [w <Plug>(qf_loc_previous)
+nmap <silent> ]w <Plug>(qf_loc_next)
+nmap <silent> <leader>q <Plug>(qf_qf_toggle_stay)
+nmap <silent> <leader>l <Plug>(qf_loc_toggle_stay)
+nmap <silent> <leader><leader> <Plug>(qf_qf_switch)
 
-"""""""""""""""
-"  FUNCTIONS  "
-"""""""""""""""
-
-function! s:ulti_complete() abort
-    if empty(UltiSnips#SnippetsInCurrentScope(1))
-        return ''
-    endif
-
-    let word_to_complete = matchstr(strpart(getline('.'), 0, col('.') - 1), '\S\+$')
-    let contain_word = 'stridx(v:val, word_to_complete)>=0'
-    let candidates = map(filter(keys(g:current_ulti_dict_info), contain_word),
-                   \  "{
-                   \      'word': v:val,
-                   \      'menu': '[snip] '. g:current_ulti_dict_info[v:val]['description'],
-                   \      'dup' : 1,
-                   \   }")
-    let from_where = col('.') - len(word_to_complete)
-
-    if !empty(candidates)
-        call complete(from_where, candidates)
-    endif
-
-    return ''
-endfunction
-
-inoremap <silent> <C-x><C-z> <C-r>=<SID>ulti_complete()<CR>
-
-function! ExpandLspSnippet()
-    call UltiSnips#ExpandSnippetOrJump()
-    if !pumvisible() || empty(v:completed_item)
-        return ''
-    endif
-
-    " only expand Lsp if UltiSnips#ExpandSnippetOrJump not effect.
-    let l:value = v:completed_item['word']
-    let l:matched = len(l:value)
-    if l:matched <= 0
-        return ''
-    endif
-
-    " remove inserted chars before expand snippet
-    if col('.') == col('$')
-        let l:matched -= 1
-        exec 'normal! ' . l:matched . 'Xx'
-    else
-        exec 'normal! ' . l:matched . 'X'
-    endif
-
-    if col('.') == col('$') - 1
-        " move to $ if at the end of line.
-        call cursor(line('.'), col('$'))
-    endif
-
-    " expand snippet now.
-    call UltiSnips#Anon(l:value)
-    return ''
-endfunction
-
-inoremap <silent> <C-k> <C-r>=ExpandLspSnippet()<CR>
-
-" function! CompleteSnippet()
-"     if empty(v:completed_item)
-"         return
-"     endif
-"
-"     call UltiSnips#ExpandSnippet()
-"     if g:ulti_expand_res > 0
-"         return
-"     endif
-"
-"     let l:complete = type(v:completed_item) == v:t_dict ? v:completed_item.word : v:completed_item
-"     let l:comp_len = len(l:complete)
-"
-"     let l:cur_col = mode() == 'i' ? col('.') - 2 : col('.') - 1
-"     let l:cur_line = getline('.')
-"
-"     let l:start = l:comp_len <= l:cur_col ? l:cur_line[:l:cur_col - l:comp_len] : ''
-"     let l:end = l:cur_col < len(l:cur_line) ? l:cur_line[l:cur_col + 1 :] : ''
-"
-"     call setline('.', l:start . l:end)
-"     call cursor('.', l:cur_col - l:comp_len + 2)
-"
-"     call UltiSnips#Anon(l:complete)
-" endfunction
-"
-" autocmd CompleteDone * call CompleteSnippet()
 
 """"""""""""""
 "  SETTINGS  "
 """"""""""""""
 
-set synmaxcol=800
 set number
-set showcmd
 set hidden
-set wildmenu
-set wildmode=longest:full,full
-set complete-=t
-set complete-=i
-set completeopt=menuone,noinsert,noselect
-set shortmess+=atIc
-set lazyredraw
-set mouse=a
-set diffopt+=hiddenoff,internal,algorithm:histogram
-
 set cursorline
-"if &diff | set nocursorline | endif
-set textwidth=80
-set wrapmargin=0
-set nowrap
-set showmatch
-set matchtime=5
 set list
-
-set novisualbell
-set noerrorbells
-set belloff=all
-set display=lastline
+set nowrap
+set mouse=ar
 set laststatus=2
 set showtabline=2
-set noshowmode
+set tabpagemax=50
 set previewheight=5
-
-set notimeout
-set ttimeout
-set ttimeoutlen=100
-set updatetime=100
+set noshowmode
+set hlsearch
+set incsearch
+set ignorecase
+set smartcase
+set autoread
+set noruler
+set nostartofline
 
 set tabstop=4
-set softtabstop=4
 set shiftwidth=4
 set expandtab
-
-" function! ExpandSpaces()
-"     set tabstop=2
-"     set noexpandtab
-"     '<,'>retab!
-"     set tabstop=4
-"     set expandtab
-"     '<,'>retab
-" endfunction
-" nnoremap <leader>i :call ExpandSpaces()<CR>
-
-set encoding=utf-8
-set smarttab
 set autoindent
-set linespace=0
+set smarttab
+set textwidth=80
 set scrolloff=3
+set sidescroll=1
 set sidescrolloff=5
-set backspace=indent,eol,start
+
+set wildmode=longest:full,full
+set complete-=i
+set completeopt=menuone,noinsert,noselect
+set shortmess+=aIc shortmess-=S
+set diffopt+=hiddenoff,algorithm:histogram
+set clipboard+=unnamed,unnamedplus
 set formatoptions+=rj formatoptions-=o
 set nrformats-=octal
 set pastetoggle=<F2>
+set history=10000
+set sessionoptions-=options
+set nojoinspaces
+set belloff=all
+set lazyredraw
+set synmaxcol=800
 set dictionary+=/usr/share/dict/words-insane
 set tags^=./.git/tags
 
-"set clipboard+=unnamed,unnamedplus
-set history=10000
-set tabpagemax=50
-set autoread
-set autowrite
-set ruler
-set nostartofline
-set nohidden
-set nojoinspaces
-set sessionoptions-=options
-
-set incsearch
-set hlsearch
-set ignorecase
-set smartcase
-
-set foldenable
-set foldnestmax=100
-"set foldmethod=indent
-
 set guifont=monospace
 set guioptions-=mTrl
+
+if &term !=? 'linux' || has('gui_running')
+    set listchars=tab:›\ ,extends:❯,precedes:❮,nbsp:˷,trail:~
+    "set listchars=tab:›\ ,extends:❯,precedes:❮,nbsp:˷,eol:⤶,trail:~
+    set fillchars=vert:│,fold:─,diff:\ 
+    "augroup InsertModeHideTrailingSpaces
+    "    autocmd!
+    "    autocmd InsertEnter * set listchars-=eol:⤶ listchars-=trail:~
+    "    autocmd InsertLeave * set listchars+=eol:⤶,trail:~
+    "augroup END
+else
+    set listchars=tab:>\ ,extends:>,precedes:<,nbsp:+,trail:~
+    "set listchars=tab:>\ ,extends:>,precedes:<,nbsp:+,eol:$,trail:~
+    set fillchars=vert:\|,fold:-,diff:\ 
+    "augroup InsertModeHideTrailingSpaces
+    "    autocmd!
+    "    autocmd InsertEnter * set listchars-=eol:$ listchars-=trail:~
+    "    autocmd InsertLeave * set listchars+=eol:$,trail:~
+    "augroup END
+endif
 
 
 """""""""""""
 "  AUTOCMD  "
 """""""""""""
 
-" augroup TransparentBackground
-"     autocmd!
-"     autocmd ColorScheme * highlight Normal guibg=NONE ctermbg=NONE
-" augroup END
-
-" augroup IncSearchHighlight
-"     autocmd!
-"     autocmd CmdlineEnter [/\?] :set hlsearch
-"     autocmd CmdlineLeave [/\?] :set nohlsearch
-" augroup END
-
-augroup LighterCursorLine
+augroup SourceVimrc
     autocmd!
-    "autocmd ColorScheme * highlight clear CursorLine
-    "autocmd ColorScheme * highlight CursorLine guibg=#32302f
-    autocmd ColorScheme * if &background == "dark" | highlight CursorLine guibg=#32302f | else | highlight CursorLine guibg=#f2e5bc | endif
+    autocmd BufWritePost $MYVIMRC nested source $MYVIMRC
 augroup END
 
-augroup BoldCursorLineNr
+augroup UnfoldInitially
     autocmd!
-    "autocmd ColorScheme * highlight CursorLineNR cterm=bold guibg=#282828
-    autocmd ColorScheme * if &background == "dark" | highlight CursorLineNR cterm=bold guibg=#32302f | else | highlight CursorLineNR cterm=bold guibg=#f2e5bc | endif
-augroup END
-
-augroup LighterQuickFixLine
-    autocmd!
-    "autocmd ColorScheme * highlight QuickFixLine ctermbg=Yellow guibg=#504945
-    "autocmd ColorScheme * highlight qfFileName guifg=#fe8019
-    autocmd ColorScheme * if &background == "dark" | highlight QuickFixLine ctermbg=Yellow guibg=#504945 | else | highlight QuickFixLine ctermbg=Yellow guibg=#d5c4a1 | endif
-    autocmd ColorScheme * if &background == "dark" | highlight qfFileName guifg=#fe8019 | else | highlight qfFileName guifg=#af3a03 | endif
-augroup END
-
-" augroup SearchHighlightColor
-"     autocmd!
-"     "autocmd ColorScheme * highlight Search guibg=#282828 guifg=#fe8019
-"     autocmd ColorScheme * if &background == "dark" | highlight Search guibg=#282828 guifg=#fe8019 | else | highlight Search guibg=#fbf1c7 guifg=#af3a03 | endif
-" augroup END
-
-augroup VCSConflictMarker
-    autocmd!
-    "autocmd ColorScheme * highlight VCSConflict guibg=#cc241d guifg=#282828
-    autocmd ColorScheme * if &background == "dark" | highlight VCSConflict guibg=#cc241d guifg=#282828 | else | highlight VCSConflict guibg=#cc241d guifg=#fbf1c7 | endif
-    autocmd BufEnter,WinEnter * match VCSConflict '^\(<\|=\||\|>\)\{7\}\([^=].\+\)\?$'
-augroup END
-
-" augroup OverLength
-"     autocmd!
-"     "autocmd ColorScheme * highlight OverLength guibg=#cc241d guifg=#282828
-"     autocmd ColorScheme * if &background == "dark" | highlight OverLength guibg=#cc241d guifg=#282828 | else | highlight OverLength guibg=#cc241d guifg=#fbf1c7 | endif
-"     "autocmd BufEnter,WinEnter * match OverLength /\%81v./
-"     "autocmd BufEnter,WinEnter * match OverLength /\%>80v.\+/
-"     let collumnLimit=80
-"     let pattern='\%' . (collumnLimit+1) . 'v.'
-"     autocmd BufEnter,WinEnter *
-"                 \ let w:m1=matchadd('OverLength', pattern, -1)
-" augroup END
-
-augroup RefreshAirline
-    autocmd!
-    autocmd ColorScheme * if exists(':AirlineRefresh') | :AirlineRefresh | endif
-augroup END
-
-augroup SpellBadUnderline
-    autocmd!
-    autocmd BufEnter,WinEnter * highlight SpellBad gui=underline term=underline cterm=underline
-augroup END
-
-if &term !=? 'linux' || has('gui_running')
-    set listchars=tab:›\ ,extends:>,precedes:<,nbsp:˷,eol:⤶,trail:~
-    set fillchars=vert:│,fold:─,diff:-
-    augroup TrailingSpaces
-        autocmd!
-        autocmd InsertEnter * set listchars-=eol:⤶,trail:~
-        autocmd InsertLeave * set listchars+=eol:⤶,trail:~
-    augroup END
-else
-    set listchars=tab:>\ ,extends:>,precedes:<,nbsp:+,eol:$,trail:~
-    set fillchars=vert:\|,fold:-,diff:-
-    augroup TrailingSpaces
-        autocmd!
-        autocmd InsertEnter * set listchars-=eol:$,trail:~
-        autocmd InsertLeave * set listchars+=eol:$,trail:~
-    augroup END
-endif
-
-augroup CustomFolding
-    autocmd!
-    " with this, everything is unfolded at start
     autocmd BufWinEnter * let &foldlevel=max(add(map(range(1, line('$')), 'foldlevel(v:val)'), 10))
 augroup End
 
-function! NeatFoldText()
+function! CustomFoldText()
     let line = ' ' . substitute(getline(v:foldstart), '^\s*"\?\s*\|\s*"\?\s*{{' . '{\d*\s*', '', 'g') . ' '
     let lines_count = v:foldend - v:foldstart + 1
     let lines_count_text = '┤ ' . printf("%10s", lines_count . ' lines') . ' ├'
@@ -1119,70 +1105,38 @@ function! NeatFoldText()
     let foldtextlength = strlen(substitute(foldtextstart . foldtextend, '.', 'x', 'g')) + &foldcolumn
     return foldtextstart . repeat(foldchar, winwidth(0)-foldtextlength) . foldtextend
 endfunction
-set foldtext=NeatFoldText()
+set foldtext=CustomFoldText()
 
-augroup PreviewAutocmds
-    autocmd!
-    autocmd WinEnter * if &previewwindow |
-                \ setlocal nonumber |
-                \ nnoremap <buffer><silent> q :q<CR>
-                \ |
-                \ endif
-augroup END
+
+""""""""""""
+"  NEOVIM  "
+""""""""""""
+
+if has('nvim')
+    set inccommand=nosplit
+    set pumblend=0
+    set fillchars+=eob:\ 
+endif
 
 if !has('nvim')
+    set display=lastline
     set viminfo=%,\"800,'10,/50,:100,h,f0,n~/.vim/.viminfo
     augroup SavePosition
         autocmd!
         autocmd BufReadPost *
                     \ if index(['gitcommit', 'gitrebase'], &ft) < 0 &&
                     \ line("'\"") > 0 && line("'\"") <= line("$") |
-                    \ execute 'normal! g`"zvzz' |
+                    \ exec 'normal! g`"zvzz' |
                     \ endif
     augroup END
 endif
 
-
-"""""""""""
-"  THEME  "
-"""""""""""
-
-"" Theme and colors
-set termguicolors
-set background=dark
-let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
-let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
-"set t_Co=256
-let g:gruvbox_bold=1
-let g:gruvbox_italic=1
-let g:gruvbox_underline=1
-let g:gruvbox_undercurl=1
-
-"" Use environment variable
-if !empty($VIM_COLOR)
-    silent! colorscheme $VIM_COLOR
-else
-    silent! colorscheme gruvbox
+if has('nvim') || has('gui_running')
+    augroup FZFHideStatus
+        autocmd! FileType fzf
+        autocmd FileType fzf set laststatus=0 | autocmd BufLeave <buffer> set laststatus=2
+    augroup END
 endif
-
-"" Switch cursor according to mode
-if &term !=? 'linux' || has('gui_running')
-    let &t_SI="\<Esc>[6 q"
-    let &t_SR="\<Esc>[4 q"
-    let &t_EI="\<Esc>[2 q"
-
-    " let &t_ue="\<Esc>[4:0m"
-    " let &t_us="\<Esc>[4:1m"
-    " let &t_Ce="\<Esc>[4:0m"
-    " let &t_Cs="\<Esc>[4:3m"
-endif
-
-
-""""""""""""
-"  BUGFIX  "
-""""""""""""
-
-nohlsearch
 
 
 """"""""""""""""""""""""""
@@ -1237,7 +1191,9 @@ silent! source .local.vimrc
 
 "" Links to check out
 
-" checkout: https://github.com/zenbro/dotfiles/blob/master/.nvimrc
+" checkout: https://github.com/romainl/idiomatic-vimrc
+"           https://gist.github.com/romainl/4b9f139d2a8694612b924322de1025ce
+"           https://github.com/zenbro/dotfiles/blob/master/.nvimrc
 "           https://github.com/spf13/spf13-vim/blob/3.0/.vimrc
 "           https://github.com/euclio/vimrc/blob/master/vimrc
 "           https://github.com/KevOBrien/dotfiles
