@@ -875,36 +875,14 @@ function! LanguageClient_settings()
     if !has_key(g:LanguageClient_serverCommands, &filetype)
         return
     endif
-    nnoremap <buffer><silent> K          :call LanguageClient#contextMenu()<CR>
-    nnoremap <buffer><silent> <F1>       :call LanguageClient#textDocument_hover()<CR>
-    nnoremap <buffer><silent> <leader>d  :call LanguageClient#textDocument_definition()<CR>
-    nnoremap <buffer><silent> <leader>i  :call LanguageClient#textDocument_implementation()<CR>
-    nnoremap <buffer><silent> <leader>x  :call LanguageClient#textDocument_typeDefinition()<CR>
-    nnoremap <buffer><silent> <leader>y  :call LanguageClient#textDocument_documentSymbol()<CR>
-    nnoremap <buffer><silent> <leader>u  :call LanguageClient#textDocument_references()<CR>
-    nnoremap <buffer><silent> <leader>r  :call LanguageClient#textDocument_rename()<CR>
-    nnoremap <buffer><silent> <leader>cc :call LanguageClient#textDocument_rename(
-                \ {'newName': Abolish.camelcase(expand('<cword>'))})<CR>
-    nnoremap <buffer><silent> <leader>cm :call LanguageClient#textDocument_rename(
-                \ {'newName': Abolish.mixedcase(expand('<cword>'))})<CR>
-    nnoremap <buffer><silent> <leader>c_ :call LanguageClient#textDocument_rename(
-                \ {'newName': Abolish.snakecase(expand('<cword>'))})<CR>
-    nnoremap <buffer><silent> <leader>cs :call LanguageClient#textDocument_rename(
-                \ {'newName': Abolish.snakecase(expand('<cword>'))})<CR>
-    nnoremap <buffer><silent> <leader>cu :call LanguageClient#textDocument_rename(
-                \ {'newName': Abolish.uppercase(expand('<cword>'))})<CR>
-    nnoremap <buffer><silent> <leader>cU :call LanguageClient#textDocument_rename(
-                \ {'newName': Abolish.uppercase(expand('<cword>'))})<CR>
-    nnoremap <buffer><silent> <leader>c- :call LanguageClient#textDocument_rename(
-                \ {'newName': Abolish.dashcase(expand('<cword>'))})<CR>
-    nnoremap <buffer><silent> <leader>ck :call LanguageClient#textDocument_rename(
-                \ {'newName': Abolish.dashcase(expand('<cword>'))})<CR>
-    nnoremap <buffer><silent> <leader>c. :call LanguageClient#textDocument_rename(
-                \ {'newName': Abolish.dotcase(expand('<cword>'))})<CR>
-    nnoremap <buffer><silent> <leader>ct :call LanguageClient#textDocument_rename(
-                \ {'newName': Abolish.titlecase(expand('<cword>'))})<CR>
-    nnoremap <buffer><silent> <leader>c<space> :call LanguageClient#textDocument_rename(
-                \ {'newName': Abolish.spacecase(expand('<cword>'))})<CR>
+    nnoremap <buffer><silent> K         :call LanguageClient#contextMenu()<CR>
+    nnoremap <buffer><silent> <F1>      :call LanguageClient#textDocument_hover()<CR>
+    nnoremap <buffer><silent> <leader>d :call LanguageClient#textDocument_definition()<CR>
+    nnoremap <buffer><silent> <leader>i :call LanguageClient#textDocument_implementation()<CR>
+    nnoremap <buffer><silent> <leader>x :call LanguageClient#textDocument_typeDefinition()<CR>
+    nnoremap <buffer><silent> <leader>y :call LanguageClient#textDocument_documentSymbol()<CR>
+    nnoremap <buffer><silent> <leader>u :call LanguageClient#textDocument_references()<CR>
+    nnoremap <buffer><silent> <leader>r :call LanguageClient#textDocument_rename()<CR>
 endfunction
 
 augroup LanguageClient_config
