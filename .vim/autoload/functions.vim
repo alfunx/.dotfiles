@@ -1,12 +1,21 @@
 " vim-functions - Custom helper functions
-" Maintainer:	Alphonse Mariya <alphonse.mariya@hotmail.com>
-" Version:	0.1.0
-" License:	MIT
-" Location:	autoload/functions.vim
+" Maintainer: Alphonse Mariya <alphonse.mariya@hotmail.com>
+" Version: 0.1.0
+" License: MIT
+" Location: autoload/functions.vim
+
+let s:save_cpo = &cpo
+set cpo&vim
+
+" OS related variable
+let s:is_win = has('win32') || has('win64')
+let s:is_mac = !s:is_win && (has('mac') || has('macunix') || has('gui_macvim') || system('uname') =~? '^darwin')
+let s:is_linux = !s:is_win && !s:is_mac
+let s:open = s:is_win ? 'start' : s:is_mac ? 'open' : 'xdg-open'
 
 " syntax highlight group
 function! functions#syntax(...) abort
-    let l:syn_id = synID(line('.'), col('.'), 1)
+    let syn_id = synID(line('.'), col('.'), 1)
     if a:0 > 1
         return synIDattr(syn_id, a:1, a:2)
     elseif a:0 > 0
@@ -24,89 +33,10 @@ endfunction
 
 " simple git blame
 function! functions#gitblame(range) abort
-    return join(systemlist(join([
-                \ 'git -C',
+    return join(systemlist(printf('git -C %s blame -L %s %s',
                 \ shellescape(expand('%:p:h')),
-                \ 'blame -L',
                 \ a:range,
-                \ shellescape(expand('%:t'))])), "\n")
-endfunction
-
-" run macro on visual selection
-function! functions#visual_macro(type, ...)
-    if a:0
-        silent exe "normal! gvV"
-    elseif a:type == 'line'
-        silent exe "normal! '[V']V"
-    else
-        silent exe "normal! `[v`]V"
-    endif
-
-    exec "'<,'>normal @" . nr2char(getchar())
-endfunction
-
-" fix space tabstop
-function! functions#fix_space_tabstop(type, ...)
-    if a:0
-        silent exe "normal! gvV"
-    elseif a:type == 'line'
-        silent exe "normal! '[V']V"
-    else
-        silent exe "normal! `[v`]V"
-    endif
-
-    let l:ts = &tabstop
-    let &tabstop = nr2char(getchar())
-    set noexpandtab
-    '<,'>retab!
-    let &tabstop = l:ts
-    set expandtab
-    '<,'>retab
-endfunction
-
-" send to tmux split
-function! functions#send_to_tmux_split(type, ...)
-    let sel_save = &selection
-    let &selection = "inclusive"
-    let reg_save = @@
-
-    if a:0
-        silent exe "normal! gvy"
-    elseif a:type == 'line'
-        silent exe "normal! '[V']y"
-    else
-        silent exe "normal! `[v`]y"
-    endif
-
-    call VimuxOpenRunner()
-    call VimuxSendText(@@)
-    silent exe "normal! `v"
-
-    let &selection = sel_save
-    let @@ = reg_save
-endfunction
-
-" complete snippets
-function! functions#ulti_complete() abort
-    if empty(UltiSnips#SnippetsInCurrentScope(1))
-        return ''
-    endif
-
-    let word_to_complete = matchstr(strpart(getline('.'), 0, col('.') - 1), '\S\+$')
-    let contain_word = 'stridx(v:val, word_to_complete)>=0'
-    let candidates = map(filter(keys(g:current_ulti_dict_info), contain_word),
-                   \  "{
-                   \      'word': v:val,
-                   \      'menu': '[snip] '. g:current_ulti_dict_info[v:val]['description'],
-                   \      'dup' : 1,
-                   \   }")
-    let from_where = col('.') - len(word_to_complete)
-
-    if !empty(candidates)
-        call complete(from_where, candidates)
-    endif
-
-    return ''
+                \ shellescape(expand('%:t')))), '\n')
 endfunction
 
 " use UltiSnips to expand snippet in completion
@@ -120,17 +50,90 @@ function! functions#expand_snippet() abort
         return ''
     endif
 
-    let l:completion = v:completed_item.word
-    let l:len = len(l:completion)
-    let l:col = col('.') - 2
-    let l:line = getline('.')
+    let completion = v:completed_item.word
+    let len = len(completion)
+    let col = col('.') - 2
+    let line = getline('.')
 
     " remove completion before expanding snippet
-    call setline('.', l:line[: l:col - l:len] . l:line[l:col + 1 :])
-    call cursor('.', l:col - l:len + 2)
+    call setline('.', line[: col - len] . line[col + 1 :])
+    call cursor('.', col - len + 2)
 
     " expand snippet
-    call UltiSnips#Anon(l:completion)
+    call UltiSnips#Anon(completion)
 
     return ''
 endfunction
+
+" pretty fold text
+function! functions#foldtext()
+    let line = printf('  %s  ', substitute(getline(v:foldstart), '^\s*"\?\s*\|\s*"\?\s*{{' . '{\d*\s*', '', 'g'))
+    let linecount = printf('┤ %4d ├', v:foldend - v:foldstart + 1)
+    let foldcount = v:foldlevel > 1 ? printf('┤ %d ├', v:foldlevel) : ''
+    let foldchar = matchstr(&fillchars, 'fold:\zs.')
+    let foldhead = strpart(printf('%s%s%s%s', repeat(foldchar, 3), foldcount, repeat(foldchar, 3), line), 0, (winwidth(0)*2)/3)
+    let foldtail = linecount . repeat(foldchar, 8)
+    let foldtextlength = strlen(substitute(foldhead . foldtail, '.', 'x', 'g')) + &foldcolumn
+    return foldhead . repeat(foldchar, winwidth(0)-foldtextlength) . foldtail
+endfunction
+
+" trim string
+function! functions#trim(text) abort
+    return substitute(a:text, '\(^\|\n\).\{-}\zs\\\@1<!\s\+\ze\($\|\n\)', '', 'g')
+endfunction
+
+" convert number to bin
+function! functions#bin(num) abort
+    return printf('%b', a:num)
+endfunction
+
+" convert number to hex
+function! functions#hex(num) abort
+    return printf('%x', a:num)
+endfunction
+
+" convert number to dec
+function! functions#dec(num) abort
+    return printf('%d', a:num)
+endfunction
+
+" search on google
+function! functions#google(query, lucky) abort
+    let query = substitute(
+                \ substitute(
+                \ trim(a:query), '["\n]', ' ', 'g'),
+                \ '[[:punct:] ]', '\=printf("%%%02X", char2nr(submatch(0)))', 'g')
+    let url = printf('https://www.google.com/search?%sq="%s"', a:lucky ? 'btnI&' : '', query)
+    call system(s:open . ' "' . escape(url, '"') . '"')
+    return s:open . ' ' . escape(url, '"')
+endfunction
+
+" open floating window with borders
+function! functions#nvim_open_window(buffer, enter, opts)
+    if get(a:opts, 'border', v:false)
+        call remove(a:opts, 'border')
+        let opts = copy(a:opts)
+        let opts.width += 4
+        let opts.height += 2
+        let opts.row -= 1
+        let opts.col -= 2
+        let opts.focusable = v:false
+        let opts.style = 'minimal'
+        let frame =            [ '╭' . repeat('─', opts.width - 2) . '╮' ]
+                    \ + repeat([ '│' . repeat(' ', opts.width - 2) . '│' ], opts.height - 2)
+                    \ +        [ '╰' . repeat('─', opts.width - 2) . '╯' ]
+        let s:buf = nvim_create_buf(v:false, v:true)
+        call nvim_buf_set_lines(s:buf, 0, -1, v:true, frame)
+        let border = nvim_open_win(s:buf, v:true, opts)
+        call setwinvar(border, '&winhl', 'NormalFloat:Comment')
+        let win = nvim_open_win(a:buffer, a:enter, a:opts)
+        autocmd BufWipeout <buffer> exe 'bw ' . s:buf
+        return win
+    else
+        return nvim_open_win(a:buffer, a:enter, a:opts)
+    endif
+endfunction
+
+let &cpo = s:save_cpo
+
+" vim: set et ts=4 sw=4 sts=0 tw=80 fdm=marker:

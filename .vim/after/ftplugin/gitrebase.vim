@@ -7,5 +7,7 @@ nnoremap <buffer><silent> ge :Edit<CR>
 nnoremap <buffer><silent> gs :Squash<CR>
 nnoremap <buffer><silent> gf :Fixup<CR>
 nnoremap <buffer><silent> gd :Drop<CR>
+nnoremap <buffer><silent> gb obreak<Esc>-
+nnoremap <buffer><silent> gB Obreak<Esc>+
 nnoremap <buffer><silent> S :Cycle<CR>
 nnoremap <buffer><silent> K :Cycle<CR>
