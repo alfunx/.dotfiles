@@ -8,6 +8,7 @@
 
 # compiler
 .ccls-cache/
+.clangd/
 compile_commands.json
 
 # binary
@@ -18,10 +19,15 @@ compile_commands.json
 *.dll
 *.com
 
+# local
+.tmux
+.nvimrc
+.vimrc
+.exrc
+
 # tools
 tags
-.local.vimrc
-.tmux
+.tags
 .backup/
 .vim-backup/
 .swap/
@@ -30,6 +36,7 @@ tags
 .vim-undo/
 
 # cache
+*.cache
 *.log
 *~
 *#

@@ -1,6 +1,19 @@
 #!/bin/sh
 
+remote=$1
+location=$2
 z40=0000000000000000000000000000000000000000
+
+# filter commits that are already on the specified remote
+filter_commits() {
+    while IFS='' read -r commit; do
+        test ! "$(git for-each-ref --contains="${commit%% *}" \
+            | cut -f2 \
+            | grep "^refs/remotes/$remote")" \
+            && echo "$commit"
+    done
+    return 0
+}
 
 while IFS=' ' read -r local_ref local_sha remote_ref remote_sha; do
     if [ "$local_sha" = $z40 ]; then
@@ -16,7 +29,8 @@ while IFS=' ' read -r local_ref local_sha remote_ref remote_sha; do
     fi
 
     # check for WIP commits
-    commits=$(git log --format='%h %s' -i --grep='^wip' "$range")
+    commits=$(git log --format='%h %s' --basic-regexp -i --grep='^wip' "$range" \
+        | filter_commits)
     if [ -n "$commits" ]; then
         warn1 "WIP commits detected."
         warn2 "Pass [1m--no-verify[0m to git-push to bypass this check."
@@ -27,7 +41,8 @@ while IFS=' ' read -r local_ref local_sha remote_ref remote_sha; do
     fi
 
     # check for autosquash commits
-    commits=$(git log --format='%h %s' -i --grep='^fixup!\|^squash!' "$range")
+    commits=$(git log --format='%h %s' --basic-regexp -i --grep='^fixup!\|^squash!' "$range" \
+        | filter_commits)
     if [ -n "$commits" ]; then
         warn1 "Autosquash commits detected."
         warn2 "Pass [1m--no-verify[0m to git-push to bypass this check."
