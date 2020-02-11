@@ -53,6 +53,7 @@ alias egrep='egrep --color=auto --exclude-dir={.git,.svn,.hg}'
 alias diff='diff --color=auto'
 alias journalctl='journalctl -r'
 alias gdb='gdb -q'
+alias rust-gdb='rust-gdb -q'
 
 # tty aliases
 if [[ "$TERM" == 'linux' ]]; then
@@ -421,8 +422,8 @@ bindkey '\eo' ranger-widget
 ranger-cd-widget() {
     echo
     trap 'rm -f /tmp/.rangerdir' SIGINT SIGTERM EXIT
-    ranger --choosedir="/tmp/.rangerdir" < "$TTY"
-    cd $(< "/tmp/.rangerdir")
+    ranger --choosedir=/tmp/.rangerdir < "$TTY"
+    cd "$(< /tmp/.rangerdir)"
     zle reset-prompt
 }
 zle     -N     ranger-cd-widget

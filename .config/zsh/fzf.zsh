@@ -11,9 +11,9 @@
     && source '/usr/share/fzf/key-bindings.zsh'
 
 # default options
-export FZF_DEFAULT_OPTS='--height 30%
-    --color fg:223,bg:235,hl:208,fg+:229,bg+:237,hl+:167,border:237
-    --color info:246,prompt:214,pointer:214,marker:142,spinner:246,header:214'
+export FZF_DEFAULT_OPTS='--height 30% --info=inline
+    --color fg:223,bg:235,hl:208,fg+:223,bg+:235,gutter:235,hl+:167,border:237
+    --color info:241,prompt:214,pointer:214,marker:167,spinner:241,header:214'
 
 export FZF_DEFAULT_COMMAND='fd -tf -HL 2> /dev/null'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"

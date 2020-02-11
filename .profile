@@ -55,29 +55,33 @@ export LESS_TERMCAP_us=$'\e[4;96m'
 export LESS_TERMCAP_ue=$'\e[0m'
 export MANLESS=" [1m\$MAN_PN[0m${LESS_TERMCAP_so} ?ltline %lt?L/%L.:byte %bB?s/%s..?pB %pB\%. "
 export MANROFFOPT='-c'
-export LESS='-iMRSj.3'
+export LESS='-iMRSj.5'
 export SYSTEMD_LESS="$LESS"
 
-# # man / less colors (using tput)
-# export LESS_TERMCAP_mb=$(tput bold; tput setaf 2)
-# export LESS_TERMCAP_md=$(tput bold; tput setaf 4)
-# export LESS_TERMCAP_me=$(tput sgr0)
-# export LESS_TERMCAP_so=$(tput bold; tput setaf 0; tput setab 11)
-# export LESS_TERMCAP_se=$(tput rmso; tput sgr0)
-# export LESS_TERMCAP_us=$(tput smul; tput setaf 14)
-# export LESS_TERMCAP_ue=$(tput rmul; tput sgr0)
-# export LESS_TERMCAP_mr=$(tput rev)
-# export LESS_TERMCAP_mh=$(tput dim)
-# export MANROFFOPT='-c'
-# export LESS='-iMRj.3'
+# man / less colors (using tput)
+#export LESS_TERMCAP_mb=$(tput bold; tput setaf 2)
+#export LESS_TERMCAP_md=$(tput bold; tput setaf 4)
+#export LESS_TERMCAP_me=$(tput sgr0)
+#export LESS_TERMCAP_so=$(tput bold; tput setaf 0; tput setab 11)
+#export LESS_TERMCAP_se=$(tput rmso; tput sgr0)
+#export LESS_TERMCAP_us=$(tput smul; tput setaf 14)
+#export LESS_TERMCAP_ue=$(tput rmul; tput sgr0)
+#export LESS_TERMCAP_mr=$(tput rev)
+#export LESS_TERMCAP_mh=$(tput dim)
+#export MANROFFOPT='-c'
+#export LESS='-iMRj.3'
 
-# # man width
-# MAN_MAX_WIDTH='105'
-# export MANWIDTH=$(tput cols)
-# [ "$MANWIDTH" -gt "$MAN_MAX_WIDTH" ] && export MANWIDTH=$MAN_MAX_WIDTH
+# man width
+#MAN_MAX_WIDTH='105'
+#export MANWIDTH=$(tput cols)
+#[ "$MANWIDTH" -gt "$MAN_MAX_WIDTH" ] && export MANWIDTH=$MAN_MAX_WIDTH
 
 # gpg (for Github)
-export GPG_TTY=$(tty)
+export GPG_TTY="$(tty)"
 
 # qt theme
 export QT_QPA_PLATFORMTHEME="qt5ct"
+
+# hledger
+export LEDGER_PATH="$HOME/notes"
+export LEDGER_FILE="$LEDGER_PATH/current.journal"

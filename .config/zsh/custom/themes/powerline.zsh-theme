@@ -174,6 +174,12 @@ prompt_git() {
 
 prompt_bzr() {
     (( $+commands[bzr] )) || return
+    if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
+        return
+    fi
+    if $(hg id >/dev/null 2>&1); then
+        return
+    fi
     if (bzr status >/dev/null 2>&1); then
         status_mod=`bzr status | head -n1 | grep 'modified' | wc -m`
         status_all=`bzr status | head -n1 | wc -m`

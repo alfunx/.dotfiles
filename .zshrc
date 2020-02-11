@@ -118,11 +118,11 @@ plugins=(
 ############
 
 # Zsh options
-setopt COMPLETE_ALIASES
-setopt HIST_IGNORE_SPACE
-setopt NO_AUTO_CD
-setopt INTERACTIVE_COMMENTS
-setopt PROMPT_SUBST
+unsetopt AUTO_CD
+setopt   INTERACTIVE_COMMENTS
+setopt   PROMPT_SUBST
+setopt   HIST_IGNORE_SPACE
+setopt   HIST_IGNORE_DUPS
 
 # No scrolllock
 stty -ixon
@@ -154,7 +154,7 @@ local main_attached="$(tmux list-sessions -F '#S #{session_attached}' \
     2>/dev/null \
     | sed -n 's/^main[[:space:]]//p')"
 if [[ "$main_attached" -le '0' ]] && [[ "$TERM" != 'linux' ]]; then
-    tmux new -A -s main -t main >/dev/null 2>&1
+    tmux new -A -s main >/dev/null 2>&1
     exit
 fi
 

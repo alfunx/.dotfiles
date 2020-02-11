@@ -8,9 +8,11 @@ setopt   ALWAYS_TO_END     # Move cursor to the end of a completed word
 setopt   PATH_DIRS         # Perform path search even on command names with slashes
 setopt   AUTO_MENU         # Show completion menu on a succesive tab press
 setopt   AUTO_LIST         # Automatically list choices on ambiguous completion
+setopt   AUTO_REMOVE_SLASH # Remove trailing slashes
 setopt   AUTO_PARAM_SLASH  # If completed parameter is a directory, add a trailing slash
 unsetopt MENU_COMPLETE     # Do not autoselect the first completion entry
 unsetopt FLOW_CONTROL      # Disable start/stop characters in shell editor
+setopt   GLOB_COMPLETE     # Show completions for glob instead of expanding
 
 # Treat these characters as part of a word
 WORDCHARS='*?_-.[]~&;!#$%^(){}<>'
@@ -37,7 +39,7 @@ zstyle ':completion:*:corrections' format ' %F{8}correction:%f %B%F{green}%d (er
 zstyle ':completion:*:descriptions' format ' %F{8}description:%f %B%F{blue}%d%f%b'
 zstyle ':completion:*:messages' format ' %F{8}message:%f %B%F{magenta}%d%f%b'
 zstyle ':completion:*:warnings' format ' %F{8}error:%f %B%F{red}no matches found%f%b'
-zstyle ':completion:*:default' select-prompt '%S%M matches, current selection at %p%s'
+zstyle ':completion:*:default' select-prompt '%B%S%M%b matches, current selection at %p%s'
 zstyle ':completion:*' format ' %F{8}completion:%f %B%F{yellow}%d%f%b'
 zstyle ':completion:*' list-separator '→'
 zstyle ':completion:*' group-name ''
@@ -134,7 +136,7 @@ zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^<->.<->
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' menu select=1
 zstyle ':completion:*' original false
-#zstyle ':completion:*' select-prompt %S%M matches, current selection at %p%s
+#zstyle ':completion:*' select-prompt '%S%M matches, current selection at %p%s'
 
 autoload -Uz compinit
 compinit -D
