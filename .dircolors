@@ -269,9 +269,11 @@ CHR 04;01;97
 .p 32
 .pod 32
 .tex 32
+.rs 32
 .go 32
 .sql 32
 .csv 32
+.r 32
 
 ### Multimedia formats
 
@@ -471,6 +473,7 @@ CHR 04;01;97
 *,v 93
 .pacnew 93
 .pacsave 93
+.lock 93
 
 # History
 *history 96
