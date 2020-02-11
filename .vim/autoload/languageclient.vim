@@ -39,15 +39,15 @@ function! s:record_diagnostics(state) abort
     call lightline#update()
 endfunction
 
-function! s:get_diagnostics()
+function! s:get_diagnostics() abort
     call LanguageClient#getState(function('s:record_diagnostics'))
 endfunction
 
-function! s:diagnostics_for_buffer()
+function! s:diagnostics_for_buffer() abort
     return get(s:diagnostics, expand('%:p'), [])
 endfunction
 
-function! languageclient#get(type)
+function! languageclient#get(type) abort
     let l:rel = filter(copy(s:diagnostics_for_buffer()),
                 \ {_, v -> has_key(v, 'severity') && v.severity == a:type})
     let l:cnt = len(l:rel)
@@ -62,19 +62,19 @@ function! languageclient#get(type)
     return l:cnt
 endfunction
 
-function! languageclient#errors()
+function! languageclient#errors() abort
     return languageclient#get(s:severity_error)
 endfunction
 
-function! languageclient#warnings()
+function! languageclient#warnings() abort
     return languageclient#get(s:severity_warning)
 endfunction
 
-function! languageclient#infos()
+function! languageclient#infos() abort
     return languageclient#get(s:severity_info)
 endfunction
 
-function! languageclient#hints()
+function! languageclient#hints() abort
     return languageclient#get(s:severity_hint)
 endfunction
 

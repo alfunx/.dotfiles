@@ -9,7 +9,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! s:do_action(fn, type)
+function! s:do_action(fn, type) abort
     " backup settings that we will change
     let sel_save = &selection
     let cbd_save = &clipboard
@@ -52,16 +52,16 @@ function! s:do_action(fn, type)
     let &clipboard = cbd_save
 endfunction
 
-function! s:action_opfunc(type)
+function! s:action_opfunc(type) abort
     return s:do_action(s:encode_algorithm, a:type)
 endfunction
 
-function! s:action_setup(fn)
+function! s:action_setup(fn) abort
     let s:encode_algorithm = a:fn
     let &opfunc = matchstr(expand('<sfile>'), '<SNR>\d\+_').'action_opfunc'
 endfunction
 
-function! map#action(fn, key)
+function! map#action(fn, key) abort
     exe 'nnoremap <silent> <Plug>actions'    .a:fn.' :<C-U>call <SID>action_setup("'.a:fn.'")<CR>g@'
     exe 'xnoremap <silent> <Plug>actions'    .a:fn.' :<C-U>call <SID>do_action("'.a:fn.'",visualmode())<CR>'
     exe 'nnoremap <silent> <Plug>actionsLine'.a:fn.' :<C-U>call <SID>do_action("'.a:fn.'",v:count1)<CR>'

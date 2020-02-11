@@ -36,15 +36,15 @@ endfunction
 " trailing
 function! status#trailing() abort
     if getwininfo(win_getid())[0].quickfix | return '' | endif
-    let l:line = search('\\\@1<!\s\+$', 'nw')
+    let l:line = search('\\\@1<!\s\+$', 'ncw', 0, 500)
     return l:line ? winwidth(0) < 100 ? 'Ξ' : 'Ξ' . l:line : ''
 endfunction
 
 " mixed indent
 function! status#mixedindent() abort
     if getwininfo(win_getid())[0].quickfix | return '' | endif
-    let l:tabs = search('^\t', 'nw')
-    let l:spaces = search('^ ', 'nw')
+    let l:tabs = search('^\t', 'ncw', 0, 500)
+    let l:spaces = search('^ ', 'ncw', 0, 500)
     if l:tabs && l:spaces
         return winwidth(0) < 100 ? '⇄' : l:tabs . '⇄' . l:spaces
     elseif l:spaces && !&et
@@ -59,7 +59,7 @@ endfunction
 function! status#longline() abort
     if getwininfo(win_getid())[0].quickfix | return '' | endif
     if !&tw | return '' | endif
-    let l:line = search('^.\{' . (&tw + 1) . ',}' , 'nw')
+    let l:line = search('^.\{' . (&tw + 1) . ',}' , 'ncw', 0, 500)
     return l:line ? winwidth(0) < 100 ? '→' : '→' . l:line : ''
 endfunction
 
@@ -69,12 +69,12 @@ function! status#syntaxhlgroup() abort
 endfunction
 
 " quickfix / locallist name
-function! status#qfname()
+function! status#qfname() abort
     return get(w:, 'quickfix_title', '')
 endfunction
 
 " word count
-function! status#wordcount()
+function! status#wordcount() abort
     if index(['asciidoc', 'help', 'mail', 'markdown', 'org', 'rst', 'tex', 'text'], &ft) < 0
         return ''
     endif
@@ -86,7 +86,7 @@ function! status#wordcount()
 endfunction
 
 " relative path
-function! status#relativepath()
+function! status#relativepath() abort
     if getwininfo(win_getid())[0].loclist  | return '[Location List]' | endif
     if getwininfo(win_getid())[0].quickfix | return '[Quickfix List]' | endif
     if &ft == 'fzf' | return '[FZF]' | endif

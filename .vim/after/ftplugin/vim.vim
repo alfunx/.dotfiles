@@ -3,6 +3,3 @@ nnoremap <buffer><silent> <leader>i :so $MYVIMRC <Bar> PlugInstall<CR>
 nnoremap <buffer><silent> <leader>u :so $MYVIMRC <Bar> PlugUpdate <Bar> PlugUpgrade<CR>
 nnoremap <buffer><silent> <leader>U :so $MYVIMRC <Bar> PlugUpgrade<CR>
 nnoremap <buffer><silent> <leader>c :so $MYVIMRC <Bar> PlugClean<CR>
-
-setlocal formatoptions-=t formatoptions-=c formatoptions-=o
-setlocal commentstring=\"\ %s

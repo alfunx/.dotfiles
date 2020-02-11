@@ -1,7 +1,5 @@
 nnoremap <buffer><silent> { :call search('^@@', 'bWz')<CR>zt
 nnoremap <buffer><silent> } :call search('^@@', 'Wz')<CR>zt
-"nnoremap <buffer><silent> <M-k> :call search('^@@', 'bWz')<CR>zt
-"nnoremap <buffer><silent> <M-j> :call search('^@@', 'Wz')<CR>zt
 
 setlocal iskeyword+=-
 setlocal spell

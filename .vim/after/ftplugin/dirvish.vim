@@ -1,10 +1,10 @@
-nmap <buffer> <Left>     -
-nmap <buffer> <Right>    <CR>
-nnoremap <buffer> <Up>   k
-nnoremap <buffer> <Down> j
+nmap     <buffer> <Left>  -
+nmap     <buffer> <Right> <CR>
+nnoremap <buffer> <Up>    k
+nnoremap <buffer> <Down>  j
 
-nnoremap <silent><buffer> gh :silent keeppatterns g@/\.[^/]\+/\?$@d _<CR>:setl cole=3<CR>
-nnoremap <silent><buffer> gx :set conceallevel=2<CR>
+nnoremap <silent><buffer> gh :<C-u>keepp g@/\.[^/]\+/\?$@d _<CR>:setl conceallevel=3<CR>
+nnoremap <silent><buffer> gx :<C-u>setl conceallevel=2<CR>
 
 nmap <buffer> q <Plug>(dirvish_quit)
 

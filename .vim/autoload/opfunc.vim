@@ -8,7 +8,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 " run macro on visual selection
-function! opfunc#visual_macro(type, ...)
+function! opfunc#visual_macro(type, ...) abort
     if a:0
         silent exe "normal! gvV"
     elseif a:type == 'line'
@@ -21,7 +21,7 @@ function! opfunc#visual_macro(type, ...)
 endfunction
 
 " fix space tabstop
-function! opfunc#fix_space_tabstop(type, ...)
+function! opfunc#fix_space_tabstop(type, ...) abort
     if a:0
         silent exe "normal! gvV"
     elseif a:type == 'line'
@@ -40,7 +40,7 @@ function! opfunc#fix_space_tabstop(type, ...)
 endfunction
 
 " send to tmux split
-function! opfunc#send_to_tmux_split(type, ...)
+function! opfunc#send_to_tmux_split(type, ...) abort
     let sel_save = &selection
     let &selection = "inclusive"
     let reg_save = @@
@@ -62,7 +62,7 @@ function! opfunc#send_to_tmux_split(type, ...)
 endfunction
 
 " google it
-function! opfunc#google(type, ...)
+function! opfunc#google(type, ...) abort
     let sel_save = &selection
     let &selection = "inclusive"
     let reg_save = @@

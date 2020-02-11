@@ -56,12 +56,10 @@ Plug 'justinmk/vim-sneak'
 Plug 'terryma/vim-multiple-cursors'
 "Plug 'jiangmiao/auto-pairs'
 Plug 'tmsvg/pear-tree'
-Plug 'mbbill/undotree'
 Plug 'ap/vim-css-color'
 "Plug 'markonm/traces.vim'
 Plug 'chrisbra/NrrwRgn'
 Plug 'dense-analysis/ale'
-Plug 'majutsushi/tagbar'
 Plug 'editorconfig/editorconfig-vim'
 "Plug 'romainl/vim-qf'  " forked
 "Plug 'rhysd/git-messenger.vim'  " forked
@@ -69,6 +67,11 @@ Plug 'sheerun/vim-polyglot'
 "Plug 'wellle/context.vim'
 "Plug 'liuchengxu/vista.vim'
 "Plug 'fszymanski/fzf-quickfix'
+Plug 'Shougo/echodoc.vim'
+
+" Sidebars
+Plug 'mbbill/undotree'
+Plug 'majutsushi/tagbar'
 
 " Text objects
 Plug 'wellle/targets.vim'
@@ -222,7 +225,7 @@ endif
 
 " }}}
 
-" Mapping {{{
+" Mappings {{{
 
 " Leader key
 nnoremap <Space> <Nop>
@@ -233,11 +236,11 @@ let maplocalleader = ''
 " Split navigation
 if exists(':TmuxNavigate')
     let g:tmux_navigator_no_mappings = 1
-    nnoremap <silent> <C-h>  :TmuxNavigateLeft<CR>
-    nnoremap <silent> <C-j>  :TmuxNavigateDown<CR>
-    nnoremap <silent> <C-k>  :TmuxNavigateUp<CR>
-    nnoremap <silent> <C-l>  :TmuxNavigateRight<CR>
-    nnoremap <silent> <C-BS> :TmuxNavigatePrevious<CR>
+    nnoremap <silent> <C-h>  :<C-u>TmuxNavigateLeft<CR>
+    nnoremap <silent> <C-j>  :<C-u>TmuxNavigateDown<CR>
+    nnoremap <silent> <C-k>  :<C-u>TmuxNavigateUp<CR>
+    nnoremap <silent> <C-l>  :<C-u>TmuxNavigateRight<CR>
+    nnoremap <silent> <C-BS> :<C-u>TmuxNavigatePrevious<CR>
 else
     nnoremap <silent> <C-h> <C-w><C-h>
     nnoremap <silent> <C-j> <C-w><C-j>
@@ -278,12 +281,12 @@ nnoremap <silent> Y y$
 
 " Copy to system clipboard
 nnoremap <silent> gy "+y
-nnoremap <silent> gY "+Y
-nnoremap <silent> gp "+p
-nnoremap <silent> gP "+P
 xnoremap <silent> gy "+y
+nnoremap <silent> gY "+Y
 xnoremap <silent> gY "+Y
+nnoremap <silent> gp "+p
 xnoremap <silent> gp "+p
+nnoremap <silent> gP "+P
 xnoremap <silent> gP "+P
 
 " Keep selection after indenting
@@ -291,20 +294,23 @@ xnoremap <silent> < <gv
 xnoremap <silent> > >gv
 
 " Swap lines
-xnoremap <silent> <leader>j :m '>+1<CR>gv=gv
-xnoremap <silent> <leader>k :m '<-2<CR>gv=gv
 nnoremap <silent> <leader>j :m .+1<CR>
 nnoremap <silent> <leader>k :m .-2<CR>
+xnoremap <silent> <leader>j :m '>+1<CR>gv=gv
+xnoremap <silent> <leader>k :m '<-2<CR>gv=gv
 
 " Use CTRL-S for saving, also in Insert mode
-nnoremap <silent> <C-s>      :write<CR>
-xnoremap <silent> <C-s> <Esc>:write<CR>
-inoremap <silent> <C-s> <C-o>:write<CR><Esc>
+nnoremap <silent> <C-s>      :<C-u>write<CR>
+xnoremap <silent> <C-s> <Esc>:<C-u>write<CR>
+inoremap <silent> <C-s> <C-o>:<C-u>write<CR><Esc>
+
+" Exit terminal insert mode
+tnoremap <Esc> <C-\><C-n>
 
 " Insert mode mappings
 inoremap <silent> <C-u> <C-g>u<C-u>
-inoremap <silent> àà    <C-o>O
-inoremap <silent> éé    <C-o>o
+inoremap <silent> è     <C-o>O
+inoremap <silent> à     <C-o>o
 inoremap <silent> <M-b> <C-o>b
 inoremap <silent> <M-w> <C-o>w
 inoremap <silent> <M-e> <C-o>e<Right>
@@ -321,10 +327,39 @@ onoremap <silent> ae :<C-u>normal vie<CR>
 nnoremap gV `[v`]
 
 " Move cursor by dipslay lines when wrapping
-nnoremap <expr> j v:count ? 'j' : 'gj'
-nnoremap <expr> k v:count ? 'k' : 'gk'
-xnoremap <expr> j v:count ? 'j' : 'gj'
-xnoremap <expr> k v:count ? 'k' : 'gk'
+nnoremap <expr> j v:count \|\| !&wrap ? 'j' : 'gj'
+xnoremap <expr> j v:count \|\| !&wrap ? 'j' : 'gj'
+onoremap <expr> j v:count \|\| !&wrap ? 'j' : 'gj'
+nnoremap <expr> k v:count \|\| !&wrap ? 'k' : 'gk'
+xnoremap <expr> k v:count \|\| !&wrap ? 'k' : 'gk'
+onoremap <expr> k v:count \|\| !&wrap ? 'k' : 'gk'
+
+nnoremap <expr> gj v:count \|\| !&wrap ? 'gj' : 'j'
+xnoremap <expr> gj v:count \|\| !&wrap ? 'gj' : 'j'
+onoremap <expr> gj v:count \|\| !&wrap ? 'gj' : 'j'
+nnoremap <expr> gk v:count \|\| !&wrap ? 'gk' : 'k'
+xnoremap <expr> gk v:count \|\| !&wrap ? 'gk' : 'k'
+onoremap <expr> gk v:count \|\| !&wrap ? 'gk' : 'k'
+
+nnoremap <expr> 0 v:count \|\| !&wrap ? '0' : 'g0'
+xnoremap <expr> 0 v:count \|\| !&wrap ? '0' : 'g0'
+onoremap <expr> 0 v:count \|\| !&wrap ? '0' : 'g0'
+nnoremap <expr> ^ v:count \|\| !&wrap ? '^' : 'g^'
+xnoremap <expr> ^ v:count \|\| !&wrap ? '^' : 'g^'
+onoremap <expr> ^ v:count \|\| !&wrap ? '^' : 'g^'
+nnoremap <expr> $ v:count \|\| !&wrap ? '$' : 'g$'
+xnoremap <expr> $ v:count \|\| !&wrap ? '$' : 'g$'
+onoremap <expr> $ v:count \|\| !&wrap ? '$' : 'g$'
+
+nnoremap <expr> g0 v:count \|\| !&wrap ? 'g0' : '0'
+xnoremap <expr> g0 v:count \|\| !&wrap ? 'g0' : '0'
+onoremap <expr> g0 v:count \|\| !&wrap ? 'g0' : '0'
+nnoremap <expr> g^ v:count \|\| !&wrap ? 'g^' : '^'
+xnoremap <expr> g^ v:count \|\| !&wrap ? 'g^' : '^'
+onoremap <expr> g^ v:count \|\| !&wrap ? 'g^' : '^'
+nnoremap <expr> g$ v:count \|\| !&wrap ? 'g$' : '$'
+xnoremap <expr> g$ v:count \|\| !&wrap ? 'g$' : '$'
+onoremap <expr> g$ v:count \|\| !&wrap ? 'g$' : '$'
 
 " Go to tab
 nnoremap <silent> <M-1> 1gt
@@ -336,28 +371,34 @@ nnoremap <silent> <M-6> 6gt
 nnoremap <silent> <M-7> 7gt
 nnoremap <silent> <M-8> 8gt
 nnoremap <silent> <M-9> 9gt
-nnoremap <silent> <M-0> :tablast<CR>
+nnoremap <silent> <M-0> :<C-u>tablast<CR>
 
 " Diff update
-nnoremap <silent> du :diffupdate<CR>
-
-" Scroll
-map <silent> <ScrollWheelUp> <C-y>
-map <silent> <ScrollWheelDown> <C-e>
+nnoremap <silent> du :<C-u>diffupdate!<CR>
 
 " German keyboard mappings
-nmap <silent> ä ^
-xmap <silent> ä ^
-omap <silent> ä ^
-nmap <silent> ö "
-xmap <silent> ö "
-omap <silent> ö "
-nmap <silent> ü [
-xmap <silent> ü [
-omap <silent> ü [
-nmap <silent> ¨ ]
-xmap <silent> ¨ ]
-omap <silent> ¨ ]
+nmap <silent> ä  ^
+xmap <silent> ä  ^
+omap <silent> ä  ^
+nmap <silent> gä g^
+xmap <silent> gä g^
+omap <silent> gä g^
+nmap <silent> ö  "
+xmap <silent> ö  "
+omap <silent> ö  "
+nmap <silent> ü  [
+xmap <silent> ü  [
+omap <silent> ü  [
+nmap <silent> ¨  ]
+xmap <silent> ¨  ]
+omap <silent> ¨  ]
+nmap <silent> g¨ g]
+xmap <silent> g¨ g]
+omap <silent> g¨ g]
+
+" Jump to definition
+nmap <silent> è <C-]>
+xmap <silent> è <C-]>
 
 " Jump paragraphs
 nmap <silent> <M-j> }
@@ -367,10 +408,6 @@ nmap <silent> <M-k> {
 xmap <silent> <M-k> {
 omap <silent> <M-k> {
 
-" Jump to definition
-nmap <silent> è <C-]>
-xmap <silent> è <C-]>
-
 " Wildmenu
 set wildchar=<Tab>
 set wildcharm=<Tab>
@@ -378,7 +415,7 @@ cnoremap <expr> <Tab>   getcmdtype() =~ '[?/]' ? '<C-g>' : '<Tab>'
 cnoremap <expr> <S-Tab> getcmdtype() =~ '[?/]' ? '<C-t>' : '<S-Tab>'
 
 " Remove trailing whitespaces
-nnoremap <silent> <F3> m`:keeppatterns %s/\\\@1<!\s\+$//e<CR>``
+nnoremap <silent> <F3> m`:<C-u>keeppatterns %s/\\\@1<!\s\+$//e<CR>``
 
 " Allow saving of files as sudo
 command! W exe 'silent! w !sudo /usr/bin/tee % >/dev/null' <Bar> edit!
@@ -392,6 +429,9 @@ command! DiffOrig vnew | set bt=nofile | r ++edit # | 0d_ | diffthis | wincmd p 
 " No highlight
 nnoremap <silent> <M-b> :<C-u>nohlsearch<CR>
 
+" Change register
+nnoremap <silent> cx :<C-u>call functions#change_register()<CR>
+
 " Run last macro
 nnoremap Q @@
 
@@ -399,22 +439,17 @@ nnoremap Q @@
 nnoremap <silent> <leader>@ :set opfunc=opfunc#visual_macro<CR>g@
 xnoremap <silent>         @ :<C-u>call opfunc#visual_macro(visualmode(), 1)<CR>
 
-" Change register
-nnoremap <silent> cx :<C-u>call functions#change_register()<CR>
-
 " Google
 nnoremap <silent> <leader>? :set opfunc=opfunc#google<CR>g@
 xnoremap <silent>         ? :<C-u>call opfunc#google(visualmode(), 1)<CR>
 
 " Copy path:line
 "nnoremap <silent> <F4> :<C-u>exe "!tmux send -t " . v:count . " 'b " . expand("%:p") . ":" . line(".") . "' C-m"<CR>
-"nnoremap <silent> <F4> :call system("tmux send -t monetDB:server 'b " . expand("%:p") . ":" . line(".") . "' C-m")<CR>
+"nnoremap <silent> <F4> :<C-u>call system("tmux send -t monetDB:server 'b " . expand("%:p") . ":" . line(".") . "' C-m")<CR>
 nnoremap <silent> <F4> :<C-u>let @+ = expand('%:p') . ':' . line('.')<CR>
 
 " Display highlighting info
-nnoremap <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
-            \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
-            \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
+nnoremap <silent> <F10> :<C-u>call functions#echo_syntax()<CR>
 
 " RG
 command! -bang -nargs=* Rg
@@ -450,8 +485,8 @@ command! -bang -nargs=+ -complete=file_in_path -bar LGrep
 command! -bang -nargs=+ -complete=file_in_path -bar LGrepadd
             \ call grep#lladd(<bang>0?'--pcre2':'', <q-args>)
 
-nnoremap <leader>s :Grep<space>
-nnoremap <leader>S :Grepadd<space>
+nnoremap <leader>s :<C-u>Grep<space>
+nnoremap <leader>S :<C-u>Grepadd<space>
 
 nnoremap <silent> gs :set opfunc=grep#qf_opfunc<CR>g@
 xnoremap <silent> gs :<C-u>call grep#qf_opfunc(visualmode(), 1)<CR>
@@ -503,13 +538,13 @@ inoremap <silent> <C-x><C-i> <C-r>=completion#tmux()<CR>
 " Plugin settings {{{
 
 " fzf.vim
-nnoremap <silent> <leader>f :Files<CR>
-nnoremap <silent> <leader>b :Buffers<CR>
-nnoremap <silent> <leader>w :Windows<CR>
-nnoremap <silent> <leader>t :Tags<CR>
-nnoremap <silent> <leader>o :History<CR>
-nnoremap <silent> <leader>: :History:<CR>
-nnoremap <silent> <leader>/ :History/<CR>
+nnoremap <silent> <leader>f :<C-u>Files<CR>
+nnoremap <silent> <leader>b :<C-u>Buffers<CR>
+nnoremap <silent> <leader>w :<C-u>Windows<CR>
+nnoremap <silent> <leader>t :<C-u>Tags<CR>
+nnoremap <silent> <leader>o :<C-u>History<CR>
+nnoremap <silent> <leader>: :<C-u>History:<CR>
+nnoremap <silent> <leader>/ :<C-u>History/<CR>
 
 "" Mapping selecting mappings
 nmap <leader><Tab> <plug>(fzf-maps-n)
@@ -578,12 +613,12 @@ xmap ah <Plug>(GitGutterTextObjectOuterVisual)
 let g:sneak#label = 1
 let g:sneak#use_ic_scs = 1
 nmap f <Plug>Sneak_f
-nmap F <Plug>Sneak_F
-nmap t <Plug>Sneak_t
-nmap T <Plug>Sneak_T
 xmap f <Plug>Sneak_f
+nmap F <Plug>Sneak_F
 xmap F <Plug>Sneak_F
+nmap t <Plug>Sneak_t
 xmap t <Plug>Sneak_t
+nmap T <Plug>Sneak_T
 xmap T <Plug>Sneak_T
 
 " tcomment_vim
@@ -603,14 +638,14 @@ command! -nargs=? -complete=dir Vexplore leftabove vsplit | silent Dirvish <args
 nmap - <Plug>(dirvish_up)
 
 " vim-easy-align
-xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
+xmap ga <Plug>(EasyAlign)
 
 " undotree
-nnoremap <silent> <F11> :UndotreeToggle<CR>
+nnoremap <silent> <F11> :<C-u>UndotreeToggle<CR>
 
 " tagbar
-nnoremap <silent> <F12> :TagbarToggle<CR>
+nnoremap <silent> <F12> :<C-u>TagbarToggle<CR>
 
 " vim-after-object
 augroup AfterTextObject
@@ -639,6 +674,10 @@ let g:snips_github = "https://github.com/alfunx"
 
 "" Manual
 inoremap <silent> <C-k> <C-r>=functions#expand_snippet()<CR>
+
+" echodoc.vim
+let g:echodoc#enable_at_startup = 1
+let g:echodoc#type = 'echo'
 
 " vim-multiple-cursors
 let g:multi_cursor_use_default_mapping = 0
@@ -820,10 +859,11 @@ let g:languageclient#show_linenr = 0
 
 " LanguageClient
 let g:LanguageClient_autoStart = 1
+let g:LanguageClient_selectionUI = 'quickfix'
 let g:LanguageClient_diagnosticsList = 'Location'
 let g:LanguageClient_diagnosticsMaxSeverity = 'Hint'
 let g:LanguageClient_hoverPreview = 'Always'
-let g:LanguageClient_virtualTextPrefix = '   ← '
+let g:LanguageClient_virtualTextPrefix = ' ← '
 let g:LanguageClient_hasSnippetSupport = 1
 
 let g:LanguageClient_serverCommands = {
@@ -875,20 +915,21 @@ function! LanguageClient_settings()
     if !has_key(g:LanguageClient_serverCommands, &filetype)
         return
     endif
-    nnoremap <buffer><silent> K         :call LanguageClient#contextMenu()<CR>
-    nnoremap <buffer><silent> <F1>      :call LanguageClient#textDocument_hover()<CR>
-    nnoremap <buffer><silent> <leader>d :call LanguageClient#textDocument_definition()<CR>
-    nnoremap <buffer><silent> <leader>i :call LanguageClient#textDocument_implementation()<CR>
-    nnoremap <buffer><silent> <leader>x :call LanguageClient#textDocument_typeDefinition()<CR>
-    nnoremap <buffer><silent> <leader>y :call LanguageClient#textDocument_documentSymbol()<CR>
-    nnoremap <buffer><silent> <leader>u :call LanguageClient#textDocument_references()<CR>
-    nnoremap <buffer><silent> <leader>r :call LanguageClient#textDocument_rename()<CR>
+    nnoremap <buffer><silent> K          :<C-u>call LanguageClient_textDocument_hover()<CR>
+    nnoremap <buffer><silent> <F1>       :<C-u>call LanguageClient_contextMenu()<CR>
+    nnoremap <buffer><silent> <leader>d  :<C-u>call LanguageClient_textDocument_definition()<CR>
+    nnoremap <buffer><silent> <leader>gd :<C-u>call LanguageClient_textDocument_typeDefinition()<CR>
+    nnoremap <buffer><silent> <leader>i  :<C-u>call LanguageClient_textDocument_implementation()<CR>
+    nnoremap <buffer><silent> <leader>x  :<C-u>call LanguageClient_textDocument_documentSymbol()<CR>
+    nnoremap <buffer><silent> <leader>gx :<C-u>call LanguageClient_workspace_symbol()<CR>
+    nnoremap <buffer><silent> <leader>r  :<C-u>call LanguageClient_textDocument_references()<CR>
+    nnoremap <buffer><silent> <leader>c  :<C-u>call LanguageClient_textDocument_rename()<CR>
 endfunction
 
 augroup LanguageClient_config
     autocmd!
     autocmd FileType * call LanguageClient_settings()
-    autocmd BufEnter __LanguageClient__ nnoremap <buffer><silent> <F1> :q<CR>
+    autocmd BufEnter __LanguageClient__ nnoremap <buffer><silent> <F1> :q!<CR>
 augroup END
 
 " " vim-lsp
@@ -951,7 +992,7 @@ let g:ale_sign_hint = '●'
 
 nmap [r <plug>(ale_previous_wrap)
 nmap ]r <plug>(ale_next_wrap)
-nnoremap <silent> <leader>a :ALEToggle <Bar> echo g:ale_enabled ? 'ALE enabled' : 'ALE disabled' <CR>
+nnoremap <silent> <leader>a :<C-u>ALEToggle <Bar> echo g:ale_enabled ? 'ALE enabled' : 'ALE disabled' <CR>
 
 " }}}
 
@@ -1006,7 +1047,7 @@ set complete-=i
 set completeopt=menuone,noinsert,noselect
 set shortmess+=aIc shortmess-=S
 set diffopt+=hiddenoff,algorithm:histogram
-set formatoptions+=rj formatoptions-=o
+set formatoptions-=o
 set nrformats-=octal
 set pastetoggle=<F2>
 set signcolumn=yes
@@ -1024,23 +1065,15 @@ set guifont=monospace
 set guioptions-=mTrl
 
 if &term !=? 'linux' || has('gui_running')
-    "set listchars=tab:›\ ,extends:❯,precedes:❮,nbsp:˷,eol:⤶,trail:~
-    set listchars=tab:›\ ,extends:❯,precedes:❮,nbsp:˷,trail:~
+    "set listchars=tab:›\ ,extends:›,precedes:‹,nbsp:˷,eol:⤶,trail:~
+    set showbreak=→\ \ \ 
+    set listchars=tab:›\ ,extends:…,precedes:…,nbsp:␣,trail:·
     set fillchars=vert:│,fold:─,diff:\ 
-    "augroup InsertModeHideTrailingSpaces
-    "    autocmd!
-    "    autocmd InsertEnter * set listchars-=eol:⤶ listchars-=trail:~
-    "    autocmd InsertLeave * set listchars+=eol:⤶,trail:~
-    "augroup END
 else
     "set listchars=tab:>\ ,extends:>,precedes:<,nbsp:+,eol:$,trail:~
-    set listchars=tab:>\ ,extends:>,precedes:<,nbsp:+,trail:~
+    set listchars=tab:>\ ,extends:…,precedes:…,nbsp:+,trail:~
+    set showbreak=\\\ \ \ 
     set fillchars=vert:\|,fold:-,diff:\ 
-    "augroup InsertModeHideTrailingSpaces
-    "    autocmd!
-    "    autocmd InsertEnter * set listchars-=eol:$ listchars-=trail:~
-    "    autocmd InsertLeave * set listchars+=eol:$,trail:~
-    "augroup END
 endif
 
 " }}}
@@ -1104,6 +1137,7 @@ if has('nvim') && has('termguicolors') && &termguicolors
                     \ 'style': 'minimal',
                     \ 'border': v:true }
         call functions#nvim_open_window(nvim_create_buf(v:false, v:true), v:true, opts)
+        tnoremap <buffer><silent> <Esc> <C-\><C-n>:q!<CR>
     endfunction
     let g:fzf_layout = { 'window': 'call FloatingFZF()' }
 elseif has('nvim') || has('gui_running')

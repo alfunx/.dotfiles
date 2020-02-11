@@ -7,11 +7,16 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-" OS related variable
+" OS related variables
 let s:is_win = has('win32') || has('win64')
 let s:is_mac = !s:is_win && (has('mac') || has('macunix') || has('gui_macvim') || system('uname') =~? '^darwin')
 let s:is_linux = !s:is_win && !s:is_mac
-let s:open = s:is_win ? 'start' : s:is_mac ? 'open' : 'xdg-open'
+
+" open file with OS
+function! functions#open(...) abort
+    let open = s:is_win ? 'start ' : s:is_mac ? 'open ' : 'xdg-open '
+    call system(open . shellescape(join(a:000)))
+endfunction
 
 " syntax highlight group
 function! functions#syntax(...) abort
@@ -23,6 +28,35 @@ function! functions#syntax(...) abort
     else
         return synIDattr(syn_id, 'name')
     endif
+endfunction
+
+" print syntax highlight group
+function! functions#echo_syntax(...) abort
+    let hi = synIDattr(synID(line('.'),col('.'),1),'name')
+    let tr = synIDattr(synID(line('.'),col('.'),0),'name')
+
+    let hic = synIDattr(synIDtrans(synID(line('.'),col('.'),1)),'name')
+    let trc = synIDattr(synIDtrans(synID(line('.'),col('.'),0)),'name')
+
+    echon 'hi: '
+    echohl Todo
+    echon hi
+    echohl None
+    echon ' (' . hic . ' '
+    exec  'echohl ' . hic
+    echon '●'
+    echohl None
+    echon ')  '
+
+    echon 'tr: '
+    echohl Todo
+    echon tr
+    echohl None
+    echon ' (' . trc . ' '
+    exec  'echohl ' . tr
+    echon '●'
+    echohl None
+    echon ')  '
 endfunction
 
 " change register
@@ -66,7 +100,7 @@ function! functions#expand_snippet() abort
 endfunction
 
 " pretty fold text
-function! functions#foldtext()
+function! functions#foldtext() abort
     let line = printf('  %s  ', substitute(getline(v:foldstart), '^\s*"\?\s*\|\s*"\?\s*{{' . '{\d*\s*', '', 'g'))
     let linecount = printf('┤ %4d ├', v:foldend - v:foldstart + 1)
     let foldcount = v:foldlevel > 1 ? printf('┤ %d ├', v:foldlevel) : ''
@@ -104,12 +138,11 @@ function! functions#google(query, lucky) abort
                 \ trim(a:query), '["\n]', ' ', 'g'),
                 \ '[[:punct:] ]', '\=printf("%%%02X", char2nr(submatch(0)))', 'g')
     let url = printf('https://www.google.com/search?%sq="%s"', a:lucky ? 'btnI&' : '', query)
-    call system(s:open . ' "' . escape(url, '"') . '"')
-    return s:open . ' ' . escape(url, '"')
+    call functions#open(url)
 endfunction
 
 " open floating window with borders
-function! functions#nvim_open_window(buffer, enter, opts)
+function! functions#nvim_open_window(buffer, enter, opts) abort
     if get(a:opts, 'border', v:false)
         call remove(a:opts, 'border')
         let opts = copy(a:opts)
