@@ -1,4 +1,10 @@
+\set PROMPT1 '%[%033[38;5;241m%][ %n@%M:%> %/%R ]\n%[%033[1;38;5;66m%]>%[%033[1;38;5;109m%]>%[%033[0m%] '
+\set PROMPT2 ' %[%033[1;38;5;109m%]|%[%033[0m%] '
+
 \timing
+\set VERBOSITY verbose
+\set HISTCONTROL ignoredups
+\pset null '[NULL]'
 \pset linestyle unicode
 \pset border 2
 \pset pager off
