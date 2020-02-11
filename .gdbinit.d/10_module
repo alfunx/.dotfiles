@@ -18,10 +18,14 @@ dashboard assembly -style height 5
 dashboard source -style height 11
 
 dashboard stack -style compact True
+dashboard stack -style align True
 dashboard stack -style limit 5
 
 dashboard threads -style skip-running False
 
 dashboard variables -style compact True
+dashboard variables -style align True
+
+dashboard expressions -style align True
 
 dashboard breakpoints -style pending True
