@@ -1,10 +1,29 @@
 # Basic options
 --recurse=yes
 --tag-relative=yes
+
+# vcs
 --exclude=.git
---exclude=.svn
 --exclude=.hg
+--exclude=.svn
+
+# compiler
 --exclude=.ccls-cache
+--exclude=.clangd
+--exclude=compile_commands.json
+
+# binary
+--exclude=\*.o
+--exclude=\*.so
+--exclude=\*.class
+--exclude=\*.exe
+--exclude=\*.dll
+--exclude=\*.com
+
+# tools
+--exclude=tags
+--exclude=.tags
+--exclude=.tmux
 --exclude=.backup
 --exclude=.vim-backup
 --exclude=.swap
@@ -12,22 +31,60 @@
 --exclude=.undo
 --exclude=.vim-undo
 
-# Rust
---langdef=Rust
---langmap=Rust:.rs
---regex-Rust=/^[ \t]*(#\[[^\]]\][ \t]*)*(pub[ \t]+)?(extern[ \t]+)?("[^"]+"[ \t]+)?(unsafe[ \t]+)?fn[ \t]+([a-zA-Z0-9_]+)/\6/f,functions,function definitions/
---regex-Rust=/^[ \t]*(pub[ \t]+)?type[ \t]+([a-zA-Z0-9_]+)/\2/T,types,type definitions/
---regex-Rust=/^[ \t]*(pub[ \t]+)?enum[ \t]+([a-zA-Z0-9_]+)/\2/g,enum,enumeration names/
---regex-Rust=/^[ \t]*(pub[ \t]+)?struct[ \t]+([a-zA-Z0-9_]+)/\2/s,structure names/
---regex-Rust=/^[ \t]*(pub[ \t]+)?mod[ \t]+([a-zA-Z0-9_]+)/\2/m,modules,module names/
---regex-Rust=/^[ \t]*(pub[ \t]+)?(static|const)[ \t]+(mut[ \t]+)?([a-zA-Z0-9_]+)/\4/c,consts,static constants/
---regex-Rust=/^[ \t]*(pub[ \t]+)?(unsafe[ \t]+)?trait[ \t]+([a-zA-Z0-9_]+)/\3/t,traits,traits/
---regex-Rust=/^[ \t]*(pub[ \t]+)?(unsafe[ \t]+)?impl([ \t\n]*<[^>]*>)?[ \t]+(([a-zA-Z0-9_:]+)[ \t]*(<[^>]*>)?[ \t]+(for)[ \t]+)?([a-zA-Z0-9_]+)/\5 \7 \8/i,impls,trait implementations/
---regex-Rust=/^[ \t]*macro_rules![ \t]+([a-zA-Z0-9_]+)/\1/d,macros,macro definitions/
+# cache
+--exclude=\*.cache
+--exclude=\*.log
+--exclude=\*~
+--exclude=\*#
+--exclude=\*.bak
+--exclude=\*.BAK
+--exclude=\*.old
+--exclude=\*.OLD
+--exclude=\*.off
+--exclude=\*.OFF
+--exclude=\*.dist
+--exclude=\*.DIST
+--exclude=\*.orig
+--exclude=\*.ORIG
+--exclude=\*.rej
+--exclude=\*.REJ
+--exclude=\*.swp
+--exclude=\*.swo
+--exclude=\*.swn
+--exclude=\*.swm
+--exclude=\*.tmp
+--exclude=\*.sln
 
-# Clojure
---langdef=Clojure
---langmap=Clojure:.clj
+# packages
+--exclude=node_modules
+--exclude=.bundle
+--exclude=\*.map
+--exclude=\*.Master
+--exclude=min
+--exclude=\*.min.\*
+--exclude=\*.pdb
+--exclude=\*.pyc
+--exclude=.sass-cache
+--exclude=\*.tar.\*
+--exclude=tmp
+--exclude=vendor
+
+# rust
+--langdef=rust
+--langmap=rust:.rs
+--regex-rust=/^[ \t]*(#\[[^\]]\][ \t]*)*(pub[ \t]+)?(extern[ \t]+)?("[^"]+"[ \t]+)?(unsafe[ \t]+)?fn[ \t]+([a-zA-Z0-9_]+)/\6/f,functions,function definitions/
+--regex-rust=/^[ \t]*(pub[ \t]+)?type[ \t]+([a-zA-Z0-9_]+)/\2/T,types,type definitions/
+--regex-rust=/^[ \t]*(pub[ \t]+)?enum[ \t]+([a-zA-Z0-9_]+)/\2/g,enum,enumeration names/
+--regex-rust=/^[ \t]*(pub[ \t]+)?struct[ \t]+([a-zA-Z0-9_]+)/\2/s,structure names/
+--regex-rust=/^[ \t]*(pub[ \t]+)?mod[ \t]+([a-zA-Z0-9_]+)/\2/m,modules,module names/
+--regex-rust=/^[ \t]*(pub[ \t]+)?(static|const)[ \t]+(mut[ \t]+)?([a-zA-Z0-9_]+)/\4/c,consts,static constants/
+--regex-rust=/^[ \t]*(pub[ \t]+)?(unsafe[ \t]+)?trait[ \t]+([a-zA-Z0-9_]+)/\3/t,traits,traits/
+--regex-rust=/^[ \t]*(pub[ \t]+)?(unsafe[ \t]+)?impl([ \t\n]*<[^>]*>)?[ \t]+(([a-zA-Z0-9_:]+)[ \t]*(<[^>]*>)?[ \t]+(for)[ \t]+)?([a-zA-Z0-9_]+)/\5 \7 \8/i,impls,trait implementations/
+--regex-rust=/^[ \t]*macro_rules![ \t]+([a-zA-Z0-9_]+)/\1/d,macros,macro definitions/
+
+# clojure
+--langdef=clojure
+--langmap=clojure:.clj
 --regex-clojure=/\([ \t]*create-ns[ \t]+([-[:alnum:]*+!_:\/.?]+)/\1/n,namespace/
 --regex-clojure=/\([ \t]*def[ \t]+([-[:alnum:]*+!_:\/.?]+)/\1/d,definition/
 --regex-clojure=/\([ \t]*defn-?[ \t]+([-[:alnum:]*+!_:\/.?]+)/\1/f,function/
@@ -39,3 +96,115 @@
 --regex-clojure=/\([ \t]*defstruct[ \t]+([-[:alnum:]*+!_:\/.?]+)/\1/s,struct/
 --regex-clojure=/\([ \t]*intern[ \t]+([-[:alnum:]*+!_:\/.?]+)/\1/v,intern/
 --regex-clojure=/\([ \t]*ns[ \t]+([-[:alnum:]*+!_:\/.?]+)/\1/n,namespace/
+
+# less
+--langdef=less
+--langmap=less:.less
+--regex-less=/^\.([a-zA-Z0-9_\-]+)[ ]*\(.*\)[ ]*\{/\1/m,macro/i
+--regex-less=/^\@([a-zA-Z0-9_\-]+)\:.*\;/\1/v,var/i
+--regex-less=/^[ \t]*.([A-Za-z0-9_-]+)/\1/c,class,classes/
+--regex-less=/^[ \t&]*\.([A-Za-z0-9_-]+)/\1/c,class,classes/
+--regex-less=/^[ \t&]*\.([A-Za-z0-9_-]+)/\1/c,class,classes/
+--regex-less=/^[ \t&]*#([A-Za-z0-9_-]+)/\1/idds/
+--regex-less=/^[ \t]*#([A-Za-z0-9_-]+)/\1/i,id,ids/
+--regex-less=/^[ \t&]*#([A-Za-z0-9_-]+)/\1/i,id,ids/
+--regex-less=/^[ \t]*(@[A-Za-z0-9_-]+):/\1/v,variable,variables/
+--regex-less=/^[ \t]*(@[A-Za-z0-9_-]+):/\1/v,variable,variables/
+--regex-less=/^[ \t]*(([A-Za-z0-9_-]+[ \t\n,]+)+)\{/\1/t,tag,tags/
+--regex-less=/^[ \t]*(([A-Za-z0-9_-]+[ \t\n,]+)+)\{/\1/t,tag,tags/
+--regex-less=/^[ \t]*@media\s+([A-Za-z0-9_-]+)/\1/m,media,medias/
+--regex-less=/^[ \t]*@media\s+([A-Za-z0-9_-]+)/\1/m,media,medias/
+--regex-less=/^[ \t]*@medias+([A-Za-z0-9_-]+)/\1/m,media,medias/
+
+# html
+--langmap=html:.htm.html.erb
+--regex-html=/class="([A-Za-z0-9_-]+)"/\1/c,class,classes/
+--regex-html=/id="([A-Za-z0-9_-]+)"/\1/i,id,ids/
+--regex-html=/id="([A-Za-z0-9_-]+)"/\1/idds/
+--regex-html=/[ \t]+id[ \t]*=[ \t]*['"]([^'"]+)/\1/o,object/
+--regex-html=/[ \t]+ng-blur[ \t]*=[ \t]*['"]([^'"]+)/\1/o,object/
+--regex-html=/[ \t]+ng-change[ \t]*=[ \t]*['"]([^'"]+)/\1/o,object/
+--regex-html=/[ \t]+ng-click[ \t]*=[ \t]*['"]([^'"]+)/\1/o,object/
+--regex-html=/[ \t]+ng-controller[ \t]*=[ \t]*['"]([^'"]+)/\1/o,object/
+--regex-html=/[ \t]+ng-disabled[ \t]*=[ \t]*['"]([^'"]+)/\1/o,object/
+--regex-html=/[ \t]+ng-focus[ \t]*=[ \t]*['"]([^'"]+)/\1/o,object/
+--regex-html=/[ \t]+ng-if[ \t]*=[ \t]*['"]([^'"]+)/\1/o,object/
+--regex-html=/[ \t]+ng-repeat[ \t]*=[ \t]*['"][^'"]+ in \([^'"]+\)['"]/\1/o,object/
+--regex-html=/[ \t]+ng-show[ \t]*=[ \t]*['"]([^'"]+)/\1/o,object/
+
+# scss
+--langdef=scss
+--langmap=scss:.scss
+--regex-scss=/^(.*)*\#([A-Za-z0-9_-]+) *[,{]/\2/i,id,ids/
+--regex-scss=/(^(.*, *)([A-Za-z0-9_-]+)) *[,|\{]/\3/t,tag,tags/
+--regex-scss=/(^([A-Za-z0-9_-])*([A-Za-z0-9_-]+)) *[,|\{]/\1/t,tag,tags/
+--regex-scss=/^([A-Za-z0-9_-]*)*(\.[A-Za-z0-9_-]+) *[,{]/\2/c,class,classes/
+--regex-scss=/^[ \t]+(\.[A-Za-z0-9_-]+) *[,{]/\1/c,class,classes/
+--regex-scss=/^[ \t]*#([A-Za-z0-9_-]+)/\1/i,id,ids/
+--regex-scss=/(^[ \t]+([A-Za-z0-9_-]+)) *[,|\{]/\1/t,tag,tags/
+--regex-scss=/^[ \t]*\$([A-Za-z0-9_-]+)/\1/v,variable,variables/
+--regex-scss=/(^([^\/\/])*)[ \t]+([A-Za-z0-9_-]+)) *[,|\{]/\3/t,tag,tags/
+--regex-scss=/^[ \t]*@media\s+([A-Za-z0-9_-]+)/\1/d,media,media/
+--regex-scss=/^[ \t]*@mixin ([A-Za-z0-9_-]+)/\1/m,mixin,mixins/
+
+# markdown
+--langdef=markdown
+--langmap=markdown:.md
+--regex-markdown=/^#\+[ \t](.*$)/\1/h,heading,headings/
+--regex-markdown=/^#[ \t]+(.*)/\1/h,Heading_L1/
+--regex-markdown=/^##[ \t]+(.*)/\1/i,Heading_L2/
+--regex-markdown=/^###[ \t]+(.*)/\1/k,Heading_L3/
+
+# powershell
+--langdef=powershell
+--langmap=powershell:.ps1.psm1
+--regex-powershell=/^[Ff]ilter[\t ]*([a-zA-Z0-9_-]+)/\1/i,filter/
+--regex-powershell=/^[Ff]unction[\t ]*([a-zA-Z0-9_-]+)/\1/f,function/
+--regex-powershell=/^[sS]et-[Aa]lias[\t ]*([a-zA-Z0-9_-]+)/\1/a,alias/
+
+# r
+--langdef=r
+--langmap=r:.R.r
+--regex-r=/^"?([.A-Za-z][.A-Za-z0-9_]*)"?[ \t]*<-[ \t][^f][^u][^n][^c][^t][^i][^o][^n]/\1/g,GlobalVars/
+--regex-r=/^[ \t]*"?([.A-Za-z][.A-Za-z0-9_]*)"?[ \t]*<-[ \t]function/\1/f,Functions/
+--regex-r=/[ \t]"?([.A-Za-z][.A-Za-z0-9_]*)"?[ \t]*<-[ \t][^f][^u][^n][^c][^t][^i][^o][^n]/\1/v,FunctionVariables/
+
+# xquery
+--langdef=xquery
+--langmap=xquery:.xq
+--regex-xquery=/^(declare|define)[ \t]*(private)?[ \t]*(%an:automatic)?[ \t]*variable[ \t]*\$([_a-zA-Z0-9:-]*:)?([_a-zA-Z0-9-]+)/\5/v,variable/
+--regex-xquery=/^(declare|define)[ \t]*(private)?[ \t]*(updating)?[ \t]*(%an:sequential)?[ \t]*(%an:nondeterministic)?[ \t]*function[ \t]*([_a-zA-Z0-9:-]*:)?([_a-zA-Z0-9-]+)/\7/f,function/
+--regex-xquery=/^module namespace[ \t]*(\w+)[ \t]*=.*/\1/m,module/
+
+# xslt
+--langdef=xslt
+--langmap=xslt:.xsl
+--regex-xslt=/<xsl:template.*name="(\S+)".*>/\1/t,template/
+--regex-xslt=/<xsl:variable.*name="(\S+)".*>/\1/v,variable/
+
+# elixir
+--langdef=elixir
+--langmap=elixir:.ex.exs
+--regex-elixir=/^[ \t]*defcallback[ \t]+([a-z_][a-zA-Z0-9_?!]*)/\1/c,callbacks,callbacks (defcallback ...)/
+--regex-elixir=/^[ \t]*defdelegate[ \t]+([a-z_][a-zA-Z0-9_?!]*)/\1/d,delegates,delegates (defdelegate ...)/
+--regex-elixir=/^[ \t]*defexception[ \t]+([A-Z][a-zA-Z0-9_]*\.)*([A-Z][a-zA-Z0-9_?!]*)/\2/e,exceptions,exceptions (defexception ...)/
+--regex-elixir=/^[ \t]*defimpl[ \t]+([A-Z][a-zA-Z0-9_]*\.)*([A-Z][a-zA-Z0-9_?!]*)/\2/i,implementations,implementations (defimpl ...)/
+--regex-elixir=/^[ \t]*defmacro(p?)[ \t]+([a-zA-Z0-9_?!]+)?[ \t]+([^ \tA-Za-z0-9_]+)[ \t]*[a-zA-Z0-9_!?!]/\3/o,operators,operators (e.g. "defmacro a <<< b")/
+--regex-elixir=/^[ \t]*defmacro(p?)[ \t]+([a-z_][a-zA-Z0-9_?!]*)\(/\2/a,macros,macros (defmacro ...)/
+--regex-elixir=/^[ \t]*defmodule[ \t]+([A-Z][a-zA-Z0-9_]*\.)*([A-Z][a-zA-Z0-9_?!]*)/\2/m,modules,modules (defmodule ...)/
+--regex-elixir=/^[ \t]*defprotocol[ \t]+([A-Z][a-zA-Z0-9_]*\.)*([A-Z][a-zA-Z0-9_?!]*)/\2/p,protocols,protocols (defprotocol...)/
+--regex-elixir=/^[ \t]*def(p?)[ \t]+([a-z_][a-zA-Z0-9_?!]*)/\2/f,functions,functions (def ...)/
+--regex-elixir=/^[ \t]*Record\.defrecord[ \t]+:([a-zA-Z0-9_]+)/\1/r,records,records (defrecord...)/
+
+# javascript
+--langmap=javascript:.js
+--regex-javascript=/([A-Za-z0-9._$]+)[ \t]*=[ \t]*\{/\1/objectbjects/
+--regex-javascript=/([A-Za-z0-9._$]+)[ \t]*[:=][ \t]*[\(]function[ \t]*\(/\1/functionunctions/
+--regex-javascript=/^[ \t]*([A-Za-z0-9._$]+)[ \t]*[:][ \t]*[^\{]/\1/p,property,properties/
+--regex-javascript=/\/\/[ \t]*(FIXME)[ \t]*\:*(.*)/\1/i,FIXME/
+--regex-javascript=/^[ \t]*[\(]function[ \t]*([A-Za-z0-9._$]+)/\1/functionunctions/
+--regex-javascript=/\/\/[ \t]*(TODO)[ \t]*\:*(.*)/\1/i,TODO/
+--regex-javascript=/^[ \t]+var[ \t]*([A-Za-z0-9._$]+)[ \t]*=[ \t]*[\d"'\[]/\1/v,variable,variables/
+
+# vim
+--langmap=vim:+(vimrc)
