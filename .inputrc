@@ -13,6 +13,7 @@ set editing-mode emacs
 $if mode=emacs
 
 Meta-Control-h: backward-kill-word
+"\e[3;3~": kill-word
 
 # # Arrow keys in keypad mode
 # "\M-OD": backward-char
@@ -25,6 +26,8 @@ Meta-Control-h: backward-kill-word
 "\M-[C": forward-char
 "\M-[A": previous-history
 "\M-[B": next-history
+"\M-[A": history-search-backward
+"\M-[B": history-search-forward
 
 # # Arrow keys in 8 bit keypad mode
 # "\M-\C-OD": backward-char
@@ -105,6 +108,8 @@ set show-all-if-ambiguous on
 set show-all-if-unmodified on
 set menu-complete-display-prefix on
 set visible-stats on
+set match-hidden-files off
+set skip-completed-text on
 
 # Color Options
 set colored-completion-prefix on
