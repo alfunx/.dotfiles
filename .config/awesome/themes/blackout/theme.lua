@@ -1177,6 +1177,7 @@ function theme.at_screen_connect(s)
     -- Quake application
     s.quake = lain.util.quake {
         app = context.vars.terminal,
+        argname = "--name %s",
     }
 
     -- If wallpaper is a function, call it with the screen

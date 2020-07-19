@@ -52,41 +52,28 @@ function _config.init()
 
         {
             rule = {
-                class = "Thunderbird",
+                class = "chromium",
             },
             properties = {
-                screen = 1,
-                tag    = tags.names[6],
+                tag    = tags.names[2],
             },
         },
 
         {
             rule = {
-                class = "Gimp-2.10",
+                class = "Discord",
             },
             properties = {
-                screen = 1,
-                tag    = tags.names[7],
+                tag    = tags.names[3],
             },
         },
 
         {
             rule = {
-                class = "VirtualBox",
+                class = "discord",
             },
             properties = {
-                screen = 1,
-                tag    = tags.names[8],
-            },
-        },
-
-        {
-            rule = {
-                class = "Firefox",
-                role  = "toolbox",
-            },
-            properties = {
-                floating = true,
+                tag    = tags.names[3],
             },
         },
 

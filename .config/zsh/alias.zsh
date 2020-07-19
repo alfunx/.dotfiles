@@ -3,7 +3,7 @@
 #############
 
 # will be integrated to 'dotfiles.sh'
-#compdef dotfiles=git
+compdef dotfiles=git
 
 alias ..='cd ..'
 alias ...='cd ../..'
@@ -20,6 +20,7 @@ alias please='sudo $( history -p !! )'
 alias wifi='sudo wifi-menu'
 alias supac='sudo pacman'
 
+alias gotop='TERM=xterm-color gotop'
 alias ssh='TERM=xterm-color ssh'
 alias eva='TERM=xterm-color ssh eva.fit.vutbr.cz'
 alias merlin='TERM=xterm-color ssh merlin.fit.vutbr.cz'
@@ -403,6 +404,6 @@ zle     -N    fzf-command-widget
 bindkey '-' fzf-command-widget
 bindkey '.' fzf-command-widget
 
-alias dotfiles="/usr/bin/env git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
+alias dots="/usr/bin/env git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
 
 eval $(thefuck --alias)

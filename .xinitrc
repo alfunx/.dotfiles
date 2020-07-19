@@ -40,11 +40,12 @@ compton --config .config/compton.conf &
 syndaemon -i 0.5 -K -R -d
 
 # select wm/de with: startx ~/.xinitrc session
-session=${1:-awesome}
-
-case "$session" in
-    awesome)
-        exec awesome ;;
-    *)
-        exec "$session"
-esac
+# session=${1:-awesome}
+#
+# case "$session" in
+#     awesome)
+#         exec awesome ;;
+#     *)
+#         exec "$session"
+# esac
+exec awesome -c ~/.config/awesome/rc.lua

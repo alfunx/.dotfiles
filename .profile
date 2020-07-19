@@ -16,6 +16,9 @@ export PATH="$HOME/.gem/ruby/2.6.0/bin:$PATH"
 export JAVA_HOME="/usr/lib/jvm/java-8-openjdk"
 export PATH="$JAVA_HOME/bin:$PATH"
 
+# go
+export PATH="$HOME/go/bin:$PATH"
+
 # user scripts
 export PATH="$HOME/.bin:$PATH"
 

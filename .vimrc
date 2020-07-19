@@ -169,9 +169,6 @@ nnoremap <silent> <C-w><C-l> gt
 "" Fullscreen
 nnoremap <silent> <C-w>F <C-w>_<C-w><Bar>
 
-" Make Y behave like other commands
-nnoremap <silent> Y y$
-
 " Copy to system clipboard
 nnoremap <silent> gy "+y
 nnoremap <silent> gY "+Y
@@ -200,11 +197,6 @@ inoremap <silent> <C-s> <C-o>:write<CR><Esc>
 "" Quickfix & Loclist
 nnoremap <silent> <leader>q :copen<CR>
 nnoremap <silent> <leader>l :lopen<CR>
-
-"" Insert mode mappings
-inoremap <silent> <C-u> <C-g>u<C-u>
-inoremap <silent> àà <C-o>O
-inoremap <silent> éé <C-o>o
 
 "" Entire text-object
 xnoremap <silent> ie :<C-u>normal! G$Vgg0<CR>

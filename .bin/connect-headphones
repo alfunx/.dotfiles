@@ -1,0 +1,4 @@
+ #!/usr/bin/env bash
+
+ bluetoothctl power on &&
+     bluetoothctl connect 06:A2:00:12:2B:74
