@@ -451,6 +451,6 @@ ranger-cd-widget() {
 zle     -N     ranger-cd-widget
 bindkey '\e^o' ranger-cd-widget
 
-alias dots="/usr/bin/env git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
+alias dotfiles="/usr/bin/env git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
 
 eval $(thefuck --alias)
