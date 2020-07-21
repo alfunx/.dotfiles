@@ -1,7 +1,5 @@
 # ripgrep config
 
---follow
---hidden
 --smart-case
 --line-number
 --colors=match:fg:red

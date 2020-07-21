@@ -1,0 +1,27 @@
+# GDB config
+# - use with: https://github.com/cyrus-and/gdb-dashboard
+
+dashboard -style divider_fill_char_primary '─'
+dashboard -style divider_fill_style_primary '38;5;66'
+dashboard -style divider_fill_char_secondary '─'
+dashboard -style divider_fill_style_secondary '38;5;241'
+
+dashboard -style divider_label_style_on_primary '1;38;5;214'
+dashboard -style divider_label_style_off_primary '38;5;172'
+dashboard -style divider_label_style_on_secondary '1;38;5;208'
+dashboard -style divider_label_style_off_secondary '38;5;166'
+
+dashboard -style divider_label_skip 3
+dashboard -style divider_label_margin 1
+dashboard -style divider_label_align_right False
+
+dashboard -style style_selected_1 '1;38;5;108'
+dashboard -style style_selected_2 '38;5;109'
+dashboard -style style_low '38;5;241'
+dashboard -style style_high '38;5;243'
+dashboard -style style_error '38;5;167'
+
+dashboard -style syntax_highlighting 'vim'
+dashboard -style prompt '{status}\\[\\e[0m\\]'
+dashboard -style prompt_not_running '\\[\\e[1;38;5;172m\\]>\\[\\e[1;38;5;214m\\]>'
+dashboard -style prompt_running '\\[\\e[1;38;5;124m\\]>\\[\\e[1;38;5;167m\\]>'

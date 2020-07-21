@@ -6,6 +6,11 @@
 
 --]]
 
+--luacheck: push ignore
+local awesome, client, mouse, screen, tag = awesome, client, mouse, screen, tag
+local pairs, ipairs, string, os, table, math, tostring, tonumber, type = pairs, ipairs, string, os, table, math, tostring, tonumber, type
+--luacheck: pop
+
 local awful = require("awful")
 local beautiful = require("beautiful")
 
@@ -15,6 +20,13 @@ local tags = require("config.tags")
 local _config = { }
 
 function _config.init()
+
+    -- placement, that should be applied after setting x/y/width/height/geometry
+    function awful.rules.delayed_properties.delayed_placement(c, value, props) --luacheck: no unused
+        if props.delayed_placement then
+            awful.rules.extra_properties.placement(c, props.delayed_placement, props)
+        end
+    end
 
     -- Rules to apply to new clients (through the "manage" signal)
     awful.rules.rules = {
@@ -32,6 +44,7 @@ function _config.init()
                 screen            = awful.screen.preferred,
                 placement         = awful.placement.no_offscreen
                                   + awful.placement.no_overlap,
+                delayed_placement = awful.placement.centered,
                 size_hints_honor  = false,
                 titlebars_enabled = true,
             },
@@ -84,6 +97,7 @@ function _config.init()
             },
             properties = {
                 floating = true,
+                tag    = tags.names[2],
             },
         },
 
@@ -94,6 +108,7 @@ function _config.init()
             },
             properties = {
                 floating = true,
+                tag    = tags.names[2],
             },
         },
 
@@ -102,7 +117,7 @@ function _config.init()
                 class = "Arandr",
             },
             properties = {
-                width  = 500,
+                width  = 600,
                 height = 400,
             },
         },
@@ -122,11 +137,23 @@ function _config.init()
                     "Pinentry",
                     "Event Tester",
                     "alsamixer",
+                    "pulsemixer",
                     "Arandr",
                 },
                 name = {
                     "Event Tester",
                     "Page Unresponsive",
+                },
+                role = {
+                    "AlarmWindow",
+                    "ConfigManager",
+                    "toolbox",
+                    "pop-up",
+                },
+                instance = {
+                    "DTA",
+                    "copyq",
+                    "pinentry",
                 },
             },
             properties = {
@@ -136,13 +163,6 @@ function _config.init()
         },
 
     }
-
-    -- placement, that should be applied after setting x/y/width/height/geometry
-    function awful.rules.delayed_properties.delayed_placement(c, value, props) --luacheck: no unused
-        if props.delayed_placement then
-            awful.rules.extra_properties.placement(c, props.delayed_placement, props)
-        end
-    end
 
 end
 

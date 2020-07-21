@@ -6,6 +6,11 @@
 
 --]]
 
+--luacheck: push ignore
+local awesome, client, mouse, screen, tag = awesome, client, mouse, screen, tag
+local pairs, ipairs, string, os, table, math, tostring, tonumber, type = pairs, ipairs, string, os, table, math, tostring, tonumber, type
+--luacheck: pop
+
 local gears = require("gears")
 local awful = require("awful")
 local lain = require("lain")
@@ -47,6 +52,14 @@ function _config.init()
         awful.key({ k.m                }, "BackSpace", function(c) c:swap(awful.client.getmaster()) end,
                   { description = "swap with master", group = "client" }),
 
+        -- Client placement
+        awful.key({ k.m, k.c, k.s      }, "c", util.if_client_floats(awful.placement.centered),
+                  { description = "center floating client", group = "client" }),
+        awful.key({ k.m, k.c, k.s      }, "o", util.if_client_floats(awful.placement.no_overlap),
+                  { description = "no-overlap floating client", group = "client" }),
+        awful.key({ k.m, k.c, k.s      }, "s", util.if_client_floats(awful.placement.no_offscreen),
+                  { description = "no-offscreen floating client", group = "client" }),
+
         -- Move client to tag in grid
         awful.key({ k.m, k.c, k.s      }, k.l, function(c)
             util.move_client_in_grid(c, "l")
@@ -70,40 +83,43 @@ function _config.init()
                   { description = "move to tag below", group = "client" }),
 
         -- Move client to screen
-        awful.key({ k.m                }, "o", function(c)
+        awful.key({ k.m, k.s           }, "g", function(c)
+            local s = c.screen
+            c:move_to_screen()
+            awful.screen.focus(s)
+            -- c.screen._taglist_popup:show()
+        end,
+                  { description = "move to screen", group = "screen" }),
+        awful.key({ k.m, k.c, k.s      }, "g", function(c)
             c:move_to_screen()
             -- c.screen._taglist_popup:show()
         end,
-                  { description = "move to screen", group = "client" }),
+                  { description = "move to screen, focus", group = "screen" }),
+
+        -- Move client to screen
         awful.key({ k.c, k.a, k.s      }, k.l, function(c)
             c:move_to_screen(c.screen.index+1)
             -- c.screen._taglist_popup:show()
         end,
-                  { description = "move to previous screen", group = "client" }),
+                  { description = "move to previous screen", group = "screen" }),
         awful.key({ k.c, k.a, k.s      }, k.r, function(c)
             c:move_to_screen(c.screen.index-1)
             -- c.screen._taglist_popup:show()
         end,
-                  { description = "move to next screen", group = "client" }),
+                  { description = "move to next screen", group = "screen" }),
 
         -- Edit in Vim
-        awful.key({ k.m                }, "v", function(c) --luacheck: no unused args
-            awful.spawn(table.concat { context.vars.terminal, " zsh -lic '", context.vars.scripts_dir, "/edit-in-vim'" }, {
-                floating = true,
-                ontop = true,
-                placement = awful.placement.centered,
-            })
+        awful.key({ k.m                }, "v", function(c) --luacheck: no unused
+            awful.spawn(table.concat {
+                    context.vars.terminal, " zsh -lic '", context.vars.scripts_dir, "/edit-in-vim'"
+                }, {
+                    floating = true,
+                    ontop = true,
+                    placement = awful.placement.centered,
+                }
+            )
         end)
     )
-
-    if util.set_wallpaper then
-        _config.keys = gears.table.join(
-            _config.keys,
-
-            awful.key({ k.m, k.c           }, "i", function() util.set_wallpaper(0) end,
-                      { description = "unblur wallpaper", group = "client" })
-        )
-    end
 
     -- Bind number keys
     -- NOTE: Using keycodes to make it works on any keyboard layout
@@ -151,7 +167,7 @@ function _config.init()
 
     -- Move client to tag and view it
     util.fake_key({ k.m, k.c, k.s      }, "1..9", nil,
-                  { description = "move client to tag and view it", group = "numeric keys" })
+                  { description = "move client to tag, focus", group = "numeric keys" })
 
     -- Toggle tag on focused client
     util.fake_key({ k.m, k.a           }, "1..9", nil,
@@ -163,8 +179,8 @@ function _config.init()
 
     _config.buttons = gears.table.join(
         awful.button({                    }, 1, function(c) if c.focusable then client.focus = c end; c:raise() end),
-        awful.button({ k.m                }, 1, awful.mouse.client.move),
-        awful.button({ k.m, k.s           }, 1, awful.mouse.client.resize)
+        awful.button({ k.m                }, 1, function(c) awful.mouse.client.move(c); c:raise() end),
+        awful.button({ k.m, k.s           }, 1, function(c) awful.mouse.client.resize(c); c:raise() end)
     )
 
     -- }}}

@@ -5,7 +5,7 @@
 # Lines beginning with '#' are comments.
 #
 # First, include any systemwide bindings and variable assignments
-$include /etc/Inputrc
+$include /etc/inputrc
 
 # Set various bindings for emacs mode
 set editing-mode emacs
@@ -38,12 +38,13 @@ Meta-Control-h: backward-kill-word
 # "\M-\C-[A": previous-history
 # "\M-\C-[B": next-history
 
-C-q: quoted-insert
+"\C-q": quoted-insert
 
 $endif
 
 # An old-style binding, this happens to be the default
-TAB: complete
+TAB: menu-complete
+"\e[Z": menu-complete-backward
 
 # Macros that are convenient for shell interaction
 $if Bash
@@ -77,7 +78,7 @@ $endif
 set bind-tty-special-chars off
 
 # Use a visible bell if one is available
-set bell-style visible
+set bell-style none
 
 # Useful stuff for UTF-8
 set meta-flag on
@@ -102,9 +103,11 @@ set page-completions on
 set completion-ignore-case on
 set show-all-if-ambiguous on
 set show-all-if-unmodified on
+set menu-complete-display-prefix on
 set visible-stats on
 
-# Use different colors to indicate the file type
+# Color Options
+set colored-completion-prefix on
 set colored-stats on
 
 # For FTP

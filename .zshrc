@@ -49,7 +49,7 @@ UPDATE_ZSH_DAYS=7
 #####################
 
 # bgnotify settings
-bgnotify_threshold=1    ## set your own notification threshold
+bgnotify_threshold=2    ## set your own notification threshold
 bgnotify_formatted() {
     ## $1=exit_status, $2=command, $3=elapsed_time
     [[ $1 -eq 0 ]] && title="Zsh" || title="Zsh (fail)"
@@ -65,7 +65,6 @@ plugins=(
     zsh-completions
     zsh-autosuggestions
     command-not-found
-    colorize
     bgnotify
 )
 
@@ -155,7 +154,7 @@ local main_attached="$(tmux list-sessions -F '#S #{session_attached}' \
     2>/dev/null \
     | sed -n 's/^main[[:space:]]//p')"
 if [[ "$main_attached" -le '0' ]] && [[ "$TERM" != 'linux' ]]; then
-    tmux attach -t main >/dev/null 2>&1 || tmux new -s main >/dev/null 2>&1
+    tmux new -A -s main -t main >/dev/null 2>&1
     exit
 fi
 

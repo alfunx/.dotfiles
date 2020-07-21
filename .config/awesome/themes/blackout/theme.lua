@@ -6,24 +6,21 @@
 
 --]]
 
+local awful            = require("awful")
+local cairo            = require("lgi").cairo
 local gears            = require("gears")
 local lain             = require("lain")
-local awful            = require("awful")
-local wibox            = require("wibox")
 local naughty          = require("naughty")
 local theme_assets     = require("beautiful.theme_assets")
-local cairo            = require("lgi").cairo
+local wibox            = require("wibox")
 local os, math, string = os, math, string
 
 local context          = require("config.context")
 local brokers          = require("config.brokers")
 local util             = require("config.util")
 local t_util           = require("config.util_theme")
-local tags             = require("config.tags")
 local taglist_binds    = require("config.bindings_taglist")
 local tasklist_binds   = require("config.bindings_tasklist")
-
-local widgets          = require("widgets")
 
 local unit             = require("yaawl.util.unit")
 
@@ -74,12 +71,11 @@ theme.dir = string.format("%s/.config/awesome/themes/%s", os.getenv("HOME"), the
 
 -- theme.wallpaper                                 = theme.dir .. "/wallpapers/wall.png"
 theme.wallpaper                                 = theme.dir .. "/wallpapers/escheresque.png"
--- theme.wallpaper_offset                          = 5
+theme.wallpaper_fn                              = gears.wallpaper.tiled
 
 -- theme.wallpaper_original                        = theme.dir .. "/wallpapers/matterhorn.jpg"
 -- theme.wallpaper                                 = theme.dir .. "/wallpapers/matterhorn_base.jpg"
 -- theme.wallpaper_blur                            = theme.dir .. "/wallpapers/matterhorn_blur.jpg"
--- theme.wallpaper_offset                          = 0
 
 local font_name                                 = "monospace"
 local font_size                                 = "11"
@@ -194,6 +190,7 @@ theme.layout_tile                               = theme.dir .. "/layouts/tile.pn
 theme.layout_tilebottom                         = theme.dir .. "/layouts/tilebottom.png"
 theme.layout_tileleft                           = theme.dir .. "/layouts/tileleft.png"
 theme.layout_tiletop                            = theme.dir .. "/layouts/tiletop.png"
+theme.layout_treetile                           = theme.dir .. "/layouts/treetile.png"
 
 theme.widget_ac                                 = theme.dir .. "/icons/ac.png"
 theme.widget_battery                            = theme.dir .. "/icons/battery.png"
@@ -213,6 +210,7 @@ theme.widget_net_1                              = theme.dir .. "/icons/net_1.png
 theme.widget_net_2                              = theme.dir .. "/icons/net_2.png"
 theme.widget_net_3                              = theme.dir .. "/icons/net_3.png"
 theme.widget_net_4                              = theme.dir .. "/icons/net_4.png"
+theme.widget_net_5                              = theme.dir .. "/icons/net_5.png"
 theme.widget_hdd                                = theme.dir .. "/icons/hdd.png"
 theme.widget_music                              = theme.dir .. "/icons/note.png"
 theme.widget_music_on                           = theme.dir .. "/icons/note_on.png"
@@ -630,11 +628,11 @@ brokers.loadavg:add_callback(function(x)
 
     if x.load_5 / _cores >= 1.5 then
         color = colors.red_2
-    elseif x.load_5 / _cores >= 0.8 then
+    elseif x.load_5 / _cores >= 1.0 then
         color = x.load_1 > x.load_5 and colors.red_2 or colors.orange_2
-    elseif x.load_5 / _cores >= 0.65 then
+    elseif x.load_5 / _cores >= 0.8 then
         color = colors.orange_2
-    elseif x.load_5 / _cores >= 0.5 then
+    elseif x.load_5 / _cores >= 0.6 then
         color = colors.yellow_2
     end
 
@@ -831,6 +829,7 @@ local audio_widget = wibox.widget {
 }
 
 brokers.audio:add_callback(function(x)
+    local color
     local icon
 
     if x.muted then
@@ -843,11 +842,20 @@ brokers.audio:add_callback(function(x)
         icon = theme.widget_vol
     end
 
+    if x.percent >= 100 then
+        color = colors.red_2
+    elseif x.percent >= 90 then
+        color = colors.orange_2
+    elseif x.percent >= 80 then
+        color = colors.yellow_2
+    else
+        color = bar_fg
+    end
+
     audio_widget.icon:set_image(icon)
-    m_text(audio_widget.text, x.percent)
+    m_text(audio_widget.text, x.percent, color)
 end)
 
-brokers.audio:show()
 audio_widget:buttons(brokers.audio.buttons)
 -- }}}
 
@@ -887,7 +895,7 @@ brokers.battery:add_callback(function(x)
         icon = theme.widget_battery
     end
 
-    if x.charging or x.ac then
+    if x.charging or x.full or x.ac then
         icon = theme.widget_ac
         if x.percent >= 95 then
             color = colors.green_2
@@ -903,7 +911,7 @@ battery_widget:buttons(brokers.battery.buttons)
 
 -- {{{ WEATHER
 -- local weather_widget = wibox.widget {
---     space,
+--     space, space,
 --     {
 --         id = "icon",
 --         align = "center",
@@ -915,15 +923,15 @@ battery_widget:buttons(brokers.battery.buttons)
 --         align = "center",
 --         widget = wibox.widget.textbox,
 --     },
---     space,
+--     space, space,
 --     layout = wibox.layout.fixed.horizontal,
 -- }
---
+-- 
 -- brokers.weather:add_callback(function(x)
 --     m_symbol(weather_widget.icon, t_util.get_icon(x.data.weather[1].icon))
 --     m_text(weather_widget.text, x.data.main.temp)
 -- end)
---
+-- 
 -- weather_widget:buttons(brokers.weather.buttons)
 -- }}}
 
@@ -931,73 +939,84 @@ battery_widget:buttons(brokers.battery.buttons)
 local net_widget = wibox.widget {
     space,
     {
+        id = "icon",
+        image = theme.widget_net_0,
+        widget = wibox.widget.imagebox,
+    },
+    {
+        id = "text",
+        widget = wibox.widget.textbox,
+    },
+    {
+        id = "load",
+        space,
+        vert_sep,
+        space, space,
         {
-            id = "icon",
-            image = theme.widget_net_0,
-            widget = wibox.widget.imagebox,
+            id = "text",
+            align = "center",
+            widget = wibox.widget.textbox,
         },
-        space, vert_sep, space,
-        id = "wifi",
         visible = false,
         layout = wibox.layout.fixed.horizontal,
     },
     space,
-    {
-        id = "text",
-        align = "center",
-        widget = wibox.widget.textbox,
-    },
-    space,
     layout = wibox.layout.fixed.horizontal,
+}
+
+local net_tooltip = awful.tooltip { --luacheck: no unused
+    objects = { net_widget },
+    delay_show = 0.5,
+    align = "bottom",
+    mode = "outside",
+    bg = colors.bw_2,
+    preferred_positions = { "bottom" },
 }
 
 brokers.net:add_callback(function(x)
     local icon
 
     if x.wifi and x.signal then
-        net_widget.wifi.visible = true
-
-        if x.signal >= -30 then
-            icon = theme.widget_net_4
+        if x.signal >= -35 then
+            icon = theme.widget_net_5
         elseif x.signal >= -60 then
-            icon = theme.widget_net_3
+            icon = theme.widget_net_4
         elseif x.signal >= -70 then
-            icon = theme.widget_net_2
+            icon = theme.widget_net_3
         elseif x.signal >= -80 then
-            icon = theme.widget_net_1
+            icon = theme.widget_net_2
         else
-            icon = theme.widget_net_0
+            icon = theme.widget_net_1
         end
     else
-        net_widget.wifi.visible = false
+        icon = theme.widget_net_0
     end
 
     if not x.state or x.state ~= "up" then
-        m_text(net_widget.text, " N/A ", colors.red_2)
+        m_text(net_tooltip, " N/A ", colors.red_2)
+        m_text(net_widget.load.text, " N/A ", colors.red_2)
+        m_text(net_widget.text, "")
     else
-        m_text(net_widget.text, string.format("%.1f ↓↑ %.1f", unit.to_mb(x.received), unit.to_mb(x.sent)))
+        local r, s = unit.to_mb(x.received), unit.to_mb(x.sent)
+        m_text(net_tooltip, string.format("%.1f ↓↑ %.1f", r, s))
+        m_text(net_widget.load.text, string.format("%.1f ↓↑ %.1f", r, s))
+
+        local flags = table.concat {
+            r + s > 2.0 and "!" or "",
+            x.connected and "" or "✗",
+        }
+        m_text(net_widget.text, flags, colors.red_2)
     end
 
-    net_widget.wifi.icon:set_image(icon)
+    net_widget.icon:set_image(icon)
 end)
 
-local net_widget_notification
-net_widget:buttons(awful.button({ }, 1, function()
-    naughty.destroy(net_widget_notification)
-    net_widget_notification = naughty.notify {
-        title = "Network",
-        timeout = 15,
-    }
-
-    local net_text
-    awful.spawn.with_line_callback(context.vars.scripts_dir .. "/show-ip-address -f", {
-        stdout = function(line)
-            net_text = net_text and table.concat { net_text, '\n', line } or line
-            -- naughty.replace_text(net_widget_notification, "Network", net_text)
-            net_widget_notification.text = net_text
-        end,
-    })
-end))
+net_widget:buttons(gears.table.join(
+    brokers.net.buttons,
+    awful.button({ context.keys.altkey }, 1, function()
+        net_widget.load.visible = not net_widget.load.visible
+    end)
+))
 -- }}}
 
 -- {{{ 2BWM - style
@@ -1009,20 +1028,37 @@ end))
 --       See: config/signals.lua - "property::floating"
 -- }}}
 
-local function title_markup(client, color, bold)
+-- Format title text
+local function title_markup(class, name, color, bold)
     return table.concat {
         "<span color='", color, "'>",
 
         "<small><small><i>",
-        client.class and gears.string.xml_escape(client.class .. ":") or "",
+        class and gears.string.xml_escape(class .. ":") or "",
         "</i></small></small> ",
 
         (bold and "<b>" or ""),
-        gears.string.xml_escape(client.name or awful.titlebar.fallback_name or "N/A"),
+        gears.string.xml_escape(name or awful.titlebar.fallback_name or "N/A"),
         (bold and "</b>" or ""),
 
         "</span>",
     }
+end
+
+-- Recolor client icon
+local function icon_recolor(icon, color)
+    local img = gears.surface.duplicate_surface(icon)
+    local cr = cairo.Context(img)
+
+    -- cr:mask_surface(img, 0, 0)
+    -- cr:mask(cairo.Pattern.create_for_surface(img))
+
+    cr:set_source_rgb(gears.color.parse_color(color))
+    -- cr:set_source_rgb(gears.color.parse_color("#ff0"))
+    cr:set_operator(cairo.Operator.HSL_COLOR)
+
+    cr:paint()
+    return img
 end
 
 -- {{{ TITLEBAR
@@ -1036,11 +1072,11 @@ local function titlewidget(c)
     local ret = wibox.widget.textbox()
     local function update()
         if c == client.focus then
-            ret:set_markup(title_markup(c, theme.titlebar_fg_focus, true))
+            ret:set_markup(title_markup(c.class, c.name, theme.titlebar_fg_focus, true))
         elseif c.urgent then
-            ret:set_markup(title_markup(c, theme.titlebar_fg_urgent, true))
+            ret:set_markup(title_markup(c.class, c.name, theme.titlebar_fg_urgent, true))
         else
-            ret:set_markup(title_markup(c, theme.titlebar_fg_normal))
+            ret:set_markup(title_markup(c.class, c.name, theme.titlebar_fg_normal))
         end
     end
 
@@ -1057,13 +1093,10 @@ end
 local function iconwidget(c)
     local ret = wibox.widget.imagebox()
     local function update()
-        local img = gears.surface.duplicate_surface(c.icon)
-        local cr = cairo.Context(img)
-        cr:set_source_rgb(gears.color.parse_color(client.focus == c and
-                theme.titlebar_bg_focus or theme.titlebar_bg_normal))
-        cr:set_operator(cairo.Operator.HSL_COLOR)
-        cr:paint()
-        ret:set_image(img)
+        ret:set_image(icon_recolor(c.icon, client.focus == c
+                and theme.titlebar_bg_focus or theme.titlebar_bg_normal))
+        -- ret:set_image(icon_recolor(c.icon, theme.titlebar_fg_urgent))
+        -- ret:set_image(c.icon)
     end
 
     c:connect_signal("property::icon", update)
@@ -1135,6 +1168,67 @@ theme.titlebar_fn = function(c)
         widget = wibox.container.margin,
     }
 
+    -- local t = awful.titlebar(c, { size = 20, position = "top" })
+    -- t:setup {
+    --     {
+    --         {
+    --             {
+    --                 awful.titlebar.widget.stickybutton(c),
+    --                 awful.titlebar.widget.ontopbutton(c),
+    --                 {
+    --                     iconwidget(c),
+    --                     buttons = buttons,
+    --                     margins = 2,
+    --                     widget = wibox.container.margin,
+    --                 },
+    --                 layout = wibox.layout.fixed.horizontal,
+    --             },
+    --             {
+    --                 {
+    --                     {
+    --                         {
+    --                             align = "center",
+    --                             widget = titlewidget(c),
+    --                         },
+    --                         id = "_scroll",
+    --                         step_function = wibox.container.scroll.step_functions.linear_increase,
+    --                         speed = 80,
+    --                         extra_space = 50,
+    --                         widget = wibox.container.scroll.horizontal,
+    --                     },
+    --                     widget = wibox.container.place,
+    --                 },
+    --                 left = 6,
+    --                 right = 6,
+    --                 buttons = buttons,
+    --                 widget = wibox.container.margin,
+    --             },
+    --             {
+    --                 awful.titlebar.widget.minimizebutton(c),
+    --                 awful.titlebar.widget.maximizedbutton(c),
+    --                 awful.titlebar.widget.closebutton(c),
+    --                 layout = wibox.layout.fixed.horizontal,
+    --             },
+    --             layout = wibox.layout.align.horizontal,
+    --         },
+    --         {
+    --             {
+    --                 image = "/home/amariya/pictures/wallpapers/matterhorn_sunset.jpg",
+    --                 resize = true,
+    --                 widget = wibox.widget.imagebox,
+    --             },
+    --             content_fill_vertical = true,
+    --             content_fill_horizontal = true,
+    --             fill_vertical = true,
+    --             fill_horizontal = true,
+    --             widget = wibox.container.place,
+    --         },
+    --         layout = wibox.layout.stack,
+    --     },
+    --     bottom = theme.border_width / 2,
+    --     widget = wibox.container.margin,
+    -- }
+
     local scroll = t:get_children_by_id("_scroll")[1]
     scroll:connect_signal("mouse::enter", function()
         scroll:continue()
@@ -1153,46 +1247,36 @@ util.hide_all_unneeded_titlebars()
 -- }}}
 
 -- {{{ TASKLIST
-local function tasklist_update_callback(self, c, index, objects) --luacheck: no unused args
+local function tasklist_update_callback(self, c, index, objects) --luacheck: no unused
     local t = self:get_children_by_id("_text")[1]
+    -- local i = self:get_children_by_id("_icon")[1]
     local b = self:get_children_by_id("_color_bar")[1]
 
     if c == client.focus then
-        t:set_markup(title_markup(c, theme.tasklist_fg_focus, true))
+        t:set_markup(title_markup(c.class, c.name, theme.tasklist_fg_focus, true))
+        -- i:set_image(icon_recolor(c.icon, theme.tasklist_bg_focus))
         b.color = theme.tasklist_fg_normal
     elseif c.urgent then
-        t:set_markup(title_markup(c, theme.tasklist_fg_urgent, true))
+        t:set_markup(title_markup(c.class, c.name, theme.tasklist_fg_urgent, true))
+        -- i:set_image(icon_recolor(c.icon, theme.tasklist_bg_urgent))
         b.color = theme.tasklist_fg_urgent
     elseif c.minimized then
-        t:set_markup(title_markup(c, theme.tasklist_fg_minimize))
+        t:set_markup(title_markup(c.class, c.name, theme.tasklist_fg_minimize))
+        -- i:set_image(icon_recolor(c.icon, theme.tasklist_bg_minimize))
         b.color = theme.tasklist_bg_minimize
+    elseif c == awful.client.focus.history.get(c.screen, 0) then
+        t:set_markup(title_markup(c.class, c.name, theme.tasklist_fg_normal, true))
+        -- i:set_image(icon_recolor(c.icon, theme.tasklist_bg_normal))
+        b.color = theme.tasklist_fg_minimize
     else
-        t:set_markup(title_markup(c, theme.tasklist_fg_normal))
+        t:set_markup(title_markup(c.class, c.name, theme.tasklist_fg_normal))
+        -- i:set_image(icon_recolor(c.icon, theme.tasklist_bg_normal))
         b.color = theme.tasklist_bg_normal
     end
 end
 -- }}}
 
 function theme.at_screen_connect(s)
-    -- Quake application
-    s.quake = lain.util.quake {
-        app = context.vars.terminal,
-        argname = "--name %s",
-    }
-
-    -- If wallpaper is a function, call it with the screen
-    local wallpaper = theme.wallpaper
-    if type(wallpaper) == "function" then
-        wallpaper = wallpaper(s)
-    end
-    -- gears.wallpaper.maximized(wallpaper, s, true)
-    gears.wallpaper.tiled(wallpaper, s)
-
-    -- Add tags if there are none
-    if #s.tags == 0 then
-        awful.tag(tags.names, s, tags.layouts)
-    end
-
     -- Create the wibox
     s._wibox = awful.wibar {
         position = "top",
@@ -1232,117 +1316,130 @@ function theme.at_screen_connect(s)
     )
 
     -- Create a taglist widget
-    s._taglist = awful.widget.taglist{
+    s._taglist = awful.widget.taglist {
         screen = s,
         filter = util.rowfilter,
         buttons = taglist_binds.buttons,
     }
 
-    local gen_tasklist = function()
-        s._tasklist = awful.widget.tasklist {
-            screen = s,
-            filter = awful.widget.tasklist.filter.currenttags,
-            buttons = tasklist_binds.buttons,
-            bg_focus = theme.tasklist_bg_focus,
-            style = {
-                shape = function(cr, width, height)
-                    gears.shape.rounded_rect(cr, width, height, theme.border_radius or 0)
-                end,
-                -- shape_border_width = 2,
-                -- shape_border_color = theme.tasklist_bg_normal,
-            },
-            widget_template = {
+    -- Create a tasklist widget
+    s._tasklist = awful.widget.tasklist {
+        screen = s,
+        filter = awful.widget.tasklist.filter.currenttags,
+        buttons = tasklist_binds.buttons,
+        bg_focus = theme.tasklist_bg_focus,
+        style = {
+            shape = function(cr, width, height)
+                gears.shape.rounded_rect(cr, width, height, theme.border_radius or 0)
+            end,
+            -- shape_border_width = 2,
+            -- shape_border_color = theme.tasklist_bg_normal,
+        },
+        widget_template = {
+            {
                 {
                     {
                         {
-                            {
-                                layout = wibox.layout.flex.vertical,
-                            },
-                            id = "_color_bar",
-                            top = s._wibox.position == "top" and theme.border / 2 or 0,
-                            bottom = s._wibox.position == "bottom" and theme.border / 2 or 0,
-                            widget = wibox.container.margin,
+                            layout = wibox.layout.flex.vertical,
                         },
-                        {
-                            {
-                                {
-                                    -- id = "text_role",
-                                    id = "_text",
-                                    widget = wibox.widget.textbox,
-                                },
-                                id = "_scroll",
-                                step_function = wibox.container.scroll.step_functions.linear_increase,
-                                speed = 80,
-                                extra_space = 50,
-                                widget = wibox.container.scroll.horizontal,
-                            },
-                            widget = wibox.container.place,
-                        },
-                        {
-                            widgets.fade {
-                                width = 30,
-                                color = theme.tasklist_bg_normal,
-                            },
-                            id = "_fade",
-                            visible = false,
-                            layout = wibox.layout.flex.horizontal,
-                        },
-                        layout = wibox.layout.stack,
+                        id = "_color_bar",
+                        top = s._wibox.position == "top" and theme.border / 2 or 0,
+                        bottom = s._wibox.position == "bottom" and theme.border / 2 or 0,
+                        widget = wibox.container.margin,
                     },
-                    left = 3,
-                    right = 3,
-                    widget = wibox.container.margin,
+                    {
+                        {
+                            {
+                                -- id = "text_role",
+                                id = "_text",
+                                widget = wibox.widget.textbox,
+                            },
+                            id = "_scroll",
+                            step_function = wibox.container.scroll.step_functions.linear_increase,
+                            speed = 80,
+                            extra_space = 50,
+                            widget = wibox.container.scroll.horizontal,
+                        },
+                        widget = wibox.container.place,
+                    },
+                    -- {
+                    --     {
+                    --         {
+                    --             -- id = "icon_role",
+                    --             id = "_icon",
+                    --             widget = wibox.widget.imagebox,
+                    --         },
+                    --         margins = 6,
+                    --         widget = wibox.container.margin,
+                    --     },
+                    --     {
+                    --         {
+                    --             {
+                    --                 -- id = "text_role",
+                    --                 id = "_text",
+                    --                 widget = wibox.widget.textbox,
+                    --             },
+                    --             id = "_scroll",
+                    --             step_function = wibox.container.scroll.step_functions.linear_increase,
+                    --             speed = 80,
+                    --             extra_space = 50,
+                    --             widget = wibox.container.scroll.horizontal,
+                    --         },
+                    --         widget = wibox.container.place,
+                    --     },
+                    --     layout = wibox.layout.align.horizontal,
+                    -- },
+                    -- {
+                    --     widgets.fade {
+                    --         width = 30,
+                    --         color = theme.tasklist_bg_normal,
+                    --     },
+                    --     id = "_fade",
+                    --     visible = false,
+                    --     layout = wibox.layout.flex.horizontal,
+                    -- },
+                    layout = wibox.layout.stack,
                 },
-                id = "background_role",
-                widget = wibox.container.background,
-                create_callback = function(self, c, index, objects)
-                    local scroll = self:get_children_by_id("_scroll")[1]
-                    local fade = self:get_children_by_id("_fade")[1]
-                    self:connect_signal("mouse::enter", function()
-                        fade.visible = true
-                        scroll:continue()
-                    end)
-                    self:connect_signal("mouse::leave", function()
-                        fade.visible = false
-                        scroll:pause()
-                        scroll:reset_scrolling()
-                    end)
+                left = 3,
+                right = 3,
+                widget = wibox.container.margin,
+            },
+            id = "background_role",
+            widget = wibox.container.background,
+            create_callback = function(self, c, index, objects)
+                local scroll = self:get_children_by_id("_scroll")[1]
+                -- local fade = self:get_children_by_id("_fade")[1]
+                self:connect_signal("mouse::enter", function()
+                    -- fade.visible = true
+                    scroll:continue()
+                end)
+                self:connect_signal("mouse::leave", function()
+                    -- fade.visible = false
                     scroll:pause()
                     scroll:reset_scrolling()
-                    tasklist_update_callback(self, c, index, objects)
-                end,
-                update_callback = tasklist_update_callback,
+                end)
+                scroll:pause()
+                scroll:reset_scrolling()
+                tasklist_update_callback(self, c, index, objects)
+            end,
+            update_callback = tasklist_update_callback,
+        },
+        layout = {
+            layout = wibox.layout.flex.horizontal,
+            spacing = 8,
+            spacing_widget = {
+                vert_sep,
+                widget = wibox.container.place,
             },
-            layout = {
-                layout = wibox.layout.flex.horizontal,
-                spacing = 8,
-                spacing_widget = {
-                    vert_sep,
-                    widget = wibox.container.place,
-                },
-            },
-        }
-    end
-
-    -- TODO: remove
-    -- For old version (Awesome v4.2)
-    gears.protected_call(gen_tasklist)
-    -- Create a tasklist widget
-    s._tasklist = s._tasklist or awful.widget.tasklist(s,
-        awful.widget.tasklist.filter.currenttags,
-        tasklist_binds.buttons, {
-            bg_focus = theme.tasklist_bg_focus,
-            shape = function(cr, width, height)
-                        gears.shape.rounded_rect(cr, width, height, theme.border_radius or 0)
-                    end,
-            shape_border_width = 0,
-            shape_border_color = theme.tasklist_bg_normal,
-            align = "center" })
+        },
+    }
 
     -- {{{ HIDDEN WIDGET
     s._hidden_widget = wibox.widget {
-        space, vert_sep, vert_sep,
-        -- space, weather_widget, space,
+        space, vert_sep, vert_sep, vert_sep, vert_sep,
+
+        drive_widget,
+--         weather_widget,
 
         vert_sep,
         space,
@@ -1361,7 +1458,7 @@ function theme.at_screen_connect(s)
         layout = wibox.layout.fixed.horizontal,
     }
 
-    local systray_activator = wibox.widget {
+    local hidden_widget_activator = wibox.widget {
         space, space,
         layout = wibox.layout.fixed.horizontal,
         buttons = gears.table.join(
@@ -1458,7 +1555,6 @@ function theme.at_screen_connect(s)
                     cpu_widget,
                     memory_widget,
                     temp_widget,
-                    drive_widget,
                     brightness_widget,
                     audio_widget,
                     battery_widget,
@@ -1472,7 +1568,7 @@ function theme.at_screen_connect(s)
                     clock_widget,
 
                     s._hidden_widget,
-                    systray_activator,
+                    hidden_widget_activator,
 
                     layout = wibox.layout.fixed.horizontal,
                 },
@@ -1480,6 +1576,7 @@ function theme.at_screen_connect(s)
             },
             layout = wibox.layout.flex.vertical,
         },
+        id = "border",
         bottom = s._wibox.position == "top" and theme.border or 0,
         top = s._wibox.position == "bottom" and theme.border or 0,
         color = colors.bw_2,
@@ -1491,12 +1588,14 @@ function theme.at_screen_connect(s)
         local popup_font = t_util.font { size = 20 , bold = true }
 
         -- Layoutbox popup
-        s._layout_popup = util.popup {
+        s._layout_popup = util.default_popup {
+            screen = s,
             widget = awful.widget.layoutbox(s),
         }
 
         -- Taglist popup
-        s._taglist_popup = util.popup {
+        s._taglist_popup = util.default_popup {
+            screen = s,
             widget = awful.widget.taglist {
                 screen = s,
                 filter = util.rowfilter,

@@ -5,6 +5,7 @@
 # will be integrated to 'dotfiles.sh'
 compdef dotfiles=git
 
+# go to parent
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
@@ -41,60 +42,55 @@ alias lr='ls -tRFh'
 # long list,sorted by date,show type,human readable
 alias lt='ls -ltFh'
 
+# more ls variants
 alias ldot='ls -ld .*'
-alias lS='ls -1FSsh'
+alias lS='ls -1FASsh'
 alias lart='ls -1Fcart'
 alias lrt='ls -1Fcrt'
+
+# ls with different alphabethical sorting
+unalias ll
+ll() { LC_COLLATE=C ls "$@" }
+
+# suffix aliases
+alias -g CP='| xclip -selection clipboard -rmlastnl'
+alias -g LL="| less"
+alias -g CA="| cat -A"
+alias -g KE="2>&1"
+alias -g NE="2>/dev/null"
+alias -g NUL=">/dev/null 2>&1"
+
+# misc aliases
+alias si='sudo -i zsh'
+alias :q='exit'
+alias pg='ping -c 1 8.8.8.8'
+alias pc='python -ic "from math import *"'
+alias bcl='bc -l'
 alias t='tail -f'
 alias wa='watch -ctn 2'
-
-# Suffix commands
-alias -g H='| head'
-alias -g T='| tail'
-alias -g G='| grep'
-alias -g L="| less"
-alias -g M="| most"
-alias -g LL="2>&1 | less"
-alias -g CA="2>&1 | cat -A"
-alias -g NE="2> /dev/null"
-alias -g NUL="> /dev/null 2>&1"
-alias -g P="2>&1| pygmentize -l pytb"
-
-alias dud='du -d 1 -h'
-alias duf='du -sh *'
-alias fnd='find . -type d -name'
-alias fnf='find . -type f -name'
-
-alias rm='rm -i'
-alias cp='cp -i --reflink=auto'
-alias mv='mv -i'
-
-alias :q='exit'
-alias pg='ping -c 1 www.google.ch'
-alias bcl='bc -l'
-alias neofetch='echo "\\n\\n" && neofetch'
-alias si='sudo -i zsh'
 alias open='xdg-open'
-alias grep='grep --color=auto --exclude-dir={.git,.svn}'
-alias egrep='egrep --color=auto --exclude-dir={.git,.svn}'
-alias -g C='| xclip -selection clipboard -rmlastnl'
+alias neofetch='echo "\\n\\n" && neofetch'
+alias grep='grep --color=auto --exclude-dir={.git,.svn,.hg}'
+alias egrep='egrep --color=auto --exclude-dir={.git,.svn,.hg}'
 alias diff='diff --color=auto'
 alias journalctl='journalctl -r'
-alias tmuxtty='/usr/bin/tmux -L linux -f "$HOME/.tmux.minimal.conf"'
 
+# tty aliases
+if [[ "$TERM" == 'linux' ]]; then
+    alias tmux='/usr/bin/tmux -L linux'
+fi
+
+# bring job to fg
 foreground-job() {
     fg
 }
 zle     -N   foreground-job
 bindkey '^Z' foreground-job
 
+# mkdir + cd
 mkcd() {
     [[ $# -gt 1 ]] && return 1
     mkdir -p "$1" && cd "$1" || return 1
-}
-
-toilol() {
-    toilet -f mono12 -w "$(tput cols)" | lolcat "$@"
 }
 
 # archive compress
@@ -195,6 +191,37 @@ toggle() {
 }
 
 
+#################
+#  KEYBINDINGS  #
+#################
+
+# ctrl+arrows
+bindkey "\e[1;5C" forward-word
+bindkey "\e[1;5D" backward-word
+bindkey "\e[5C" forward-word
+bindkey "\e[5D" backward-word
+bindkey "\e\e[C" forward-word
+bindkey "\e\e[D" backward-word
+
+# alt+arrows
+bindkey "\e[1;3C" vi-forward-blank-word
+bindkey "\e[1;3D" vi-backward-blank-word
+bindkey "\e[3C" vi-forward-blank-word
+bindkey "\e[3D" vi-backward-blank-word
+bindkey "\e\e[C" vi-forward-blank-word
+bindkey "\e\e[D" vi-backward-blank-word
+
+# ctrl+delete
+bindkey "\e[3;5~" kill-word
+bindkey "\e[3;3~" kill-word
+
+# ctrl+backspace
+bindkey '^H' backward-kill-word
+
+# ctrl+shift+delete
+bindkey "\e[3;6~" kill-line
+
+
 #########
 #  FZF  #
 #########
@@ -250,43 +277,16 @@ fag() {
 # FUZZY COMMANDS #
 ##################
 
-# # cd to selected directory (no hidden files)
-# cnh() {
-#       cd "$(find ${1:-.} -path '*/\.*' -prune -o -type d -print 2> /dev/null \
-#           | fzf +m -q "$1" -0)"
-# }
-
-# cd to selected directory (no hidden files)
-cnh() {
-    cd "$(fd --follow --type d '.' "${1:-.}" 2> /dev/null \
-        | fzf +m -q "$1" -0)" \
-        || return 1
-}
-
-# # cnh, but including hidden directories
-# c() {
-#       cd "$(find -L ${1:-.} -type d 2> /dev/null \
-#           | fzf +m -q "$1" -0)"
-# }
-
-# cnh, but including hidden directories
+# cd to selected directory
 c() {
-    cd "$(fd --hidden --follow --type d '.' "${1:-.}" 2> /dev/null \
-        | fzf +m -q "$1" -0)" \
+    cd "$(fd -td -HLI --print0 '.' "${1:-.}" 2> /dev/null \
+        | fzf +s +m +e --read0 -0)" \
         || return 1
 }
-
-# # cd to selected directory and open ranger
-# fr() {
-#       cd "$(find -L ${1:-.} -type d 2> /dev/null \
-#           | fzf +m -q "$1" -0)" && ranger
-# }
 
 # cd to selected directory and open ranger
-fr() {
-    cd "$(fd --hidden --follow --type d '.' "${1:-.}" 2> /dev/null \
-        | fzf +m -q "$1" -0)" \
-        && ranger
+r() {
+    c "$@" && ranger
 }
 
 # open the selected file with the default editor
@@ -294,7 +294,7 @@ fr() {
 #       - CTRL-E or Enter key to open with the $EDITOR
 fo() {
     local out file key
-    IFS=$'\n' out=($(fzf -q "$1" -0 --expect=ctrl-o,ctrl-e))
+    IFS=$'\n' out=($(fzf +s +m +e -q "$1" -0 --expect=ctrl-o,ctrl-e))
     key=$(head -1 <<< "$out")
     file=$(head -2 <<< "$out" | tail -1)
     if [ -n "$file" ]; then
@@ -308,7 +308,7 @@ fo() {
 cdf() {
     local file
     local dir
-    file=$(fzf +m -q "$1" -0) \
+    file=$(fzf +s +m +e -q "$1" -0) \
         && dir=$(dirname "$file") \
         && cd "$dir" \
         || return 1
@@ -383,6 +383,11 @@ fman() {
     man "$(apropos . | fzf | sed 's/ .*//')"
 }
 
+
+#############
+#  WIDGETS  #
+#############
+
 # command search (formatted like official fzf keybindings)
 fzf-command-widget() {
     local selected num
@@ -401,8 +406,50 @@ fzf-command-widget() {
     return "$ret"
 }
 zle     -N    fzf-command-widget
-bindkey '-' fzf-command-widget
-bindkey '.' fzf-command-widget
+
+bindkey '\e-' fzf-command-widget
+bindkey '\e.' fzf-command-widget
+
+# cd into the selected directory
+zle     -N    fzf-cd-widget
+bindkey '\eg' fzf-cd-widget
+
+# cd to parent
+cd-parent-widget() {
+    echo
+    cd ..
+    zle reset-prompt
+}
+zle     -N   cd-parent-widget
+bindkey '^n' cd-parent-widget
+
+# cd to home
+cd-home-widget() {
+    echo
+    cd
+    zle reset-prompt
+}
+zle     -N    cd-home-widget
+bindkey '\en' cd-home-widget
+
+# open ranger
+ranger-widget() {
+    ranger < "$TTY"
+    zle reset-prompt
+}
+zle     -N    ranger-widget
+bindkey '\eo' ranger-widget
+
+# open ranger, cd to chosen directory
+ranger-cd-widget() {
+    echo
+    trap 'rm -f /tmp/.rangerdir' SIGINT SIGTERM EXIT
+    ranger --choosedir="/tmp/.rangerdir" < "$TTY"
+    cd $(< "/tmp/.rangerdir")
+    zle reset-prompt
+}
+zle     -N     ranger-cd-widget
+bindkey '\e^o' ranger-cd-widget
 
 alias dots="/usr/bin/env git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
 

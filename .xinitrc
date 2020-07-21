@@ -32,11 +32,10 @@ if [ -d /etc/X11/xinit/xinitrc.d ]; then
 fi
 
 # these get ingnored for whatever reason
-# amixer -c PCH set "Master" mute &
 # unclutter -root -reset &
 redshift -c .config/redshift.conf &
 # xcompmgr &
-compton --config .config/compton.conf &
+compton --config .config/compton/compton.conf &
 syndaemon -i 0.5 -K -R -d
 
 # select wm/de with: startx ~/.xinitrc session

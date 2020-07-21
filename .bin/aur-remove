@@ -58,6 +58,6 @@ for arg in "$@"; do
         -) cat ;;
         *) printf '%s\n' "$arg" ;;
     esac
-done | xargs repo-remove "$repo_path.tar"
+done | xargs -r repo-remove "$repo_path.tar"
 
 # vim: set et sw=4 sts=4 ft=sh:
