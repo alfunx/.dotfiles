@@ -1,0 +1,13 @@
+prev_img
+next_img
+
+zoom_in C-4
+zoom_out C-5
+
+scroll_up 4
+scroll_down 5
+scroll_left 6
+scroll_right 7
+
+blur C-1
+rotate C-3

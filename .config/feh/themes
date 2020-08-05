@@ -19,8 +19,7 @@
 
 feh --scale-down \
     --sort name \
-    --no-menus \
-    --magick-timeout -1 \
+    --conversion-timeout -1 \
     --force-aliasing \
     --geometry 1280x960 \
     --title "[%u/%l] %n (%wx%h)"
