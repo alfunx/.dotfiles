@@ -124,7 +124,7 @@ function _config.init()
 
     -- Temperature
     _config.temperature = yaawl.temperature {
-        temp_path = "/sys/class/thermal/thermal_zone8/temp",
+        path = "/sys/class/thermal/thermal_zone8/temp",
     }
     _config.temperature:add_timer {
         timeout = 23,
@@ -253,6 +253,14 @@ function _config.init()
         end)
     )
 
+    -- Devices
+    -- _config.udev = yaawl.udev {
+    --     path = "/media",
+    -- }
+    -- _config.audio:add_timer {
+    --     timeout = 797,
+    -- }
+
     ---------------------
     --  Notifications  --
     ---------------------
@@ -263,16 +271,17 @@ function _config.init()
             naughty.destroy(battery_notification)
             return
         end
-        naughty.destroy(battery_notification)
-        battery_notification = naughty.notify {
-            preset  = naughty.config.presets.critical,
-            timeout = 0,
-            title   = "Battery",
-            text    = table.concat {
-                "Your battery is running low.\n",
-                "You should plug in your PC.",
-            },
-        }
+        if not battery_notification then
+            battery_notification = naughty.notify {
+                preset  = naughty.config.presets.critical,
+                timeout = 0,
+                title   = "Battery",
+                text    = table.concat {
+                    "Your battery is running low.\n",
+                    "You should plug in your PC.",
+                },
+            }
+        end
     end)
 
 --

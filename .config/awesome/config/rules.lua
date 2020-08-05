@@ -65,10 +65,21 @@ function _config.init()
 
         {
             rule = {
-                class = "Thunderbird",
+                class = "Arandr",
             },
             properties = {
-                tag    = tags.names[6],
+                width  = 600,
+                height = 400,
+            },
+        },
+
+        {
+            rule = {
+                class = "Blueman-manager",
+            },
+            properties = {
+                width  = 600,
+                height = 800,
             },
         },
 
@@ -92,11 +103,10 @@ function _config.init()
 
         {
             rule = {
-                class = "Arandr",
+                class = "Thunderbird",
             },
             properties = {
-                width  = 600,
-                height = 400,
+                tag    = tags.names[9],
             },
         },
 
@@ -117,6 +127,7 @@ function _config.init()
                     "alsamixer",
                     "pulsemixer",
                     "Arandr",
+                    "Blueman-manager",
                 },
                 name = {
                     "Event Tester",

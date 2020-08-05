@@ -33,7 +33,7 @@ function _config.init()
 
     -- {{{ Keys
 
-    _config.keys = gears.table.join(
+    awful.keyboard.append_global_keybindings {
 
         -- Awesome Hotkeys
         awful.key({ k.m, k.c           }, "s", hotkeys_popup.show_help,
@@ -47,10 +47,6 @@ function _config.init()
         awful.key({ k.m                }, "Escape", naughty.destroy_all_notifications,
                   { description = "dismiss all notifications", group = "awesome" }),
 
-        -- Switch to alternative theme
-        awful.key({ k.m, k.a           }, "z", util.alternate_theme,
-                  { description = "switch to alternative theme", group = "awesome" }),
-
         -- Hotkeys
         awful.key({ k.m                }, "Return", function() awful.spawn(context.vars.terminal) end,
                   { description = "open a terminal", group = "launcher" }),
@@ -59,12 +55,12 @@ function _config.init()
                   { description = "open a floating terminal", group = "launcher" }),
         awful.key({ k.m                }, "b", function() awful.spawn(context.vars.browser) end,
                   { description = "open browser", group = "launcher" }),
-        awful.key({ k.m                }, "e", function() awful.spawn("thunderbird") end,
+        awful.key({ k.m                }, "e", function() awful.spawn(context.vars.email) end,
                   { description = "open email client", group = "launcher" }),
-        awful.key({ k.m                }, "w", function() awful.spawn("Whatsapp") end,
-                  { description = "open whatsapp", group = "launcher" }),
-        awful.key({ k.m                }, "p", function() awful.spawn("arandr") end,
+        awful.key({ k.m                }, "p", function() awful.spawn(context.vars.randr) end,
                   { description = "open arandr", group = "launcher" }),
+        awful.key({ k.m                }, "w", function() awful.spawn(context.vars.emoji) end,
+                  { description = "open emoji picker", group = "launcher" }),
         awful.key({ k.m, k.c           }, "c", function() awful.spawn(table.concat
                   { context.vars.terminal, " python -ic 'from math import *'" },
                   { floating = true, ontop = true, width = 410, height = 550,
@@ -128,6 +124,10 @@ function _config.init()
             awful.spawn.easy_async(table.concat { context.vars.scripts_dir, "/rofi-session" }, function() end)
         end,
                   { description = "show session menu (rofi)", group = "launcher" }),
+        awful.key({ k.m                }, "d", function()
+            awful.spawn.easy_async(table.concat { context.vars.scripts_dir, "/rofi-devices" }, function() end)
+        end,
+                  { description = "show devices menu (rofi)", group = "launcher" }),
         awful.key({ k.m                }, "x", function()
             awful.prompt.run {
                 prompt       = "Run (Lua): ",
@@ -434,14 +434,14 @@ function _config.init()
                 common.text = table.concat { common.text, markup.bold("ON") }
             end
             naughty.notify(common)
-        end)
-    )
+        end),
+
+    }
 
     -- Bind number keys
     -- NOTE: Using keycodes to make it works on any keyboard layout
     for i = 1, 10 do
-        _config.keys = gears.table.join(
-            _config.keys,
+        awful.keyboard.append_global_keybindings {
 
             -- View tag only
             awful.key({ k.m                }, "#" .. i + 9, function()
@@ -464,8 +464,9 @@ function _config.init()
                     awful.tag.viewtoggle(t)
                 end
                 -- s._taglist_popup:show()
-            end)
-        )
+            end),
+
+        }
     end
 
     -- }}}
@@ -484,21 +485,26 @@ function _config.init()
 
     -- {{{ Buttons
 
-    _config.buttons = gears.table.join(
+    awful.mouse.append_global_mousebindings {
+        awful.button({                    }, 1, function()
+            local coords = mouse.coords()
+            awful.screen.focus(mouse.screen)
+            mouse.coords(coords, true)
+        end),
         awful.button({                    }, 3, function() menu.main:toggle() end),
         awful.button({                    }, 4, function() end),
         awful.button({                    }, 5, function() end)
         -- awful.button({                    }, 4, awful.tag.viewnext),
-        -- awful.button({                    }, 5, awful.tag.viewprev)
-    )
+        -- awful.button({                    }, 5, awful.tag.viewprev),
+    }
 
     -- }}}
 
     -- Set keys
-    root.keys(_config.keys)
+    --root.keys(_config.keys)
 
     -- Set buttons
-    root.buttons(_config.buttons)
+    --root.buttons(_config.buttons)
 
     -- -- Layout
     -- awful.keygrabber {

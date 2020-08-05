@@ -38,6 +38,12 @@ function _config.init()
         end),
         awful.button({                    }, 5, function()
             awful.client.focus.byidx(-1)
+        end),
+        awful.button({                    }, 6, function()
+            awful.client.focus.byidx(-1)
+        end),
+        awful.button({                    }, 7, function()
+            awful.client.focus.byidx(1)
         end)
     )
 

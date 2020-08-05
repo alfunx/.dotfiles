@@ -97,7 +97,7 @@ function _config.init()
 
        local idx = s.selected_tag.index
        for i = 1, #s.tags do
-           local t = s.tags[(idx + i * direction) % #s.tags]
+           local t = s.tags[(idx - 1 + i * direction) % #s.tags + 1]
            if t and #t:clients() > 0 then
                t:view_only()
                return

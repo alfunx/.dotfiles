@@ -1171,16 +1171,17 @@ theme.titlebar_fn = function(c)
         widget = wibox.container.margin,
     }
 
-    local scroll = t:get_children_by_id("_scroll")[1]
-    scroll:connect_signal("mouse::enter", function()
-        scroll:continue()
-    end)
-    scroll:connect_signal("mouse::leave", function()
-        scroll:pause()
-        scroll:reset_scrolling()
-    end)
-    scroll:pause()
-    scroll:reset_scrolling()
+    -- FIXME
+    -- local scroll = t:get_children_by_id("_scroll")[1]
+    -- scroll:connect_signal("mouse::enter", function()
+    --     scroll:continue()
+    -- end)
+    -- scroll:connect_signal("mouse::leave", function()
+    --     scroll:pause()
+    --     scroll:reset_scrolling()
+    -- end)
+    -- scroll:pause()
+    -- scroll:reset_scrolling()
 
     util.hide_unneeded_titlebars(c)
 end

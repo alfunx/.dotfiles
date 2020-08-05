@@ -105,9 +105,9 @@ function _config.init()
         awful.layout.suit.tile,
         awful.layout.suit.tile,
         awful.layout.suit.tile,
+        awful.layout.suit.tile,
+        awful.layout.suit.tile,
         awful.layout.suit.max,
-        awful.layout.suit.max,
-        awful.layout.suit.floating,
     }
 
     _config.main_layout = awful.layout.suit.tile

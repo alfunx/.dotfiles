@@ -32,7 +32,9 @@ function _config.init()
             if client.focus then client.focus:toggle_tag(t) end
         end),
         awful.button({                    }, 4, function(t) awful.tag.viewnext(t.screen) end),
-        awful.button({                    }, 5, function(t) awful.tag.viewprev(t.screen) end)
+        awful.button({                    }, 5, function(t) awful.tag.viewprev(t.screen) end),
+        awful.button({                    }, 6, function(t) awful.tag.viewprev(t.screen) end),
+        awful.button({                    }, 7, function(t) awful.tag.viewnext(t.screen) end)
     )
 
     -- }}}
