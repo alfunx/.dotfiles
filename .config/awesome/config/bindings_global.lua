@@ -473,11 +473,11 @@ function _config.init()
     -- {{{ Fake bindings for description
 
     -- View tag only
-    util.fake_key({ k.m                }, "1..9", nil,
+    util.fake_key({ k.m                }, "1..9",
                   { description = "view tag", group = "numeric keys" })
 
     -- Toggle tag display
-    util.fake_key({ k.m, k.c           }, "1..9", nil,
+    util.fake_key({ k.m, k.c           }, "1..9",
                   { description = "toggle tag", group = "numeric keys" })
 
     -- }}}

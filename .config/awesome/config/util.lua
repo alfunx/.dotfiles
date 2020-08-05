@@ -479,24 +479,18 @@ function _config.init()
     end
 
     -- Add fake bindings (based on awful.key)
-    _config.fake_key = function(mod, _key, press, release, data)
-        if type(release) == 'table' then
-            data=release
-            release=nil
-        end
-
+    _config.fake_key = function(mod, _key, data)
         -- append custom userdata (like description) to a hotkey
         data = data and gears.table.clone(data) or { }
-        gears.table.crush(data, {
-            mod     = mod,
-            key     = _key,
-            press   = press,
-            release = release,
-            execute = function(_) awful.key.execute(mod, _key) end,
-        })
+        data.mod = mod
+        data.key = _key
+        data.keys = {{_key}}
+        data.on_press = nil
+        data.on_release = nil
+        data._is_capi_key = false
+        data.execute = function(_) end
+        assert((not data.key) or type(data.key) == "string")
         table.insert(awful.key.hotkeys, data)
-
-        return { }
     end
 
     _config.global_history_get = function(s, idx, filter)

@@ -162,15 +162,15 @@ function _config.init()
     -- {{{ Fake bindings for description
 
     -- Move client to tag
-    util.fake_key({ k.m, k.s           }, "1..9", nil,
+    util.fake_key({ k.m, k.s           }, "1..9",
                   { description = "move client to tag", group = "numeric keys" })
 
     -- Move client to tag and view it
-    util.fake_key({ k.m, k.c, k.s      }, "1..9", nil,
+    util.fake_key({ k.m, k.c, k.s      }, "1..9",
                   { description = "move client to tag, focus", group = "numeric keys" })
 
     -- Toggle tag on focused client
-    util.fake_key({ k.m, k.a           }, "1..9", nil,
+    util.fake_key({ k.m, k.a           }, "1..9",
                   { description = "toggle client on tag", group = "numeric keys" })
 
     -- }}}
