@@ -180,7 +180,7 @@ beautiful.init(theme_path)
 -- {{{ Parts
 config.menu.init()
 config.popups.init()
-config.sidebar.init()
+--config.sidebar.init()
 -- }}}
 
 -- {{{ Configs

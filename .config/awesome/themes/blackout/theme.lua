@@ -326,6 +326,33 @@ naughty.config.presets.critical                 = {
                                                       timeout      = 0,
                                                   }
 
+theme.calendar_margin                           = theme.notification_margin - theme.border_width
+theme.calendar_year_padding                     = naughty.config.padding
+theme.calendar_month_padding                    = naughty.config.padding
+
+theme.calendar_year_border_color                = colors.bw_2
+theme.calendar_year_border_width                = theme.border
+theme.calendar_month_border_color               = colors.bw_2
+theme.calendar_month_border_width               = theme.border
+theme.calendar_yearheader_border_color          = colors.bw_2
+theme.calendar_yearheader_border_width          = theme.border
+theme.calendar_header_border_color              = colors.bw_2
+theme.calendar_header_border_width              = theme.border
+theme.calendar_weekday_border_color             = colors.bw_0
+theme.calendar_weekday_border_width             = theme.border
+theme.calendar_weeknumber_border_color          = colors.bw_0
+theme.calendar_weeknumber_border_width          = theme.border
+theme.calendar_normal_border_color              = colors.bw_2
+theme.calendar_normal_border_width              = theme.border
+theme.calendar_focus_border_color               = colors.bw_2
+theme.calendar_focus_border_width               = theme.border
+
+theme.calendar_yearheader_bg_color              = colors.bw_1
+theme.calendar_header_bg_color                  = colors.bw_1
+theme.calendar_focus_fg_color                   = colors.bw_0
+theme.calendar_focus_bg_color                   = colors.bw_9
+theme.calendar_weeknumber_fg_color              = colors.bw_5
+
 -- Spacing
 local space = wibox.widget.separator {
     orientation = "vertical",
@@ -356,122 +383,7 @@ local clock = awful.widget.watch(
         m_boldtext(widget, stdout, colors.bw_8)
     end
 )
-
-local clock_widget = wibox.widget {
-    {
-        clock,
-        left = 4,
-        right = 4,
-        widget = wibox.container.margin,
-    },
-    layout = wibox.layout.fixed.horizontal,
-}
 -- }}}
-
--- {{{ CALENDAR
-lain.widget.cal {
-    cal = "cal --color=always --monday",
-    attach_to = { clock_widget },
-    icons = "",
-    notification_preset = naughty.config.presets.normal,
-}
--- }}}
-
--- -- {{{ CALENDAR
--- local styles = {}
--- local function rounded_shape(size, partial)
---     if partial then
---         return function(cr, width, height)
---                    gears.shape.partially_rounded_rect(cr, width, height,
---                         false, true, false, true, 5)
---                end
---     else
---         return function(cr, width, height)
---                    gears.shape.rounded_rect(cr, width, height, size)
---                end
---     end
--- end
--- styles.month   = { padding      = 5,
---                    bg_color     = '#555555',
---                    border_width = 2,
---                    shape        = rounded_shape(10)
--- }
--- styles.normal  = { shape    = rounded_shape(5) }
--- styles.focus   = { fg_color = '#000000',
---                    bg_color = '#ff9800',
---                    markup   = function(t) return table.concat { '<b>', t, '</b>' } end,
---                    shape    = rounded_shape(5, true)
--- }
--- styles.header  = { fg_color = '#de5e1e',
---                    markup   = function(t) return table.concat { '<b>', t, '</b>' } end,
---                    shape    = rounded_shape(10)
--- }
--- styles.weekday = { fg_color = '#7788af',
---                    markup   = function(t) return table.concat { '<b>', t, '</b>' } end,
---                    shape    = rounded_shape(5)
--- }
--- local function decorate_cell(widget, flag, date)
---     if flag=='monthheader' and not styles.monthheader then
---         flag = 'header'
---     end
---     local props = styles[flag] or {}
---     if props.markup and widget.get_text and widget.set_markup then
---         widget:set_markup(props.markup(widget:get_text()))
---     end
---     -- Change bg color for weekends
---     local d = {year=date.year, month=(date.month or 1), day=(date.day or 1)}
---     local weekday = tonumber(os.date('%w', os.time(d)))
---     local default_bg = (weekday==0 or weekday==6) and '#232323' or '#383838'
---     local ret = wibox.widget {
---         {
---             widget,
---             margins = (props.padding or 2) + (props.border_width or 0),
---             widget  = wibox.container.margin
---         },
---         shape              = props.shape,
---         shape_border_color = props.border_color or '#b9214f',
---         shape_border_width = props.border_width or 0,
---         fg                 = props.fg_color or '#999999',
---         bg                 = props.bg_color or default_bg,
---         widget             = wibox.container.background
---     }
---     return ret
--- end
---
--- local cal_popup = awful.popup {
---     widget       = {
---         id       = "cal",
---         date     = os.date('*t'),
---         fn_embed = decorate_cell,
---         widget   = wibox.widget.calendar.month,
---     },
---     border_color        = theme.border_normal,
---     border_width        = theme.border_width,
---     preferred_positions = 'bottom',
---     preferred_anchors   = 'back',
---     placement           = awful.placement.top_right,
---     offset              = { y = 10 },
---     -- placement    = awful.placement.next_to(client.focus, {
---     --     preferred_positions = "bottom",
---     --     preferred_anchors   = { "back", "mid", "front" },
---     --     -- bounding_rect       = s:get_bounding_geometry(),
---     -- }),
---     -- placement    = awful.placement.next_to(clock_widget, {
---     --     bounding_rect       = s:get_bounding_geometry(),
---     -- }),
---     shape               = gears.shape.rounded_rect,
---     ontop               = true,
---     visible             = false,
--- }
---
--- clock_widget:connect_signal("mouse::enter", function()
---     cal_popup:move_next_to(client.focus)
---     cal_popup.visible = true
--- end)
--- clock_widget:connect_signal("mouse::leave", function()
---     cal_popup.visible = false
--- end)
--- -- }}}
 
 -- -- {{{ Mail IMAP check
 -- local mail_icon = wibox.widget.imagebox(theme.widget_mail)
@@ -1248,6 +1160,25 @@ function theme.at_screen_connect(s)
     -- Create a promptbox for each screen
     s._promptbox = awful.widget.prompt()
 
+    -- Create a clock widget for each screen
+    s._clock = wibox.widget {
+        {
+            clock,
+            left = 4,
+            right = 4,
+            widget = wibox.container.margin,
+        },
+        layout = wibox.layout.fixed.horizontal,
+    }
+
+    -- Create a calendar widget for each screen
+    s._calendar = awful.widget.calendar_popup.month {
+        screen = s,
+        margin = theme.calendar_margin,
+        week_numbers = true,
+    }
+    s._calendar:attach(s._clock, 'tr')
+
     -- Create an imagebox widget which will contains an icon indicating which layout we're using.
     -- We need one layoutbox per screen.
     s._layoutbox = awful.widget.layoutbox(s)
@@ -1508,7 +1439,7 @@ function theme.at_screen_connect(s)
 
                     space, vert_sep, space,
 
-                    clock_widget,
+                    s._clock,
 
                     s._hidden_widget,
                     hidden_widget_activator,
