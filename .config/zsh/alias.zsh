@@ -40,6 +40,7 @@ alias -g NUL=">/dev/null 2>&1"
 
 # misc aliases
 alias si='sudo -i zsh'
+alias se='sudo -e'
 alias :q='exit'
 alias pg='ping -c 1 8.8.8.8'
 alias pc='python -ic "from math import *"'
@@ -47,6 +48,7 @@ alias bcl='bc -l'
 alias t='tail -f'
 alias wa='watch -ctn 2'
 alias open='xdg-open'
+alias tunnel='ssh -fNTL'
 alias neofetch='echo "\\n\\n" && neofetch'
 alias grep='grep --color=auto --exclude-dir={.git,.svn,.hg}'
 alias egrep='egrep --color=auto --exclude-dir={.git,.svn,.hg}'
