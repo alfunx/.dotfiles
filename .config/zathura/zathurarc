@@ -40,7 +40,6 @@ set recolor-keephue             "false"
 
 set adjust-open width
 set pages-per-row 1
-set smooth-scroll true
 set selection-clipboard clipboard
 set incremental-search true
 set guioptions ""
@@ -55,5 +54,14 @@ map u scroll half-up
 map x toggle_page_mode
 map <C-r> rotate
 map r recolor
+
 map <S-Up> zoom in
 map <S-Down> zoom out
+
+map <Left> navigate previous
+map <Right> navigate next
+
+map <C-Up> scroll up
+map <C-Down> scroll down
+map <C-Left> scroll left
+map <C-Right> scroll right
