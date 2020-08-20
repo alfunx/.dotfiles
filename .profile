@@ -14,7 +14,7 @@
 export PATH="$HOME/.luarocks/bin:$PATH"
 
 # python
-#export PYTHONSTARTUP="$HOME/.pythonrc.py"
+export PYTHONSTARTUP="$HOME/.pythonrc.py"
 
 # ruby
 export PATH="$HOME/.gem/ruby/2.5.0/bin:$PATH"
@@ -80,7 +80,8 @@ export SYSTEMD_LESS="$LESS"
 export GPG_TTY="$(tty)"
 
 # qt theme
-export QT_QPA_PLATFORMTHEME="qt5ct"
+export QT_QPA_PLATFORMTHEME='gtk2'
+#export QT_QPA_PLATFORMTHEME='qt5ct'
 
 # hledger
 export LEDGER_PATH="$HOME/notes"
