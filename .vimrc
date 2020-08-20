@@ -68,6 +68,7 @@ Plug 'sheerun/vim-polyglot'
 "Plug 'liuchengxu/vista.vim'
 "Plug 'fszymanski/fzf-quickfix'
 Plug 'Shougo/echodoc.vim'
+Plug 'lambdalisue/suda.vim'
 
 " Sidebars
 Plug 'mbbill/undotree'
@@ -105,6 +106,7 @@ Plug 'lervag/vimtex', { 'for': ['latex', 'tex'] }
 Plug 'racer-rust/vim-racer', { 'for': 'rust' }
 Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
 Plug 'tweekmonster/helpful.vim', { 'for': ['vim', 'help'] }
+Plug 'jupyter-vim/jupyter-vim', { 'for': 'python' }
 
 " Syntax
 Plug 'cespare/vim-toml'
@@ -655,6 +657,7 @@ augroup End
 
 " vimtex
 let g:vimtex_view_method = 'zathura'
+nmap <silent> <localleader>ll <plug>(vimtex-compile-ss)
 
 " ultisnips
 let g:UltiSnipsExpandTrigger = '<Tab>'
@@ -755,6 +758,10 @@ nmap <silent> <Down>  <Plug>(qf_loc_next)
 nmap <silent> <leader>q        <Plug>(qf_qf_toggle_stay)
 nmap <silent> <leader>l        <Plug>(qf_loc_toggle_stay)
 nmap <silent> <leader><leader> <Plug>(qf_qf_switch)
+
+" suda.vim
+let g:suda_smart_edit = 1
+let g:suda#prefix = ['sudo://', 'suda://']
 
 " }}}
 
@@ -1025,7 +1032,7 @@ set smarttab
 set textwidth=80
 set scrolloff=3
 set sidescroll=1
-set sidescrolloff=5
+set sidescrolloff=0
 
 set wildmode=longest:full,full
 set wildignorecase
