@@ -34,11 +34,11 @@ fi
 # select wm/de with: startx ~/.xinitrc session
 session=${1:-awesome}
 
-# AwesomeWM handles this in rc.lua
-if [ "$session" != 'awesome' ]; then
-    notifier_cmd="notify-send -t 18000 -u critical 'Lock' 'Locking screen in 20 seconds.'"
-else
+# use AwesomeWM notifications if possible
+if [ "$session" = 'awesome' ]; then
     notifier_cmd="awesome-client \"n=require('naughty');n.notify{title='Lock',text='Locking screen in 20 seconds.',timeout=18,preset=n.config.presets.critical}\""
+else
+    notifier_cmd="notify-send -t 18000 -u critical 'Lock' 'Locking screen in 20 seconds.'"
 fi
 
 # xset s off &
