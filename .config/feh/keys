@@ -8,8 +8,14 @@ scroll_right
 
 zoom_in S-Up
 zoom_out S-Down
+zoom_default C-0
 
 scroll_up C-Up
 scroll_down C-Down
 scroll_left C-Left
 scroll_right C-Right
+
+scroll_up k
+scroll_down j
+scroll_left h
+scroll_right l

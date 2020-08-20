@@ -3,6 +3,8 @@ next_img
 
 zoom_in C-4
 zoom_out C-5
+prev_img C-6
+next_img C-7
 
 scroll_up 4
 scroll_down 5
