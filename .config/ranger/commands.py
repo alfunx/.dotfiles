@@ -196,8 +196,7 @@ class fd_prev(Command):
 
 
 class mkcd(Command):
-    """
-    :mkcd <dirname>
+    """:mkcd <dirname>
 
     Creates a directory with the name <dirname> and enters it.
     """
@@ -235,7 +234,4 @@ class cquit(Command):
     """
 
     def execute(self):
-        if self.arg(1):
-            exit(int(self.arg(1)))
-        else:
-            exit(1)
+        exit(int(self.arg(1)) if self.arg(1) else 1)
