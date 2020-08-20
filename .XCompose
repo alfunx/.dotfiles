@@ -57,3 +57,4 @@ include "%L"
 <Multi_key> <g> <q> <s> : "ς"    U03C2    # GREEK SMALL LETTER FINAL SIGMA
 <Multi_key> <g> <q> <x> : "ξ"    U03BE    # GREEK SMALL LETTER XI
 <Multi_key> <g> <q> <e> : "ϵ"    U03F5    # GREEK SMALL LETTER LUNATE EPSILON
+<Multi_key> <g> <q> <E> : "ℯ"    UAB30    # LATIN EXTENDED E
