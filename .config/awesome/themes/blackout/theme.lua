@@ -328,23 +328,25 @@ naughty.config.presets.critical                 = {
 
 theme.calendar_margin                           = theme.notification_margin - theme.border_width
 theme.calendar_year_padding                     = naughty.config.padding
+theme.calendar_year_bg_color                    = colors.bw_0
 theme.calendar_month_padding                    = naughty.config.padding
+theme.calendar_month_bg_color                   = colors.bw_0
 
-theme.calendar_year_border_color                = colors.bw_2
+theme.calendar_year_border_color                = colors.bw_1
 theme.calendar_year_border_width                = theme.border
-theme.calendar_month_border_color               = colors.bw_2
+theme.calendar_month_border_color               = colors.bw_1
 theme.calendar_month_border_width               = theme.border
-theme.calendar_yearheader_border_color          = colors.bw_2
+theme.calendar_yearheader_border_color          = colors.bw_1
 theme.calendar_yearheader_border_width          = theme.border
-theme.calendar_header_border_color              = colors.bw_2
+theme.calendar_header_border_color              = colors.bw_1
 theme.calendar_header_border_width              = theme.border
 theme.calendar_weekday_border_color             = colors.bw_0
 theme.calendar_weekday_border_width             = theme.border
 theme.calendar_weeknumber_border_color          = colors.bw_0
 theme.calendar_weeknumber_border_width          = theme.border
-theme.calendar_normal_border_color              = colors.bw_2
+theme.calendar_normal_border_color              = colors.bw_0
 theme.calendar_normal_border_width              = theme.border
-theme.calendar_focus_border_color               = colors.bw_2
+theme.calendar_focus_border_color               = colors.bw_9
 theme.calendar_focus_border_width               = theme.border
 
 theme.calendar_yearheader_bg_color              = colors.bw_1
@@ -383,6 +385,45 @@ local clock = awful.widget.watch(
         m_boldtext(widget, stdout, colors.bw_8)
     end
 )
+-- }}}
+
+-- {{{ CALENDAR
+local bold        = function(t) return table.concat { '<b>', t, '</b>' } end
+local styles      = {}
+styles.year       = { padding = theme.calendar_year_padding  }
+styles.month      = { padding = theme.calendar_month_padding }
+styles.yearheader = { markup  = bold }
+styles.header     = { markup  = bold }
+styles.focus      = { markup  = bold }
+styles.weekday    = { markup  = bold }
+
+local decorate_cell = function(widget, flag, date)
+    if flag=='monthheader' and not styles.monthheader then
+        flag = 'header'
+    end
+    local props = styles[flag] or {}
+    if props.markup and widget.get_text and widget.set_markup then
+        widget:set_markup(props.markup(widget:get_text()))
+    end
+    -- Change bg color for weekends
+    local d = {year=date.year, month=(date.month or 1), day=(date.day or 1)}
+    local weekday = tonumber(os.date('%w', os.time(d)))
+    local bg = (flag == 'normal' or flag == 'weekday') and (weekday==0 or weekday==6) and colors.bw_1 or props.bw_0
+    local ret = wibox.widget {
+        {
+            widget,
+            margins = (props.padding or 2) + (props.border_width or theme[table.concat {'calendar_', flag, '_border_width'}] or 0),
+            widget  = wibox.container.margin
+        },
+        shape              = props.shape,
+        border_color       = props.border_color or bg or theme[table.concat {'calendar_', flag, '_border_color'}],
+        border_width       = props.border_width or       theme[table.concat {'calendar_', flag, '_border_width'}],
+        fg                 = props.fg_color or           theme[table.concat {'calendar_', flag, '_fg_color'}],
+        bg                 = props.bg_color or bg or     theme[table.concat {'calendar_', flag, '_bg_color'}],
+        widget             = wibox.container.background
+    }
+    return ret
+end
 -- }}}
 
 -- -- {{{ Mail IMAP check
@@ -1176,8 +1217,17 @@ function theme.at_screen_connect(s)
         screen = s,
         margin = theme.calendar_margin,
         week_numbers = true,
+        fn_embed = decorate_cell,
     }
     s._calendar:attach(s._clock, 'tr')
+
+    -- Use horizontal scroll to navigate through years
+    local calendar_buttons = {
+        awful.button({ }, 6, function() s._calendar:call_calendar(-12) end),
+        awful.button({ }, 7, function() s._calendar:call_calendar( 12) end),
+    }
+    s._calendar.buttons = gears.table.join(calendar_buttons, s._calendar.buttons)
+    s._clock.buttons    = gears.table.join(calendar_buttons, s._clock.buttons)
 
     -- Create an imagebox widget which will contains an icon indicating which layout we're using.
     -- We need one layoutbox per screen.
