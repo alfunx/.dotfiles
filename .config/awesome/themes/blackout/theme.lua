@@ -1221,13 +1221,24 @@ function theme.at_screen_connect(s)
     }
     s._calendar:attach(s._clock, 'tr')
 
-    -- Use horizontal scroll to navigate through years
+    -- Override calendar buttons
     local calendar_buttons = {
+        awful.button({ }, 1, function() s._calendar.visible=false; s._calendar._calendar_clicked_on=false end),
+        awful.button({ }, 3, function() s._calendar:call_calendar(0) end),
+        awful.button({ }, 4, function() s._calendar:call_calendar(-1) end),
+        awful.button({ }, 5, function() s._calendar:call_calendar( 1) end),
         awful.button({ }, 6, function() s._calendar:call_calendar(-12) end),
         awful.button({ }, 7, function() s._calendar:call_calendar( 12) end),
     }
-    s._calendar.buttons = gears.table.join(calendar_buttons, s._calendar.buttons)
-    s._clock.buttons    = gears.table.join(calendar_buttons, s._clock.buttons)
+    s._calendar:buttons(calendar_buttons)
+
+    -- Override clock buttons
+    local clock_buttons = {
+        awful.button({ }, 3, function() s._calendar:call_calendar(0) end),
+        awful.button({ }, 6, function() s._calendar:call_calendar(-12) end),
+        awful.button({ }, 7, function() s._calendar:call_calendar( 12) end),
+    }
+    s._clock.buttons = gears.table.join(clock_buttons, s._clock.buttons)
 
     -- Create an imagebox widget which will contains an icon indicating which layout we're using.
     -- We need one layoutbox per screen.

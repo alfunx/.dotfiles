@@ -157,7 +157,6 @@ function _config.init()
 
     -- Lock
     _config.lock = yaawl.lock {
-        signals = false,
     }
     _config.lock:add_timer {
         timeout = 401,
