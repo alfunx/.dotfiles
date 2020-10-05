@@ -1005,7 +1005,7 @@ nnoremap <silent> <leader>a :<C-u>ALEToggle <Bar> echo g:ale_enabled ? 'ALE enab
 
 " Settings {{{
 
-set nonumber
+set number
 set hidden
 set cursorline
 set list
