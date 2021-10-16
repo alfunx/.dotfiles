@@ -11,28 +11,28 @@ set cpo&vim
 
 " create a quickfix list with search results
 function! grep#qf(...) abort
-    let cmd = printf('%s %s', &grepprg, join(a:000))
+    let cmd = join([&grepprg] + a:000, ' ')
     cgetexpr system(cmd)
     call setqflist([], 'a', {'title': cmd})
 endfunction
 
 " add search results to the current quickfix list
 function! grep#qfadd(...) abort
-    let cmd = printf('%s %s', &grepprg, join(a:000))
+    let cmd = join([&grepprg] + a:000, ' ')
     caddexpr system(cmd)
     call setqflist([], 'a', {'title': cmd})
 endfunction
 
 " create a location list with search results
 function! grep#ll(...) abort
-    let cmd = printf('%s %s', &grepprg, join(a:000))
+    let cmd = join([&grepprg] + a:000, ' ')
     lgetexpr system(cmd)
     call setloclist(0, [], 'a', {'title': cmd})
 endfunction
 
 " add search results to the location list of the current window
 function! grep#lladd(...) abort
-    let cmd = printf('%s %s', &grepprg, join(a:000))
+    let cmd = join([&grepprg] + a:000, ' ')
     laddexpr system(cmd)
     call setloclist(0, [], 'a', {'title': cmd})
 endfunction
@@ -76,6 +76,15 @@ endfunction
 function! grep#lladd_opfunc(type, ...) abort
     call s:opfunc('grep#lladd', a:type, a:0)
 endfunction
+
+" command! -bang -nargs=+ -complete=file -bar Grep
+"             \ call grep#qf(<bang>0?'--pcre2':'', <f-args>)
+" command! -bang -nargs=+ -complete=file -bar Grepadd
+"             \ call grep#qfadd(<bang>0?'--pcre2':'', <f-args>)
+" command! -bang -nargs=+ -complete=file -bar LGrep
+"             \ call grep#ll(<bang>0?'--pcre2':'', <f-args>)
+" command! -bang -nargs=+ -complete=file -bar LGrepadd
+"             \ call grep#lladd(<bang>0?'--pcre2':'', <f-args>)
 
 let &cpo = s:save_cpo
 

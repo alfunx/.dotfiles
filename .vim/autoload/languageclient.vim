@@ -78,10 +78,10 @@ function! languageclient#hints() abort
     return languageclient#get(s:severity_hint)
 endfunction
 
-augroup lightline_languageclient
-    autocmd!
-    autocmd User LanguageClientDiagnosticsChanged call <SID>get_diagnostics()
-augroup END
+" augroup lightline_languageclient
+"     autocmd!
+"     autocmd User LanguageClientDiagnosticsChanged call <SID>get_diagnostics()
+" augroup END
 
 let &cpo = s:save_cpo
 

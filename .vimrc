@@ -26,14 +26,14 @@ let g:plug_url_format = 'https://github.com/%s.git'
 Plug '/usr/bin/fzf'
 
 " General
-"Plug 'junegunn/fzf.vim'  " forked
+Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-git'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-speeddating'
-Plug 'Konfekt/vim-CtrlXA'
+"Plug 'Konfekt/vim-CtrlXA'
 Plug 'justinmk/vim-dirvish'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-rsi'
@@ -57,17 +57,9 @@ Plug 'terryma/vim-multiple-cursors'
 "Plug 'jiangmiao/auto-pairs'
 Plug 'tmsvg/pear-tree'
 Plug 'ap/vim-css-color'
-"Plug 'markonm/traces.vim'
-Plug 'chrisbra/NrrwRgn'
-Plug 'dense-analysis/ale'
 Plug 'editorconfig/editorconfig-vim'
 "Plug 'romainl/vim-qf'  " forked
 "Plug 'rhysd/git-messenger.vim'  " forked
-Plug 'sheerun/vim-polyglot'
-"Plug 'wellle/context.vim'
-"Plug 'liuchengxu/vista.vim'
-"Plug 'fszymanski/fzf-quickfix'
-Plug 'Shougo/echodoc.vim'
 Plug 'lambdalisue/suda.vim'
 
 " Sidebars
@@ -92,29 +84,30 @@ Plug 'SirVer/ultisnips'
 "Plug 'honza/vim-snippets'  " forked
 
 " Language server
-Plug 'autozimu/LanguageClient-neovim', {
-            \ 'branch': 'next',
-            \ 'do': 'bash install.sh',
-            \ }
-
-"Plug 'prabirshrestha/async.vim'
-"Plug 'prabirshrestha/vim-lsp'
+if has('nvim')
+    Plug 'neovim/nvim-lspconfig'
+    Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
+else
+    Plug 'autozimu/LanguageClient-neovim', {
+                \ 'branch': 'next',
+                \ 'do': 'bash install.sh',
+                \ }
+endif
 
 " Language specific
-Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
-Plug 'lervag/vimtex', { 'for': ['latex', 'tex'] }
-Plug 'racer-rust/vim-racer', { 'for': 'rust' }
-Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
-Plug 'tweekmonster/helpful.vim', { 'for': ['vim', 'help'] }
-Plug 'jupyter-vim/jupyter-vim', { 'for': 'python' }
+Plug 'plasticboy/vim-markdown'  ", { 'for': 'markdown' }
+Plug 'lervag/vimtex'  ", { 'for': ['latex', 'tex'] }
+Plug 'racer-rust/vim-racer'  ", { 'for': 'rust' }
+Plug 'neovimhaskell/haskell-vim'  ", { 'for': 'haskell' }
+Plug 'tweekmonster/helpful.vim'  ", { 'for': ['vim', 'help'] }
+Plug 'jupyter-vim/jupyter-vim'  ", { 'for': 'python' }
 
 " Syntax
 Plug 'cespare/vim-toml'
-Plug 'tomlion/vim-solidity'
 
 " Themes
 "Plug 'morhetz/gruvbox'  "forked
-Plug 'lifepillar/vim-gruvbox8'
+"Plug 'lifepillar/vim-gruvbox8'
 
 " Don't load in console
 if &term !=? 'linux' || has('gui_running')
@@ -122,14 +115,12 @@ if &term !=? 'linux' || has('gui_running')
     Plug 'itchyny/lightline.vim'
 endif
 
-Plug 'vim/killersheep'
-
 let g:plug_url_format = 'git@github.com:%s.git'
 
-Plug 'alfunx/fzf.vim'  " fork of 'junegunn/fzf.vim'
+"Plug 'alfunx/fzf.vim'  " fork of 'junegunn/fzf.vim'
 Plug 'alfunx/tcomment_vim'  " fork of 'tomtom/tcomment_vim'
 Plug 'alfunx/diffconflicts'  " fork of 'whiteinge/diffconflicts'
-Plug 'alfunx/vim-qf'  " fork of 'romainl/vim-qf'
+"Plug 'alfunx/vim-qf'  " fork of 'romainl/vim-qf'
 Plug 'alfunx/git-messenger.vim'  " fork of 'rhysd/git-messenger.vim'
 Plug 'alfunx/vim-indent-object'  " fork of 'michaeljsmith/vim-indent-object'
 Plug 'alfunx/vim-snippets'  " fork of 'honza/vim-snippets'
@@ -151,26 +142,38 @@ endif
 
 " Theme {{{
 
-augroup QuickFixHighlighting
+augroup quick_fix_highlighting
     autocmd!
     autocmd ColorScheme * hi! QuickFixLine term=bold cterm=bold gui=bold
     autocmd ColorScheme * hi! link qfFileName Special
 augroup END
 
-augroup MarkdownFenceHighlighting
+augroup markdown_fence_highlighting
     autocmd!
     autocmd ColorScheme * hi! link mkdCodeStart Comment
     autocmd ColorScheme * hi! link mkdCodeEnd Comment
     autocmd ColorScheme * hi! link mkdCodeDelimiter Comment
 augroup END
 
-augroup ConflictMarkerHighlighting
+augroup conflict_marker_highlighting
     autocmd!
     autocmd ColorScheme * hi! link VcsConflict Error
     autocmd BufEnter,WinEnter * match VcsConflict '^\(<\|=\||\|>\)\{7\}\([^=].\+\)\?$'
 augroup END
 
-augroup StatusLineUpdate
+augroup lsp_reference_highlighting
+    autocmd!
+    autocmd ColorScheme * hi! LspReferenceText cterm=bold gui=bold
+    autocmd ColorScheme * hi! LspReferenceRead cterm=bold gui=bold
+    autocmd ColorScheme * hi! LspReferenceWrite cterm=bold gui=bold
+augroup END
+
+augroup lsp_hover_highlighting
+    autocmd!
+    autocmd ColorScheme * hi! link mkdLineBreak NONE
+augroup END
+
+augroup status_line_update
     autocmd!
     if exists(':AirlineRefresh')
         autocmd ColorScheme * AirlineRefresh
@@ -258,10 +261,10 @@ nnoremap <silent> <C-w>l 5<C-w>>
 
 " New tab
 nnoremap <silent> <C-w>t     :tabnew<CR>
-nnoremap <silent> <C-w><C-t> :tabnew<CR>
+nnoremap <silent> <C-w><C-t> :tab split<CR>
 
 " Close tab
-nnoremap <silent> <C-w>b     :tabclose<CR>
+nnoremap <silent> <C-w>b     :bd<CR>
 nnoremap <silent> <C-w><C-b> :tabclose<CR>
 
 " Tab navigation
@@ -327,6 +330,10 @@ onoremap <silent> ae :<C-u>normal vie<CR>
 
 " Select last inserted text
 nnoremap gV `[v`]
+
+" Mark word, instead of jumping
+nnoremap <silent> * :let @/='\<<C-R>=expand("<cword>")<CR>\>'<CR>:set hlsearch<CR>
+nnoremap <silent> # :let @/='\<<C-R>=expand("<cword>")<CR>\>'<CR>:set hlsearch<CR>
 
 " Move cursor by dipslay lines when wrapping
 nnoremap <expr> j v:count \|\| !&wrap ? 'j' : 'gj'
@@ -394,6 +401,18 @@ omap <silent> ü  [
 nmap <silent> ¨  ]
 xmap <silent> ¨  ]
 omap <silent> ¨  ]
+nmap <silent> üü [[
+xmap <silent> üü [[
+omap <silent> üü [[
+nmap <silent> ü¨ []
+xmap <silent> ü¨ []
+omap <silent> ü¨ []
+nmap <silent> ¨ü ][
+xmap <silent> ¨ü ][
+omap <silent> ¨ü ][
+nmap <silent> ¨¨ ]]
+xmap <silent> ¨¨ ]]
+omap <silent> ¨¨ ]]
 nmap <silent> g¨ g]
 xmap <silent> g¨ g]
 omap <silent> g¨ g]
@@ -428,8 +447,9 @@ command! -bang -nargs=* Cd cd<bang> %:p:h
 " Compare buffer to file on disk
 command! DiffOrig vnew | set bt=nofile | r ++edit # | 0d_ | diffthis | wincmd p | diffthis
 
-" No highlight
+" Set highlight
 nnoremap <silent> <M-b> :<C-u>nohlsearch<CR>
+nnoremap <silent> <M-v> :<C-u>set hlsearch<CR>
 
 " Change register
 nnoremap <silent> cx :<C-u>call functions#change_register()<CR>
@@ -478,14 +498,14 @@ elseif executable('ag')
 endif
 
 " Grep
-command! -bang -nargs=+ -complete=file_in_path -bar Grep
-            \ call grep#qf(<bang>0?'--pcre2':'', <q-args>)
-command! -bang -nargs=+ -complete=file_in_path -bar Grepadd
-            \ call grep#qfadd(<bang>0?'--pcre2':'', <q-args>)
-command! -bang -nargs=+ -complete=file_in_path -bar LGrep
-            \ call grep#ll(<bang>0?'--pcre2':'', <q-args>)
-command! -bang -nargs=+ -complete=file_in_path -bar LGrepadd
-            \ call grep#lladd(<bang>0?'--pcre2':'', <q-args>)
+command! -bang -nargs=+ -complete=file -bar Grep
+            \ call grep#qf(<bang>0?'--pcre2':'', <f-args>)
+command! -bang -nargs=+ -complete=file -bar Grepadd
+            \ call grep#qfadd(<bang>0?'--pcre2':'', <f-args>)
+command! -bang -nargs=+ -complete=file -bar LGrep
+            \ call grep#ll(<bang>0?'--pcre2':'', <f-args>)
+command! -bang -nargs=+ -complete=file -bar LGrepadd
+            \ call grep#lladd(<bang>0?'--pcre2':'', <f-args>)
 
 nnoremap <leader>s :<C-u>Grep<space>
 nnoremap <leader>S :<C-u>Grepadd<space>
@@ -496,15 +516,63 @@ xnoremap <silent> gs :<C-u>call grep#qf_opfunc(visualmode(), 1)<CR>
 nnoremap <silent> gS :set opfunc=grep#qfadd_opfunc<CR>g@
 xnoremap <silent> gS :<C-u>call grep#qfadd_opfunc(visualmode(), 1)<CR>
 
-" Open the quickfix/location window automatically
-augroup quickfix
+" Mappings for quickfix/loclist
+nnoremap <silent> <Left>  :cprevious<CR>
+nnoremap <silent> <Right> :cnext<CR>
+nnoremap <silent> <Up>    :lprevious<CR>
+nnoremap <silent> <Down>  :lnext<CR>
+
+nnoremap <silent> <C-Left>  :cpfile<CR>
+nnoremap <silent> <C-Right> :cnfile<CR>
+nnoremap <silent> <C-Up>    :lpfile<CR>
+nnoremap <silent> <C-Down>  :lnfile<CR>
+
+nnoremap <silent> <leader><Left>  :colder<CR>
+nnoremap <silent> <leader><Right> :cnewer<CR>
+nnoremap <silent> <leader><Up>    :lolder<CR>
+nnoremap <silent> <leader><Down>  :lnewer<CR>
+
+nnoremap <silent> [w [l
+nnoremap <silent> ]w ]l
+nnoremap <silent> [W [L
+nnoremap <silent> ]W ]L
+nnoremap <silent> [<C-W> [<C-L>
+nnoremap <silent> ]<C-W> ]<C-L>
+
+function! ToggleQuickFix()
+    if empty(filter(getwininfo(), 'v:val.quickfix')) | copen | else | cclose | endif
+endfunction
+
+function! ToggleLocList()
+    if empty(filter(getwininfo(), 'v:val.loclist')) | silent! lopen | else | lclose | endif
+endfunction
+
+" nmap <silent> <leader>q :call ToggleQuickFix()<CR>
+" nmap <silent> <leader>l :call ToggleLocList()<CR>
+nmap <silent> <leader>q :copen<CR>
+nmap <silent> <leader>l :lopen<CR>
+
+" Open quickfix/loclist window automatically
+augroup auto_open_quickfix
     autocmd!
-    autocmd QuickFixCmdPost cgetexpr,caddexpr cwindow
-    autocmd QuickFixCmdPost lgetexpr,laddexpr lwindow
+    autocmd QuickFixCmdPost cexpr,cgetexpr,caddexpr,cfile,cgetfile copen
+    autocmd QuickFixCmdPost lexpr,lgetexpr,laddexpr,lfile,lgetfile lopen
 augroup END
 
 " GitBlame
 command! -range GBlame echo functions#gitblame('<line1>,<line2>')
+
+" Git diff locations
+command! -bang -nargs=* -complete=file -bar GDiff
+            \ GitGutterQuickFix | copen
+
+" Git merge locations
+command! -bang -nargs=* -complete=file -bar GMerge
+            \ call git#qf('merge', <f-args>)
+
+" Git diff --check locations
+command! -bang -nargs=* -complete=file -bar GCheck
+            \ call git#qf('check', <f-args>)
 
 " Countrepeat
 "nnoremap . :<C-u>exe 'norm! ' . repeat('.', v:count1)<CR>
@@ -543,10 +611,10 @@ inoremap <silent> <C-x><C-i> <C-r>=completion#tmux()<CR>
 nnoremap <silent> <leader>f :<C-u>Files<CR>
 nnoremap <silent> <leader>b :<C-u>Buffers<CR>
 nnoremap <silent> <leader>w :<C-u>Windows<CR>
-nnoremap <silent> <leader>t :<C-u>Tags<CR>
-nnoremap <silent> <leader>o :<C-u>History<CR>
-nnoremap <silent> <leader>: :<C-u>History:<CR>
-nnoremap <silent> <leader>/ :<C-u>History/<CR>
+"nnoremap <silent> <leader>t :<C-u>Tags<CR>
+"nnoremap <silent> <leader>o :<C-u>History<CR>
+"nnoremap <silent> <leader>: :<C-u>History:<CR>
+"nnoremap <silent> <leader>/ :<C-u>History/<CR>
 
 "" Mapping selecting mappings
 nmap <leader><Tab> <plug>(fzf-maps-n)
@@ -570,6 +638,9 @@ let g:fzf_action = {
 
 "" Default fzf layout
 let g:fzf_layout = { 'down': '~30%' }
+
+"" Disable preview window
+let g:fzf_preview_window = []
 
 "" Customize fzf colors to match your color scheme
 let g:fzf_colors = {
@@ -637,7 +708,6 @@ let g:loaded_netrwPlugin = 1
 command! -nargs=? -complete=dir Explore Dirvish <args>
 command! -nargs=? -complete=dir Sexplore belowright split | silent Dirvish <args>
 command! -nargs=? -complete=dir Vexplore leftabove vsplit | silent Dirvish <args>
-nmap - <Plug>(dirvish_up)
 
 " vim-easy-align
 nmap ga <Plug>(EasyAlign)
@@ -650,14 +720,15 @@ nnoremap <silent> <F11> :<C-u>UndotreeToggle<CR>
 nnoremap <silent> <F12> :<C-u>TagbarToggle<CR>
 
 " vim-after-object
-augroup AfterTextObject
+augroup after_text_object
     autocmd!
     autocmd VimEnter * call after_object#enable(['n', 'nn'], '=', ':', '+', '-', '*', '/', '#', ' ')
 augroup End
 
 " vimtex
+let g:tex_flavor = 'latex'
 let g:vimtex_view_method = 'zathura'
-nmap <silent> <localleader>ll <plug>(vimtex-compile-ss)
+"nmap <silent> <localleader>ll <plug>(vimtex-compile-ss)
 
 " ultisnips
 let g:UltiSnipsExpandTrigger = '<Tab>'
@@ -670,17 +741,13 @@ let g:snips_email = "alphonse.mariya@hotmail.com"
 let g:snips_github = "https://github.com/alfunx"
 
 "" Auto
-"augroup UltiSnipsExpand
+"augroup ulti_snips_expand
 "    autocmd!
 "    autocmd CompleteDone * call functions#expand_snippet()
 "augroup End
 
 "" Manual
 inoremap <silent> <C-k> <C-r>=functions#expand_snippet()<CR>
-
-" echodoc.vim
-let g:echodoc#enable_at_startup = 1
-let g:echodoc#type = 'echo'
 
 " vim-multiple-cursors
 let g:multi_cursor_use_default_mapping = 0
@@ -721,8 +788,8 @@ let g:racer_cmd = "/usr/bin/racer"
 let g:racer_experimental_completer = 0
 
 " vim-speeddating
-nmap <Plug>SpeedDatingFallbackUp   <Plug>(CtrlXA-CtrlA)
-nmap <Plug>SpeedDatingFallbackDown <Plug>(CtrlXA-CtrlX)
+"nmap <Plug>SpeedDatingFallbackUp   <Plug>(CtrlXA-CtrlA)
+"nmap <Plug>SpeedDatingFallbackDown <Plug>(CtrlXA-CtrlX)
 
 " vim-rsi
 let g:rsi_no_meta = 1
@@ -744,20 +811,28 @@ cnoremap <expr> <C-x><space> "\<C-u>" . g:Abolish.spacecase(getcmdline())
 " vim-dispatch
 nnoremap <F5> :Make<CR>
 
-" vim-qf
-let g:qf_mapping_ack_style = 1
-let g:qf_bufname_or_text = 2
-nmap <silent> [q <Plug>(qf_qf_previous)
-nmap <silent> ]q <Plug>(qf_qf_next)
-nmap <silent> [w <Plug>(qf_loc_previous)
-nmap <silent> ]w <Plug>(qf_loc_next)
-nmap <silent> <Left>  <Plug>(qf_qf_previous)
-nmap <silent> <Right> <Plug>(qf_qf_next)
-nmap <silent> <Up>    <Plug>(qf_loc_previous)
-nmap <silent> <Down>  <Plug>(qf_loc_next)
-nmap <silent> <leader>q        <Plug>(qf_qf_toggle_stay)
-nmap <silent> <leader>l        <Plug>(qf_loc_toggle_stay)
-nmap <silent> <leader><leader> <Plug>(qf_qf_switch)
+" " vim-qf
+" let g:qf_mapping_ack_style = 1
+" let g:qf_bufname_or_text = 0
+" let g:qf_shorten_path = 0
+" let g:qf_auto_resize = 0
+" let g:qf_auto_open_quickfix = 0
+" let g:qf_auto_open_loclist = 0
+" nmap <silent> [q <Plug>(qf_qf_previous)
+" nmap <silent> ]q <Plug>(qf_qf_next)
+" nmap <silent> [w <Plug>(qf_loc_previous)
+" nmap <silent> ]w <Plug>(qf_loc_next)
+" nmap <silent> <Left>    <Plug>(qf_qf_previous)
+" nmap <silent> <Right>   <Plug>(qf_qf_next)
+" nmap <silent> <Up>      <Plug>(qf_loc_previous)
+" nmap <silent> <Down>    <Plug>(qf_loc_next)
+" nmap <silent> <C-Left>  <Plug>(qf_older)
+" nmap <silent> <C-Right> <Plug>(qf_newer)
+" nmap <silent> <C-Up>    <Plug>(qf_previous_file)
+" nmap <silent> <C-Down>  <Plug>(qf_next_file)
+" nmap <silent> <leader>q        <Plug>(qf_qf_toggle_stay)
+" nmap <silent> <leader>l        <Plug>(qf_loc_toggle_stay)
+" nmap <silent> <leader><leader> <Plug>(qf_qf_switch)
 
 " suda.vim
 let g:suda_smart_edit = 1
@@ -812,6 +887,7 @@ let g:lightline.tab = {
 let g:lightline.component = {
             \ 'path': '%{expand("%:p:~:.:s?^$?./?:s?^term://.*#FZF$?[FZF]?")}',
             \ 'fileinfo': '%t%{status#fileinfo()}',
+            \ 'lineinfo': '%3l/%L:%-2c',
             \ }
 
 let g:lightline.component_visible_condition = {
@@ -830,10 +906,10 @@ let g:lightline.component_function = {
             \ }
 
 let g:lightline.component_expand = {
-            \ 'lsp_hint': 'languageclient#hints',
-            \ 'lsp_info': 'languageclient#infos',
-            \ 'lsp_warning': 'languageclient#warnings',
-            \ 'lsp_error': 'languageclient#errors',
+            \ 'lsp_hint': 'lsp#hints',
+            \ 'lsp_info': 'lsp#infos',
+            \ 'lsp_warning': 'lsp#warnings',
+            \ 'lsp_error': 'lsp#errors',
             \ }
 
 let g:lightline.component_type = {
@@ -864,142 +940,204 @@ let g:languageclient#show_linenr = 0
 
 " LSP / Linting {{{
 
-" LanguageClient
-let g:LanguageClient_autoStart = 1
-let g:LanguageClient_selectionUI = 'quickfix'
-let g:LanguageClient_diagnosticsList = 'Location'
-let g:LanguageClient_diagnosticsMaxSeverity = 'Hint'
-let g:LanguageClient_hoverPreview = 'Always'
-let g:LanguageClient_virtualTextPrefix = ' ← '
-let g:LanguageClient_hasSnippetSupport = 1
+if has('nvim')
 
-let g:LanguageClient_serverCommands = {
-            \ 'haskell': ['hie-wrapper'],
-            \ 'rust':    ['rustup', 'run', 'stable', 'rls'],
-            \ 'java':    ['jdtls'],
-            \ 'c':       ['ccls'],
-            \ 'cpp':     ['ccls'],
-            \ 'objc':    ['ccls'],
-            \ 'python':  ['pyls'],
-            \ 'lua':     ['lua-lsp'],
-            \ 'sh':      ['bash-language-server', 'start'],
-            \ 'tex':     ['texlab'],
-            \ 'bib':     ['texlab'],
-            \ }
+"     lua <<EOF
+" local lspconfig = require'lspconfig'
+" local configs = require'lspconfig/configs'
+" if not lspconfig.lua_lsp then
+"   configs.lua_lsp = {
+"     default_config = {
+"       cmd = {'lua-lsp'};
+"       filetypes = {'lua'};
+"       root_dir = function(fname)
+"         return lspconfig.util.find_git_ancestor(fname) or vim.loop.os_homedir()
+"       end;
+"       settings = {};
+"     };
+"   }
+" end
+" EOF
 
-let g:LanguageClient_diagnosticsDisplay = {
-            \     1: {
-            \         "name": "Error",
-            \         "texthl": "ALEError",
-            \         "signText": "●",
-            \         "signTexthl": "ALEErrorSign",
-            \         "virtualTexthl": "VirtualTextError",
-            \     },
-            \     2: {
-            \         "name": "Warning",
-            \         "texthl": "ALEWarning",
-            \         "signText": "●",
-            \         "signTexthl": "ALEWarningSign",
-            \         "virtualTexthl": "VirtualTextWarning",
-            \     },
-            \     3: {
-            \         "name": "Information",
-            \         "texthl": "ALEInfo",
-            \         "signText": "●",
-            \         "signTexthl": "ALEInfoSign",
-            \         "virtualTexthl": "VirtualTextInfo",
-            \     },
-            \     4: {
-            \         "name": "Hint",
-            \         "texthl": "ALEHint",
-            \         "signText": "●",
-            \         "signTexthl": "ALEHintSign",
-            \         "virtualTexthl": "VirtualTextHint",
-            \     },
-            \ }
+" custom prefix for virtual text
+    lua <<EOF
+vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+  vim.lsp.diagnostic.on_publish_diagnostics, {
+    virtual_text = {
+      prefix = '←',
+      spacing = 0,
+    },
+  }
+)
+EOF
 
-function! LanguageClient_settings()
-    if !has_key(g:LanguageClient_serverCommands, &filetype)
-        return
-    endif
-    nnoremap <buffer><silent> K          :<C-u>call LanguageClient_textDocument_hover()<CR>
-    nnoremap <buffer><silent> <F1>       :<C-u>call LanguageClient_contextMenu()<CR>
-    nnoremap <buffer><silent> <leader>d  :<C-u>call LanguageClient_textDocument_definition()<CR>
-    nnoremap <buffer><silent> <leader>gd :<C-u>call LanguageClient_textDocument_typeDefinition()<CR>
-    nnoremap <buffer><silent> <leader>i  :<C-u>call LanguageClient_textDocument_implementation()<CR>
-    nnoremap <buffer><silent> <leader>x  :<C-u>call LanguageClient_textDocument_documentSymbol()<CR>
-    nnoremap <buffer><silent> <leader>gx :<C-u>call LanguageClient_workspace_symbol()<CR>
-    nnoremap <buffer><silent> <leader>r  :<C-u>call LanguageClient_textDocument_references()<CR>
-    nnoremap <buffer><silent> <leader>c  :<C-u>call LanguageClient_textDocument_rename()<CR>
-endfunction
+" do not hide hover window when inputting text
+    lua <<EOF
+vim.lsp.handlers['textDocument/hover'] = function(_, method, result)
+  vim.lsp.util.focusable_float(method, function()
+    if not (result and result.contents) then
+      -- return { 'No information available' }
+      return
+    end
+    local markdown_lines = vim.lsp.util.convert_input_to_markdown_lines(result.contents)
+    markdown_lines = vim.lsp.util.trim_empty_lines(markdown_lines)
+    if vim.tbl_isempty(markdown_lines) then
+      -- return { 'No information available' }
+      return
+    end
+    local bufnr, winnr = vim.lsp.util.fancy_floating_markdown(markdown_lines, {
+      pad_left = 1; pad_right = 1;
+    })
+    vim.lsp.util.close_preview_autocmd({"CursorMoved", "BufHidden"}, winnr)
+    return bufnr, winnr
+  end)
+end
+EOF
 
-augroup LanguageClient_config
-    autocmd!
-    autocmd FileType * call LanguageClient_settings()
-    autocmd BufEnter __LanguageClient__ nnoremap <buffer><silent> <F1> :q!<CR>
-augroup END
+    " native language client
+    lua require'lspconfig'.ccls.setup{}
+    lua require'lspconfig'.rls.setup{cmd={"rustup","run","stable","rls"}}
+    lua require'lspconfig'.pyls.setup{}
+    " lua require'lspconfig'.lua_lsp.setup{}
+    lua require'lspconfig'.sumneko_lua.setup{cmd={"lua-language-server"}}
+    lua require'lspconfig'.jdtls.setup{}
+    lua require'lspconfig'.hie.setup{}
+    lua require'lspconfig'.texlab.setup{}
+    lua require'lspconfig'.bashls.setup{}
+    lua require'lspconfig'.vimls.setup{}
 
-" " vim-lsp
-" let g:lsp_signs_error = {'text': '●'}
-" let g:lsp_signs_warning = {'text': '●'}
-" let g:lsp_signs_information = {'text': '●'}
-" let g:lsp_signs_hint = {'text': '●'}
-" let g:lsp_highlight_references_enabled = 1
-"
-" hi! link LspErrorHighlight ALEError
-" hi! link LspWarningHighlight ALEWarning
-" hi! link LspInformationHighlight ALEInfo
-" hi! link LspHintHighlight ALEHint
-"
-" hi! link LspErrorText VirtualTextError
-" hi! link LspWarningText VirtualTextWarning
-" hi! link LspInformationText VirtualTextInfo
-" hi! link LspHintText VirtualTextHint
-"
-" hi! link LspError ALEErrorSign
-" hi! link LspWarning ALEWarningSign
-" hi! link LspInformation ALEInfoSign
-" hi! link LspHint ALEHintSign
-"
-" if executable('ccls')
-"     au User lsp_setup call lsp#register_server({
-"         \ 'name': 'ccls',
-"         \ 'cmd': ['ccls'],
-"         \ 'whitelist': ['c', 'cpp'],
-"         \ })
-" endif
-"
-" if executable('rustup')
-"     au User lsp_setup call lsp#register_server({
-"         \ 'name': 'rls',
-"         \ 'cmd': ['rustup', 'run', 'stable', 'rls'],
-"         \ 'whitelist': ['rust'],
-"         \ })
-" endif
+    " special space: ( ) U+2000 (EN QUAD)
+    sign define LspDiagnosticsSignError text= ● texthl=LspDiagnosticsSignError linehl= numhl=
+    sign define LspDiagnosticsSignWarning text= ● texthl=LspDiagnosticsSignWarning linehl= numhl=
+    sign define LspDiagnosticsSignInformation text= ● texthl=LspDiagnosticsSignInformation linehl= numhl=
+    sign define LspDiagnosticsSignHint text= ● texthl=LspDiagnosticsSignHint linehl= numhl=
 
-" ALE
-let g:ale_enabled = 0
-let g:ale_disable_lsp = 1
-let g:ale_set_quickfix = 0
-let g:ale_set_loclist = 0
-let g:ale_lint_on_text_changed = 'normal'
-let g:ale_lint_on_insert_leave = 1
-let g:ale_lint_on_enter = 1
-let g:ale_lint_on_save = 1
-let g:ale_lint_on_filetype_changed = 1
-let g:ale_set_highlights = 1
-let g:ale_set_signs = 1
-let g:ale_completion_enabled = 0
+    function! LSP_settings()
+        nnoremap <buffer><silent> <leader>K  K
+        nnoremap <buffer><silent> K          <Cmd>lua vim.lsp.buf.hover()<CR>
+        nnoremap <buffer><silent> <F1>       <Cmd>lua vim.lsp.buf.signature_help()<CR>
+        inoremap <buffer><silent> <F1>       <Cmd>lua vim.lsp.buf.signature_help()<CR>
+        nnoremap <buffer><silent> <leader>d  <Cmd>lua vim.lsp.buf.definition()<CR>
+        nnoremap <buffer><silent> <leader>t  <Cmd>lua vim.lsp.buf.type_definition()<CR>
+        nnoremap <buffer><silent> <leader>i  <Cmd>lua vim.lsp.buf.implementation()<CR>
+        nnoremap <buffer><silent> <leader>r  <Cmd>lua vim.lsp.buf.references()<CR>
+        nnoremap <buffer><silent> <leader>x  <Cmd>lua vim.lsp.buf.document_symbol()<CR>
+        nnoremap <buffer><silent> <leader>gx <Cmd>lua vim.lsp.buf.workspace_symbol()<CR>
+        nnoremap <buffer><silent> <leader>c  <Cmd>lua vim.lsp.buf.rename()<CR>
+        nnoremap <buffer><silent> <M-CR>     <Cmd>lua vim.lsp.buf.code_action()<CR>
+        xnoremap <buffer><silent> <M-CR>     <Cmd>lua vim.lsp.buf.range_code_action()<CR>
+        inoremap <buffer><silent> <C-k>      <Cmd>lua vim.lsp.buf.signature_help()<CR>
+        inoremap <buffer><silent> <C-l>      <Cmd>lua vim.lsp.buf.hover()<CR>
+        inoremap <buffer><silent> <C-y> <C-y><Cmd>lua vim.lsp.buf.hover()<CR>
+    endfunction
 
-"" Use special space: ( ) U+2000 (EN QUAD)
-let g:ale_sign_error = '●'
-let g:ale_sign_warning = '●'
-let g:ale_sign_info = '●'
-let g:ale_sign_hint = '●'
+    augroup lsp_config
+        autocmd!
+        autocmd FileType * call LSP_settings()
+        autocmd FileType * set omnifunc=v:lua.vim.lsp.omnifunc
+        autocmd User LspDiagnosticsChanged lua vim.lsp.diagnostic.set_loclist{open_loclist=false}
+        autocmd User LspDiagnosticsChanged call lightline#update()
+    augroup END
 
-nmap [r <plug>(ale_previous_wrap)
-nmap ]r <plug>(ale_next_wrap)
-nnoremap <silent> <leader>a :<C-u>ALEToggle <Bar> echo g:ale_enabled ? 'ALE enabled' : 'ALE disabled' <CR>
+    " augroup lsp_highlight_current
+    "     autocmd!
+    "     autocmd CursorHold  * lua vim.lsp.buf.document_highlight()
+    "     autocmd CursorHoldI * lua vim.lsp.buf.document_highlight()
+    "     autocmd CursorMoved * lua vim.lsp.buf.clear_references()
+    " augroup END
+
+    let g:lightline.component_expand['lsp_hint'] = 'lsp#hints'
+    let g:lightline.component_expand['lsp_info'] = 'lsp#infos'
+    let g:lightline.component_expand['lsp_warning'] = 'lsp#warnings'
+    let g:lightline.component_expand['lsp_error'] = 'lsp#errors'
+
+    augroup yank_highlight
+        autocmd!
+        autocmd TextYankPost * silent! lua vim.highlight.on_yank {timeout=150}
+    augroup END
+
+else
+
+    " LanguageClient
+    let g:LanguageClient_autoStart = 1
+    let g:LanguageClient_selectionUI = 'quickfix'
+    let g:LanguageClient_diagnosticsList = 'Location'
+    let g:LanguageClient_diagnosticsMaxSeverity = 'Hint'
+    let g:LanguageClient_hoverPreview = 'Always'
+    let g:LanguageClient_virtualTextPrefix = ' ← '
+    let g:LanguageClient_hasSnippetSupport = 1
+
+    let g:LanguageClient_serverCommands = {
+                \ 'haskell': ['hie-wrapper'],
+                \ 'rust':    ['rustup', 'run', 'stable', 'rls'],
+                \ 'java':    ['jdtls'],
+                \ 'c':       ['ccls'],
+                \ 'cpp':     ['ccls'],
+                \ 'objc':    ['ccls'],
+                \ 'python':  ['pyls'],
+                \ 'lua':     ['lua-lsp'],
+                \ 'sh':      ['bash-language-server', 'start'],
+                \ 'tex':     ['texlab'],
+                \ 'bib':     ['texlab'],
+                \ 'vim':     ['vim-language-server', '--stdio'],
+                \ }
+
+    let g:LanguageClient_diagnosticsDisplay = {
+                \     1: {
+                \         "name": "Error",
+                \         "texthl": "ALEError",
+                \         "signText": "●",
+                \         "signTexthl": "ALEErrorSign",
+                \         "virtualTexthl": "VirtualTextError",
+                \     },
+                \     2: {
+                \         "name": "Warning",
+                \         "texthl": "ALEWarning",
+                \         "signText": "●",
+                \         "signTexthl": "ALEWarningSign",
+                \         "virtualTexthl": "VirtualTextWarning",
+                \     },
+                \     3: {
+                \         "name": "Information",
+                \         "texthl": "ALEInfo",
+                \         "signText": "●",
+                \         "signTexthl": "ALEInfoSign",
+                \         "virtualTexthl": "VirtualTextInfo",
+                \     },
+                \     4: {
+                \         "name": "Hint",
+                \         "texthl": "ALEHint",
+                \         "signText": "●",
+                \         "signTexthl": "ALEHintSign",
+                \         "virtualTexthl": "VirtualTextHint",
+                \     },
+                \ }
+
+    function! LanguageClient_settings()
+        if !has_key(g:LanguageClient_serverCommands, &filetype) | return | endif
+        nnoremap <buffer><silent> K          :<C-u>call LanguageClient_textDocument_hover()<CR>
+        nnoremap <buffer><silent> <F1>       :<C-u>call LanguageClient_contextMenu()<CR>
+        nnoremap <buffer><silent> <leader>d  :<C-u>call LanguageClient_textDocument_definition()<CR>
+        nnoremap <buffer><silent> <leader>t  :<C-u>call LanguageClient_textDocument_typeDefinition()<CR>
+        nnoremap <buffer><silent> <leader>i  :<C-u>call LanguageClient_textDocument_implementation()<CR>
+        nnoremap <buffer><silent> <leader>r  :<C-u>call LanguageClient_textDocument_references()<CR>
+        nnoremap <buffer><silent> <leader>x  :<C-u>call LanguageClient_textDocument_documentSymbol()<CR>
+        nnoremap <buffer><silent> <leader>gx :<C-u>call LanguageClient_workspace_symbol()<CR>
+        nnoremap <buffer><silent> <leader>c  :<C-u>call LanguageClient_textDocument_rename()<CR>
+    endfunction
+
+    augroup language_client_config
+        autocmd!
+        autocmd FileType * call LanguageClient_settings()
+        autocmd BufEnter __LanguageClient__ nnoremap <buffer><silent> <F1> :q!<CR>
+    augroup END
+
+    let g:lightline.component_expand['lsp_hint'] = 'languageclient#hints'
+    let g:lightline.component_expand['lsp_info'] = 'languageclient#infos'
+    let g:lightline.component_expand['lsp_warning'] = 'languageclient#warnings'
+    let g:lightline.component_expand['lsp_error'] = 'languageclient#errors'
+
+endif
 
 " }}}
 
@@ -1023,6 +1161,7 @@ set smartcase
 set autoread
 set noruler
 set nostartofline
+set updatetime=400
 
 set tabstop=4
 set shiftwidth=4
@@ -1087,22 +1226,22 @@ endif
 
 " Autocmd {{{
 
-augroup SourceVimrc
+augroup source_vimrc
     autocmd!
     autocmd BufWritePost $MYVIMRC nested source $MYVIMRC
 augroup END
 
-augroup GitGutterUpdate
+augroup git_gutter_update
     autocmd!
     autocmd BufWritePost * GitGutter
 augroup END
 
-augroup UnfoldInitially
+augroup unfold_initially
     autocmd!
     autocmd BufWinEnter * let &foldlevel=max(add(map(range(1, line('$')), 'foldlevel(v:val)'), 10))
 augroup End
 
-augroup DirvishConceal
+augroup dirvish_conceal
     autocmd!
     autocmd BufWritePre dirvish set conceallevel=2
 augroup End
@@ -1117,7 +1256,7 @@ if has('nvim')
     set winblend=0
     set fillchars+=eob:·
 
-    augroup RestorePosition
+    augroup restore_position
         autocmd!
         autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") &&
                     \ index(['gitcommit', 'gitrebase'], &ft) < 0 |
@@ -1129,6 +1268,7 @@ endif
 if !has('nvim')
     set display=lastline
     set viminfo=%,\"800,'10,/50,:100,h,f0,n~/.vim/.viminfo
+    set switchbuf+=uselast
 endif
 
 if has('nvim') && has('termguicolors') && &termguicolors
@@ -1148,7 +1288,7 @@ if has('nvim') && has('termguicolors') && &termguicolors
     endfunction
     let g:fzf_layout = { 'window': 'call FloatingFZF()' }
 elseif has('nvim') || has('gui_running')
-    augroup FZFHideStatus
+    augroup fzf_hide_status
         autocmd! FileType fzf
         autocmd FileType fzf set laststatus=0 | autocmd BufLeave <buffer> set laststatus=2
     augroup END

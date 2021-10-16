@@ -3,8 +3,8 @@ if &readonly
 endif
 
 " goto tag
-nnoremap <buffer><silent> <CR> <C-]>
-nnoremap <buffer><silent> <BS> <C-t>
+nnoremap <buffer><silent><nowait> <CR> <C-]>
+nnoremap <buffer><silent><nowait> <BS> <C-t>
 
 " tag definition
 nnoremap <buffer><silent> <C-Up>    :call search("\\*\\S\\+\\*", 'sbW')<CR>
