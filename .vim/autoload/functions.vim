@@ -38,6 +38,9 @@ function! functions#echo_syntax(...) abort
     let hic = synIDattr(synIDtrans(synID(line('.'),col('.'),1)),'name')
     let trc = synIDattr(synIDtrans(synID(line('.'),col('.'),0)),'name')
 
+    let node = luaeval("require'nvim-treesitter.ts_utils'.get_node_at_cursor():type()")
+    let expr = luaeval("require'nvim-treesitter.ts_utils'.get_node_at_cursor():sexpr()")
+
     echon 'hi: '
     echohl Todo
     echon hi
@@ -57,6 +60,11 @@ function! functions#echo_syntax(...) abort
     echon '●'
     echohl None
     echon ')  '
+
+    echon 'treesitter-node: '
+    echohl Todo
+    echon node
+    echohl None
 endfunction
 
 " change register
@@ -90,8 +98,8 @@ function! functions#expand_snippet() abort
     let line = getline('.')
 
     " remove completion before expanding snippet
-    call setline('.', line[: col - len] . line[col + 1 :])
-    call cursor('.', col - len + 2)
+    call setline('.', line[:col-len] . line[col+1:])
+    call cursor('.', col-len+2)
 
     " expand snippet
     call UltiSnips#Anon(completion)
@@ -165,6 +173,10 @@ function! functions#nvim_open_window(buffer, enter, opts) abort
     else
         return nvim_open_win(a:buffer, a:enter, a:opts)
     endif
+endfunction
+
+function! functions#close_if_fzf() abort
+    if &ft == 'fzf' | quit! | endif
 endfunction
 
 let &cpo = s:save_cpo

@@ -22,7 +22,6 @@ call plug#begin('~/.vim/plugged')
 let g:plug_url_format = 'https://github.com/%s.git'
 
 " FZF
-"Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug '/usr/bin/fzf'
 
 " General
@@ -35,13 +34,13 @@ Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-speeddating'
 "Plug 'Konfekt/vim-CtrlXA'
 Plug 'justinmk/vim-dirvish'
-Plug 'tpope/vim-vinegar'
+"Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-rsi'
 Plug 'tpope/vim-sleuth'
-Plug 'tpope/vim-endwise'
+"Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-eunuch'
-Plug 'tpope/vim-jdaddy'
+"Plug 'tpope/vim-jdaddy'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-scriptease'
 "Plug 'tpope/vim-commentary'
@@ -56,10 +55,11 @@ Plug 'justinmk/vim-sneak'
 Plug 'terryma/vim-multiple-cursors'
 "Plug 'jiangmiao/auto-pairs'
 Plug 'tmsvg/pear-tree'
+"Plug 'windwp/nvim-autopairs'
 Plug 'ap/vim-css-color'
 Plug 'editorconfig/editorconfig-vim'
 "Plug 'romainl/vim-qf'  " forked
-"Plug 'rhysd/git-messenger.vim'  " forked
+Plug 'rhysd/git-messenger.vim'
 Plug 'lambdalisue/suda.vim'
 
 " Sidebars
@@ -87,6 +87,7 @@ Plug 'SirVer/ultisnips'
 if has('nvim')
     Plug 'neovim/nvim-lspconfig'
     Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
+    Plug 'ray-x/lsp_signature.nvim'
 else
     Plug 'autozimu/LanguageClient-neovim', {
                 \ 'branch': 'next',
@@ -97,7 +98,6 @@ endif
 " Language specific
 Plug 'plasticboy/vim-markdown'  ", { 'for': 'markdown' }
 Plug 'lervag/vimtex'  ", { 'for': ['latex', 'tex'] }
-Plug 'racer-rust/vim-racer'  ", { 'for': 'rust' }
 Plug 'neovimhaskell/haskell-vim'  ", { 'for': 'haskell' }
 Plug 'tweekmonster/helpful.vim'  ", { 'for': ['vim', 'help'] }
 Plug 'jupyter-vim/jupyter-vim'  ", { 'for': 'python' }
@@ -117,11 +117,10 @@ endif
 
 let g:plug_url_format = 'git@github.com:%s.git'
 
-"Plug 'alfunx/fzf.vim'  " fork of 'junegunn/fzf.vim'
+" Forked
 Plug 'alfunx/tcomment_vim'  " fork of 'tomtom/tcomment_vim'
 Plug 'alfunx/diffconflicts'  " fork of 'whiteinge/diffconflicts'
 "Plug 'alfunx/vim-qf'  " fork of 'romainl/vim-qf'
-Plug 'alfunx/git-messenger.vim'  " fork of 'rhysd/git-messenger.vim'
 Plug 'alfunx/vim-indent-object'  " fork of 'michaeljsmith/vim-indent-object'
 Plug 'alfunx/vim-snippets'  " fork of 'honza/vim-snippets'
 Plug 'alfunx/gruvbox'  " fork of 'morhetz/gruvbox'
@@ -163,9 +162,21 @@ augroup END
 
 augroup lsp_reference_highlighting
     autocmd!
-    autocmd ColorScheme * hi! LspReferenceText cterm=bold gui=bold
-    autocmd ColorScheme * hi! LspReferenceRead cterm=bold gui=bold
+    autocmd ColorScheme * hi! LspReferenceText  cterm=bold gui=bold
+    autocmd ColorScheme * hi! LspReferenceRead  cterm=bold gui=bold
     autocmd ColorScheme * hi! LspReferenceWrite cterm=bold gui=bold
+augroup END
+
+augroup lsp_diagnostics_highlighting
+    autocmd!
+    autocmd ColorScheme * hi! link LspDiagnosticsDefaultError         TextError
+    autocmd ColorScheme * hi! link LspDiagnosticsDefaultWarning       TextWarning
+    autocmd ColorScheme * hi! link LspDiagnosticsDefaultInformation   TextInfo
+    autocmd ColorScheme * hi! link LspDiagnosticsDefaultHint          TextHint
+    autocmd ColorScheme * hi! link LspDiagnosticsUnderlineError       UnderlineError
+    autocmd ColorScheme * hi! link LspDiagnosticsUnderlineWarning     UnderlineWarning
+    autocmd ColorScheme * hi! link LspDiagnosticsUnderlineInformation UnderlineInfo
+    autocmd ColorScheme * hi! link LspDiagnosticsUnderlineHint        UnderlineHint
 augroup END
 
 augroup lsp_hover_highlighting
@@ -473,21 +484,6 @@ nnoremap <silent> <F4> :<C-u>let @+ = expand('%:p') . ':' . line('.')<CR>
 " Display highlighting info
 nnoremap <silent> <F10> :<C-u>call functions#echo_syntax()<CR>
 
-" RG
-command! -bang -nargs=* Rg
-            \ call fzf#vim#grep(
-            \ 'rg --hidden --line-number --column --smart-case --follow --no-heading --color=always ' .
-            \ '--colors="match:none" --colors="path:fg:white" --colors="line:fg:white" 2>/dev/null ' .
-            \ shellescape(<q-args>), 1,
-            \ <bang>0)
-
-" AG
-command! -bang -nargs=* Ag
-            \ call fzf#vim#ag(
-            \ <q-args>, '--hidden --number --column --smart-case --follow --nogroup --color ' .
-            \ '--color-path "0;37" --color-line-number "0;37" --color-match "" ',
-            \ <bang>0)
-
 " Grep
 if executable('rg')
     set grepprg=rg\ --vimgrep
@@ -532,23 +528,6 @@ nnoremap <silent> <leader><Right> :cnewer<CR>
 nnoremap <silent> <leader><Up>    :lolder<CR>
 nnoremap <silent> <leader><Down>  :lnewer<CR>
 
-nnoremap <silent> [w [l
-nnoremap <silent> ]w ]l
-nnoremap <silent> [W [L
-nnoremap <silent> ]W ]L
-nnoremap <silent> [<C-W> [<C-L>
-nnoremap <silent> ]<C-W> ]<C-L>
-
-function! ToggleQuickFix()
-    if empty(filter(getwininfo(), 'v:val.quickfix')) | copen | else | cclose | endif
-endfunction
-
-function! ToggleLocList()
-    if empty(filter(getwininfo(), 'v:val.loclist')) | silent! lopen | else | lclose | endif
-endfunction
-
-" nmap <silent> <leader>q :call ToggleQuickFix()<CR>
-" nmap <silent> <leader>l :call ToggleLocList()<CR>
 nmap <silent> <leader>q :copen<CR>
 nmap <silent> <leader>l :lopen<CR>
 
@@ -611,10 +590,6 @@ inoremap <silent> <C-x><C-i> <C-r>=completion#tmux()<CR>
 nnoremap <silent> <leader>f :<C-u>Files<CR>
 nnoremap <silent> <leader>b :<C-u>Buffers<CR>
 nnoremap <silent> <leader>w :<C-u>Windows<CR>
-"nnoremap <silent> <leader>t :<C-u>Tags<CR>
-"nnoremap <silent> <leader>o :<C-u>History<CR>
-"nnoremap <silent> <leader>: :<C-u>History:<CR>
-"nnoremap <silent> <leader>/ :<C-u>History/<CR>
 
 "" Mapping selecting mappings
 nmap <leader><Tab> <plug>(fzf-maps-n)
@@ -627,9 +602,6 @@ imap <C-x><C-f> <plug>(fzf-complete-path)
 imap <C-x><C-j> <plug>(fzf-complete-file-ag)
 imap <C-x><C-l> <plug>(fzf-complete-line)
 
-"" Use custom dictionary
-inoremap <expr> <C-x><C-k> fzf#complete('cat /usr/share/dict/words-insane')
-
 "" Default key bindings
 let g:fzf_action = {
             \ 'ctrl-t': 'tab split',
@@ -637,7 +609,8 @@ let g:fzf_action = {
             \ 'ctrl-v': 'vsplit' }
 
 "" Default fzf layout
-let g:fzf_layout = { 'down': '~30%' }
+let g:fzf_layout = { 'window': { 'width': 0.5, 'height': 0.6, 'border': 'sharp' } }
+let $FZF_DEFAULT_OPTS .= ' --reverse'
 
 "" Disable preview window
 let g:fzf_preview_window = []
@@ -652,7 +625,7 @@ let g:fzf_colors = {
             \ 'gutter':  ['bg', 'Normal'],
             \ 'hl+':     ['fg', 'Statement'],
             \ 'info':    ['fg', 'LineNr'],
-            \ 'border':  ['bg', 'Ignore'],
+            \ 'border':  ['bg', 'FloatBorder'],
             \ 'prompt':  ['fg', 'Type'],
             \ 'pointer': ['fg', 'Type'],
             \ 'marker':  ['fg', 'Statement'],
@@ -665,12 +638,13 @@ let g:fzf_commits_log_options = '--graph --color=always --pretty=lo'
 "" Command to generate tags file
 let g:fzf_tags_command = 'ctags -R'
 
-" vim-gitgutter
-let g:gitgutter_sign_added = '┃'
-let g:gitgutter_sign_modified = '┃'
-let g:gitgutter_sign_removed = '◢'
-let g:gitgutter_sign_removed_first_line = '◥'
-let g:gitgutter_sign_modified_removed = '┻'
+" vim-gitgutter - special space: ( ) U+2000 (EN QUAD)
+let g:gitgutter_sign_priority = 30
+let g:gitgutter_sign_added = ' ┃'
+let g:gitgutter_sign_modified = ' ┃'
+let g:gitgutter_sign_removed = ' ◢'
+let g:gitgutter_sign_removed_first_line = ' ◥'
+let g:gitgutter_sign_modified_removed = '━┫'
 let g:gitgutter_map_keys = 0
 nmap <leader>hp <Plug>(GitGutterPreviewHunk)
 nmap <leader>ha <Plug>(GitGutterStageHunk)
@@ -728,7 +702,6 @@ augroup End
 " vimtex
 let g:tex_flavor = 'latex'
 let g:vimtex_view_method = 'zathura'
-"nmap <silent> <localleader>ll <plug>(vimtex-compile-ss)
 
 " ultisnips
 let g:UltiSnipsExpandTrigger = '<Tab>'
@@ -740,14 +713,7 @@ let g:snips_author = "Alphonse Mariya"
 let g:snips_email = "alphonse.mariya@hotmail.com"
 let g:snips_github = "https://github.com/alfunx"
 
-"" Auto
-"augroup ulti_snips_expand
-"    autocmd!
-"    autocmd CompleteDone * call functions#expand_snippet()
-"augroup End
-
-"" Manual
-inoremap <silent> <C-k> <C-r>=functions#expand_snippet()<CR>
+inoremap <silent> <C-j> <C-r>=functions#expand_snippet()<CR>
 
 " vim-multiple-cursors
 let g:multi_cursor_use_default_mapping = 0
@@ -768,28 +734,28 @@ let g:tmuxcomplete#trigger = ''
 nnoremap <silent> _ mv:set opfunc=opfunc#send_to_tmux_split<CR>g@
 xnoremap <silent> _ mv:<C-u>call opfunc#send_to_tmux_split(visualmode(), 1)<CR>
 
-" auto-pairs
-"let g:AutoPairsShortcutBackInsert = '<M-z>'
-"let g:AutoPairsMultilineClose = 0
-"let g:AutoPairs = {'(':')', '[':']', '{':'}', "'":"'", '"':'"', "`":"`", '```':'```', '"""':'"""', "'''":"'''"}
-
 " pear-tree
 let g:pear_tree_smart_openers = 0
 let g:pear_tree_smart_closers = 0
 let g:pear_tree_smart_backspace = 0
 imap <M-z> <Plug>(PearTreeJump)
 
+" " nvim-autopairs
+" lua <<EOF
+" require'nvim-autopairs'.setup {
+"     check_ts = true,
+"     ts_config = {
+"         java = false,
+"         javascript = {'template_string'},
+"         lua = {'string'},
+"         -- rust = {'string'},
+"     },
+" }
+" EOF
+
 " git-messenger
 let g:git_messenger_no_default_mappings = 1
 nmap gb <Plug>(git-messenger)
-
-" vim-racer
-let g:racer_cmd = "/usr/bin/racer"
-let g:racer_experimental_completer = 0
-
-" vim-speeddating
-"nmap <Plug>SpeedDatingFallbackUp   <Plug>(CtrlXA-CtrlA)
-"nmap <Plug>SpeedDatingFallbackDown <Plug>(CtrlXA-CtrlX)
 
 " vim-rsi
 let g:rsi_no_meta = 1
@@ -885,7 +851,7 @@ let g:lightline.tab = {
             \ }
 
 let g:lightline.component = {
-            \ 'path': '%{expand("%:p:~:.:s?^$?./?:s?^term://.*#FZF$?[FZF]?")}',
+            \ 'path': '%{expand("%:p:~:.:s?^$?./?")}',
             \ 'fileinfo': '%t%{status#fileinfo()}',
             \ 'lineinfo': '%3l/%L:%-2c',
             \ }
@@ -906,17 +872,17 @@ let g:lightline.component_function = {
             \ }
 
 let g:lightline.component_expand = {
-            \ 'lsp_hint': 'lsp#hints',
-            \ 'lsp_info': 'lsp#infos',
-            \ 'lsp_warning': 'lsp#warnings',
             \ 'lsp_error': 'lsp#errors',
+            \ 'lsp_warning': 'lsp#warnings',
+            \ 'lsp_info': 'lsp#infos',
+            \ 'lsp_hint': 'lsp#hints',
             \ }
 
 let g:lightline.component_type = {
-            \ 'lsp_hint': 'hint',
-            \ 'lsp_info': 'info',
-            \ 'lsp_warning': 'warning',
             \ 'lsp_error': 'error',
+            \ 'lsp_warning': 'warning',
+            \ 'lsp_info': 'info',
+            \ 'lsp_hint': 'hint',
             \ }
 
 let g:lightline.tab_component = {
@@ -928,107 +894,112 @@ let g:lightline.tab_component_function = {
             \ 'tabnum': 'status#tab_tabnum',
             \ }
 
-let g:languageclient#indicator_error = '✘'
-let g:languageclient#indicator_warning = '↯'
-let g:languageclient#indicator_info = 'ℹ'
-let g:languageclient#indicator_hint = '♥'
-let g:languageclient#open_linenr = '['
-let g:languageclient#close_linenr = ']'
-let g:languageclient#show_linenr = 0
-
 " }}}
 
 " LSP / Linting {{{
 
 if has('nvim')
 
-"     lua <<EOF
-" local lspconfig = require'lspconfig'
-" local configs = require'lspconfig/configs'
-" if not lspconfig.lua_lsp then
-"   configs.lua_lsp = {
-"     default_config = {
-"       cmd = {'lua-lsp'};
-"       filetypes = {'lua'};
-"       root_dir = function(fname)
-"         return lspconfig.util.find_git_ancestor(fname) or vim.loop.os_homedir()
-"       end;
-"       settings = {};
-"     };
-"   }
-" end
-" EOF
+    " special space: ( ) U+2000 (EN QUAD)
+    sign define LspDiagnosticsSignError       text= ● texthl=TextError   linehl= numhl=
+    sign define LspDiagnosticsSignWarning     text= ● texthl=TextWarning linehl= numhl=
+    sign define LspDiagnosticsSignInformation text= ● texthl=TextInfo    linehl= numhl=
+    sign define LspDiagnosticsSignHint        text= ● texthl=TextHint    linehl= numhl=
 
-" custom prefix for virtual text
     lua <<EOF
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-  vim.lsp.diagnostic.on_publish_diagnostics, {
-    virtual_text = {
-      prefix = '←',
-      spacing = 0,
-    },
-  }
+    vim.lsp.diagnostic.on_publish_diagnostics, {
+        virtual_text = {
+            prefix = '←',
+            spacing = 0,
+        },
+        signs = {
+            priority = 20,
+        },
+        severity_sort = true,
+    }
 )
 EOF
 
-" do not hide hover window when inputting text
     lua <<EOF
-vim.lsp.handlers['textDocument/hover'] = function(_, method, result)
-  vim.lsp.util.focusable_float(method, function()
-    if not (result and result.contents) then
-      -- return { 'No information available' }
-      return
-    end
-    local markdown_lines = vim.lsp.util.convert_input_to_markdown_lines(result.contents)
-    markdown_lines = vim.lsp.util.trim_empty_lines(markdown_lines)
-    if vim.tbl_isempty(markdown_lines) then
-      -- return { 'No information available' }
-      return
-    end
-    local bufnr, winnr = vim.lsp.util.fancy_floating_markdown(markdown_lines, {
-      pad_left = 1; pad_right = 1;
-    })
-    vim.lsp.util.close_preview_autocmd({"CursorMoved", "BufHidden"}, winnr)
-    return bufnr, winnr
-  end)
-end
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+    vim.lsp.handlers.hover, {
+        border = 'single',
+    }
+)
 EOF
 
+    lua <<EOF
+vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
+    vim.lsp.handlers.signature_help, {
+        border = 'single',
+    }
+)
+EOF
+
+"     " display only most severe sign per line
+"     lua <<EOF
+" local set_signs = vim.lsp.diagnostic.set_signs
+" vim.lsp.diagnostic.set_signs = function(diagnostics, bufnr, client_id, sign_ns, opts)
+"     if not diagnostics then return end
+"
+"     local diagnostic = {}
+"     for _, d in pairs(diagnostics) do
+"         if not diagnostic[d.range.start.line]
+"                 or d.severity < diagnostic[d.range.start.line].severity then
+"             diagnostic[d.range.start.line] = d
+"         end
+"     end
+"
+"     local filtered_diagnostics = {}
+"     for _, v in pairs(diagnostic) do
+"         table.insert(filtered_diagnostics, v)
+"     end
+"
+"     set_signs(filtered_diagnostics, bufnr, client_id, sign_ns, opts)
+" end
+" EOF
+
     " native language client
-    lua require'lspconfig'.ccls.setup{}
-    lua require'lspconfig'.rls.setup{cmd={"rustup","run","stable","rls"}}
-    lua require'lspconfig'.pyls.setup{}
-    " lua require'lspconfig'.lua_lsp.setup{}
-    lua require'lspconfig'.sumneko_lua.setup{cmd={"lua-language-server"}}
-    lua require'lspconfig'.jdtls.setup{}
-    lua require'lspconfig'.hie.setup{}
-    lua require'lspconfig'.texlab.setup{}
+    let g:lsp_languages = ['bib', 'c', 'cpp', 'java', 'lua', 'objc', 'python', 'rust', 'sh', 'tex', 'vim']
+
     lua require'lspconfig'.bashls.setup{}
+    lua require'lspconfig'.ccls.setup{}
+    lua require'lspconfig'.gopls.setup{}
+    lua require'lspconfig'.jdtls.setup{}
+    lua require'lspconfig'.pylsp.setup{}
+    lua require'lspconfig'.rust_analyzer.setup{}
+    lua require'lspconfig'.sumneko_lua.setup{cmd={"lua-language-server"}}
+    lua require'lspconfig'.texlab.setup{}
     lua require'lspconfig'.vimls.setup{}
 
-    " special space: ( ) U+2000 (EN QUAD)
-    sign define LspDiagnosticsSignError text= ● texthl=LspDiagnosticsSignError linehl= numhl=
-    sign define LspDiagnosticsSignWarning text= ● texthl=LspDiagnosticsSignWarning linehl= numhl=
-    sign define LspDiagnosticsSignInformation text= ● texthl=LspDiagnosticsSignInformation linehl= numhl=
-    sign define LspDiagnosticsSignHint text= ● texthl=LspDiagnosticsSignHint linehl= numhl=
-
     function! LSP_settings()
+        if empty(filter(g:lsp_languages, 'v:key != &filetype')) | return | endif
         nnoremap <buffer><silent> <leader>K  K
         nnoremap <buffer><silent> K          <Cmd>lua vim.lsp.buf.hover()<CR>
         nnoremap <buffer><silent> <F1>       <Cmd>lua vim.lsp.buf.signature_help()<CR>
+        inoremap <buffer><silent> <C-k>      <Cmd>lua vim.lsp.buf.signature_help()<CR>
         inoremap <buffer><silent> <F1>       <Cmd>lua vim.lsp.buf.signature_help()<CR>
+
         nnoremap <buffer><silent> <leader>d  <Cmd>lua vim.lsp.buf.definition()<CR>
+        nnoremap <buffer><silent> <leader>D  <Cmd>lua vim.lsp.buf.declaration()<CR>
         nnoremap <buffer><silent> <leader>t  <Cmd>lua vim.lsp.buf.type_definition()<CR>
         nnoremap <buffer><silent> <leader>i  <Cmd>lua vim.lsp.buf.implementation()<CR>
         nnoremap <buffer><silent> <leader>r  <Cmd>lua vim.lsp.buf.references()<CR>
-        nnoremap <buffer><silent> <leader>x  <Cmd>lua vim.lsp.buf.document_symbol()<CR>
-        nnoremap <buffer><silent> <leader>gx <Cmd>lua vim.lsp.buf.workspace_symbol()<CR>
+        nnoremap <buffer><silent> <leader>gi <Cmd>lua vim.lsp.buf.incoming_calls()<CR>
+        nnoremap <buffer><silent> <leader>go <Cmd>lua vim.lsp.buf.outgoing_calls()<CR>
+        nnoremap <buffer><silent> <leader>gs <Cmd>lua vim.lsp.buf.workspace_symbols()<CR>
+
+        nnoremap <buffer><silent> <leader>x  <Cmd>lua vim.lsp.buf.add_workspace_folder()<CR>
+        nnoremap <buffer><silent> <leader>X  <Cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>
+        nnoremap <buffer><silent> <leader>gx <Cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>
+
+        nnoremap <buffer><silent> <leader>u  <Cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
+        nnoremap <buffer><silent> <leader>U  <Cmd>lua vim.lsp.diagnostic.set_loclist{open_loclist=false}<CR>
+
         nnoremap <buffer><silent> <leader>c  <Cmd>lua vim.lsp.buf.rename()<CR>
         nnoremap <buffer><silent> <M-CR>     <Cmd>lua vim.lsp.buf.code_action()<CR>
         xnoremap <buffer><silent> <M-CR>     <Cmd>lua vim.lsp.buf.range_code_action()<CR>
-        inoremap <buffer><silent> <C-k>      <Cmd>lua vim.lsp.buf.signature_help()<CR>
-        inoremap <buffer><silent> <C-l>      <Cmd>lua vim.lsp.buf.hover()<CR>
-        inoremap <buffer><silent> <C-y> <C-y><Cmd>lua vim.lsp.buf.hover()<CR>
     endfunction
 
     augroup lsp_config
@@ -1039,22 +1010,11 @@ EOF
         autocmd User LspDiagnosticsChanged call lightline#update()
     augroup END
 
-    " augroup lsp_highlight_current
-    "     autocmd!
-    "     autocmd CursorHold  * lua vim.lsp.buf.document_highlight()
-    "     autocmd CursorHoldI * lua vim.lsp.buf.document_highlight()
-    "     autocmd CursorMoved * lua vim.lsp.buf.clear_references()
-    " augroup END
-
-    let g:lightline.component_expand['lsp_hint'] = 'lsp#hints'
-    let g:lightline.component_expand['lsp_info'] = 'lsp#infos'
+    " lightline
+    let g:lightline.component_expand['lsp_error']   = 'lsp#errors'
     let g:lightline.component_expand['lsp_warning'] = 'lsp#warnings'
-    let g:lightline.component_expand['lsp_error'] = 'lsp#errors'
-
-    augroup yank_highlight
-        autocmd!
-        autocmd TextYankPost * silent! lua vim.highlight.on_yank {timeout=150}
-    augroup END
+    let g:lightline.component_expand['lsp_info']    = 'lsp#infos'
+    let g:lightline.component_expand['lsp_hint']    = 'lsp#hints'
 
 else
 
@@ -1065,20 +1025,20 @@ else
     let g:LanguageClient_diagnosticsMaxSeverity = 'Hint'
     let g:LanguageClient_hoverPreview = 'Always'
     let g:LanguageClient_virtualTextPrefix = ' ← '
+    let g:LanguageClient_useVirtualText = 'All'
     let g:LanguageClient_hasSnippetSupport = 1
 
     let g:LanguageClient_serverCommands = {
-                \ 'haskell': ['hie-wrapper'],
-                \ 'rust':    ['rustup', 'run', 'stable', 'rls'],
-                \ 'java':    ['jdtls'],
+                \ 'bib':     ['texlab'],
                 \ 'c':       ['ccls'],
                 \ 'cpp':     ['ccls'],
+                \ 'java':    ['jdtls'],
+                \ 'lua':     ['lua-lsp'],
                 \ 'objc':    ['ccls'],
                 \ 'python':  ['pyls'],
-                \ 'lua':     ['lua-lsp'],
+                \ 'rust':    ['rust-analyzer'],
                 \ 'sh':      ['bash-language-server', 'start'],
                 \ 'tex':     ['texlab'],
-                \ 'bib':     ['texlab'],
                 \ 'vim':     ['vim-language-server', '--stdio'],
                 \ }
 
@@ -1088,54 +1048,116 @@ else
                 \         "texthl": "ALEError",
                 \         "signText": "●",
                 \         "signTexthl": "ALEErrorSign",
-                \         "virtualTexthl": "VirtualTextError",
+                \         "virtualTexthl": "TextError",
                 \     },
                 \     2: {
                 \         "name": "Warning",
                 \         "texthl": "ALEWarning",
                 \         "signText": "●",
                 \         "signTexthl": "ALEWarningSign",
-                \         "virtualTexthl": "VirtualTextWarning",
+                \         "virtualTexthl": "TextWarning",
                 \     },
                 \     3: {
                 \         "name": "Information",
                 \         "texthl": "ALEInfo",
                 \         "signText": "●",
                 \         "signTexthl": "ALEInfoSign",
-                \         "virtualTexthl": "VirtualTextInfo",
+                \         "virtualTexthl": "TextInfo",
                 \     },
                 \     4: {
                 \         "name": "Hint",
                 \         "texthl": "ALEHint",
                 \         "signText": "●",
                 \         "signTexthl": "ALEHintSign",
-                \         "virtualTexthl": "VirtualTextHint",
+                \         "virtualTexthl": "TextHint",
                 \     },
                 \ }
 
     function! LanguageClient_settings()
         if !has_key(g:LanguageClient_serverCommands, &filetype) | return | endif
+        nnoremap <buffer><silent> <leader>K  K
         nnoremap <buffer><silent> K          :<C-u>call LanguageClient_textDocument_hover()<CR>
         nnoremap <buffer><silent> <F1>       :<C-u>call LanguageClient_contextMenu()<CR>
+        inoremap <buffer><silent> <C-k>      :<C-u>call LanguageClient_textDocument_hover()<CR>
+        inoremap <buffer><silent> <F1>       :<C-u>call LanguageClient_contextMenu()<CR>
+
         nnoremap <buffer><silent> <leader>d  :<C-u>call LanguageClient_textDocument_definition()<CR>
         nnoremap <buffer><silent> <leader>t  :<C-u>call LanguageClient_textDocument_typeDefinition()<CR>
         nnoremap <buffer><silent> <leader>i  :<C-u>call LanguageClient_textDocument_implementation()<CR>
         nnoremap <buffer><silent> <leader>r  :<C-u>call LanguageClient_textDocument_references()<CR>
-        nnoremap <buffer><silent> <leader>x  :<C-u>call LanguageClient_textDocument_documentSymbol()<CR>
-        nnoremap <buffer><silent> <leader>gx :<C-u>call LanguageClient_workspace_symbol()<CR>
+        nnoremap <buffer><silent> <leader>gd :<C-u>call LanguageClient_textDocument_documentSymbol()<CR>
+        nnoremap <buffer><silent> <leader>gs :<C-u>call LanguageClient_workspace_symbol()<CR>
+
         nnoremap <buffer><silent> <leader>c  :<C-u>call LanguageClient_textDocument_rename()<CR>
+        nnoremap <buffer><silent> <M-CR>     :<C-u>call LanguageClient_handleCodeLensAction()<CR>
+        xnoremap <buffer><silent> <M-CR>     :<C-u>call LanguageClient_handleCodeLensAction()<CR>
     endfunction
 
     augroup language_client_config
         autocmd!
         autocmd FileType * call LanguageClient_settings()
-        autocmd BufEnter __LanguageClient__ nnoremap <buffer><silent> <F1> :q!<CR>
+        autocmd User LanguageClientDiagnosticsChanged call lightline#update()
     augroup END
 
-    let g:lightline.component_expand['lsp_hint'] = 'languageclient#hints'
-    let g:lightline.component_expand['lsp_info'] = 'languageclient#infos'
+    " lightline
+    let g:lightline.component_expand['lsp_error']   = 'languageclient#errors'
     let g:lightline.component_expand['lsp_warning'] = 'languageclient#warnings'
-    let g:lightline.component_expand['lsp_error'] = 'languageclient#errors'
+    let g:lightline.component_expand['lsp_info']    = 'languageclient#infos'
+    let g:lightline.component_expand['lsp_hint']    = 'languageclient#hints'
+
+endif
+
+if has('nvim')
+
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+    ensure_installed = { "bash", "c", "cpp", "go", "java", "latex", "lua", "python", "rust", "vim" },
+    ignore_install = { },
+    highlight = {
+        enable = false,
+        additional_vim_regex_highlighting = false,
+    },
+    incremental_selection = {
+        enable = false,
+        keymaps = {
+            init_selection = "gnn",
+            node_incremental = "grn",
+            scope_incremental = "grc",
+            node_decremental = "grm",
+        },
+    },
+}
+EOF
+
+endif
+
+if has('nvim')
+
+lua <<EOF
+require'lsp_signature'.setup {
+    bind = true,
+    doc_lines = 10,
+    floating_window = true,
+    floating_window_above_cur_line = true,
+    fix_pos = true,
+    hint_enable = false,
+    hint_prefix = "↑ ",
+    hint_scheme = "String",
+    use_lspsaga = false,
+    hi_parameter = "SpellBad",
+    max_height = 12,
+    max_width = 120,
+    transpancy = nil,
+    handler_opts = { border = "none" },
+    always_trigger = false,
+    auto_close_after = nil,
+    extra_trigger_chars = { "(", "," },
+    zindex = 200,
+    padding = '',
+    timer_interval = 200,
+    toggle_key = nil,
+}
+EOF
 
 endif
 
@@ -1175,18 +1197,14 @@ set sidescrolloff=0
 
 set wildmode=longest:full,full
 set wildignorecase
-set wildignore+=.ignore,.gitignore
-set wildignore+=*/.git/,*/.hg/,*/.svn/
-set wildignore+=*/.ccls-cache/,*/.clangd/
+set wildignore+=*/.ccls-cache,*/.clangd
 set wildignore+=*.o,*.so,*.class,*.exe,*.dll,*.com
-set wildignore+=.tmux,.nvimrc,.vimrc,.exrc
-set wildignore+=tags,.tags,*/.backup/,*/.vim-backup/,*/.swap/,*/.vim-swap/,*/.undo/,*/.vim-undo/,*/._pkg/
+set wildignore+=tags,.tags,*/.backup,*/.vim-backup,*/.swap,*/.vim-swap,*/.undo,*/.vim-undo,*/._pkg
 set wildignore+=*.cache,*.log,*~,*#,*.bak,*.BAK,*.old,*.OLD,*.off,*.OFF,*.dist,*.DIST,*.orig,*.ORIG,*.rej,*.REJ,.DS_Store*
 set wildignore+=*.swp,*.swo,*.swn,*.swm,*.tmp
 set wildignore+=*.pid,*.state
 set wildignore+=*.dump,*.stackdump,*.zcompdump,*.zwc,*.pcap,*.cap,*.dmp
 set wildignore+=*.err,*.error,*.stderr
-set wildignore+=*history,*_history,*_hist
 set wildignore+=*_rsa,*_rsa.*,*_dsa,*_dsa.*,*_keys,*.pem,*.key,*.gpg
 
 set complete-=i
@@ -1203,7 +1221,7 @@ set nojoinspaces
 set belloff=all
 set lazyredraw
 set synmaxcol=800
-set dictionary+=/usr/share/dict/words-insane
+set dictionary+=/usr/share/dict/american-english
 set tags^=./.git/tags
 set foldtext=functions#foldtext()
 
@@ -1265,32 +1283,23 @@ if has('nvim')
     augroup End
 endif
 
+if has('nvim')
+    augroup yank_highlight
+        autocmd!
+        autocmd TextYankPost * silent! lua vim.highlight.on_yank {on_visual=false,timeout=150}
+    augroup END
+endif
+
 if !has('nvim')
     set display=lastline
     set viminfo=%,\"800,'10,/50,:100,h,f0,n~/.vim/.viminfo
     set switchbuf+=uselast
 endif
 
-if has('nvim') && has('termguicolors') && &termguicolors
-    let $FZF_DEFAULT_OPTS .= ' --reverse'
-    function! FloatingFZF()
-        let width = min([&columns - 2, float2nr(&columns * 0.5)])
-        let height = min([&lines - 8, float2nr(&lines * 0.6)])
-        let opts = { 'relative': 'editor',
-                    \ 'width': width,
-                    \ 'height': height,
-                    \ 'row': (&lines - height) / 2,
-                    \ 'col': (&columns - width) / 2,
-                    \ 'style': 'minimal',
-                    \ 'border': v:true }
-        call functions#nvim_open_window(nvim_create_buf(v:false, v:true), v:true, opts)
-        tnoremap <buffer><silent> <Esc> <C-\><C-n>:q!<CR>
-    endfunction
-    let g:fzf_layout = { 'window': 'call FloatingFZF()' }
-elseif has('nvim') || has('gui_running')
-    augroup fzf_hide_status
-        autocmd! FileType fzf
-        autocmd FileType fzf set laststatus=0 | autocmd BufLeave <buffer> set laststatus=2
+if has('nvim')
+    augroup close_fzf_window
+        autocmd!
+        autocmd TermLeave * call functions#close_if_fzf()
     augroup END
 endif
 
@@ -1298,31 +1307,58 @@ endif
 
 " Backup / Swap / Undo {{{
 
-if !isdirectory($HOME . '/.vim/.backup')
-    silent !mkdir -p ~/.vim/.backup >/dev/null 2>&1
-endif
-set backupdir-=.
-set backupdir+=.
-set backupdir-=~/
-set backupdir^=~/.vim/.backup/
-set backupdir^=./.vim-backup/
-set backup
+if has('nvim')
 
-if !isdirectory($HOME . '/.vim/.swap')
-    silent !mkdir -p ~/.vim/.swap >/dev/null 2>&1
-endif
-set directory=./.vim-swap//
-set directory+=~/.vim/.swap//
-set directory+=~/.tmp//
-set directory+=.
+    if !isdirectory($HOME . '/.local/share/nvim/backup')
+        silent !mkdir -p ~/.local/share/nvim/backup >/dev/null 2>&1
+    endif
+    set backupdir-=.
+    set backupdir+=.
+    set backupdir^=~/.local/share/nvim/backup//
+    set backupdir^=./.nvim-backup//
+    set backup
 
-if exists('+undofile')
+    if !isdirectory($HOME . '/.local/share/nvim/swap')
+        silent !mkdir -p ~/.local/share/nvim/swap >/dev/null 2>&1
+    endif
+    set directory-=.
+    set directory+=.
+    set directory^=~/.local/share/nvim/swap//
+    set directory^=./.nvim-swap//
+
+    if !isdirectory($HOME . '/.local/share/nvim/undo')
+        silent !mkdir -p ~/.local/share/nvim/undo >/dev/null 2>&1
+    endif
+    set undodir^=~/.local/share/nvim/undo//
+    set undodir^=./.nvim-undo//
+    set undofile
+
+else
+
+    if !isdirectory($HOME . '/.vim/.backup')
+        silent !mkdir -p ~/.vim/.backup >/dev/null 2>&1
+    endif
+    set backupdir-=.
+    set backupdir+=.
+    set backupdir^=~/.vim/.backup//
+    set backupdir^=./.vim-backup//
+    set backup
+
+    if !isdirectory($HOME . '/.vim/.swap')
+        silent !mkdir -p ~/.vim/.swap >/dev/null 2>&1
+    endif
+    set directory-=.
+    set directory+=.
+    set directory^=~/.vim/.swap//
+    set directory^=./.vim-swap//
+
     if !isdirectory($HOME . '/.vim/.undo')
         silent !mkdir -p ~/.vim/.undo >/dev/null 2>&1
     endif
-    set undodir=./.vim-undo//
-    set undodir+=~/.vim/.undo//
+    set undodir^=~/.vim/.undo//
+    set undodir^=./.vim-undo//
     set undofile
+
 endif
 
 " }}}
