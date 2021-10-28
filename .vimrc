@@ -87,7 +87,7 @@ Plug 'SirVer/ultisnips'
 if has('nvim')
     Plug 'neovim/nvim-lspconfig'
     Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
-    Plug 'ray-x/lsp_signature.nvim'
+    "Plug 'ray-x/lsp_signature.nvim'
 else
     Plug 'autozimu/LanguageClient-neovim', {
                 \ 'branch': 'next',
@@ -977,9 +977,9 @@ EOF
         if empty(filter(g:lsp_languages, 'v:key != &filetype')) | return | endif
         nnoremap <buffer><silent> <leader>K  K
         nnoremap <buffer><silent> K          <Cmd>lua vim.lsp.buf.hover()<CR>
-        nnoremap <buffer><silent> <F1>       <Cmd>lua vim.lsp.buf.signature_help()<CR>
-        inoremap <buffer><silent> <C-k>      <Cmd>lua vim.lsp.buf.signature_help()<CR>
-        inoremap <buffer><silent> <F1>       <Cmd>lua vim.lsp.buf.signature_help()<CR>
+        nnoremap <buffer><silent> <F1>       <Cmd>lua require'signature_help'.normal()<CR>
+        inoremap <buffer><silent> <C-k>      <Cmd>lua require'signature_help'.insert()<CR>
+        inoremap <buffer><silent> <F1>       <Cmd>lua vim.lsp.buf.hover()<CR>
 
         nnoremap <buffer><silent> <leader>d  <Cmd>lua vim.lsp.buf.definition()<CR>
         nnoremap <buffer><silent> <leader>D  <Cmd>lua vim.lsp.buf.declaration()<CR>
@@ -1133,31 +1133,31 @@ endif
 
 if has('nvim')
 
-lua <<EOF
-require'lsp_signature'.setup {
-    bind = true,
-    doc_lines = 10,
-    floating_window = true,
-    floating_window_above_cur_line = true,
-    fix_pos = true,
-    hint_enable = false,
-    hint_prefix = "↑ ",
-    hint_scheme = "String",
-    use_lspsaga = false,
-    hi_parameter = "SpellBad",
-    max_height = 12,
-    max_width = 120,
-    transpancy = nil,
-    handler_opts = { border = "none" },
-    always_trigger = false,
-    auto_close_after = nil,
-    extra_trigger_chars = { "(", "," },
-    zindex = 200,
-    padding = '',
-    timer_interval = 200,
-    toggle_key = nil,
-}
-EOF
+" lua <<EOF
+" require'lsp_signature'.setup {
+"     bind = true,
+"     doc_lines = 10,
+"     floating_window = true,
+"     floating_window_above_cur_line = true,
+"     fix_pos = true,
+"     hint_enable = false,
+"     hint_prefix = "↑ ",
+"     hint_scheme = "String",
+"     use_lspsaga = false,
+"     hi_parameter = "SpellBad",
+"     max_height = 12,
+"     max_width = 120,
+"     transpancy = nil,
+"     handler_opts = { border = "sharp" },
+"     always_trigger = false,
+"     auto_close_after = nil,
+"     extra_trigger_chars = { "(", "," },
+"     zindex = 200,
+"     padding = '',
+"     timer_interval = 200,
+"     toggle_key = nil,
+" }
+" EOF
 
 endif
 
