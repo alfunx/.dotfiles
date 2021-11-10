@@ -1,0 +1,25 @@
+configuration {
+	/* theme: "~/.config/rofi/gruvbox-line.rasi"; */
+	theme: "~/.config/rofi/gruvbox.rasi";
+	modi: "window,run,ssh,drun,combi";
+	fixed-num-lines: true;
+	case-sensitive: false;
+	matching: "fuzzy";
+
+	kb-remove-to-eol: "";
+	kb-accept-entry: "Control+m,Return,KP_Enter";
+
+	kb-row-up: "Up,Control+k,Control+p,ISO_Left_Tab";
+	kb-row-down: "Down,Control+j,Control+n";
+
+	timeout {
+		action: "kb-cancel";
+		delay:  0;
+	}
+	filebrowser {
+		directories-first: true;
+		sorting-method:    "name";
+	}
+}
+
+/* vim: set ft=css : */

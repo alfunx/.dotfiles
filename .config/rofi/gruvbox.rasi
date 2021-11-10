@@ -1,95 +1,111 @@
 * {
-    backgroundcolor: #282828;
-    bg1: #504945;
-    backgroundcoloralternate: #282828;
-    separatorcolor: #504945;
-    scrollbarcolor: #504945;
-    foregroundcolor: #ebdbb2;
-    foregroundcolorinverse: #ebdbb2;
-    selectioncolor: #504945;
+    normal-bg: #282828;
+    normal-fg: #ebdbb2;
+    selected-bg: #504945;
+    selected-fg: #ebdbb2;
+    active-bg: #282828;
+    active-fg: #fabd2f;
+    urgent-bg: #282828;
+    urgent-fg: #fb4934;
+    border-bg: #504945;
+    window-bg: #928374;
 
-    font: "monospace 14";
-    border-color: @separatorcolor;
-    background-color: @backgroundcolor;
-    text-color: @foregroundcolor;
     margin: 0;
     margin-bottom: 0;
     margin-top: 0;
     spacing: 0;
+
+    font: "monospace 14";
+    background-color: @normal-bg;
+    text-color: @normal-fg;
+    border-color: @border-bg;
 }
 
 #listview {
     spacing: 0;
     scrollbar: true;
-    margin: 0;
     dynamic: true;
+    lines: 10;
+
+    margin: 0;
     padding-top: 500;
-    /* lines: 10; */
 }
 
 #window {
-    background-color: @backgroundcolor;
-    border-color: @separatorcolor;
-    border-color: #928374;
+    width: 600;
     border: 4;
     border-radius: 0;
-    width: 600;
+
+    border-color: @window-bg;
 }
 
 #mainbox {
-    border: 0;
     padding: 0;
-    background-color: @backgroundcoloralternate;
+    border: 0;
 }
 
 #element {
     padding: 16;
-    border: 0 0 1 0;
-    border-color: @separatorcolor;
-    background-color: @backgroundcoloralternate;
 }
 
-#element.selected.normal {
-    background-color: @selectioncolor;
-    text-color: @foregroundcolorinverse;
-    border-radius: 0;
-
-    border: 0 0 1 0;
-    border-color: @separatorcolor;
+#element.normal.normal {
+    background-color: @normal-bg;
+    text-color: @normal-fg;
 }
 
 #element.alternate.normal {
-    background-color: @backgroundcoloralternate;
+    background-color: @normal-bg;
+    text-color: @normal-fg;
+}
+
+#element.selected.normal {
+    background-color: @selected-bg;
+    text-color: @normal-fg;
 }
 
 #element.normal.active {
-    background-color: #7c6f64;
+    background-color: @active-bg;
+    text-color: @active-fg;
 }
 
 #element.alternate.active {
-    background-color: #7c6f64;
+    background-color: @active-bg;
+    text-color: @active-fg;
 }
 
 #element.selected.active {
-    background-color: @selectioncolor;
-    text-color: @foregroundcolorinverse;
-    border-radius: 0;
+    background-color: @selected-bg;
+    text-color: @active-fg;
+}
 
-    border: 0 0 1 0;
-    border-color: @separatorcolor;
+#element.normal.urgent {
+    background-color: @urgent-bg;
+    text-color: @urgent-fg;
+}
+
+#element.alternate.urgent {
+    background-color: @urgent-bg;
+    text-color: @urgent-fg;
+}
+
+#element.selected.urgent {
+    background-color: @selected-bg;
+    text-color: @urgent-fg;
 }
 
 #inputbar {
-    border: 0 solid 0 solid 1 solid 0 solid;
     margin: 0;
     spacing: 0;
-    border-color: @separatorcolor;
+    border: 0 0 1 0;
+
+    border-color: @border-bg;
 }
 
 #prompt {
     padding: 16;
-    background-color: @backgroundcoloralternate;
     border: 0 1 0 0;
+
+    border-color: @border-bg;
 }
 
 #entry {
@@ -97,11 +113,18 @@
 }
 
 #scrollbar {
-    border: 0;
     width: 0;
-    handle-color: @scrollbarcolor;
+    border: 0;
+
+    handle-color: @border-bg;
     handle-width: 0;
-    background-color: @backgroundcoloralternate;
+
+    background-color: @normal-bg;
+}
+
+element-text, element-icon {
+    background-color: inherit;
+    text-color:       inherit;
 }
 
 /* vim: set ft=css : */
