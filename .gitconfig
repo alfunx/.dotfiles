@@ -13,6 +13,9 @@
 [credential]
 	helper = cache --timeout=7200
 
+[init]
+	defaultBranch = main
+
 [color]
 	advice = true
 	branch = true
@@ -296,13 +299,13 @@
 	up = reset --patch HEAD --
 
 	# commit
-	c = commit --verbose
-	cn = commit --verbose --no-verify
-	cc = commit --verbose -c
-	cf = commit --verbose --fixup
-	cs = commit --verbose --squash
-	ca = commit --verbose --amend
-	can = commit --verbose --amend --no-edit
+	c = commit
+	cn = commit --no-verify
+	cc = commit -c
+	cf = commit --fixup
+	cs = commit --squash
+	ca = commit --amend
+	can = commit --amend --no-edit
 
 	# checkout
 	co = checkout
@@ -335,9 +338,11 @@
 
 	# network (out)
 	pu = push
-	pun = push --no-verify
 	puf = push --force-with-lease
 	puff = push --force
+	pun = push --no-verify
+	punf = push --no-verify --force-with-lease
+	punff = push --no-verify --force
 
 	# submodule
 	sub = submodule
