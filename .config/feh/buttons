@@ -1,15 +1,23 @@
+# unmap
 prev_img
 next_img
 
+# zoom
 zoom_in C-4
 zoom_out C-5
 prev_img C-6
 next_img C-7
 
+# scroll
 scroll_up 4
 scroll_down 5
 scroll_left 6
 scroll_right 7
 
-blur C-1
+# rotate
 rotate C-3
+
+# blur
+blur C-1
+
+# vim: ft=dosini cms=#%s

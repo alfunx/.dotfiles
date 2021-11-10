@@ -19,8 +19,8 @@
 
 feh --scale-down \
     --sort name \
+    --auto-rotate \
     --conversion-timeout -1 \
-    --force-aliasing \
     --geometry 1280x960 \
     --title "[%u/%l] %n (%wx%h)"
 
@@ -72,3 +72,5 @@ sky --menu-bg /usr/share/feh/images/menubg_sky.png
 orange --menu-bg /usr/share/feh/images/menubg_orange.png
 light --menu-bg /usr/share/feh/images/menubg_light.png
 black --menu-bg /usr/share/feh/images/menubg_black.png --menu-style /usr/share/feh/fonts/black.style
+
+# vim: ft=dosini cms=#%s

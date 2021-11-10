@@ -1,21 +1,40 @@
+# unmap zoom
 zoom_in
 zoom_out
 
+# unmap scroll
 scroll_up
 scroll_down
 scroll_left
 scroll_right
 
+# zoom
 zoom_in S-Up
 zoom_out S-Down
 zoom_default C-0
 
+# scroll
 scroll_up C-Up
 scroll_down C-Down
 scroll_left C-Left
 scroll_right C-Right
 
+# scroll
 scroll_up k
 scroll_down j
 scroll_left h
 scroll_right l
+
+# scroll half-page
+scroll_up_page K
+scroll_down_page J
+scroll_left_page H
+scroll_right_page L
+
+# rotate
+orient_1 C-r
+
+# save list
+save_filelist G
+
+# vim: ft=dosini cms=#%s
