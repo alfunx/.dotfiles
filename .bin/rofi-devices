@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+media_dir='/media'
+
+choice=$(find "$media_dir" -mindepth 1 -maxdepth 1 -type d \
+    | xargs -I@ basename @ \
+    | rofi -i -lines 6 -dmenu -p 'devices')
+
+[[ -z "$choice" ]] && exit 0
+
+udevil umount "$media_dir/$choice"

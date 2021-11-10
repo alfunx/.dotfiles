@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # aur-tmpfs - setup tmpfs for chroot
-set -o errexit -o pipefail
-shopt -s nullglob
+[[ -v AUR_DEBUG ]] && set -o xtrace
+set -o errexit
 shopt -s extglob
 argv0=tmpfs
 PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
@@ -10,7 +10,7 @@ PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 unmount=0
 
 usage() {
-    plain "usage: $argv0 [-u]"
+    plain >&2 'usage: %s [-u]' "$argv0"
     exit 1
 }
 
@@ -18,8 +18,15 @@ source /usr/share/makepkg/util/util.sh
 source /usr/share/makepkg/util/message.sh
 source /usr/share/makepkg/util/parseopts.sh
 
-if [[ -t 2 && ! -o xtrace ]]; then
-    colorize
+if [[ ! -v NO_COLOR ]] && [[ ! -v AUR_DEBUG ]]; then
+    [[ -t 2 ]] && colorize
+fi
+
+# mollyguard for makepkg
+if (( UID == 0 )) && [[ ! -v AUR_ASROOT ]]; then
+    warning 'aur-%s is not meant to be run as root.' "$argv0"
+    warning 'To proceed anyway, set the %s variable.' 'AUR_ASROOT'
+    exit 1
 fi
 
 opt_short='u'

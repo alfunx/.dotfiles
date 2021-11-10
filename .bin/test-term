@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+prepare() {
+    # Generate 100MB of random tex.
+    base64 </dev/urandom | dd of=/tmp/randomdata bs=1024 count=100KB
+}
+
+execute() {
+    # Test. Repeat for each terminal...
+    # Results are written to bench_XXX.txt
+    # This also shows MB/s very nicely thanks to `dd`.
+
+    loop_count=${2:-1}
+
+    echo -e "# bench for $1\\n\\n" > ~/.bin/test-term-results/bench_"$1"
+
+    for (( i=1; i<="$loop_count"; i++ )); do
+        echo "> iteration nr: $i" >> ~/.bin/test-term-results/bench_"$1"
+        { time dd if=/tmp/randomdata bs=10240; } 2>> ~/.bin/test-term-results/bench_"$1"
+        echo >> ~/.bin/test-term-results/bench_"$1"
+    done
+}
+
+colors() {
+    time for i in {1..400000}; do
+        echo -e '\r'
+        echo -e '\033[0K\033[1mBold\033[0m \033[7mInvert\033[0m \033[4mUnderline\033[0m'
+        echo -e '\033[0K\033[1m\033[7m\033[4mBold & Invert & Underline\033[0m'
+        echo
+        echo -e '\033[0K\033[31m Red \033[32m Green \033[33m Yellow \033[34m Blue \033[35m Magenta \033[36m Cyan \033[0m'
+        echo -e '\033[0K\033[1m\033[4m\033[31m Red \033[32m Green \033[33m Yellow \033[34m Blue \033[35m Magenta \033[36m Cyan \033[0m'
+        echo
+        echo -e '\033[0K\033[41m Red \033[42m Green \033[43m Yellow \033[44m Blue \033[45m Magenta \033[46m Cyan \033[0m'
+        echo -e '\033[0K\033[1m\033[4m\033[41m Red \033[42m Green \033[43m Yellow \033[44m Blue \033[45m Magenta \033[46m Cyan \033[0m'
+        echo
+        echo -e '\033[0K\033[30m\033[41m Red \033[42m Green \033[43m Yellow \033[44m Blue \033[45m Magenta \033[46m Cyan \033[0m'
+        echo -e '\033[0K\033[30m\033[1m\033[4m\033[41m Red \033[42m Green \033[43m Yellow \033[44m Blue \033[45m Magenta \033[46m Cyan \033[0m'
+    done
+}
+
+case $1 in
+    e|execute)
+        shift
+        execute "$@"
+        ;;
+    p|prepare)
+        shift
+        prepare "$@"
+        ;;
+    c|colors)
+        shift
+        colors "$@"
+        ;;
+esac

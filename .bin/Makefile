@@ -2,7 +2,7 @@ DESTDIR ?=
 PREFIX ?= /usr/local
 BINDIR ?= $(PREFIX)/bin
 CONFDIR ?= /etc
-HOMEDIR ?= $(HOME)
+HOMEDIR ?= /home/amariya
 
 help:
 	@echo 'default:         help'

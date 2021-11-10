@@ -13,14 +13,17 @@ shift
 case $cmd in
 
     vim)
+        cd ~/.vim
         vim \
             ~/.vimrc \
             ~/.vim/after/**/* \
+            ~/.vim/autoload/* \
             ~/.vim/syntax/* \
             "$@"
         ;;
 
     tmux)
+        cd ~/.config/tmux
         vim \
             ~/.tmux.conf \
             ~/.config/tmux/**/* \
@@ -32,18 +35,21 @@ case $cmd in
             ~/.gitconfig \
             ~/.gitignore \
             ~/.gitmodules \
+            ~/.ignore \
             ~/.bin/git-* \
             ~/.config/git/hooks/**/* \
             "$@"
         ;;
 
     aur|aurutils)
+        cd ~/.bin
         vim \
             ~/.bin/aur-* \
             "$@"
         ;;
 
     zsh)
+        cd ~/.config/zsh
         vim \
             ~/.zshrc \
             ~/.config/zsh/* \
@@ -53,6 +59,7 @@ case $cmd in
         ;;
 
     bash)
+        cd ~/.config/bash
         vim \
             ~/.bashrc \
             ~/.config/bash/* \
@@ -62,6 +69,7 @@ case $cmd in
         ;;
 
     aw|awesome)
+        cd ~/.config/awesome
         vim \
             ~/.config/awesome/rc.lua \
             ~/.config/awesome/themes/blackout/theme.lua \
@@ -81,6 +89,7 @@ case $cmd in
         ;;
 
     gdb)
+        cd ~/.gdbinit.d
         vim \
             ~/.gdbinit \
             ~/.gdbinit.d/**/* \
@@ -88,12 +97,14 @@ case $cmd in
         ;;
 
     bin)
+        cd ~/.bin
         vim \
             ~/.bin/* \
             "$@"
         ;;
 
     conf)
+        cd ~/.bin
         vim "$0"
         ;;
 

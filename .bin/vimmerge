@@ -1,5 +1,65 @@
 #!/bin/sh
 
+# Add vimmerge as mergetool to your ~/.gitconfig:
+#
+#   git config --global mergetool.vimmerge.cmd 'vimmerge $MERGED $BASE $LOCAL $REMOTE
+#   git config --global mergetool.vimmerge.trustExitCode true
+#
+# To set vimmerge as default mergetool do:
+#
+#   git config --global merge.tool vimmerge
+#
+# When you encounter a merge with conflicts, run the following command to open
+# vimmerge as mergetool:
+#
+#   git mergetool -t vimmerge
+#   # or, if you chose vimmerge as default mergetool:
+#   git mergetool
+#
+# This tool will open three tabs in Vim, where each tab provides a different way
+# to view the conflicts. Resolve the conflicts in the first tab in the left
+# split, then save and exit the file. This will also mark the conflict as
+# resolved in Git.
+#
+#   Tab1 is a two-way diff of just the conflicts. Resolve the conflicts in the
+#   left split and save the file. The right split is set as read-only.
+#       +------+
+#       | Tab1 |
+#       +--------------------------------+
+#       |    file.c     |    THEIRS      |
+#       +--------------------------------+
+#
+#   Tab2 is a three-way diff of the original files and the merge base. This is
+#   the traditional three-way diff. Although noisy, it is occasionally useful
+#   to view the three original states of the conflicting file before the merge.
+#   These buffers are set as read-only.
+#              +------+
+#              | Tab2 |
+#       +--------------------------------+
+#       |  LOCAL   |   BASE   |  REMOTE  |
+#       +--------------------------------+
+#
+#   Tab3 is the in-progress merge that Git has written to the filesystem
+#   containing the conflict markers. This buffer is also set as read-only.
+#                     +------+
+#                     | Tab3 |
+#       +--------------------------------+
+#       |       <<<<<<< HEAD             |
+#       |        LCONFL                  |
+#       |       =======                  |
+#       |        RCONFL                  |
+#       |       >>>>>>> someref          |
+#       +--------------------------------+
+#
+# Workflow:
+#
+# 1. Save your changes to the original file (the left split on the first tab,
+#    which is also the only buffer that is not read-only).
+# 2. The LOCAL, BASE, and REMOTE versions of the file are available in the
+#    second tab, if you want to look at them.
+# 3. When vimdiff exits cleanly, the conflict will be marked as solved.
+#    NOTE: Use :cq to abort the merge and exit Vim with an error code.
+
 if [ $# -lt 4 ]; then
     echo "Usage: $0 <merged> <base> <local> <remote>" 2>&1
     exit 1
@@ -9,21 +69,20 @@ readonly MERGED=$1 BASE=$2 LOCAL=$3 REMOTE=$4
 readonly TMPDIR=$(mktemp --tmpdir --directory vimmerge.XXXXXXXXXX)
 trap 'rm -rf "$TMPDIR"' INT TERM EXIT
 
-readonly THEIRS=$TMPDIR/THEIRS.${REMOTE##*.}
-readonly ORIGINAL=$TMPDIR/ORIGINAL.${MERGED##*.}
+readonly THEIRS=$TMPDIR/THEIRS.${REMOTE#*.}
+readonly ORIGINAL=$TMPDIR/ORIGINAL.${MERGED#*.}
 cp "$MERGED" "$THEIRS"
 cp "$MERGED" "$ORIGINAL"
 
-vim -f \
-    -c 'g/^<\{7} /,/^|\{7} \?\|^=\{7}\r\?$/d' \
-    -c 'g/^>\{7} /d' \
-    -c "w | f THEIRS | setl nomod ro | lefta vert diffs $MERGED" \
-    -c 'g/^|\{7} \?\|^=\{7}\r\?$/,/^>\{7} /d' \
-    -c 'g/^<\{7} /d' \
+vim -c 'g/^<<<<<<< /,/^||||||| \?\|^=======\r\?$/d_' \
+    -c 'g/^>>>>>>> /d_' \
+    -c "w | f THEIRS | setl nomod ro | abo vert diffs $MERGED" \
+    -c 'g/^||||||| \?\|^=======\r\?$/,/^>>>>>>> /d_' \
+    -c 'g/^<<<<<<< /d_' \
     -c "w | tabe $REMOTE | f REMOTE | setl nomod ro" \
-    -c "lefta vert diffs $LOCAL | f LOCAL | setl nomod ro" \
-    -c "rightb vert diffs $BASE | f BASE | setl nomod ro" \
-    -c "tabe $ORIGINAL | f ORIGINAL | setl nomod ro | tabr" \
+    -c "abo vert diffs $LOCAL | f LOCAL | setl nomod ro" \
+    -c "bel vert diffs $BASE | f BASE | setl nomod ro" \
+    -c "tabe $ORIGINAL | f ORIGINAL | setl nomod ro | tabr | nohl" \
     "$THEIRS"
 
 exit $?

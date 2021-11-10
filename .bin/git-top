@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+case "$(git rev-parse --is-inside-work-tree)" in
+    true)  cd "$(git rev-parse --show-toplevel)" || exit 2 ;;
+    false) cd "$(git rev-parse --git-dir)/.." || exit 2 ;;
+    *)     exit 1 ;;
+esac
+
+"${@:-pwd}"
