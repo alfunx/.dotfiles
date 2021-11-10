@@ -49,19 +49,36 @@ set window-title-basename true
 set statusbar-home-tilde true
 set show-hidden true
 
-map d scroll half-down
-map u scroll half-up
-map x toggle_page_mode
-map <C-r> rotate
-map r recolor
-
+# zoom
 map <S-Up> zoom in
 map <S-Down> zoom out
+map <C-0> zoom default
 
-map <Left> navigate previous
-map <Right> navigate next
-
+# scroll
 map <C-Up> scroll up
 map <C-Down> scroll down
 map <C-Left> scroll left
 map <C-Right> scroll right
+
+# scroll
+map k scroll up
+map j scroll down
+map h scroll left
+map l scroll right
+
+# scroll half-page
+map d scroll half-down
+map u scroll half-up
+
+# rotate
+map <C-r> rotate
+
+# next/previous page
+map <Left> navigate previous
+map <Right> navigate next
+
+# other
+map x toggle_page_mode
+map r recolor
+
+# vim: ft=dosini cms=#%s
