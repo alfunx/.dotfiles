@@ -128,6 +128,9 @@ function _config.init()
                     "pulsemixer",
                     "Arandr",
                     "Blueman-manager",
+                    "Dconf-editor",
+                    "hp-toolbox",
+                    "zoom",
                 },
                 name = {
                     "Event Tester",

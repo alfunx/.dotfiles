@@ -61,6 +61,8 @@ function _config.init()
                   { description = "open arandr", group = "launcher" }),
         awful.key({ k.m                }, "w", function() awful.spawn(context.vars.emoji) end,
                   { description = "open emoji picker", group = "launcher" }),
+        awful.key({ k.m                }, "o", function() awful.spawn(context.vars.music) end,
+                  { description = "open music player", group = "launcher" }),
         awful.key({ k.m, k.c           }, "c", function() awful.spawn(table.concat
                   { context.vars.terminal, " python -ic 'from math import *'" },
                   { floating = true, ontop = true, width = 410, height = 550,
@@ -235,22 +237,18 @@ function _config.init()
         -- Client manipulation
         awful.key({ k.m                }, k.u, function()
             awful.client.focus.byidx(-1)
-            util.show_tasklist()
         end,
                   { description = "focus previous client by index", group = "client" }),
         awful.key({ k.m                }, k.d, function()
             awful.client.focus.byidx(1)
-            util.show_tasklist()
         end,
                   { description = "focus next client by index", group = "client" }),
         awful.key({ k.m, k.s           }, k.u, function()
             awful.client.swap.byidx(-1)
-            util.show_tasklist()
         end,
                   { description = "swap with previous client by index", group = "client" }),
         awful.key({ k.m, k.s           }, k.d, function()
             awful.client.swap.byidx(1)
-            util.show_tasklist()
         end,
                   { description = "swap with next client by index", group = "client" }),
         awful.key({ k.m                }, "u", function()
@@ -374,14 +372,20 @@ function _config.init()
                   { description = "show weather notification", group = "widget" }),
 
         -- Volume
+        awful.key({                    }, "XF86AudioMute", function()
+            brokers.audio:toggle()
+        end),
         awful.key({                    }, "XF86AudioRaiseVolume", function()
             brokers.audio:increase()
         end),
         awful.key({                    }, "XF86AudioLowerVolume", function()
             brokers.audio:decrease()
         end),
-        awful.key({                    }, "XF86AudioMute", function()
-            brokers.audio:toggle()
+        awful.key({ k.s                }, "XF86AudioRaiseVolume", function()
+            brokers.audio:increase_10()
+        end),
+        awful.key({ k.s                }, "XF86AudioLowerVolume", function()
+            brokers.audio:decrease_10()
         end),
         awful.key({ k.c                }, "XF86AudioRaiseVolume", function()
             brokers.audio:set_max()
@@ -399,6 +403,12 @@ function _config.init()
         end),
         awful.key({                    }, "XF86MonBrightnessDown", function()
             brokers.brightness:decrease()
+        end),
+        awful.key({ k.s                }, "XF86MonBrightnessUp", function()
+            brokers.brightness:increase_10()
+        end),
+        awful.key({ k.s                }, "XF86MonBrightnessDown", function()
+            brokers.brightness:decrease_10()
         end),
         awful.key({ k.c                }, "XF86MonBrightnessUp", function()
             brokers.brightness:set_max()

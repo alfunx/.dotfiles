@@ -77,6 +77,7 @@ config.context.init {
         browser          = "chromium ",
         email            = "thunderbird ",
         emoji            = "rofimoji -c ",
+        music            = "spotify",
         net_iface        = "wlp58s0",
         ping_ip          = "8.8.8.8",
         cores            = 4,

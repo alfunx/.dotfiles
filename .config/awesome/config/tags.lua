@@ -73,7 +73,7 @@ function _config.init()
     --     layout = cond,
     -- }
 
-    awful.layout.layouts = {
+    awful.layout.append_default_layouts {
         awful.layout.suit.max,
         --awful.layout.suit.max.fullscreen,
         awful.layout.suit.tile,

@@ -66,6 +66,7 @@ function _config.setup(s)
 
         if x.muted then
             icon = ""
+            -- icon = ""
         elseif x.percent <= 20 then
             icon = ""
         elseif x.percent < 50 then

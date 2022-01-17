@@ -99,7 +99,7 @@ function _config.init()
 
     -- Generate symbol markup function
     _config.symbol_markup_function = function(size, color)
-        return _config.markup_function({ name = "Font Awesome", size = size }, color)
+        return _config.markup_function({ name = "Font Awesome 5 Free", size = size }, color)
     end
 
     do
