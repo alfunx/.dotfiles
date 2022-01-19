@@ -60,8 +60,10 @@
 	whitespace = 1 reverse
 
 [color "diff-highlight"]
-	oldHighlight = reverse
-	oldReset = noreverse
+	oldHighlight = ul
+	oldReset = noul
+	newHighlight = ul
+	newReset = noul
 
 [color "interactive"]
 	prompt = 4 bold
@@ -97,7 +99,7 @@
 	status = true
 
 [diff]
-	algorithm = histogram
+	algorithm = myers
 	tool = vimdiff
 	colorMoved = default
 	renames = copy
@@ -112,7 +114,7 @@
 	prompt = true
 
 [difftool "vimdiff"]
-	cmd = vimdiff "$LOCAL" "$REMOTE"
+	cmd = vim -d "$LOCAL" "$REMOTE"
 
 [merge]
 	ff = false
@@ -164,7 +166,7 @@
 
 [interactive]
 	singlekey = true
-	diffFilter = "/usr/share/git/diff-highlight/diff-highlight | less"
+	diffFilter = "diff-highlight"
 
 [branch]
 	autoSetupMerge = true
@@ -187,9 +189,9 @@
 	mailmap = true
 
 [pager]
-	log = "/usr/share/git/diff-highlight/diff-highlight | less"
-	show = "/usr/share/git/diff-highlight/diff-highlight | less"
-	diff = "/usr/share/git/diff-highlight/diff-highlight | less"
+	log = "diff-highlight | less"
+	show = "diff-highlight | less"
+	diff = "diff-highlight | less"
 
 [rerere]
 	enabled = true
@@ -274,6 +276,8 @@
 	# inspection
 	sh = show --stat --cc --summary --patch
 	grep = grep -Ii
+	desc = describe --abbrev=0
+	descl = describe --long
 
 	# diff
 	d = diff -c
