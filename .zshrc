@@ -63,7 +63,7 @@ bgnotify_formatted() {
 plugins=(
     zsh-syntax-highlighting
     zsh-completions
-    zsh-autosuggestions
+    #zsh-autosuggestions
     command-not-found
     bgnotify
 )

@@ -15,16 +15,16 @@ alias .......='cd ../../../../../..'
 alias ........='cd ../../../../../../..'
 
 # ls variants
-alias l='ls -FAh'
-alias la='ls -lAFh'
-alias lt='ls -lFAht'
-alias lr='ls -RFAh'
+alias l='ls -FAh --group-directories-first'
+alias la='ls -lAFh --group-directories-first'
+alias lt='ls -lFAht --group-directories-first'
+alias lr='ls -RFAh --group-directories-first'
 
 # more ls variants
-alias ldot='ls -ld .*'
-alias lS='ls -1FASsh'
-alias lart='ls -1Fcart'
-alias lrt='ls -1Fcrt'
+alias ldot='ls -ld .* --group-directories-first'
+alias lS='ls -1FASsh --group-directories-first'
+alias lart='ls -1Fcart --group-directories-first'
+alias lrt='ls -1Fcrt --group-directories-first'
 
 # ls with different alphabethical sorting
 unalias ll
@@ -430,3 +430,6 @@ ranger-cd-widget() {
 }
 zle     -N     ranger-cd-widget
 bindkey '\e^o' ranger-cd-widget
+
+# tlmgr (texlive package manager)
+alias tlmgr='/usr/share/texmf-dist/scripts/texlive/tlmgr.pl --usermode'
