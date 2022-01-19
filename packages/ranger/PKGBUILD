@@ -2,14 +2,14 @@
 
 _pkgname=ranger
 pkgname=$_pkgname-git
-pkgver=1.9.2.318.g86281229
+pkgver=1.9.3.143.g5047d9e5
 pkgrel=1
 pkgdesc="A simple, vim-like file manager."
 arch=('any')
 url="http://savannah.nongnu.org/projects/ranger"
 license=('GPL')
 depends=('python') #python(>=2.6 or >=3.1)
-makedepends=('git')
+makedepends=('git' 'python-setuptools')
 optdepends=('atool: for previews of archives'
             'file: for determining file types'
             'highlight: for syntax highlighting of code'
