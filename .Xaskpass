@@ -1,0 +1,104 @@
+! SshAskpass.ad:  Default resources for the X11-based ssh-askpass for OpenSSH
+! created 1999-Nov-17 03:40 Jim Knoble <jmknoble@pobox.com>
+! autodate: 2001-Sep-16 18:08
+! 
+! by Jim Knoble <jmknoble@pobox.com>
+! Copyright (C) 1999,2000 Jim Knoble
+! 
+! Disclaimer:
+! 
+! The software is provided "as is", without warranty of any kind,
+! express or implied, including but not limited to the warranties of
+! merchantability, fitness for a particular purpose and
+! noninfringement. In no event shall the author(s) be liable for any
+! claim, damages or other liability, whether in an action of
+! contract, tort or otherwise, arising from, out of or in connection
+! with the software or the use or other dealings in the software.
+! 
+! Permission to use, copy, modify, distribute, and sell this software
+! and its documentation for any purpose is hereby granted without
+! fee, provided that the above copyright notice appear in all copies
+! and that both that copyright notice and this permission notice
+! appear in supporting documentation.
+! 
+
+! +-----------------------------+
+! | Default theme (like SSH v1) |
+! +-----------------------------+
+
+! *Dialog.font: -adobe-helvetica-bold-r-normal-*-*-240-*-*-*-*-iso8859-1
+! *Button.font: -adobe-helvetica-bold-r-normal-*-*-240-*-*-*-*-iso8859-1
+*Dialog.font: xft:Fira Sans:style=Regular:size=20
+*Button.font: xft:Fira Sans:style=Regular:size=20
+
+*?.foreground:      rgb:eb/db/b2
+*?.background:      rgb:28/28/28
+*topShadowColor:    rgb:00/00/00
+*bottomShadowColor: rgb:00/00/00
+*borderColor:       rgb:00/00/00
+*shadowThickness:   0
+*borderWidth:       2
+*horizontalSpacing: 8
+*verticalSpacing:   8
+
+*Button.shadowThickness:   0
+*Button.borderWidth:       1
+*Button.horizontalSpacing: 10
+*Button.verticalSpacing:   4
+
+*Indicator.foreground:        rgb:a8/99/84
+*Indicator.background:        rgb:50/49/45
+*Indicator.shadowThickness:   0
+*Indicator.borderWidth:       0
+*Indicator.height:            10
+*Indicator.width:             10
+*Indicator.horizontalSpacing: 4
+*Indicator.verticalSpacing:   4
+*Indicator.minimumCount:      12
+*Indicator.maximumCount:      24
+
+! X11 does a miserable job of providing resolution-independent drawing
+! facilities---it expects everything to be done in pixels.  So if you
+! happen to run your X server at a resolution of 100 pixels per inch
+! (or some other strange value) instead of the widely used default of
+! 75, x11-ssh-askpass looks might tiny.  [Sigh].
+! 
+! To get around this, umm, limitation, we declare the resolution that
+! the spacing and width/height pixels values are "valid" for, along
+! with a fuzz factor.  If the current actual resolution is outside of
+! the range of <DEFAULT - FUZZ>..<DEFAULT + FUZZ>, then we scale pixel
+! measurements to fit the actual resolution.
+! 
+! (And if you think *this* is a horrid hack, then take a look at the
+! actual code, which has to deal with conversion to [cheesy fanfare]
+! that is right---millimeters!!!  The right hand managed to slip that
+! one in while the left hand was adding a '-dpi' switch to the sample
+! server implementation.  I think both left feet were adding the
+! RESOLUTION_X and RESOLUTION_Y fields [in dots per inch, naturally]
+! to the X Logical Font Description.  The irony is underwhelming.)
+
+*defaultXResolution: 50/in
+*defaultYResolution: 50/in
+*xResolutionFuzz:    20/in
+*yResolutionFuzz:    20/in
+
+! Number of seconds to wait for a key- or button-press
+! before giving up.  '0' means wait forever.
+*inputTimeout: 0
+
+! Ssh-askpass grabs the keyboard by default.
+! To stop it from grabbing the keyboard, use:
+!*grabKeyboard: false
+
+! Ssh-askpass does not grab the pointer by default.
+! To make it grab the pointer, use:
+!*grabPointer: true
+
+! Ssh-askpass does not grab the server by default.
+! To make it grab the server, use:
+!*grabServer: true
+
+*Dialog.title:       OpenSSH Authentication Passphrase Request
+*Dialog.label:       Please enter your authentication passphrase:
+*okButton.label:     OK
+*cancelButton.label: Cancel
