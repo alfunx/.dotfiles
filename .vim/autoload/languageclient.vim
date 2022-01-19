@@ -8,22 +8,22 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! languageclient#errors() abort
+function! languageclient#error() abort
     let cnt = get(LanguageClient#statusLineDiagnosticsCounts(), 'E', 0)
     return cnt > 0 ? cnt : ''
 endfunction
 
-function! languageclient#warnings() abort
+function! languageclient#warn() abort
     let cnt = get(LanguageClient#statusLineDiagnosticsCounts(), 'W', 0)
     return cnt > 0 ? cnt : ''
 endfunction
 
-function! languageclient#infos() abort
+function! languageclient#info() abort
     let cnt = get(LanguageClient#statusLineDiagnosticsCounts(), 'I', 0)
     return cnt > 0 ? cnt : ''
 endfunction
 
-function! languageclient#hints() abort
+function! languageclient#hint() abort
     let cnt = get(LanguageClient#statusLineDiagnosticsCounts(), 'H', 0)
     return cnt > 0 ? cnt : ''
 endfunction

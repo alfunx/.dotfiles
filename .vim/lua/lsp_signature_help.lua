@@ -5,10 +5,6 @@ local lsp = vim.lsp
 
 local M = {}
 
-function _G.put(t)
-    print(vim.inspect(t):gsub("\n+", ""))
-end
-
 local fbuf, fwin, hl, hl_old, hlns
 
 local function triggered(chars)
@@ -36,7 +32,7 @@ local function cleanup()
     end
 end
 
-function handler(err, result, ctx, config)
+local function handler(err, result, ctx, config)
     config = config or {}
     config.focus_id = ctx.method
     if not (result and result.signatures and result.signatures[1]) then
@@ -90,7 +86,7 @@ function handler(err, result, ctx, config)
     return fbuf, fwin
 end
 
-function M.insert_interactive()
+function M.insert()
     return lsp.buf_request(0, 'textDocument/signatureHelp',
         util.make_position_params(),
         lsp.with(
@@ -105,9 +101,9 @@ function M.insert_interactive()
     )
 end
 
-api.nvim_command("autocmd TextChangedP <buffer> lua require'signature_help_interactive'.insert_interactive()")
-api.nvim_command("autocmd TextChangedI <buffer> lua require'signature_help_interactive'.insert_interactive()")
-api.nvim_command("autocmd CursorMovedI <buffer> lua require'signature_help_interactive'.insert_interactive()")
-api.nvim_command("autocmd InsertEnter  <buffer> lua require'signature_help_interactive'.insert_interactive()")
+api.nvim_command("autocmd TextChangedP <buffer> lua require'lsp_signature_help'.insert()")
+api.nvim_command("autocmd TextChangedI <buffer> lua require'lsp_signature_help'.insert()")
+api.nvim_command("autocmd CursorMovedI <buffer> lua require'lsp_signature_help'.insert()")
+api.nvim_command("autocmd InsertEnter  <buffer> lua require'lsp_signature_help'.insert()")
 
 return M

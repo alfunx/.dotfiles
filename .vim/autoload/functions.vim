@@ -38,9 +38,6 @@ function! functions#echo_syntax(...) abort
     let hic = synIDattr(synIDtrans(synID(line('.'),col('.'),1)),'name')
     let trc = synIDattr(synIDtrans(synID(line('.'),col('.'),0)),'name')
 
-    let node = luaeval("require'nvim-treesitter.ts_utils'.get_node_at_cursor():type()")
-    let expr = luaeval("require'nvim-treesitter.ts_utils'.get_node_at_cursor():sexpr()")
-
     echon 'hi: '
     echohl Todo
     echon hi
@@ -60,25 +57,12 @@ function! functions#echo_syntax(...) abort
     echon '●'
     echohl None
     echon ')  '
-
-    echon 'treesitter-node: '
-    echohl Todo
-    echon node
-    echohl None
 endfunction
 
 " change register
 function! functions#change_register() abort
     let x = nr2char(getchar())
     call feedkeys(":let @" . x . " = \<C-r>\<C-r>=string(@" . x . ")\<CR>\<Left>", 'n')
-endfunction
-
-" simple git blame
-function! functions#gitblame(range) abort
-    return join(systemlist(printf('git -C %s blame -L %s %s',
-                \ shellescape(expand('%:p:h')),
-                \ a:range,
-                \ shellescape(expand('%:t')))), '\n')
 endfunction
 
 " use UltiSnips to expand snippet in completion
@@ -110,7 +94,7 @@ endfunction
 " pretty fold text
 function! functions#foldtext() abort
     let line = printf('  %s  ', substitute(getline(v:foldstart), '^\s*"\?\s*\|\s*"\?\s*{{' . '{\d*\s*', '', 'g'))
-    let linecount = printf('┤ %4d ├', v:foldend - v:foldstart + 1)
+    let linecount = printf('┤ %5d ├', v:foldend - v:foldstart + 1)
     let foldcount = v:foldlevel > 1 ? printf('┤ %d ├', v:foldlevel) : ''
     let foldchar = matchstr(&fillchars, 'fold:\zs.')
     let foldhead = strpart(printf('%s%s%s%s', repeat(foldchar, 3), foldcount, repeat(foldchar, 3), line), 0, (winwidth(0)*2)/3)
@@ -149,32 +133,7 @@ function! functions#google(query, lucky) abort
     call functions#open(url)
 endfunction
 
-" open floating window with borders
-function! functions#nvim_open_window(buffer, enter, opts) abort
-    if get(a:opts, 'border', v:false)
-        call remove(a:opts, 'border')
-        let opts = copy(a:opts)
-        let opts.width += 4
-        let opts.height += 2
-        let opts.row -= 1
-        let opts.col -= 2
-        let opts.focusable = v:false
-        let opts.style = 'minimal'
-        let frame =            [ '╭' . repeat('─', opts.width - 2) . '╮' ]
-                    \ + repeat([ '│' . repeat(' ', opts.width - 2) . '│' ], opts.height - 2)
-                    \ +        [ '╰' . repeat('─', opts.width - 2) . '╯' ]
-        let s:buf = nvim_create_buf(v:false, v:true)
-        call nvim_buf_set_lines(s:buf, 0, -1, v:true, frame)
-        let border = nvim_open_win(s:buf, v:true, opts)
-        call setwinvar(border, '&winhl', 'NormalFloat:Comment')
-        let win = nvim_open_win(a:buffer, a:enter, a:opts)
-        autocmd BufWipeout <buffer> exe 'bw ' . s:buf
-        return win
-    else
-        return nvim_open_win(a:buffer, a:enter, a:opts)
-    endif
-endfunction
-
+" close window if it is an fzf window
 function! functions#close_if_fzf() abort
     if &ft == 'fzf' | quit! | endif
 endfunction

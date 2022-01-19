@@ -7,6 +7,14 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+" simple git blame
+function! git#blame(range) abort
+    return join(systemlist(printf('git -C %s blame -L %s %s',
+                \ shellescape(expand('%:p:h')),
+                \ a:range,
+                \ shellescape(expand('%:t')))), '\n')
+endfunction
+
 " create a quickfix list with git locations
 function! git#qf(...) abort
     let cmd = join(['git locations'] + a:000, ' ')
@@ -35,12 +43,15 @@ function! git#lladd(...) abort
     call setloclist(0, [], 'a', {'title': cmd})
 endfunction
 
+" " GitBlame
+" command! -range GBlame echo git#blame('<line1>,<line2>')
+"
 " " Git merge locations
 " command! -bang -nargs=* -complete=file -bar GMerge
 "             \ call git#qf('merge', <f-args>)
 "
 " " Git diff locations
-" command! -bang -nargs=* -complete=file -bar GMerge
+" command! -bang -nargs=* -complete=file -bar GDiff
 "             \ call git#qf('diff', <f-args>)
 "
 " " Git diff --check locations

@@ -11,9 +11,9 @@ endif
 " A bunch of useful C keywords
 syn match	qfFileName	"^[^|]*" nextgroup=qfSeparator
 syn match	qfSeparator	"|" nextgroup=qfLineNr contained
-syn match	qfLineNr	"[^|]*" contained contains=qfError,qfWarning,qfInfo,qfHint,qfNote
+syn match	qfLineNr	"[^|]*" contained contains=qfError,qfWarn,qfInfo,qfHint,qfNote
 syn match	qfError		"error" contained
-syn match	qfWarning	"warning" contained
+syn match	qfWarn		"warn\(ing\)\?" contained
 syn match	qfInfo		"info" contained
 syn match	qfHint		"hint" contained
 syn match	qfNote		"note" contained
@@ -22,7 +22,7 @@ syn match	qfNote		"note" contained
 hi def link qfFileName	Directory
 hi def link qfLineNr	LineNr
 hi def link qfError	Error
-hi def link qfWarning	Warning
+hi def link qfWarn	Warn
 hi def link qfInfo	Info
 hi def link qfHint	Hint
 hi def link qfNote	Note

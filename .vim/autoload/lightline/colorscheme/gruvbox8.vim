@@ -59,7 +59,7 @@ if exists('g:lightline')
   let s:p.tabline.middle = [ [ s:bg0, s:bg1 ] ]
   let s:p.tabline.right = [ [ s:fg4, s:bg2 ], [ s:bg4, s:bg1 ] ]
   let s:p.normal.error = [ [ s:bg0, s:red ] ]
-  let s:p.normal.warning = [ [ s:bg0, s:yellow ] ]
+  let s:p.normal.warn = [ [ s:bg0, s:yellow ] ]
   let s:p.normal.info = [ [ s:bg0, s:blue ] ]
   let s:p.normal.hint = [ [ s:bg0, s:purple ] ]
 
