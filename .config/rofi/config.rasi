@@ -1,6 +1,4 @@
 configuration {
-	/* theme: "~/.config/rofi/gruvbox-line.rasi"; */
-	theme: "~/.config/rofi/gruvbox.rasi";
 	modi: "window,run,ssh,drun,combi";
 	fixed-num-lines: true;
 	case-sensitive: false;
@@ -21,5 +19,8 @@ configuration {
 		sorting-method:    "name";
 	}
 }
+
+/* @theme "~/.config/rofi/gruvbox-line.rasi" */
+@theme "~/.config/rofi/gruvbox.rasi"
 
 /* vim: set ft=css : */
