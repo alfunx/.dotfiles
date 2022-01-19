@@ -5,6 +5,7 @@ usermodmap=$HOME/.Xmodmap
 sysresources=/etc/X11/xinit/.Xresources
 sysmodmap=/etc/X11/xinit/.Xmodmap
 
+askpass=$HOME/.Xaskpass
 
 # merge in defaults and keymaps
 
@@ -31,22 +32,26 @@ if [ -d /etc/X11/xinit/xinitrc.d ]; then
     unset f
 fi
 
+if [ -f "$askpass" ]; then
+    xrdb -merge "$askpass"
+fi
+
 # select wm/de with: startx ~/.xinitrc session
 session=${1:-awesome}
 
-# use AwesomeWM notifications if possible
-if [ "$session" = 'awesome' ]; then
-    notifier_cmd="awesome-client \"n=require('naughty');n.notify{title='Lock',text='Locking screen in 20 seconds.',timeout=18,preset=n.config.presets.critical}\""
-else
-    notifier_cmd="notify-send -t 18000 -u critical 'Lock' 'Locking screen in 20 seconds.'"
-fi
+# # use AwesomeWM notifications if possible
+# if [ "$session" = 'awesome' ]; then
+#     notifier_cmd="awesome-client \"n=require('naughty');n.notify{title='Lock',text='Locking screen in 20 seconds.',timeout=18,preset=n.config.presets.critical}\""
+# else
+#     notifier_cmd="notify-send -t 18000 -u critical 'Lock' 'Locking screen in 20 seconds.'"
+# fi
 
-# xset s off &
-xautolock -detectsleep \
-    -time 9 -notify 20 \
-    -corners 000- \
-    -notifier "$notifier_cmd" \
-    -locker /usr/local/bin/lock &
+# # xset s off &
+# xautolock -detectsleep \
+#     -time 9 -notify 20 \
+#     -corners 000- \
+#     -notifier "$notifier_cmd" \
+#     -locker /usr/local/bin/lock &
 
 dropbox &
 redshift -c .config/redshift.conf &
