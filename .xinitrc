@@ -57,6 +57,8 @@ dropbox &
 redshift -c .config/redshift.conf &
 compton --config .config/compton/compton.conf &
 
+autorandr --change &
+
 case "$session" in
     awesome)
         exec awesome ;;
