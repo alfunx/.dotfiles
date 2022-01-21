@@ -25,6 +25,10 @@ function M.setup()
         -- capabilities = capabilities,
     }
 
+    lspconfig.kotlin_language_server.setup {
+        -- capabilities = capabilities,
+    }
+
     lspconfig.pylsp.setup {
         -- capabilities = capabilities,
     }

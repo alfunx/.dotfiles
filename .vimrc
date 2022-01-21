@@ -104,6 +104,7 @@ Plug 'lervag/vimtex'  ", { 'for': ['latex', 'tex'] }
 "Plug 'neovimhaskell/haskell-vim'  ", { 'for': 'haskell' }
 "Plug 'tweekmonster/helpful.vim'  ", { 'for': ['vim', 'help'] }
 "Plug 'jupyter-vim/jupyter-vim'  ", { 'for': 'python' }
+Plug 'udalov/kotlin-vim'  ", { 'for': 'kotlin' }
 
 " Nvim specific
 if has('nvim')
@@ -957,7 +958,7 @@ if has('nvim')
     lua require'config_lsp'.setup()
 
     " native language client
-    let g:lsp_languages = ['bib', 'c', 'cpp', 'go', 'java', 'lua', 'objc', 'python', 'rust', 'sh', 'tex', 'vim']
+    let g:lsp_languages = ['bib', 'c', 'cpp', 'go', 'java', 'kotlin', 'lua', 'objc', 'python', 'rust', 'sh', 'tex', 'vim']
 
     function! LSP_settings()
         if empty(filter(copy(g:lsp_languages), 'v:val == &filetype')) | return | endif
@@ -1030,6 +1031,7 @@ else
                 \ 'cpp':     ['ccls'],
                 \ 'go':      ['gopls'],
                 \ 'java':    ['jdtls'],
+                \ 'kotlin':  ['kotlin-language-server'],
                 \ 'lua':     ['lua-lsp'],
                 \ 'objc':    ['ccls'],
                 \ 'python':  ['pyls'],
