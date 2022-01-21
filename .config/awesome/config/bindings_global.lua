@@ -149,7 +149,15 @@ function _config.init()
                   { description = "focus the previous screen", group = "screen" }),
         awful.key({ k.c, k.a           }, k.r, function() awful.screen.focus_relative(1) end,
                   { description = "focus the next screen", group = "screen" }),
+        awful.key({ k.m, k.c           }, "g", function() awful.screen.focus_relative(-1) end,
+                  { description = "focus the next screen", group = "screen" }),
         awful.key({ k.m                }, "g", function() awful.screen.focus_relative(1) end,
+                  { description = "focus the next screen", group = "screen" }),
+
+        -- Reload screen config
+        awful.key({ k.m, k.a           }, "g", function()
+            awful.spawn.easy_async(table.concat { "autorandr --change" }, function() end)
+         end,
                   { description = "focus the next screen", group = "screen" }),
 
         -- -- Tag browsing

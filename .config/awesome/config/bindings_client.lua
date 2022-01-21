@@ -83,27 +83,25 @@ function _config.init()
                   { description = "move to tag below", group = "client" }),
 
         -- Move client to screen
+        awful.key({ k.m, k.s, k.c      }, "g", function(c)
+            c:move_to_screen(c.screen.index-1)
+            -- c.screen._taglist_popup:show()
+        end,
+                  { description = "move to previous screen", group = "screen" }),
         awful.key({ k.m, k.s           }, "g", function(c)
-            local s = c.screen
-            c:move_to_screen()
-            awful.screen.focus(s)
+            c:move_to_screen(c.screen.index+1)
             -- c.screen._taglist_popup:show()
         end,
-                  { description = "move to screen", group = "screen" }),
-        awful.key({ k.m, k.c, k.s      }, "g", function(c)
-            c:move_to_screen()
-            -- c.screen._taglist_popup:show()
-        end,
-                  { description = "move to screen, focus", group = "screen" }),
+                  { description = "move to next screen", group = "screen" }),
 
         -- Move client to screen
         awful.key({ k.c, k.a, k.s      }, k.l, function(c)
-            c:move_to_screen(c.screen.index+1)
+            c:move_to_screen(c.screen.index-1)
             -- c.screen._taglist_popup:show()
         end,
                   { description = "move to previous screen", group = "screen" }),
         awful.key({ k.c, k.a, k.s      }, k.r, function(c)
-            c:move_to_screen(c.screen.index-1)
+            c:move_to_screen(c.screen.index+1)
             -- c.screen._taglist_popup:show()
         end,
                   { description = "move to next screen", group = "screen" }),
