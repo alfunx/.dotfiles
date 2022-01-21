@@ -3,6 +3,9 @@
 	email = alphonse.mariya@hotmail.com
 	signingkey = alphonse.mariya@hotmail.com
 
+[includeIf "gitdir:~/work/"]
+	path = ~/work/.gitconfig
+
 [core]
 	editor = vim
 	whitespace = fix,trailing-space,cr-at-eol
