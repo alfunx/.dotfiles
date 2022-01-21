@@ -42,7 +42,9 @@ function _config.init()
                   { description = "reload awesome", group = "awesome" }),
         awful.key({ k.m, k.c           }, "q", awesome.quit,
                   { description = "quit awesome", group = "awesome" }),
-        awful.key({ k.m, k.c           }, "z", function() brokers.lock:lock() end,
+        awful.key({ k.m, k.c           }, "z", function()
+            awful.spawn(table.concat { context.vars.scripts_dir, "/lock" })
+        end,
                   { description = "lock screen", group = "awesome" }),
         awful.key({ k.m                }, "Escape", naughty.destroy_all_notifications,
                   { description = "dismiss all notifications", group = "awesome" }),

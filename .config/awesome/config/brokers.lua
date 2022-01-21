@@ -155,13 +155,6 @@ function _config.init()
         end)
     )
 
-    -- Lock
-    _config.lock = yaawl.lock {
-    }
-    _config.lock:add_timer {
-        timeout = 401,
-    }
-
     -- Weather
     _config.weather = yaawl.weather {
         APPID = file.first_line(table.concat { context.vars.secrets_dir, "/openweathermap" }),
@@ -323,7 +316,6 @@ function _config:update()
     self.memory:update()
     self.temperature:update()
     self.drive:update()
-    self.lock:update()
     self.weather:update()
     self.ping:update()
 end

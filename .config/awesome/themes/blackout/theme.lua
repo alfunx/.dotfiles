@@ -741,29 +741,6 @@ end)
 drive_widget:buttons(brokers.drive.buttons)
 -- }}}
 
--- {{{ LOCK
-local lock_widget = wibox.widget {
-    space,
-    {
-        id = "icon",
-        image = theme.widget_lock,
-        widget = wibox.widget.imagebox,
-    },
-    space,
-    layout = wibox.layout.fixed.horizontal,
-}
-
-brokers.lock:add_callback(function(x)
-    if x.enabled then
-        lock_widget.icon:set_image(theme.widget_lock)
-    else
-        lock_widget.icon:set_image(theme.widget_unlock)
-    end
-end)
-
-lock_widget:buttons(brokers.lock.buttons)
--- }}}
-
 -- {{{ AUDIO
 local audio_widget = wibox.widget {
     space,
@@ -1478,10 +1455,6 @@ function theme.at_screen_connect(s)
 
                 {
                     -- Right
-                    vert_sep,
-
-                    lock_widget,
-
                     vert_sep,
 
                     pacman_widget,
