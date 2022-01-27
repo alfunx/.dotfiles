@@ -336,11 +336,9 @@
 	cl = clone
 	p = pull
 	f = fetch --tags
-	ff = fetch --force --tags
+	ff = fetch --force --prune --tags
 	fa = fetch --all --tags
-	fp = fetch --prune --tags
-	ffp = fetch --prune --force --tags
-	fap = fetch --prune --all --tags
+	ffa = fetch --all --force --prune --tags
 	pfa = "!f() { git remote | xargs -I@ -P0 git fetch --tags \"$@\" @; }; f"
 
 	# network (out)
