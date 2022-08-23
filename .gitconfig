@@ -3,9 +3,6 @@
 	email = alphonse.mariya@hotmail.com
 	signingkey = alphonse.mariya@hotmail.com
 
-[includeIf "gitdir:~/work/"]
-	path = ~/work/.gitconfig
-
 [core]
 	editor = vim
 	whitespace = fix,trailing-space,cr-at-eol
@@ -123,6 +120,7 @@
 	ff = false
 	conflictStyle = merge
 	tool = vimmerge
+	autoStash = true
 
 [mergetool]
 	prompt = true
@@ -146,6 +144,7 @@
 	instructionFormat = %<(60,trunc)%s   %cn <%ce>   [GPG: %G?% GK]
 	untrackedCache = true
 	autoSquash = true
+	autoStash = true
 	stat = true
 
 [fetch]
@@ -158,7 +157,7 @@
 [push]
 	default = simple
 	gpgSign = if-asked
-	followTags = true
+	followTags = false
 
 [submodule]
 	fetchJobs = 0
@@ -274,6 +273,7 @@
 	slo = stash list --pretty=rlo
 	slf = stash list --pretty=rlf
 	sld = stash list --pretty=rlf --stat
+	slp = stash list --pretty=rlf --patch
 	sls = stash show --patch
 
 	# inspection
@@ -319,6 +319,7 @@
 	com = checkout master --
 	cod = checkout develop --
 	cob = checkout -b
+	cop = checkout --patch HEAD --
 
 	# branch
 	b = branch
@@ -371,6 +372,7 @@
 
 	# interactive rebase
 	ri = rebase --interactive
+	rin = rebase --interactive --no-autosquash
 	riu = rebase --interactive @{u}
 	rim = rebase --interactive master
 	rid = rebase --interactive develop
@@ -496,3 +498,6 @@
 
 [includeIf "gitdir:~/development/"]
 	path = ~/development/.gitconfig
+
+[includeIf "gitdir:~/work/"]
+	path = ~/work/.gitconfig
